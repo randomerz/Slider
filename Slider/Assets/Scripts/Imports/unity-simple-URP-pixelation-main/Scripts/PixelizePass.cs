@@ -20,7 +20,7 @@ public class PixelizePass : ScriptableRenderPass
     {
         this.settings = settings;
         this.renderPassEvent = settings.renderPassEvent;
-        if (material == null) material = CoreUtils.CreateEngineMaterial("Hidden/Pixelize");
+        if (material == null) material = CoreUtils.CreateEngineMaterial("Imports/Pixelize");
     }
 
     public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -38,6 +38,7 @@ public class PixelizePass : ScriptableRenderPass
         material.SetVector("_BlockSize", new Vector2(1.0f / pixelScreenWidth, 1.0f / pixelScreenHeight));
         material.SetVector("_HalfBlockSize", new Vector2(0.5f / pixelScreenWidth, 0.5f / pixelScreenHeight));
 
+
         descriptor.height = pixelScreenHeight;
         descriptor.width = pixelScreenWidth;
 
@@ -54,9 +55,8 @@ public class PixelizePass : ScriptableRenderPass
             //Blit(cmd, colorBuffer, pointBuffer);
             //Blit(cmd, pointBuffer, pixelBuffer);
             //Blit(cmd, pixelBuffer, colorBuffer);
-
-            Blit(cmd, colorBuffer, pixelBuffer, material);
-            Blit(cmd, pixelBuffer, colorBuffer);
+            cmd.Blit(colorBuffer, pixelBuffer, material);
+            cmd.Blit(pixelBuffer, colorBuffer);
         }
 
         context.ExecuteCommandBuffer(cmd);

@@ -228,7 +228,7 @@ public class ShopDialogueManager : MonoBehaviour
                 ("Anyways, I can definitely help you on your way to Canopy Town if you finish our Tavern Pass.",
                     null as string),
                 ("Remember: If you ever run into trouble, Bob's is the one-stop-shop for all the seafaring advice you'll ever need!",
-                null as string),
+                    null as string),
                 ("Remember: If you ever run into trouble, Bob's is the one-stop-shop for all the seafaring advice you'll ever need!",
                     null as string),
             }
@@ -261,7 +261,7 @@ public class ShopDialogueManager : MonoBehaviour
             {
                 ("There's a treacherous patch of foggy sea down south we call \"The Veil\". Who knows what the mist may be hiding.",
                     null as string),
-                ("Tales tell of a song of THREE pairs of verses needed to navigate it. Think it started with \"West, South,\", null as string),but I forgot the rest.",
+                ("Tales tell of a song of THREE pairs of verses needed to navigate it. Think it started with \"West, South,\", but I forgot the rest.",
                     null as string),
                 ("Maybe others know the rest of the song? Or it might be written down, eroded away in sand.",
                     null as string),

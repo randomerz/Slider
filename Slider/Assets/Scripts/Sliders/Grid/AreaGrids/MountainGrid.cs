@@ -101,7 +101,7 @@ public class MountainGrid : SGrid
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
         if(stile.islandId == 7)
-            SaveSystem.Current.SetBool("forceAutoMove", true);
+            SaveSystem.Current.SetBool("forceAutoMoveMountain", true);
         base.EnableStile(stile, shouldFlicker);
          if(stile.islandId == 8)
             CheckForMountainCompletion();
@@ -115,7 +115,7 @@ public class MountainGrid : SGrid
 
     public void CheckForMountainCompletion() {
         if(CheckGrid.contains(GetGridString(), "31_48_76_52")) {
-            SaveSystem.Current.SetBool("forceAutoMove", false);
+            SaveSystem.Current.SetBool("forceAutoMoveMountain", false);
             StartCoroutine(ShowButtonAndMapCompletions());
             SaveSystem.Current.SetBool("completedMountain", true);
             AchievementManager.SetAchievementStat("completedMountain", 1);
@@ -134,7 +134,7 @@ public class MountainGrid : SGrid
         switch(minecart.mcState)
         {
             case MinecartState.Crystal:
-                minecart.UpdateState("Empty");
+                minecart.UpdateState(MinecartState.Empty);
                 SetCrystalDelivered();
                 break;
             case MinecartState.Lava:

@@ -94,6 +94,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
     public void StartAlienFight()
     {
         SaveSystem.Current.SetBool(START_FIGHT_STRING, true);
+        MilitaryTurnAnimator.CurrentGlobalAnimationsSpeed = MilitaryTurnAnimator.Speed.Slow;
         
         GameObject go = Instantiate(fightParticlesPrefab, alienCommander.transform.position, Quaternion.identity);
 
@@ -106,11 +107,11 @@ public class MilitaryEndCutsceneController : MonoBehaviour
                 FinishFight();
             },
             this,
-            MGFight.FIGHT_DURATION
+            MGFight.FightDuration
         );
 
         CoroutineUtils.ExecuteAfterDelay(
-            () => FlashForDuration(MGFight.FIGHT_DURATION - 0.5f),
+            () => FlashForDuration(MGFight.FightDuration - 0.5f),
             this,
             0.5f
         );
@@ -118,7 +119,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
 
         // From MGFight.cs
         AudioManager.PickSound("UI Click").WithPitch(0.6f).AndPlay();
-        for (float i = 0.5f; i < MGFight.FIGHT_DURATION; i += 0.5f)
+        for (float i = 0.5f; i < MGFight.FightDuration; i += 0.5f)
         {
             CoroutineUtils.ExecuteAfterDelay(
                 () => AudioManager.PickSound("UI Click").WithPitch(0.5f).AndPlay(),

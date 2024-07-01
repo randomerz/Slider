@@ -77,11 +77,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         UpdatePlayerSpeed();
     }
 
-    private void Start() 
-    {
-        AddTracker();
-    }
-
     private void OnDisable() 
     {
         foreach (Material m in ppMaterials)
@@ -92,6 +87,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     
     void Update()
     {
+        if(Time.timeScale == 0) return;
+        
         if (canAnimateMovement)
         {
             if (inputDir.x < 0)
@@ -491,7 +488,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     public void AddTrackerOnSettingsChangeHelper()
     {
-        if(trackerEnabled)
+        if(trackerEnabled && UITrackerManager.Instance != null)
         {
             UITrackerManager.RemoveTracker(gameObject);
             AddTracker();
@@ -500,6 +497,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     public void AddTracker()
     {
+        if(!trackerEnabled) return;
         if (SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue)
             {
                 UITrackerManager.AddNewTracker(

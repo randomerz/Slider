@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIButtonTextEffect : MonoBehaviour
 {
+    public TMP_Text textMeshPro;
     public RectTransform target;
     public int amount;
 
@@ -22,5 +24,14 @@ public class UIButtonTextEffect : MonoBehaviour
     public void MoveDefault()
     {
         target.anchoredPosition = defaultPos;
+    }
+
+    public void SetUnderlined(bool underlined)
+    {
+        if (underlined)
+            textMeshPro.fontStyle = FontStyles.Underline;
+        else
+            textMeshPro.fontStyle = FontStyles.Normal;
+
     }
 }

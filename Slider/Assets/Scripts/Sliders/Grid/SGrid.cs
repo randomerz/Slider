@@ -379,18 +379,35 @@ public void SetGrid(int[,] puzzle)
        return GetNumButtonCompletions() == GetTotalNumTiles();
     }
     
-    //C: Order of preference is transform, object, then position
+    /// <summary>
+    /// Prefered!
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="currentStileUnderneath"></param>
+    /// <param name="includeInactive"></param>
+    /// <returns></returns>
     public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
     {
         return GetSTileUnderneathHelper(entity.position, currentStileUnderneath, includeInactive);
     }
     
+    /// <summary>
+    /// Use Transform version if possible!
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="includeInactive"></param>
+    /// <returns></returns>
     public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)
     {
         return GetSTileUnderneathHelper(target.transform.position, target.GetComponentInParent<STile>(), includeInactive);
     }
 
-
+    /// <summary>
+    /// Use Transform version if possible!
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="includeInactive"></param>
+    /// <returns></returns>
     public static STile GetSTileUnderneath(Vector3 pos, bool includeInactive = false)
     {
         return GetSTileUnderneathHelper(pos, null, includeInactive);

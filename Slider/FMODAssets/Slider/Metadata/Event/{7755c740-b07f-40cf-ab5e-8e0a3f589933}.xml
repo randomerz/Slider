@@ -8,7 +8,7 @@
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{2b208f73-b9a8-4208-94c1-fe842ae3cd35}</destination>
+			<destination>{ad803405-3b49-4312-8705-f2c5ba4dabd3}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{b060a596-2306-45f6-b09f-39dab7b65cbe}</destination>
@@ -33,7 +33,7 @@
 			<destination>{09cc8e2a-a372-40a1-888d-da6055459055}</destination>
 		</relationship>
 		<relationship name="parameters">
-			<destination>{ff7d6149-a108-4135-bdec-b05bc6ecc997}</destination>
+			<destination>{c2f156b7-9d2f-4e4e-bb42-d8e2fcf20986}</destination>
 		</relationship>
 		<relationship name="banks">
 			<destination>{5f533eed-6a4c-456a-9ae6-4724ddf28999}</destination>
@@ -71,9 +71,9 @@
 			<destination>{1b524819-74d8-4563-ab04-de2d6cfcead7}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{a8d3c9bb-baee-498d-9ca4-c18f58e7849f}</destination>
 			<destination>{0d7dcea0-beec-48eb-a7b1-c563802590fe}</destination>
 			<destination>{e365e19f-f0a6-41ee-bbca-864232518db5}</destination>
+			<destination>{065ef266-3677-4952-b239-97998cabbfbd}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{7ecd18bc-b984-410a-88c4-1ae4637becf5}</destination>
@@ -95,15 +95,15 @@
 	<object class="Timeline" id="{09cc8e2a-a372-40a1-888d-da6055459055}">
 		<relationship name="modules">
 			<destination>{51b58fb5-b344-4fd6-90cd-65b155fb5c5a}</destination>
-			<destination>{a8d3c9bb-baee-498d-9ca4-c18f58e7849f}</destination>
+			<destination>{065ef266-3677-4952-b239-97998cabbfbd}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{df442102-ad2e-480e-a28f-c7ece1e780a7}</destination>
 		</relationship>
 	</object>
-	<object class="ParameterProxy" id="{ff7d6149-a108-4135-bdec-b05bc6ecc997}">
+	<object class="ParameterProxy" id="{c2f156b7-9d2f-4e4e-bb42-d8e2fcf20986}">
 		<relationship name="preset">
-			<destination>{a80a0a24-484e-49ca-acf8-3597e6d88817}</destination>
+			<destination>{9ad00958-bafc-4f57-b37d-c3071f4ee3c9}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{a9df3ee3-f0e6-44e0-abea-d747401a93a3}">
@@ -144,14 +144,6 @@
 			<destination>{efb08ae5-9bcd-4945-8501-59a72596423f}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{a8d3c9bb-baee-498d-9ca4-c18f58e7849f}">
-		<property name="length">
-			<value>44.353687499999999</value>
-		</property>
-		<relationship name="audioFile">
-			<destination>{40ed1698-87fe-42f6-a3c4-bc6def801cac}</destination>
-		</relationship>
-	</object>
 	<object class="TransitionSourceSound" id="{0d7dcea0-beec-48eb-a7b1-c563802590fe}">
 		<property name="length">
 			<value>10</value>
@@ -166,6 +158,14 @@
 		</property>
 		<relationship name="fadeInCurve">
 			<destination>{c62ed1c5-26ec-42cb-b581-76886be24dfe}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{065ef266-3677-4952-b239-97998cabbfbd}">
+		<property name="length">
+			<value>29.088000000000001</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{15435e14-61d7-4e18-aecc-03b8ba49febd}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{7ecd18bc-b984-410a-88c4-1ae4637becf5}">
@@ -192,7 +192,7 @@
 	</object>
 	<object class="SingleSound" id="{51b58fb5-b344-4fd6-90cd-65b155fb5c5a}">
 		<property name="length">
-			<value>44.353687499999999</value>
+			<value>29.088000000000001</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{079919cd-73e8-49ae-9abc-946038ff0145}</destination>
@@ -233,10 +233,10 @@
 	</object>
 	<object class="LoopRegion" id="{df442102-ad2e-480e-a28f-c7ece1e780a7}">
 		<property name="position">
-			<value>6</value>
+			<value>1.5</value>
 		</property>
 		<property name="length">
-			<value>30</value>
+			<value>26.5</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{09cc8e2a-a372-40a1-888d-da6055459055}</destination>
@@ -470,7 +470,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>0</value>
+			<value>0.100000001</value>
 		</property>
 		<property name="curveShape">
 			<value>0.675192058</value>

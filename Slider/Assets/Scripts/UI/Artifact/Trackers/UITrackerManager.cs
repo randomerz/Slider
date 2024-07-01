@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UITrackerManager : MonoBehaviour
 {
     protected static UITrackerManager _instance;
+    public static UITrackerManager Instance => _instance;
 
     public bool trackHousingAccurately = false;
     
@@ -132,6 +133,7 @@ public class UITrackerManager : MonoBehaviour
             targets.Add(uiTracker);
         }
         uiCustomTrackerBuffer.Clear();
+        Player.GetInstance().AddTracker();
     }
 
     void LateUpdate()
@@ -278,7 +280,6 @@ public class UITrackerManager : MonoBehaviour
             uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime, timeUntilBlinkRepeat));
             return;
         }
-
         GameObject tracker = GameObject.Instantiate(_instance.uiTrackerPrefab, _instance.transform);
         UITracker uiTracker = tracker.GetComponent<UITracker>();
         uiTracker.target = target;

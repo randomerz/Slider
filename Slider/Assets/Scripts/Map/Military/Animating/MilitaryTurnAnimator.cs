@@ -1,22 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 {
+    public static System.EventHandler<System.EventArgs> AfterCheckQueue;
+
     public enum QueueStatus 
     {
         Off,
         Ready, // Might still be processing but send the next
         Processing, // Proccessing animations
     }
+    public enum Speed 
+    {
+        Slow,
+        Medium,
+        Fast,
+    }
+
+    public static Speed CurrentGlobalAnimationsSpeed = Speed.Slow;
+    public static Speed BaseGlobalAnimationsSpeed = Speed.Slow;
 
     private Queue<IMGAnimatable> moveQueue = new();
 
     private Queue<IMGAnimatable> moveBuffer = new();
     private Queue<IMGAnimatable> fightBuffer = new();
     private Queue<IMGAnimatable> deathBuffer = new();
-
     private Coroutine updateBuffersCoroutine;
+
     private List<IMGAnimatable> activeMoves = new();
     private QueueStatus status = QueueStatus.Off;
 
@@ -28,14 +40,14 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private void Awake()
     {
         InitializeSingleton();
+        CurrentGlobalAnimationsSpeed = Speed.Slow;
+        BaseGlobalAnimationsSpeed = Speed.Slow;
     }
 
     public static void AddToQueue(IMGAnimatable move) => _instance._AddToQueue(move);
 
     public void _AddToQueue(IMGAnimatable move)
     {
-        // _instance.moveQueue.Enqueue(move);
-        // _instance.CheckQueue();
         if (move is MGMove)
         {
             moveBuffer.Enqueue(move);
@@ -47,6 +59,12 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         else
         {
             deathBuffer.Enqueue(move);
+        }
+        
+        // Speed up animations if there were already moves in before
+        if (moveQueue.Count > 0)
+        {
+            SpeedUpAnimations();
         }
 
         if (updateBuffersCoroutine == null)
@@ -70,6 +88,38 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                 }, this
             );
         }
+    }
+
+    public static bool IsUnitInActiveOrQueue(MilitaryUnit unit) => _instance._IsUnitInActiveOrQueue(unit);
+
+    public bool _IsUnitInActiveOrQueue(MilitaryUnit unit)
+    {
+        List<IEnumerable<IMGAnimatable>> enumerables = new() {
+            moveQueue,
+            moveBuffer,
+            fightBuffer,
+            deathBuffer,
+            activeMoves,
+        };
+        foreach (IEnumerable<IMGAnimatable> enumerable in enumerables)
+        {
+            foreach (IMGAnimatable i in enumerable)
+            {
+                if (IsUnitInAnimatable(i, unit))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsUnitInAnimatable(IMGAnimatable animatable, MilitaryUnit unit)
+    {
+        if (animatable is MGFight fight)
+        {
+            return fight.unit == unit || fight.unitOther == unit;
+        }
+        
+        return animatable.unit == unit;
     }
 
     private void CheckQueue()
@@ -130,6 +180,8 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 
                 break;
         }
+
+        AfterCheckQueue?.Invoke(this, new System.EventArgs());
     }
 
     private void ExecuteMove(IMGAnimatable move)
@@ -161,6 +213,10 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         {
             CheckQueue();
         }
+        if (status == QueueStatus.Off)
+        { 
+            CurrentGlobalAnimationsSpeed = BaseGlobalAnimationsSpeed;
+        }
     }
 
     public static void SpawnFightParticles(Transform transform)
@@ -168,12 +224,29 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         Instantiate(_instance.fightParticles, transform.position, Quaternion.identity, transform);
     }
 
-
-    private bool IsAlienMove(IMGAnimatable move)
+    
+    public static void SpeedUpAnimations()
     {
-        return move.unit.UnitTeam == MilitaryUnit.Team.Alien;
-        // return move is MGMove && (move as MGMove).unit.UnitTeam == MilitaryUnit.Team.Alien;
+        if (BaseGlobalAnimationsSpeed == Speed.Medium)
+        {
+            CurrentGlobalAnimationsSpeed = Speed.Fast;
+        }
+        else
+        {
+            CurrentGlobalAnimationsSpeed = Speed.Medium;
+        }
     }
+
+    public static void SetBaseAnimationSpeedToMedium()
+    {
+        BaseGlobalAnimationsSpeed = Speed.Medium;
+        if (CurrentGlobalAnimationsSpeed == Speed.Slow)
+        {
+            CurrentGlobalAnimationsSpeed = BaseGlobalAnimationsSpeed;
+        }
+    }
+
+
 
     private bool IsNotPlayerMGMove(IMGAnimatable move)
     {
@@ -187,17 +260,5 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
             (move1 is MGFight && move2 is MGFight) ||
             (move1 is MGDeath && move2 is MGDeath)
         );
-    }
-
-    private bool AreAllActiveMovesAlienMGMove()
-    {
-        foreach (IMGAnimatable m in activeMoves)
-        {
-            if (!IsAlienMove(m))
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }

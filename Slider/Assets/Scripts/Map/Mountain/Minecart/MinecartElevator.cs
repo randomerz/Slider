@@ -69,7 +69,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
         if(!fromSave)
         {
-            mainMc.UpdateState("Empty");
+            mainMc.UpdateState(MinecartState.Empty);
             AudioManager.Play("Puzzle Complete");
         }
     }

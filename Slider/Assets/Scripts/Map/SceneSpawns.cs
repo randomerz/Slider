@@ -66,7 +66,9 @@ public class SceneSpawns : MonoBehaviour
         // Space
     }
 
+    // Managed by SceneChanger.cs
     public static SpawnLocation nextSpawn;
+    public static Area lastArea = Area.None;
     public static Vector3 relativePos;
 
     [SerializeField] private SpawnLocation spawnName;

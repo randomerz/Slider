@@ -86,6 +86,12 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     private void SpawnWave(int index)
     {
+        if (index == 2)
+        {
+            // Let's speed things up!
+            MilitaryTurnAnimator.SetBaseAnimationSpeedToMedium();
+        }
+
         if (index >= waveSizes.Length)
         {
             CheckWinCondition();
