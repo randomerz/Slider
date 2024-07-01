@@ -55,6 +55,8 @@ public class MilitaryEndCutsceneController : MonoBehaviour
                 CameraShake.Shake(0.5f, 0.25f);
                 AudioManager.PlayWithVolume("Slide Explosion", 0.1f);
                 AudioManager.Play("Portal");
+                MilitaryMusicController.DoWinTrigger();
+                MilitaryMusicController.SetMilitaryLevel(4);
             },
             this,
             1

@@ -85,10 +85,12 @@ public class MilitaryGrid : SGrid
         PauseManager.AddPauseRestriction(gameObject);
         AudioManager.Play("Slide Rumble"); 
         
+        MilitaryMusicController.DoLoseTrigger();
         UIEffects.Pixelize(
             () => {
                 DoRestartSimulation();
                 AudioManager.Play("TFT Bell");
+                MilitaryMusicController.SetMilitaryLevel(0);
             },
             () => {
                 isRestarting = false;

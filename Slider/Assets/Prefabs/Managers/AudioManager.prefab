@@ -713,6 +713,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Laser Start
     canPause: 1
     dopplerScale: 1
+  - name: MagiTech Blast Off
+    fmodEvent:
+      Guid:
+        Data1: 1220219775
+        Data2: 1123818392
+        Data3: 420059827
+        Data4: 1703775011
+      Path: event:/SFX/Music One Shots/MagiTech Blast Off
+    canPause: 0
+    dopplerScale: 1
   - name: Footstep Concrete
     fmodEvent:
       Guid:
