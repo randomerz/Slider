@@ -102,6 +102,7 @@ public class UIEffects : Singleton<UIEffects>
         _instance.whitePanelCanvasGroup.alpha = 0;
         _instance.screenshotPanel.SetActive(false);
         _instance.screenshotCanvasGroup.alpha = 0;
+        DisablePixel();
     }
 
     private static void StartEffectCoroutine(IEnumerator coroutine, bool stopable = true)
@@ -233,8 +234,8 @@ public class UIEffects : Singleton<UIEffects>
             yield return null;
             t -= (Time.deltaTime * speed);
         }
-        callbackEnd?.Invoke();
         pixelizeFeature.settings.enabled = false;
+        callbackEnd?.Invoke();
     }
 
     public static void DisablePixel()
