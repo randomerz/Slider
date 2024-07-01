@@ -104,9 +104,11 @@ public class MilitaryGrid : SGrid
         SaveSystem.Current.SetBool("militaryFailedOnce", true);
         SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 
-        Player.SetPosition(playerRestartSpawnPosition.position);
-        Player.SetParent(null);
-
+        if (Player.GetInstance().GetSTileUnderneath() != null)
+        {
+            Player.SetPosition(playerRestartSpawnPosition.position);
+            Player.SetParent(null);
+        }
         DisableSliders();
 
         RestartTroops();
