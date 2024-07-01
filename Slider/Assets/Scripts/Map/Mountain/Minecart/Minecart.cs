@@ -41,6 +41,7 @@ public class Minecart : Item, ISavable
     public LayerMask collidingMask;
 
     public STile currentSTile;
+    public DistanceBasedAmbience minecartAmbience;
 
     private bool dropOnNextMove = false;
 
@@ -124,10 +125,18 @@ public class Minecart : Item, ISavable
 
         if (AllMovingConds())
         {
+            if(!minecartAmbience.IsEnabled)
+            {
+                minecartAmbience.SetParameterEnabled(true);
+            }
             Move();
         }
-        else if (animator != null)
+        else
         {
+            if(minecartAmbience.IsEnabled)
+            {
+                minecartAmbience.SetParameterEnabled(false);
+            }
             animator.SetSpeed(0);
         }
     }
