@@ -968,12 +968,12 @@ public class ShopDialogueManager : MonoBehaviour
                     dialogueTable[ShopDialogueCode.OceanComplete][0],
                     TKSprite.Normal,
                     () => {
-                        // He disappear
                         SetDialogue(new ShopDialogue(
                     null,
                     dialogueTable[ShopDialogueCode.OceanComplete][1],
-                    TKSprite.None,
+                    TKSprite.Normal,
                     () => {
+                        // He disappear
                         dialogueText.fontStyle = FontStyles.Italic;
             
                         SetDialogue(new ShopDialogue(

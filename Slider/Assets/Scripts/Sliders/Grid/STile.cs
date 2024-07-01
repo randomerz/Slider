@@ -252,6 +252,11 @@ public class STile : MonoBehaviour
         onChangeMove?.Invoke(this, new STileMoveArgs {moveDir = movingDirection} );
     }
 
+    public void SetMovingDirectionNoUpdate(Vector2 direction)
+    {
+        movingDirection = direction;
+    }
+
     public Vector2 GetMovingDirection()
     {
         return movingDirection;

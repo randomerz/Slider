@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4681787300532499484
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 997012892581697187, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697187, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697212, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_Name
+      value: WifiBattery Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697214, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -806612220, guid: bc1b6453116ef49429ba2ed0932367b7, type: 3}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 997012892581697215, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1903720097769807390, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076744612717931999, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: offSprite
+      value: 
+      objectReference: {fileID: -806612220, guid: bc1b6453116ef49429ba2ed0932367b7, type: 3}
+    - target: {fileID: 7076744612717931999, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: enabledSprite
+      value: 
+      objectReference: {fileID: -616654684, guid: bc1b6453116ef49429ba2ed0932367b7, type: 3}
+    - target: {fileID: 7076744612717931999, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: poweredSprite
+      value: 
+      objectReference: {fileID: -801639711, guid: bc1b6453116ef49429ba2ed0932367b7, type: 3}
+    - target: {fileID: 7076744612717931999, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: particlesConducting.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9152678509280991945, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d78360e309e571046b0ed1162ce01c1a, type: 3}
