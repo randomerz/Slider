@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 188568721237000082, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 188568721237000082, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 222308232467157162, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
       propertyPath: m_Size.x
       value: 2
@@ -24,6 +32,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 186da55ee16445f498794f7cd34e3002, type: 2}
+    - target: {fileID: 952769548747859317, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
+      propertyPath: m_Name
+      value: Waterfall Ambience Distance Node
+      objectReference: {fileID: 0}
     - target: {fileID: 956051433407308841, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
       propertyPath: m_Controller
       value: 
@@ -72,6 +84,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2593988053825270864, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2593988053942733234, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -83,6 +99,14 @@ PrefabInstance:
     - target: {fileID: 3063449451677775069, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
       propertyPath: m_Size.x
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638689353939371894, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
+      propertyPath: ambienceName
+      value: Waterfall
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638689353939371894, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
+      propertyPath: ambienceGlobalParameterName
+      value: AmbienceDistToWaterfall
       objectReference: {fileID: 0}
     - target: {fileID: 4334146668243452601, guid: 7143e16bdc8a1024fa020c7b93d86211, type: 3}
       propertyPath: m_Controller
