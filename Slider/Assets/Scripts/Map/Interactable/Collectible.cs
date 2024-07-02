@@ -90,11 +90,12 @@ public class Collectible : MonoBehaviour
         onCollect.Invoke();
     }
 
-    public void SpawnCollectable()
+    public void SpawnCollectable(bool withAudio = true)
     {
         if(!gameObject.activeSelf)
         {
-            AudioManager.Play("Puzzle Complete");
+            if(withAudio)
+                AudioManager.Play("Puzzle Complete");
             ParticleManager.SpawnParticle(particle, transform.position, transform);
         }
         gameObject.SetActive(true);

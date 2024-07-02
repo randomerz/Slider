@@ -39,7 +39,7 @@ public class MilitaryGrid : SGrid
         )
         {
             Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
-            DoRestartSimulation(updatePlayer: false);
+            DoRestartSimulation();
         }
     }
 
@@ -100,18 +100,17 @@ public class MilitaryGrid : SGrid
         );
     }
 
-    private void DoRestartSimulation(bool updatePlayer=true)
+    private void DoRestartSimulation()
     {
         Debug.Log("[Military] Restart sim!");
         SaveSystem.Current.SetBool("militaryFailedOnce", true);
         SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 
-        if (updatePlayer && Player.GetInstance().GetSTileUnderneath() != null)
+        if (Player.GetInstance().GetSTileUnderneath() != null)
         {
             Player.SetPosition(playerRestartSpawnPosition.position);
             Player.SetParent(null);
         }
-
         DisableSliders();
 
         RestartTroops();

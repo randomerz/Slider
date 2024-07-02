@@ -10,6 +10,7 @@ public class DistanceBasedAmbience : MonoBehaviour
     public List<Transform> distanceNodes = new List<Transform>();
     private Transform playerTransform;
     [SerializeField] private bool isEnabled = true;
+    public bool IsEnabled => isEnabled;
 
     private static Dictionary<string, float> nameToMinDist = new();
 
