@@ -25,11 +25,14 @@ public class MilitaryUnitFlag : Item
     private void OnDisable()
     {
         MilitaryTurnAnimator.AfterCheckQueue -= DoFightChecks;
+        MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
+        Debug.Log($"unsubscribe {name}");
     }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         MilitaryTurnManager.OnPlayerEndTurn += ResetOnPlayerEndTurn;
+        Debug.Log($"subscribe {name}");
         base.PickUpItem(pickLocation, callback);
     }
 
@@ -40,6 +43,7 @@ public class MilitaryUnitFlag : Item
         return base.DropItem(dropLocation, () => {
             isDropping = false;
             MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
+            Debug.Log($"unsubscribe {name}");
             AfterDropComplete();
             callback.Invoke();
         });
@@ -171,6 +175,8 @@ public class MilitaryUnitFlag : Item
         }
 
         // Reset the flag
+        MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
+        Debug.Log($"unsubscribe {name}");
         resetter.ResetItem(onFinish: null);
     }
 
