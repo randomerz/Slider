@@ -16,6 +16,8 @@ public class MagiLaser : MonoBehaviour, ISavable
     // private Vector2 curPos, curPos2;
     private List<Laserable> lastFrameLaserables = new();
     private List<Laserable> thisFrameLaserables = new();
+    private Vector3 thisFramePlayerPos;
+    private static float thisFrameDistToLasers = float.MaxValue; // There may be multiple MagiLaser in a scene
 
     [SerializeField] private MagiLaserAnimation magiLaserAnimation;
     [SerializeField] private MagiLaserFlashManager magiLaserFlashManager;
@@ -32,6 +34,46 @@ public class MagiLaser : MonoBehaviour, ISavable
     private void Start()
     {
         SetEnabled(isEnabled);
+        
+        AudioManager.PlayAmbience("Laser Ambience");
+    }
+
+    private void OnDestroy()
+    {
+        AudioManager.StopAmbience("Laser Ambience");
+    }
+
+    public void Save()
+    {
+        if(SaveString != null && SaveString != "")
+            SaveSystem.Current.SetBool(SaveString, isEnabled);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        if(SaveString == null || SaveString == "") return;
+
+        isEnabled = profile.GetBool(SaveString);
+        if(isEnabled)
+        {
+            isPowered = true;
+            magiLaserAnimation.PowerFromLoad();
+        }
+    }
+
+    private void Update()
+    {
+        thisFramePlayerPos = Player.GetPosition();
+        thisFrameDistToLasers = float.MaxValue;
+    }
+
+    private void LateUpdate()
+    {
+        ClearLasers();
+        MakeFirstLaser();
+        UpdateLaserables();
+
+        AudioManager.SetGlobalParameter("AmbienceDistToLaser", thisFrameDistToLasers);
     }
 
     public void EnableLaser()
@@ -42,13 +84,6 @@ public class MagiLaser : MonoBehaviour, ISavable
     public void DisableLaser()
     {
         SetEnabled(false);
-    }
-
-    private void LateUpdate()
-    {
-        ClearLasers();
-        MakeFirstLaser();
-        UpdateLaserables();
     }
 
     public void ClearLasers()
@@ -98,6 +133,7 @@ public class MagiLaser : MonoBehaviour, ISavable
         // Set origin point
         lr.positionCount = 1;
         lr.SetPosition(lr.positionCount - 1, pos);
+        float playerDist;
         
         for (int ct = 0; ct < MAX_LASER_BOUNCES; ct++) {
             hit = Physics2D.Raycast(pos, dir, 50.0f, LayerMask.GetMask("LaserRaycast"));
@@ -105,6 +141,8 @@ public class MagiLaser : MonoBehaviour, ISavable
             {
                 lr.positionCount++;
                 lr.SetPosition(lr.positionCount - 1, pos + 50.0f * dir);
+                playerDist = DistanceUtil.DistanceToLine(thisFramePlayerPos, lr.GetPosition(lr.positionCount - 2), lr.GetPosition(lr.positionCount - 1));
+                thisFrameDistToLasers = Mathf.Min(thisFrameDistToLasers, playerDist);
                 break;
             }
 
@@ -126,6 +164,8 @@ public class MagiLaser : MonoBehaviour, ISavable
 
             lr.positionCount++;
             lr.SetPosition(lr.positionCount - 1, hit.point);
+            playerDist = DistanceUtil.DistanceToLine(thisFramePlayerPos, lr.GetPosition(lr.positionCount - 2), lr.GetPosition(lr.positionCount - 1));
+            thisFrameDistToLasers = Mathf.Min(thisFrameDistToLasers, playerDist);
 
             if (laserable.IsInteractionType("Reflect")) 
             {
@@ -198,6 +238,7 @@ public class MagiLaser : MonoBehaviour, ISavable
         if (!value)
         {
             ClearLasers();
+            AudioManager.SetGlobalParameter("AmbienceDistToLaser", float.MaxValue);
         }
 
         if (laserUI != null)
@@ -210,23 +251,5 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
     public void CheckIsEnabled(Condition c) => c.SetSpec(isEnabled);
-
-    public void Save()
-    {
-        if(SaveString != null && SaveString != "")
-            SaveSystem.Current.SetBool(SaveString, isEnabled);
-    }
-
-    public void Load(SaveProfile profile)
-    {
-        if(SaveString == null || SaveString == "") return;
-
-        isEnabled = profile.GetBool(SaveString);
-        if(isEnabled)
-        {
-            isPowered = true;
-            magiLaserAnimation.PowerFromLoad();
-        }
-    }
 }
 

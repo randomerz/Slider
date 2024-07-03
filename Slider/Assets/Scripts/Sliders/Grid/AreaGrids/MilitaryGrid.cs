@@ -39,7 +39,7 @@ public class MilitaryGrid : SGrid
         )
         {
             Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
-            DoRestartSimulation(updatePlayer: false);
+            DoRestartSimulation();
         }
     }
 
@@ -58,6 +58,8 @@ public class MilitaryGrid : SGrid
         //     Debug.LogWarning($"[Military] Quit area without finishing! Resetting Military...");
         //     DoRestartSimulation(updatePlayer: false);
         // }
+
+        UIEffects.DisablePixel();
     }
 
     public override void Save()
@@ -81,47 +83,34 @@ public class MilitaryGrid : SGrid
             return;
         isRestarting = true;
         PauseManager.AddPauseRestriction(gameObject);
-        // Player.SetCanMove(false);
         AudioManager.Play("Slide Rumble"); 
         
-        UIEffects.FlashWhite(
+        MilitaryMusicController.DoLoseTrigger();
+        UIEffects.Pixelize(
             () => {
                 DoRestartSimulation();
                 AudioManager.Play("TFT Bell");
+                MilitaryMusicController.SetMilitaryLevel(0);
             },
             () => {
                 isRestarting = false;
                 PauseManager.RemovePauseRestriction(gameObject);
-                // Player.SetCanMove(true);
             }, 
             speed
         );
-        // UIEffects.Pixelize(
-        //     () => {
-        //         DoRestartSimulation();
-        //         AudioManager.Play("TFT Bell");
-        //     },
-        //     () => {
-        //         isRestarting = false;
-        //         PauseManager.RemovePauseRestriction(gameObject);
-        //         Player.SetCanMove(true);
-        //     }, 
-        //     speed
-        // );
     }
 
-    private void DoRestartSimulation(bool updatePlayer=true)
+    private void DoRestartSimulation()
     {
         Debug.Log("[Military] Restart sim!");
         SaveSystem.Current.SetBool("militaryFailedOnce", true);
         SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 
-        if (updatePlayer && Player.GetInstance().GetSTileUnderneath() != null)
+        if (Player.GetInstance().GetSTileUnderneath() != null)
         {
             Player.SetPosition(playerRestartSpawnPosition.position);
             Player.SetParent(null);
         }
-
         DisableSliders();
 
         RestartTroops();

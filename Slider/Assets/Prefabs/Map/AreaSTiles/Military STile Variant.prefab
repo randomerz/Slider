@@ -226,6 +226,10 @@ PrefabInstance:
       value: 0. Confirm Unit?
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: conds.Array.data[0].alwaysStartFromBeginning
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: conds.Array.data[0].dialogueChain.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -31614,6 +31618,10 @@ MonoBehaviour:
   - {fileID: 7878536271550697227}
   - {fileID: 4112012658804406551}
   - {fileID: 2888951663135897437}
+  hasRightWall: 0
+  hasUpWall: 0
+  hasLeftWall: 0
+  hasDownWall: 0
   sliderCollectibleSpawn: {fileID: 8089009209171678249}
   newUnitSelectorSpawn: {fileID: 1888626295742766058}
 --- !u!61 &529306391365834684 stripped

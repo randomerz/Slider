@@ -10,7 +10,7 @@ public class TimedGateDiode : ElectricalNode
     [SerializeField] private BatteryProp batteryProp;
 
 
-    private new void OnEnable()
+    protected override void OnEnable()
     {
         base.OnEnable();
         gate.OnGateActivated.AddListener(GateActivatedHandler);
@@ -18,7 +18,7 @@ public class TimedGateDiode : ElectricalNode
         batteryProp?.UpdateSprite();
     }
 
-    private new void OnDisable()
+    protected override void OnDisable()
     {
         base.OnDisable();
         gate.OnGateActivated.RemoveListener(GateActivatedHandler);
@@ -47,7 +47,11 @@ public class TimedGateDiode : ElectricalNode
         if (Powered)
         {
             swapper.TurnOn();
-            batteryProp.SetDiodeEnabled(true);
+            batteryProp?.SetDiodeEnabled(true);
+            batteryProp?.SetGateEnabled(true);
+        }
+        else
+        {
             batteryProp?.SetGateEnabled(true);
         }
     }

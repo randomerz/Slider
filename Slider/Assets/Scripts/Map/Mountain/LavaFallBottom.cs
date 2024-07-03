@@ -10,7 +10,7 @@ public class LavaFallBottom : MonoBehaviour
         if(mc != null){
             MinecartState state = mc.mcState;
             if(mc.isMoving && (state == MinecartState.Empty || state == MinecartState.Crystal))
-                mc.UpdateState("Lava");
+                mc.UpdateState(MinecartState.Lava);
         }
 
         LavaBucket lavaBucket = other.GetComponent<LavaBucket>();

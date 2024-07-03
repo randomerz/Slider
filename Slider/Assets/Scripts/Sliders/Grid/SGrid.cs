@@ -527,6 +527,14 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
+    public void ActivateSliderCollectibleNoSound(int sliderId)
+    {
+        if (!PlayerInventory.Contains("Slider " + sliderId, myArea))
+        {
+            GetCollectible("Slider " + sliderId)?.SpawnCollectable(withAudio:false);
+        }
+    }
+
     public void GivePlayerTheCollectible(string name)
     {
         if (GetCollectible(name) != null)
