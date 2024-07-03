@@ -17,6 +17,7 @@ public class FactoryTimeGlitch : MonoBehaviour
     [SerializeField] private UIHousingTracker housingTracker;
 
     [SerializeField] private GameObject errorCanvas;
+    [SerializeField] private CanvasGroup transparentBackgroundGroup;
     [SerializeField] private GameObject windowsError;
     [SerializeField] private GameObject macError;
     [SerializeField] private GameObject linuxError;
@@ -100,7 +101,6 @@ public class FactoryTimeGlitch : MonoBehaviour
 
     private void ShowErrorMessage()
     {
-        
         string platform = Application.platform.ToString();
         if(platform.Contains("OSX"))
         {
@@ -112,7 +112,17 @@ public class FactoryTimeGlitch : MonoBehaviour
         }
         else
         {
-            windowsError.SetActive(true);
+            CoroutineUtils.ExecuteEachFrame(
+                (x) => {
+                    transparentBackgroundGroup.alpha = x;
+                },
+                () => {
+                    windowsError.SetActive(true);
+                },
+                this,
+                1
+            );
+            
         }
         errorCanvas.SetActive(true);
     }
