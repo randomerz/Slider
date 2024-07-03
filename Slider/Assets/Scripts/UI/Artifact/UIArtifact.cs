@@ -97,7 +97,7 @@ public class UIArtifact : Singleton<UIArtifact>
         HandleControllerCheck();
     }
 
-    private void HandleControllerCheck()
+    protected virtual void HandleControllerCheck()
     {
         if (!UIArtifactMenus.IsArtifactOpen())
         {
