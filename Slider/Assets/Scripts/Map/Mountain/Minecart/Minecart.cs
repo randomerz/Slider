@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -40,6 +41,7 @@ public class Minecart : Item, ISavable
     public LayerMask collidingMask;
 
     public STile currentSTile;
+    public DistanceBasedAmbience minecartAmbience;
 
     private bool dropOnNextMove = false;
 
@@ -59,7 +61,6 @@ public class Minecart : Item, ISavable
 
     [Header("UI")]
     public Sprite trackerSpriteEmpty;
-    public Sprite trackerSpriteRepair;
     public Sprite trackerSpriteLava;
     public Sprite trackerSpriteCrystal;
 
@@ -98,13 +99,13 @@ public class Minecart : Item, ISavable
 
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(mcState == MinecartState.Crystal) UpdateState("Empty");
+        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
     }
 
     private void OnScrollRearrange(object sender, EventArgs e)
     {
         if(isMoving) Derail();
-        if(mcState == MinecartState.Crystal) UpdateState("Empty");
+        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
     }
 
 
@@ -124,10 +125,18 @@ public class Minecart : Item, ISavable
 
         if (AllMovingConds())
         {
+            if(!minecartAmbience.IsEnabled)
+            {
+                minecartAmbience.SetParameterEnabled(true);
+            }
             Move();
         }
-        else if (animator != null)
+        else
         {
+            if(minecartAmbience.IsEnabled)
+            {
+                minecartAmbience.SetParameterEnabled(false);
+            }
             animator.SetSpeed(0);
         }
     }
@@ -204,11 +213,12 @@ public class Minecart : Item, ISavable
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         base.PickUpItem(pickLocation, callback);
+        numberOfPickups++;
         VarManager.instance.SetBoolOn("MountainHasPickedUpMinecart");
-        UITrackerManager.RemoveTracker(this.gameObject);
+        UITrackerManager.RemoveTracker(gameObject);
         animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
-            UpdateState("Empty");
+            UpdateState(MinecartState.Empty, addTracker: false);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -244,15 +254,61 @@ public class Minecart : Item, ISavable
         return null;
     }
 
-    private void DropMinecart(Tilemap railmap, RailManager railManager, Vector3 dropLocation, System.Action callback)
+    private void DropMinecart(Tilemap railmap, RailManager railManager, Vector3 dropLocation, System.Action callback, int count = 0)
     {
+        if(count > 2)
+        {
+            Debug.LogError("infinite recursion in minecart drop. This should never happen!");
+            StartCoroutine(AnimateDrop(dropLocation, callback));
+            return;
+        }
         if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
         {
-            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-            SnapToRail(railmap.WorldToCell(dropLocation));
+            bool snap;
+            Vector3 loc = GetDropLocation(dropLocation, railmap, out snap);
+            if(snap)
+            {
+                Action dropCallback = () => {
+                    SnapToRail(railmap.WorldToCell(dropLocation));
+                    SnapCallback();
+                    callback();
+                };
+                StartCoroutine(AnimateDrop(loc, dropCallback));
+            }
+            else
+            {
+                StartCoroutine(AnimateDrop(loc, callback));
+            }
+        }
+        else if(railManager.otherRMOnTile != null 
+                && railManager.otherRMOnTile.railLocations.Contains(railmap.WorldToCell(dropLocation)))
+        {
+            this.railManager = railManager.otherRMOnTile;
+            DropMinecart(railManager.railMap, railManager.otherRMOnTile, dropLocation, callback, count + 1);
         }
         else
+        {
             StartCoroutine(AnimateDrop(dropLocation, callback));
+        }
+    }
+    
+    private Vector3 GetDropLocation(Vector3 dropLocation, Tilemap railmap, out bool snap)
+    {
+        snap = false;
+        Vector3 targetSnapLoc = railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet;
+        LayerMask mask = LayerMask.GetMask(new string[]{"Item"});
+        if(Physics2D.OverlapCircleAll(targetSnapLoc, 1, mask).Count() == 0)
+        {
+            snap = true;
+            return railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet;
+        }
+        return dropLocation;
+    }
+
+    private void SnapCallback()
+    {
+        AudioManager.Play("Hat Click");
+        ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position);
     }
 
     public override void OnEquip()
@@ -305,6 +361,8 @@ public class Minecart : Item, ISavable
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
+        if(currentTile == null)
+            print("current tile null");
         currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
@@ -557,16 +615,10 @@ public class Minecart : Item, ISavable
 
     #region State
 
-    public void UpdateState(string stateName){
-        if(stateName.Equals("Lava"))
-            mcState = MinecartState.Lava;
-        else if(stateName.Equals("Crystal"))
-            mcState = MinecartState.Crystal;
-        else if (stateName.Equals("Empty"))
-            mcState = MinecartState.Empty;
-        else
-            Debug.LogWarning("Invalid Minecart State. Should be Lava, Empty, or Crystal");
-        UpdateIcon();
+    public void UpdateState(MinecartState state, bool addTracker = true){
+        mcState = state;
+        if(addTracker)
+            UpdateIcon();
         UpdateContentsSprite();
     }
 
@@ -574,7 +626,7 @@ public class Minecart : Item, ISavable
     {
         if(mcState != MinecartState.Crystal)
         {
-            UpdateState("Crystal");
+            UpdateState(MinecartState.Crystal); 
             return true;
         }
         return false;
@@ -619,8 +671,7 @@ public class Minecart : Item, ISavable
 
     private void PlayCurveAnimation()
     {
-        //magic number based on enum order, better than 8 case switch
-        // dc: no way :sob:
+        //magic number based on enum order
         int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
     }
@@ -629,14 +680,6 @@ public class Minecart : Item, ISavable
     {
         animator.ChangeAnimationState(currentDirection + 1);
     }
-
-    private void PlayStoppedAnimation()
-    {
-
-    }
-
-    
-
 
     #endregion
 
@@ -703,19 +746,13 @@ public class Minecart : Item, ISavable
     public override void Save()
     {
         base.Save();
-
-        SaveSystem.Current.SetInt("mountainMCState", (int)mcState);
         SaveSystem.Current.SetInt("mountainMCNumPickups", numberOfPickups);
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-
-        int state = profile.GetInt("mountainMCState");
-        mcState = (MinecartState)state;
         numberOfPickups = SaveSystem.Current.GetInt("mountainMCNumPickups");
-        UpdateIcon();
     }
 
     #endregion

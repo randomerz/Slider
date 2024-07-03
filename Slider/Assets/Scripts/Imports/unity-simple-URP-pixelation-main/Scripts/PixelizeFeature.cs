@@ -11,6 +11,7 @@ public class PixelizeFeature : ScriptableRendererFeature
     {
         public RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
         public int screenHeight = 144;
+        public bool enabled = false;
     }
 
     [SerializeField] public CustomPassSettings settings;
@@ -26,7 +27,8 @@ public class PixelizeFeature : ScriptableRendererFeature
 #if UNITY_EDITOR
         if (renderingData.cameraData.isSceneViewCamera) return;
 #endif
-        renderer.EnqueuePass(customPass);
+        if(settings.enabled)
+            renderer.EnqueuePass(customPass);
     }
 }
 

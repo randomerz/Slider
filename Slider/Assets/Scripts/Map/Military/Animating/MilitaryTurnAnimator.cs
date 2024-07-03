@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 {
+    public static System.EventHandler<System.EventArgs> AfterCheckQueue;
+
     public enum QueueStatus 
     {
         Off,
@@ -87,6 +90,38 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         }
     }
 
+    public static bool IsUnitInActiveOrQueue(MilitaryUnit unit) => _instance._IsUnitInActiveOrQueue(unit);
+
+    public bool _IsUnitInActiveOrQueue(MilitaryUnit unit)
+    {
+        List<IEnumerable<IMGAnimatable>> enumerables = new() {
+            moveQueue,
+            moveBuffer,
+            fightBuffer,
+            deathBuffer,
+            activeMoves,
+        };
+        foreach (IEnumerable<IMGAnimatable> enumerable in enumerables)
+        {
+            foreach (IMGAnimatable i in enumerable)
+            {
+                if (IsUnitInAnimatable(i, unit))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsUnitInAnimatable(IMGAnimatable animatable, MilitaryUnit unit)
+    {
+        if (animatable is MGFight fight)
+        {
+            return fight.unit == unit || fight.unitOther == unit;
+        }
+        
+        return animatable.unit == unit;
+    }
+
     private void CheckQueue()
     {
         if (moveQueue.Count == 0)
@@ -145,6 +180,8 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 
                 break;
         }
+
+        AfterCheckQueue?.Invoke(this, new System.EventArgs());
     }
 
     private void ExecuteMove(IMGAnimatable move)

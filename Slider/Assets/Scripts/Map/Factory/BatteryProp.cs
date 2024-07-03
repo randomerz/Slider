@@ -8,8 +8,8 @@ public class BatteryProp : MonoBehaviour
 
     public bool isDecorativeAndOn;
 
-    private bool isGateEnabled;
-    private bool isDiodeEnabled;
+    public bool IsGateEnabled { get; private set; }
+    public bool IsDiodeEnabled { get; private set; }
 
     [SerializeField] private Sprite offSprite;
     [SerializeField] private Sprite enabledSprite;
@@ -24,15 +24,15 @@ public class BatteryProp : MonoBehaviour
         if (isDecorativeAndOn)
         {
             // SetGateEnabled(true);
-            isGateEnabled = true;
-            isDiodeEnabled = true;
+            IsGateEnabled = true;
+            IsDiodeEnabled = true;
             SetDiodeEnabled(true);
         }
     }
 
     public void SetGateEnabled(bool value)
     {
-        if (value && !isGateEnabled)
+        if (value && !IsGateEnabled)
         {
             foreach (ParticleSystem ps in particlesBurst) 
             {
@@ -40,7 +40,7 @@ public class BatteryProp : MonoBehaviour
             }
         }
 
-        isGateEnabled = value;
+        IsGateEnabled = value;
         UpdateSprite();
     }
 
@@ -53,7 +53,7 @@ public class BatteryProp : MonoBehaviour
                 ps.Play();
             }
 
-            if (!isDiodeEnabled)
+            if (!IsDiodeEnabled)
             {
                 foreach (ParticleSystem ps in particlesBurst) 
                 {
@@ -69,17 +69,17 @@ public class BatteryProp : MonoBehaviour
             }
         }
 
-        isDiodeEnabled = value;
+        IsDiodeEnabled = value;
         UpdateSprite();
     }
 
     public void UpdateSprite()
     {
-        if (isDiodeEnabled)
+        if (IsDiodeEnabled)
         {
             spriteRenderer.sprite = poweredSprite;
         }
-        else if (isGateEnabled)
+        else if (IsGateEnabled)
         {
             spriteRenderer.sprite = enabledSprite;
         }

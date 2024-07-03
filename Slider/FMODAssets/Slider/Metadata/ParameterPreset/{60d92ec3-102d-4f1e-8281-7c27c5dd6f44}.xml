@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{60d92ec3-102d-4f1e-8281-7c27c5dd6f44}">
+		<property name="name">
+			<value>AmbienceDistToWaterWheel</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{8ee289e8-f2a7-4858-83cf-eb1b3e58f821}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{8ee289e8-f2a7-4858-83cf-eb1b3e58f821}">
+		<property name="maximum">
+			<value>15</value>
+		</property>
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>15</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

@@ -29,6 +29,7 @@ public class Portal : MonoBehaviour
     public class OnTimeChangeArgs : System.EventArgs
     {
         public bool fromPast;
+        public bool betweenAreas;
     }
 
     [System.Serializable]
@@ -69,7 +70,10 @@ public class Portal : MonoBehaviour
     {
         AudioManager.Play("Portal");
         Player.SetPosition(otherPortal.spawnPoint.position);
-        OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = portalEnum is PortalEnum.MAGITECH_PAST });
+        OnTimeChange?.Invoke(this, new OnTimeChangeArgs { 
+            fromPast = portalEnum == PortalEnum.MAGITECH_PAST,
+            betweenAreas = portalEnum == PortalEnum.MAGITECH_TO_DESERT || portalEnum == PortalEnum.DESERT_TO_MAGITECH
+        });
         isTeleporting = false;
         UIEffects.FadeFromBlack(alpha:0.5f);
     }

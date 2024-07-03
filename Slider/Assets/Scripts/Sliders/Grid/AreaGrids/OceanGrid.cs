@@ -272,7 +272,8 @@ public class OceanGrid : SGrid
 
     private bool IsFinalPuzzleMatching()
     {
-        return CheckGrid.contains(GetGridString(), "[^128]12_[^128]{2}8_[^128]{3}");
+        // return CheckGrid.contains(GetGridString(), "[^128]12_[^128]{2}8_[^128]{3}");
+        return CheckGrid.contains(GetGridString(), ".12_..8_...");
     }
 
     public bool GetCheckCompletion()
@@ -335,19 +336,44 @@ public class OceanGrid : SGrid
             {
                 char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == '*')
+
+                int abid = artifactButton.islandId;
+                bool isLand = landTiles.Contains(abid);
+                if (!isLand)
                 {
-                    int abid = artifactButton.islandId;
-                    bool isLand = landTiles.Contains(abid);
-                    UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
-                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(isLand);
+                    // Ocean tiles should never be highlighted
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, tids == '*');
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(false);
                 }
                 else
                 {
-                    int tid = Converter.CharToInt(tids);
-                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
-                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(artifactButton.islandId != tid);
+                    // Land tiles will be highlighted if they are in the wrong spot
+                    bool isCorrectSpot;
+                    if (tids == '*')
+                    {
+                        isCorrectSpot = false;
+                    }
+                    else
+                    {
+                        int tid = Converter.CharToInt(tids);
+                        isCorrectSpot = artifactButton.islandId == tid;
+                    }
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, isCorrectSpot);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(!isCorrectSpot);
                 }
+                // if (tids == '*')
+                // {
+                //     int abid = artifactButton.islandId;
+                //     bool isLand = landTiles.Contains(abid);
+                //     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
+                //     UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(isLand);
+                // }
+                // else
+                // {
+                //     int tid = Converter.CharToInt(tids);
+                //     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
+                //     UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(artifactButton.islandId != tid);
+                // }
             }
         }
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class ChadJump : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class ChadJump : MonoBehaviour
     [SerializeField] private SpriteRenderer npcRenderer;
     [SerializeField] private Animator npcAnimator;
     [SerializeField] private Collider2D npcCollider; // non-trigger collider
-    [SerializeField] private Item flashlightItem;
+    [SerializeField] [FormerlySerializedAs("flashlightItem")] private Item artifactItem;
     [SerializeField] private int islandId;
 
     [SerializeField] private Transform startTransform;
@@ -37,7 +38,14 @@ public class ChadJump : MonoBehaviour
     void Awake()
     {
         // VillageGrid.Start() want to overwrite this to be true in some cases, so we put this in awake
-        flashlightItem?.SetCollider(false);
+        if (SGrid.Current is VillageGrid)
+        {
+            artifactItem.SetCollider(PlayerInventory.Contains("Slider 3", Area.Caves));
+        }
+        else if (artifactItem != null)
+        {
+            artifactItem.SetCollider(false);
+        }
     }
 
     private void OnEnable()
@@ -148,11 +156,11 @@ public class ChadJump : MonoBehaviour
         AudioManager.Play("Hurt");
         npcRenderer.sortingOrder = 0;
 
-        if (flashlightItem != null)
+        if (artifactItem != null)
         {
-            flashlightItem.transform.parent = SGrid.Current.GetStile(islandId).transform;
-            flashlightItem.DropItem(transform.position + (Vector3.right * 1f), callback: FinishFall);
-            flashlightItem.SetCollider(false);
+            artifactItem.transform.parent = SGrid.Current.GetStile(islandId).transform;
+            artifactItem.DropItem(transform.position + (Vector3.right * 1f), callback: FinishFall);
+            artifactItem.SetCollider(false);
         }
     }
 
@@ -171,10 +179,10 @@ public class ChadJump : MonoBehaviour
     {
         npcCollider.enabled = true;
         
-        if (flashlightItem != null)
+        if (artifactItem != null)
         {
-            flashlightItem?.SetCollider(true);
-            flashlightItem.spriteRenderer.sortingOrder = 0;
+            artifactItem?.SetCollider(true);
+            artifactItem.spriteRenderer.sortingOrder = 0;
         }
     }
 
