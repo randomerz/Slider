@@ -218,6 +218,9 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
         AudioManager.Play("Puzzle Complete");
 
+        UIArtifactWorldMap.SetAreaStatus(Area.Military, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(1, true);
+
         SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
         GiveAchievements();
     }
