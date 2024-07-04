@@ -147,6 +147,7 @@ public class SGridAnimator : MonoBehaviour
             // Wait a frame so that wires triggers can connect more consistently
             stile.SetMovingPosition(moveCoords.startLoc);
             yield return null;
+            yield return null;
             // This is because of the move between checks
             stile.SetMovingDirection(moveDir);
         }
