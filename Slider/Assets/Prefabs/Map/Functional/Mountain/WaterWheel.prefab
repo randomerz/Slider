@@ -319,7 +319,9 @@ MonoBehaviour:
   - {fileID: 2767824956752790972}
   - {fileID: 658582519216343112}
   - {fileID: 4423902021011887979}
+  waterWheelAmbienceSource: {fileID: 4629114393443578246}
   fullSpeedGridRegex: (3._..|.._3.)_.._..
+  usedTools: 0
 --- !u!1 &4109343674284568463
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +359,87 @@ Transform:
   - {fileID: 368427714139908093}
   m_Father: {fileID: 5781203056922211823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4629114393443578246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8575390734626161692}
+  m_Layer: 0
+  m_Name: Waterwheel Ambience Noise
+  m_TagString: Untagged
+  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8575390734626161692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629114393443578246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2692003892740045738}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5159789115942422929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7154704952014306533}
+  - component: {fileID: 5060030504618007283}
+  m_Layer: 7
+  m_Name: Waterwheel Ambience
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7154704952014306533
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159789115942422929}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6.25, y: -7.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2692003892740045738}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5060030504618007283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159789115942422929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66583c0850c76494bb2bd00d1d3b27ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambienceName: Waterwheel Ambience
+  ambienceGlobalParameterName: AmbienceDistToWaterWheel
+  ambienceGlobalParameterDefaultValue: 15
+  distanceNodes:
+  - {fileID: 8575390734626161692}
+  isEnabled: 1
 --- !u!1 &5189956642355478416
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +743,9 @@ Transform:
   m_LocalPosition: {x: 2.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7154704952014306533}
+  - {fileID: 8575390734626161692}
   m_Father: {fileID: 5781203056922211823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8820927354405395651

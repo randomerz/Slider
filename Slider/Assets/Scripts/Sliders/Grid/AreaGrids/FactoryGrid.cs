@@ -23,11 +23,17 @@ public class FactoryGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Factory");
+        AudioManager.PlayAmbience("Conveyor Ambience");
 
         if (PlayerInPast)
         {
             Player.SetIsInHouse(true);
         }
+    }
+
+    private void OnDestroy()
+    {
+        AudioManager.StopAmbience("Laser Ambience");
     }
 
     private void Update()
