@@ -33,7 +33,7 @@ public class FactoryGrid : SGrid
 
     private void OnDestroy()
     {
-        AudioManager.StopAmbience("Laser Ambience");
+        AudioManager.StopAmbience("Conveyor Ambience");
     }
 
     private void Update()
