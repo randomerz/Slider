@@ -460,6 +460,7 @@ public class MagiTechGrid : SGrid
         {
             SaveSystem.Current.SetBool("magitechBridgeFixed", true);
             AudioManager.Play("Puzzle Complete");
+            AudioManager.Play("MagicChimes2");
         }
         foreach(GameObject g in bridgeObjects)
         {

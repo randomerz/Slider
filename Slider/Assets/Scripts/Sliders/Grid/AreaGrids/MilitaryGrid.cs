@@ -119,6 +119,9 @@ public class MilitaryGrid : SGrid
         MilitaryWaveManager.Reset();
         MilitaryResetChecker.ResetCounters();
 
+        // In case they lost on the final wave!
+        SGrid.Current.CheckCompletion = false;
+
         SaveSystem.SaveGame("Finished Restarting Military Sim");
     }
 

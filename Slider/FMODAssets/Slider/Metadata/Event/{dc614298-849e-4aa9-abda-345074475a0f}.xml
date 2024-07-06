@@ -5,7 +5,7 @@
 			<value>Desync Tear Open</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<relationship name="folder">
 			<destination>{5a9b464a-71b9-49fc-96f7-60e8043cb807}</destination>
@@ -235,7 +235,6 @@
 	<object class="MixerBusEffectChain" id="{fe2d3aaf-2f74-4c29-a844-9385493ea146}">
 		<relationship name="effects">
 			<destination>{2918eab9-3ced-46bb-9e64-960f834eb394}</destination>
-			<destination>{6944e57b-2825-41ac-90f7-fd3f4f42efa4}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{786fb802-c55b-43d5-a809-b4c3e841a894}" />
@@ -318,7 +317,6 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{2918eab9-3ced-46bb-9e64-960f834eb394}" />
-	<object class="SpatialiserEffect" id="{6944e57b-2825-41ac-90f7-fd3f4f42efa4}" />
 	<object class="AutomationPoint" id="{11ddaa99-47f5-4763-8ad7-8e1ef2e69a41}">
 		<property name="position">
 			<value>0.02</value>

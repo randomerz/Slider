@@ -28,10 +28,6 @@ public class ConventionModeManager : MonoBehaviour
 
     private void Awake()
     {
-        while(true)
-        {
-            Debug.Log($"lol");;
-        }
         if (instance == null) 
         {
             instance = this;
