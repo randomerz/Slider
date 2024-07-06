@@ -17,7 +17,7 @@ public class UIArtifactInventory : MonoBehaviour
     public TextMeshProUGUI inventoryText;
 
     // TODO: Localize
-    private const string LEGENDARY_CHEESEBURGER = "Legendary Breadge";
+    private const string LEGENDARY_CHEESEBURGER = "Legendary Burger";
 
     [Header("Special Collectible Counters")] // could be refactored
     public ArtifactInventoryCollectible oilCollectible;
