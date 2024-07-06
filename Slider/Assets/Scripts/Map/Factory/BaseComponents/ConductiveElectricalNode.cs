@@ -107,7 +107,10 @@ public class ConductiveElectricalNode : ElectricalNode
             {
                 if (AddConnection(otherNode))
                 {
-                    AudioManager.Play("New Electricity Connection", transform);
+                    if (Powered)
+                    {
+                        AudioManager.Play("New Electricity Connection", transform);
+                    }
                     onAddNode?.Invoke(this, new NodeEventArgs(this, otherNode));
                 }
             }
