@@ -117,7 +117,11 @@ public class SGridAnimator : MonoBehaviour
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
                                 Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
 
-        stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
+        Vector2 moveDir = GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc);
+        if (move is not SMoveConveyor)
+        {
+            stile.SetMovingDirection(moveDir);
+        }
         
         if (isPlayerOnStile)
         {
@@ -138,13 +142,23 @@ public class SGridAnimator : MonoBehaviour
         EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, currMoveDuration, playSound);
         stile.SetGridPosition(moveCoords.endLoc);
 
+        if (move is SMoveConveyor)
+        {
+            // Wait a frame so that wires triggers can connect more consistently
+            stile.SetMovingPosition(moveCoords.startLoc);
+            yield return null;
+            yield return null;
+            // This is because of the move between checks
+            stile.SetMovingDirection(moveDir);
+        }
+
         float t = 0;
         while (t < currMoveDuration)
         {
             t += Time.deltaTime;
             
             Vector2 pos = moveCoords.startLoc;
-            if(animate)
+            if (animate)
             {
                 float s = movementCurve.Evaluate(Mathf.Min(t / currMoveDuration, 1));
                 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);

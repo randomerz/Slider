@@ -147,12 +147,16 @@ PrefabInstance:
     - target: {fileID: 6366887585970540482, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 1531495813, guid: 1336baa4463a6bb4a967206ca9ffc2f6, type: 3}
+      objectReference: {fileID: 2009622930, guid: 18c5cdbdacd67814dbc24b2809b6f1df, type: 3}
     - target: {fileID: 6366887585970540482, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
       propertyPath: m_SortingOrder
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6745694355446039697, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6928668515798072430, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}

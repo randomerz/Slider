@@ -25,6 +25,7 @@ public class MilitaryUnitFlag : Item
     private void OnDisable()
     {
         MilitaryTurnAnimator.AfterCheckQueue -= DoFightChecks;
+        MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
     }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
@@ -171,6 +172,7 @@ public class MilitaryUnitFlag : Item
         }
 
         // Reset the flag
+        MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
         resetter.ResetItem(onFinish: null);
     }
 

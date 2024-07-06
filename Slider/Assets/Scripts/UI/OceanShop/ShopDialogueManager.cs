@@ -63,6 +63,7 @@ public class ShopDialogueManager : MonoBehaviour
             ShopDialogueCode.DefaultMain, new[]
             {
                 ("Welcome back sailor!", null as string),
+                ("Welcome to the Wooden Wheel!", null as string),
                 ("Find anything interesting today?", null as string),
                 ("Looks like a good day to set sail!", null as string),
                 ("Buccaneer Bob, at your service.", null as string),
@@ -968,12 +969,12 @@ public class ShopDialogueManager : MonoBehaviour
                     dialogueTable[ShopDialogueCode.OceanComplete][0],
                     TKSprite.Normal,
                     () => {
-                        // He disappear
                         SetDialogue(new ShopDialogue(
                     null,
                     dialogueTable[ShopDialogueCode.OceanComplete][1],
-                    TKSprite.None,
+                    TKSprite.Normal,
                     () => {
+                        // He disappear
                         dialogueText.fontStyle = FontStyles.Italic;
             
                         SetDialogue(new ShopDialogue(

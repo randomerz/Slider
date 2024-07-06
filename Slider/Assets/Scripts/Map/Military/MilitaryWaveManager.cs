@@ -86,10 +86,23 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     private void SpawnWave(int index)
     {
-        if (index == 2)
+        if (index == 0)
+        {
+            MilitaryMusicController.SetMilitaryLevel(1);
+        }
+        else if (index == 2)
         {
             // Let's speed things up!
             MilitaryTurnAnimator.SetBaseAnimationSpeedToMedium();
+            MilitaryMusicController.SetMilitaryLevel(2);
+        }
+        // else if (index == 3)
+        // {
+        //     MilitaryMusicController.SetMilitaryLevel(2);
+        // }
+        else if (index == 5)
+        {
+            MilitaryMusicController.SetMilitaryLevel(3);
         }
 
         if (index >= waveSizes.Length)
@@ -205,6 +218,9 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
         AudioManager.Play("Puzzle Complete");
 
+        UIArtifactWorldMap.SetAreaStatus(Area.Military, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(1, true);
+
         SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
         GiveAchievements();
     }
@@ -212,7 +228,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     private void GiveAchievements()
     {
         AchievementManager.SetAchievementStat("completedMilitary", 1);
-        if(MilitaryResetChecker._instance.NumUnspawnedAlliesActive > 0)
+        if (MilitaryResetChecker._instance.NumUnspawnedAlliesActive > 0)
         {
             AchievementManager.SetAchievementStat("militaryExtraAlly", 1);
         }

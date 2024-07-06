@@ -41,6 +41,7 @@ public class Minecart : Item, ISavable
     public LayerMask collidingMask;
 
     public STile currentSTile;
+    public DistanceBasedAmbience minecartAmbience;
 
     private bool dropOnNextMove = false;
 
@@ -124,10 +125,18 @@ public class Minecart : Item, ISavable
 
         if (AllMovingConds())
         {
+            if(!minecartAmbience.IsEnabled)
+            {
+                minecartAmbience.SetParameterEnabled(true);
+            }
             Move();
         }
-        else if (animator != null)
+        else
         {
+            if(minecartAmbience.IsEnabled)
+            {
+                minecartAmbience.SetParameterEnabled(false);
+            }
             animator.SetSpeed(0);
         }
     }
@@ -257,9 +266,19 @@ public class Minecart : Item, ISavable
         {
             bool snap;
             Vector3 loc = GetDropLocation(dropLocation, railmap, out snap);
-            StartCoroutine(AnimateDrop(loc, callback));
             if(snap)
-                SnapToRail(railmap.WorldToCell(dropLocation));
+            {
+                Action dropCallback = () => {
+                    SnapToRail(railmap.WorldToCell(dropLocation));
+                    SnapCallback();
+                    callback();
+                };
+                StartCoroutine(AnimateDrop(loc, dropCallback));
+            }
+            else
+            {
+                StartCoroutine(AnimateDrop(loc, callback));
+            }
         }
         else if(railManager.otherRMOnTile != null 
                 && railManager.otherRMOnTile.railLocations.Contains(railmap.WorldToCell(dropLocation)))
@@ -268,7 +287,9 @@ public class Minecart : Item, ISavable
             DropMinecart(railManager.railMap, railManager.otherRMOnTile, dropLocation, callback, count + 1);
         }
         else
+        {
             StartCoroutine(AnimateDrop(dropLocation, callback));
+        }
     }
     
     private Vector3 GetDropLocation(Vector3 dropLocation, Tilemap railmap, out bool snap)
@@ -282,6 +303,12 @@ public class Minecart : Item, ISavable
             return railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet;
         }
         return dropLocation;
+    }
+
+    private void SnapCallback()
+    {
+        AudioManager.Play("Hat Click");
+        ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position);
     }
 
     public override void OnEquip()

@@ -31,7 +31,8 @@ public class MountainGrid : SGrid
     private bool crystalDelivered = false;
     private float musicValue = 0;
 
-    public override void Init() {
+    public override void Init() 
+    {
         InitArea(Area.Mountain);
         base.Init();
     }
@@ -39,10 +40,13 @@ public class MountainGrid : SGrid
     protected override void Start()
     {
         base.Start();
+
         playerOnBottom = Player._instance.transform.position.y < 63f;
         musicValue = playerOnBottom ? 1 : 0;
         AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
         AudioManager.PlayMusic("Mountain");
+
+        SaveSystem.Current.SetBool("caveDoor", true);
     }
     
     private void OnEnable()     

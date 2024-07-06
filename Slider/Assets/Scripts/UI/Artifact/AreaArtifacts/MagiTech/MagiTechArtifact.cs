@@ -38,6 +38,8 @@ public class MagiTechArtifact : UIArtifact
     public Sprite pastBackgroundSprite;
     public Sprite emptyDesyncSprite;
 
+    private const string HAS_DONE_DESYNC_SAVE_STRING = "MagiTechHasDoneADesync";
+
 
     protected override void OnEnable()
     {
@@ -90,6 +92,7 @@ public class MagiTechArtifact : UIArtifact
             // UpdateButtonPositions();
             if (desyncLocation.x != desyncedButton.x || desyncLocation.y != desyncedButton.y)
             {
+                SaveSystem.Current.SetBool(HAS_DONE_DESYNC_SAVE_STRING, true);
                 if (!isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = true;

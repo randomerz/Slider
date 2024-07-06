@@ -613,6 +613,26 @@ MonoBehaviour:
       Path: event:/SFX/Factory/Conveyor
     canPause: 1
     dopplerScale: 0
+  - name: New Electricity Connection
+    fmodEvent:
+      Guid:
+        Data1: 356693765
+        Data2: 1082072421
+        Data3: -1406706810
+        Data4: 1566924189
+      Path: event:/SFX/Factory/New Electricity Connection
+    canPause: 1
+    dopplerScale: 1
+  - name: Timed Gate Blip
+    fmodEvent:
+      Guid:
+        Data1: -1050060160
+        Data2: 1301476572
+        Data3: -229267575
+        Data4: -2034114845
+      Path: event:/SFX/Factory/Timed Gate Blip
+    canPause: 1
+    dopplerScale: 1
   - name: FactoryTimedGateProgress1
     fmodEvent:
       Guid:
@@ -673,6 +693,46 @@ MonoBehaviour:
       Path: event:/SFX/Factory/FactoryTimedGateProgress6
     canPause: 1
     dopplerScale: 0
+  - name: Door Close
+    fmodEvent:
+      Guid:
+        Data1: -1300320525
+        Data2: 1111566356
+        Data3: 1432835515
+        Data4: 656102306
+      Path: event:/SFX/Factory/Door Close
+    canPause: 1
+    dopplerScale: 1
+  - name: Door Open
+    fmodEvent:
+      Guid:
+        Data1: -2031074387
+        Data2: 1241479446
+        Data3: 1143661468
+        Data4: -683558658
+      Path: event:/SFX/Factory/Door Open
+    canPause: 1
+    dopplerScale: 1
+  - name: Gate Close
+    fmodEvent:
+      Guid:
+        Data1: 1133531243
+        Data2: 1260610556
+        Data3: -2030582887
+        Data4: 121544536
+      Path: event:/SFX/Magic/Gate Close
+    canPause: 1
+    dopplerScale: 1
+  - name: Gate Open
+    fmodEvent:
+      Guid:
+        Data1: -930386557
+        Data2: 1161988989
+        Data3: -615845453
+        Data4: -1854336289
+      Path: event:/SFX/Magic/Gate Open
+    canPause: 1
+    dopplerScale: 1
   - name: Portal
     fmodEvent:
       Guid:
@@ -712,6 +772,16 @@ MonoBehaviour:
         Data4: 1519040509
       Path: event:/SFX/Magic/Laser Start
     canPause: 1
+    dopplerScale: 1
+  - name: MagiTech Blast Off
+    fmodEvent:
+      Guid:
+        Data1: 1220219775
+        Data2: 1123818392
+        Data3: 420059827
+        Data4: 1703775011
+      Path: event:/SFX/Music One Shots/MagiTech Blast Off
+    canPause: 0
     dopplerScale: 1
   - name: Footstep Concrete
     fmodEvent:
@@ -979,6 +1049,15 @@ MonoBehaviour:
         Data3: 1150475672
         Data4: 1755165757
       Path: event:/Ambience/Campfire
+    emitter: {fileID: 0}
+  - name: Conveyor Ambience
+    fmodEvent:
+      Guid:
+        Data1: -1473993799
+        Data2: 1336296597
+        Data3: 1525560736
+        Data4: -2101295235
+      Path: event:/Ambience/Conveyor Ambience
     emitter: {fileID: 0}
   - name: Electricity Ambience
     fmodEvent:

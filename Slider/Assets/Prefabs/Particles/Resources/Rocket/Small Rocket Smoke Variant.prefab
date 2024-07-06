@@ -10,11 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2222418551398285490, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
       propertyPath: m_SortingLayer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2222418551398285490, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 529684183
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2222418551398285490, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -82,7 +78,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 328
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime2
       value: 13107
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime3
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key2.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.m_ColorSpace
@@ -91,6 +103,10 @@ PrefabInstance:
     - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
       propertyPath: ClampVelocityModule.multiplyDragByParticleSize
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222418551398285493, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.m_NumAlphaKeys
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2222418551398285495, guid: 23ddf445c07b4dd46bd8d55843723d5c, type: 3}
       propertyPath: m_LocalPosition.x

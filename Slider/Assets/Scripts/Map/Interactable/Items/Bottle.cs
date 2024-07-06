@@ -34,4 +34,14 @@ public class Bottle : MonoBehaviour
         spriteRenderer.sprite = emptyBottleSprite;
         playerConditionals.DisableConditionals();
     }
+
+    public void SpawnBottle()
+    {
+        if(!gameObject.activeSelf)
+        {
+            AudioManager.Play("Puzzle Complete");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
+        }
+        gameObject.SetActive(true);
+    }
 }

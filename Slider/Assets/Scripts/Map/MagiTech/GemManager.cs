@@ -290,7 +290,7 @@ public class GemManager : MonoBehaviour, ISavable
                         specific = "I heard the Village Gem was spotted near the laser.";
                         break;
                     case Area.Caves:
-                        specific = "You don't have the Cave Gem yet? It was on one of the large rocks in the past.";
+                        specific = "The Cave Gem was a part of some Desync experiments in the past.";
                         break;
                     case Area.Ocean:
                         specific = "The Ocean gem..? Uh... something is wrong.";
@@ -308,10 +308,10 @@ public class GemManager : MonoBehaviour, ISavable
                         specific = "The Mountain gem should be in the museum.";
                         break;
                     case Area.Military:
-                        specific = "I heard the Military gem was spotted behind one of the rocks in the past.";
+                        specific = "The Military gem was spotted behind one of the rocks in the past, towards the west.";
                         break;
                     case Area.MagiTech:
-                        specific = "The magitech gem... is on the tile I haven't given you! Something went wrong!";
+                        specific = "The MagiTech gem... is on the tile I haven't given you! Something went wrong!";
                         break;
                 };
             }

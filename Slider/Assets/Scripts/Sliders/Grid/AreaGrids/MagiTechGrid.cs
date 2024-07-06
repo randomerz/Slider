@@ -63,6 +63,7 @@ public class MagiTechGrid : SGrid
     private ContactFilter2D contactFilter;
 
     public List<GameObject> bridgeObjects;
+    public List<Transform> bridgeSmokeTransforms;
     public List<GameObject> bridgeFenceObjects;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
@@ -460,12 +461,17 @@ public class MagiTechGrid : SGrid
         {
             SaveSystem.Current.SetBool("magitechBridgeFixed", true);
             AudioManager.Play("Puzzle Complete");
+            AudioManager.Play("MagicChimes2");
+            foreach (Transform t in bridgeSmokeTransforms)
+            {
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, t.transform.position);
+            }
         }
-        foreach(GameObject g in bridgeObjects)
+        foreach (GameObject g in bridgeObjects)
         {
             g.SetActive(false);
         }
-        foreach(GameObject g in bridgeFenceObjects)
+        foreach (GameObject g in bridgeFenceObjects)
         {
             g.SetActive(true);
         }
