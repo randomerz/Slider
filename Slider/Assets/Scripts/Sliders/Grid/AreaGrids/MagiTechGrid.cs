@@ -302,9 +302,9 @@ public class MagiTechGrid : SGrid
         return transform.position.x > 67;
     }
 
-    public override void LoadRealigningGrid()
+    public override void LoadRealigningGrid(bool setRealigningGridToNull=true)
     {
-        base.LoadRealigningGrid();
+        base.LoadRealigningGrid(setRealigningGridToNull);
 
         EndDesync();
     }
