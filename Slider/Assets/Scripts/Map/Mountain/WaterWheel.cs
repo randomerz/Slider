@@ -24,6 +24,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     public Lava heaterLava;
     public PipeLiquid lavaPipe;
     public Animator lavaExtractorAnimator;
+    public Meltable bigIce;
 
     public List<GameObject> heaterLavaGO;
 
@@ -76,6 +77,7 @@ public class WaterWheel : MonoBehaviour, ISavable
             go.SetActive(true);
         cog1.AddLava(heaterLava);
         cog2.AddLava(heaterLava);
+        bigIce.AddLava(heaterLava);
         cog1.SetRefreezeOnTop(false);
         cog2.SetRefreezeOnTop(false);
     }

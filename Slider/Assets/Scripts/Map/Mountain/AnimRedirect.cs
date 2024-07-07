@@ -14,6 +14,7 @@ public class AnimRedirect : MonoBehaviour
 
     public void OnEndHeaterFill()
     {
+        if(waterWheel != null)
         waterWheel.OnFillHeaterEnd();
     }
 
