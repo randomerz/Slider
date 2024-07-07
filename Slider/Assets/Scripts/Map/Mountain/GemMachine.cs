@@ -140,6 +140,17 @@ public class GemMachine : MonoBehaviour, ISavable
         animator.Play("AbsorbGem");
         minecart.UpdateState(MinecartState.Empty);
         //TODO: Play absorb crystal sound
+
+        if(numGems == 3)
+        {
+            FinishCrystalLoopPuzzle();
+        }
+    }
+
+    private void FinishCrystalLoopPuzzle()
+    {
+        AudioManager.Play("Puzzle Complete");
+        gemMachineState = GemMachineState.FULLY_GOOED;
     }
 
     public void ResetGems(){
@@ -166,6 +177,7 @@ public class GemMachine : MonoBehaviour, ISavable
 
 
     public void Save(){
+        ResetGems(); //You have to do the loop 
         SaveSystem.Current.SetInt("mountainGemMachineNumGems", numGems);        
         SaveSystem.Current.SetInt("mountainGemMachinePhase", (int)gemMachineState);
     }

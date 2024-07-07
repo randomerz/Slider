@@ -127,6 +127,7 @@ public class Minecart : Item, ISavable
         {
             if(!minecartAmbience.IsEnabled)
             {
+                print("enabling minecart ambience");
                 minecartAmbience.SetParameterEnabled(true);
             }
             Move();
@@ -135,6 +136,7 @@ public class Minecart : Item, ISavable
         {
             if(minecartAmbience.IsEnabled)
             {
+                print("disabling minecart ambience");
                 minecartAmbience.SetParameterEnabled(false);
             }
             animator.SetSpeed(0);
@@ -674,6 +676,7 @@ public class Minecart : Item, ISavable
         //magic number based on enum order
         int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
+        AudioManager.PickSound("Minecart Corner").WithAttachmentToTransform(transform).AndPlay();
     }
     
     private void PlayStraightAnimation()
