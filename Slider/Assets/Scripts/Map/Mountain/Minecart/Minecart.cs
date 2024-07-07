@@ -127,7 +127,6 @@ public class Minecart : Item, ISavable
         {
             if(!minecartAmbience.IsEnabled)
             {
-                print("enabling minecart ambience");
                 minecartAmbience.SetParameterEnabled(true);
             }
             Move();
@@ -136,7 +135,6 @@ public class Minecart : Item, ISavable
         {
             if(minecartAmbience.IsEnabled)
             {
-                print("disabling minecart ambience");
                 minecartAmbience.SetParameterEnabled(false);
             }
             animator.SetSpeed(0);
