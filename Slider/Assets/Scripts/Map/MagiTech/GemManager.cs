@@ -75,7 +75,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
             { GemStrings.SpecificVillage, "I heard the Village Gem was spotted near the laser." },
             {
                 GemStrings.SpecificCaves,
-                "You don't have the Cave Gem yet? It was on one of the large rocks in the past."
+                "The Cave Gem was a part of some Desync experiments in the past."
             },
             { GemStrings.SpecificOcean, "The Ocean gem..? Uh... something is wrong." },
             { GemStrings.SpecificJungle, "The Jungle gem was owned by the same wizard who made this recipe!" },
@@ -83,11 +83,11 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
             { GemStrings.SpecificFactory, "The Factory gem should be in the museum." },
             { GemStrings.SpecificMountain, "The Mountain gem should be in the museum." },
             {
-                GemStrings.SpecificMilitary, "I heard the Military gem was spotted behind one of the rocks in the past."
+                GemStrings.SpecificMilitary, "The Military gem was spotted behind one of the rocks in the past, towards the west."
             },
             {
                 GemStrings.SpecificMagitech,
-                "The magitech gem... is on the tile I haven't given you! Something went wrong!"
+                "The MagiTech gem... is on the tile I haven't given you! Something went wrong!"
             },
             { GemStrings.CombinedBeginning, "Hmmm... we're missing multiple gems. Can you get me: " },
             { GemStrings.CombinedEnding, "?" },

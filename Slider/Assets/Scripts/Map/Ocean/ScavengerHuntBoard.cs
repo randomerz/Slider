@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Localization;
 using UnityEngine;
 
+[Obsolete]
 public class ScavengerHuntBoard : MonoBehaviour, IDialogueTableProvider
 {
     private List<LocalizationPair> available_tasks = new();

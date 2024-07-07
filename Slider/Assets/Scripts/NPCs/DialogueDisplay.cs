@@ -117,10 +117,10 @@ public class DialogueDisplay : MonoBehaviour
         highContrastBG.SetActive(highContrastMode);
     }
 
-    public void SetFont(TMP_FontAsset font, float scale, bool clearWordSpacing)
+    public void SetFont(TMP_FontAsset font, float scale, bool clearWordSpacing, FontWeight? weight = null)
     {
-        textTyperText.SetFont(font, scale);
-        textTyperBG.SetFont(font, scale);
+        textTyperText.SetFont(font, scale, weight);
+        textTyperBG.SetFont(font, scale, weight);
 
         if (clearWordSpacing)
         {

@@ -136,6 +136,7 @@ public class FactoryArtifact : UIArtifact
         {
             if (inPast)
             {
+                b.Init(); // In case this is called before ArtifactTileButton.Awake()
                 b.GetComponent<ArtifactTBPluginPast>().UsePastSprite();
                 b.RestoreDefaultEmptySprite();
             } 

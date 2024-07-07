@@ -307,13 +307,14 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
     
     // public List<string> MainShopDialogue => mainShopDialgoue;
     private static string[] mainShopDialgoue = {
-        "Welcome back sailor!", 
+        "Welcome back sailor!",
+        "Welcome to the Wooden Wheel!",
         "Find anything interesting today?",
         "Looks like a good day to set sail!",
         "Buccaneer Bob, at your service.",
         "What can I do for you today?",
-        "Ahoy there!"
-        };
+        "Ahoy there!",
+    };
 
     public enum TKSprite { // tavernkeep sprite
         Normal,
@@ -918,12 +919,12 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
                     this.GetLocalized(ShopDialogueCode.OceanComplete, 0),
                     TKSprite.Normal,
                     () => {
-                        // He disappear
                         SetDialogue(new ShopDialogue(
                     null,
                     this.GetLocalized(ShopDialogueCode.OceanComplete, 1),
-                    TKSprite.None,
+                    TKSprite.Normal,
                     () => {
+                        // He disappear
                         dialogueText.fontStyle = FontStyles.Italic;
             
                         SetDialogue(new ShopDialogue(

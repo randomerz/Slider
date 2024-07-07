@@ -5,7 +5,7 @@
 			<value>Electricity Ambience</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<relationship name="folder">
 			<destination>{2b208f73-b9a8-4208-94c1-fe842ae3cd35}</destination>
@@ -23,7 +23,6 @@
 			<destination>{c66ea344-ea65-4f90-b88a-9cb34a2fb5bc}</destination>
 		</relationship>
 		<relationship name="markerTracks">
-			<destination>{880fcdce-45dc-47a9-8c8e-ef60e5574ae5}</destination>
 			<destination>{15a4c9e2-6361-4c85-9117-ce85fb29130b}</destination>
 		</relationship>
 		<relationship name="groupTracks">
@@ -62,7 +61,6 @@
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{c66ea344-ea65-4f90-b88a-9cb34a2fb5bc}" />
-	<object class="MarkerTrack" id="{880fcdce-45dc-47a9-8c8e-ef60e5574ae5}" />
 	<object class="MarkerTrack" id="{15a4c9e2-6361-4c85-9117-ce85fb29130b}" />
 	<object class="GroupTrack" id="{92c42e2f-ddce-4178-8910-b72da25659a3}">
 		<relationship name="automationTracks">
@@ -81,8 +79,6 @@
 		</relationship>
 		<relationship name="markers">
 			<destination>{4e915eed-58eb-4305-b233-258fb1682d09}</destination>
-			<destination>{3b45b75c-4f93-4dce-a417-c0fe0fcedccd}</destination>
-			<destination>{27d7332d-7af1-4dcc-910f-9e7377e0200d}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{e0141e1d-ec6a-4660-9ee3-115847a2e0d1}">
@@ -154,44 +150,9 @@
 			<destination>{15a4c9e2-6361-4c85-9117-ce85fb29130b}</destination>
 		</relationship>
 	</object>
-	<object class="TransitionRegion" id="{3b45b75c-4f93-4dce-a417-c0fe0fcedccd}">
-		<property name="position">
-			<value>0.20000000000000001</value>
-		</property>
-		<property name="length">
-			<value>3.1499999999999999</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{660fc566-8227-4d67-9a28-a746ef426525}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{880fcdce-45dc-47a9-8c8e-ef60e5574ae5}</destination>
-		</relationship>
-		<relationship name="destination">
-			<destination>{27d7332d-7af1-4dcc-910f-9e7377e0200d}</destination>
-		</relationship>
-		<relationship name="triggerConditions">
-			<destination>{daed0cce-dc07-4867-a67b-160e54872e20}</destination>
-		</relationship>
-	</object>
-	<object class="NamedMarker" id="{27d7332d-7af1-4dcc-910f-9e7377e0200d}">
-		<property name="position">
-			<value>3.3500000000000001</value>
-		</property>
-		<property name="name">
-			<value>End</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{660fc566-8227-4d67-9a28-a746ef426525}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{880fcdce-45dc-47a9-8c8e-ef60e5574ae5}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusEffectChain" id="{75980cfe-bea5-4dbe-9b97-3a5b64d6e14a}">
 		<relationship name="effects">
 			<destination>{4f1aa750-5f38-4f32-80fe-cadcf78b4127}</destination>
-			<destination>{f684cea6-0d71-4bd0-8a3a-f0139b8bf4a4}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{61113370-41bf-47e3-a9de-be16cee90666}" />
@@ -211,13 +172,7 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{2883a8c7-8035-4dd3-99bb-5aea5434fac4}" />
-	<object class="EventCondition" id="{daed0cce-dc07-4867-a67b-160e54872e20}">
-		<property name="eventState">
-			<value>1</value>
-		</property>
-	</object>
 	<object class="MixerBusFader" id="{4f1aa750-5f38-4f32-80fe-cadcf78b4127}" />
-	<object class="SpatialiserEffect" id="{f684cea6-0d71-4bd0-8a3a-f0139b8bf4a4}" />
 	<object class="AutomationCurve" id="{68d3e3ea-c2be-4fc7-b8e9-aab8caeb035c}">
 		<relationship name="parameter">
 			<destination>{f85b473b-6424-4885-a0da-c09416a0090a}</destination>
@@ -238,10 +193,10 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-28</value>
+			<value>-11</value>
 		</property>
 		<property name="curveShape">
-			<value>0.226676956</value>
+			<value>0.439570814</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{2ae6fb83-ae82-4400-8564-0ffa0c859a33}">
@@ -249,7 +204,7 @@
 			<value>10</value>
 		</property>
 		<property name="value">
-			<value>-63.9999924</value>
+			<value>-80</value>
 		</property>
 	</object>
 </objects>

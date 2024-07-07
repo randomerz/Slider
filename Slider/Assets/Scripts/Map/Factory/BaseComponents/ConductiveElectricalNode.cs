@@ -9,6 +9,11 @@ public class ConductiveElectricalNode : ElectricalNode
     [SerializeField] private bool isConductiveTerminus;
     [SerializeField] private bool ignoreNotMovingCheck;
 
+    private const string DISTANCE_BASED_ELECTRICITY = "AmbienceDistToElectricity";
+    private static float thisFrameDistToElectricity = float.MaxValue;
+    private static bool thisFrameUpdatedFmod = false;
+    private static bool isPlayingAmbience = false;
+
     public struct NodeEventArgs
     {
         public ConductiveElectricalNode from;
@@ -24,9 +29,49 @@ public class ConductiveElectricalNode : ElectricalNode
     public static event System.EventHandler<NodeEventArgs> onAddNode;
     public static event System.EventHandler<NodeEventArgs> onRemoveNode;
 
-    private new void Awake()
+    protected override void Awake()
     {
         base.Awake();
+
+        thisFrameDistToElectricity = float.MaxValue;
+
+        if (!isPlayingAmbience)
+        {
+            isPlayingAmbience = true;
+            AudioManager.PlayAmbience("Electricity Ambience");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (isPlayingAmbience)
+        {
+            isPlayingAmbience = false;
+            AudioManager.StopAmbience("Electricity Ambience");
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        thisFrameUpdatedFmod = false;
+
+        if ((isConductiveTerminus || isConductiveItem) && Powered)
+        {
+            float distToPlayer = Vector3.Distance(transform.position, Player.GetPosition());
+            thisFrameDistToElectricity = Mathf.Min(distToPlayer, thisFrameDistToElectricity);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!thisFrameUpdatedFmod)
+        {
+            AudioManager.SetGlobalParameter(DISTANCE_BASED_ELECTRICITY, thisFrameDistToElectricity);
+            thisFrameUpdatedFmod = true;
+            thisFrameDistToElectricity = float.MaxValue;
+        }
     }
 
     private void OnValidate()
@@ -62,6 +107,10 @@ public class ConductiveElectricalNode : ElectricalNode
             {
                 if (AddConnection(otherNode))
                 {
+                    if (Powered)
+                    {
+                        AudioManager.Play("New Electricity Connection", transform);
+                    }
                     onAddNode?.Invoke(this, new NodeEventArgs(this, otherNode));
                 }
             }

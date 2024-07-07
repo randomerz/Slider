@@ -16,9 +16,13 @@ public class UIArtifactInventory : MonoBehaviour
 
     public TextMeshProUGUI inventoryText;
 
+    // TODO: Localize
+    private const string LEGENDARY_CHEESEBURGER = "Legendary Burger";
 
     [Header("Special Collectible Counters")] // could be refactored
     public ArtifactInventoryCollectible oilCollectible;
+    public ArtifactInventoryCollectible breadgeCollectible;
+    public Animator breadgeAnimator;
     public TextMeshProUGUI sunglassesCount;
     public TextMeshProUGUI oilCount;
     public TextMeshProUGUI breadgeCount;
@@ -26,13 +30,15 @@ public class UIArtifactInventory : MonoBehaviour
     private void OnEnable() 
     {
         UpdateIcons();
-        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
         {
-            if(!TrySelectLeftmostSelectible())
+            if (!TrySelectLeftmostSelectible())
                 UpdateText("Collection");
         }
         else
+        {
             UpdateText("Collection");
+        }
 
         UpdateCollectibleCounters(this, null);
         PlayerInventory.OnPlayerGetCollectible += UpdateCollectibleCounters;
@@ -67,6 +73,12 @@ public class UIArtifactInventory : MonoBehaviour
 
         scrollCollectible.SetVisible(PlayerInventory.Contains("Scroll of Realigning"));
         scrollScrapCollectible?.SetVisible(!PlayerInventory.Contains("Scroll of Realigning") && PlayerInventory.Contains("Scroll Scrap"));
+
+        if (PlayerInventory.Contains("Legendary Cheese Burger", Area.MagiTech))
+        {
+            breadgeCollectible.displayName = LEGENDARY_CHEESEBURGER;
+            breadgeAnimator.SetBool("isOn", true);
+        }
     }
 
     public void UpdateText(string text)

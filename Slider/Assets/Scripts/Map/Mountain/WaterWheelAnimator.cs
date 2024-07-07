@@ -9,6 +9,7 @@ public class WaterWheelAnimator : MonoBehaviour
     public Animator animatorWorm;
     public Animator animatorGenerator;
     public List<WW_GearAnimator> gearAnimators;
+    public GameObject waterWheelAmbienceSource;
 
     private const float WW_SLOW_SPEED = 0.25f;
     private const float WW_NORMAL_SPEED = 1.0f;
@@ -56,6 +57,8 @@ public class WaterWheelAnimator : MonoBehaviour
             }
             SetAnimationSpeed(currentAnimationSpeed);
         }
+
+        waterWheelAmbienceSource.SetActive(IsFullSpeed());
         
         // Optional: change targetAnimationSpeed to currentAnimationSpeed
         animatorGenerator.SetBool("isOn", IsGeneratorOn());
@@ -66,9 +69,14 @@ public class WaterWheelAnimator : MonoBehaviour
         return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
     }
 
+    private bool IsFullSpeed()
+    {
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
+    }
+
     private void UpdateAnimationSpeedTarget()
     {
-        float newSpeed = CheckGrid.contains(SGrid.GetGridString(), fullSpeedGridRegex) ? WW_NORMAL_SPEED : WW_SLOW_SPEED;
+        float newSpeed = IsFullSpeed() ? WW_NORMAL_SPEED : WW_SLOW_SPEED;
         targetAnimationSpeed = newSpeed;
     }
 

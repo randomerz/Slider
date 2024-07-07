@@ -50,11 +50,14 @@ public class MilitaryUnitFlag : Item, IDialogueTableProvider
     private void OnEnable()
     {
         MilitaryTurnAnimator.AfterCheckQueue += DoFightChecks;
+        MilitaryGrid.OnRestartMilitary += CheckPlayerHoldingOnRestartMilitary;
     }
 
     private void OnDisable()
     {
         MilitaryTurnAnimator.AfterCheckQueue -= DoFightChecks;
+        MilitaryGrid.OnRestartMilitary -= CheckPlayerHoldingOnRestartMilitary;
+        MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
     }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
@@ -174,6 +177,13 @@ public class MilitaryUnitFlag : Item, IDialogueTableProvider
         attachedUnit.GridPosition = newGridPos;
         attachedUnit.AttachedSTile = hitStile;
 
+        if (resetter == null)
+        {
+            Debug.LogError($"[Military] FlagResetter was dead! Am I dead?! Aborting!");
+            reason = this.GetLocalized(MUFStrings.Bug);
+            return false;
+        }
+
         resetter.SetResetTransform(hitStile.transform);
         resetter.ResetItem(onFinish: () => { 
             resetter.SetResetTransform(attachedUnit.NPCController.transform);
@@ -207,7 +217,18 @@ public class MilitaryUnitFlag : Item, IDialogueTableProvider
         }
 
         // Reset the flag
+        MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
         resetter.ResetItem(onFinish: null);
+    }
+
+    private void CheckPlayerHoldingOnRestartMilitary(object sender, System.EventArgs e)
+    {
+        if (PlayerInventory.GetCurrentItem() == this)
+        {
+            Debug.Log($"[Military] Did player reset while holding the flag?");
+            resetter.RemoveFromPlayer();
+            resetter.gameObject.SetActive(false);
+        }
     }
 
     private void DoFightChecks(object sender, System.EventArgs e) => DoFightChecks();

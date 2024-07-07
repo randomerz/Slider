@@ -289,10 +289,14 @@ public class TMPTextTyper : MonoBehaviour
         
     }
 
-    public void SetFont(TMP_FontAsset font, float scale)
+    public void SetFont(TMP_FontAsset font, float scale = 1.0f, FontWeight? weight = null)
     {
         TextMeshPro.font = font == null ? originalFont : font;
         TextMeshPro.fontSize = scale * originalFontSize;
+        if (weight != null)
+        {
+            TextMeshPro.fontWeight = (FontWeight) weight;
+        }
     }
 
     public void ClearWordSpacing()
