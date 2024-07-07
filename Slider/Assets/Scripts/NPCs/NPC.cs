@@ -110,6 +110,18 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         dialogueCtx.OnDialogueTriggerExit();
     }
+    
+    public void TypeCurrentDialogueAfterTime(float time)
+    {
+        StartCoroutine(TypeCurrentDialogueAfterTimeCR(time));
+    }
+
+    private IEnumerator TypeCurrentDialogueAfterTimeCR(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        TypeCurrentDialogue();
+    }
 
     public void TypeCurrentDialogue()
     {
@@ -120,6 +132,18 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public void TypeCurrentDialogueSafe() 
     {
         dialogueCtx.TypeCurrentDialogueSafe();
+    }
+
+    public void AdvanceDialogueChainAfterTime(float time)
+    {
+        StartCoroutine(AdvanceDialogueChainAfterTimeCR(time));
+    }
+
+    private IEnumerator AdvanceDialogueChainAfterTimeCR(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        AdvanceDialogueChain();
     }
 
     public void AdvanceDialogueChain()

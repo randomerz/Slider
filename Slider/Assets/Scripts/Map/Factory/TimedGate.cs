@@ -203,7 +203,7 @@ public class TimedGate : ElectricalNode, ISavable
                 OnGateDeactivated?.Invoke();
             }
 
-            AudioManager.Play("UI Click");
+            AudioManager.Play("Timed Gate Blip");
             
             _gateActive = true;
             _countdown = numTurns;

@@ -8,6 +8,9 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
     private bool _wentToPast = false;
     public static bool Blackout => _instance != null && _instance._blackout;
 
+    [SerializeField] private Animator animator;
+    [SerializeField] private GameObject crystalBTTFParticles;
+
     public delegate void HandleBlackout();
     public static event HandleBlackout blackoutStarted;
     public static event HandleBlackout blackoutEnded;
@@ -45,16 +48,20 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 
     private IEnumerator CrystalPoweredBuildup()
     {
+        animator.SetTrigger("TryTurnOn");
         AudioManager.PickSound("Power On").WithPitch(1.0f).WithVolume(0.8f).AndPlay();
+        StartCoroutine(SpawnSparkles(crystalBTTFParticles));
         (SGrid.Current as FactoryGrid).factoryMusicController.DoFactoryStinger();
         
         yield return new WaitForSeconds(1.5f);
 
         AudioManager.PickSound("Power On").WithPitch(1.2f).WithVolume(0.9f).AndPlay();
+        StartCoroutine(SpawnSparkles(crystalBTTFParticles));
         
         yield return new WaitForSeconds(1.5f);
 
         AudioManager.PickSound("Power On").WithPitch(1.4f).WithVolume(1.0f).AndPlay();
+        StartCoroutine(SpawnSparkles(crystalBTTFParticles));
 
         yield return new WaitForSeconds(FactoryMusicController.FACTORY_STINGER_DURATION - 4f);
         
@@ -71,11 +78,32 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
         CameraShake.Shake(1f, 0.35f);
         AudioManager.Play("Slide Explosion");
         AudioManager.Play("Power Off");
+        StartCoroutine(SpawnSparkles(ParticleManager.GetPrefab(ParticleType.SmokePoof)));
         DoBlackout();
 
         yield return new WaitForSeconds(2);
 
         AudioManager.StopMusic("Factory");
+    }
+
+    private IEnumerator SpawnSparkles(GameObject prefab)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            Instantiate(prefab, transform.position + GetRandomPosition(), Quaternion.identity, transform);
+            Instantiate(prefab, transform.position + GetRandomPosition(), Quaternion.identity, transform);
+            AudioManager.PlayWithVolume("UI Click", 0.25f);
+
+            yield return new WaitForSeconds(0.125f);
+        }
+    }
+    
+    private Vector3 GetRandomPosition()
+    {
+        float r = Random.Range(0f, 8f);
+        float t = Random.Range(0f, 360f);
+
+        return new Vector2(r * Mathf.Cos(t), r * Mathf.Sin(t));
     }
 
     private void DoBlackout()

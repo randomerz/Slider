@@ -96,6 +96,7 @@ public class JackalJump : MonoBehaviour
         jackalSpriteRenderer.sortingOrder = 2;
         jackalAnimator.SetBool("isSpinning", true);
         jackalAnimator.SetBool("isFrozen", false);
+        ParticleManager.SpawnParticle(ParticleType.MiniSparkle, jackalGameObject.transform.position);
 
         AudioManager.Play("Jackal Jump", jackalGameObject.transform);
 

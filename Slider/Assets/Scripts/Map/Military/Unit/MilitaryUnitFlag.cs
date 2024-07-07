@@ -20,19 +20,19 @@ public class MilitaryUnitFlag : Item
     private void OnEnable()
     {
         MilitaryTurnAnimator.AfterCheckQueue += DoFightChecks;
+        MilitaryGrid.OnRestartMilitary += CheckPlayerHoldingOnRestartMilitary;
     }
 
     private void OnDisable()
     {
         MilitaryTurnAnimator.AfterCheckQueue -= DoFightChecks;
+        MilitaryGrid.OnRestartMilitary -= CheckPlayerHoldingOnRestartMilitary;
         MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
-        Debug.Log($"unsubscribe {name}");
     }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         MilitaryTurnManager.OnPlayerEndTurn += ResetOnPlayerEndTurn;
-        Debug.Log($"subscribe {name}");
         base.PickUpItem(pickLocation, callback);
     }
 
@@ -43,7 +43,6 @@ public class MilitaryUnitFlag : Item
         return base.DropItem(dropLocation, () => {
             isDropping = false;
             MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
-            Debug.Log($"unsubscribe {name}");
             AfterDropComplete();
             callback.Invoke();
         });
@@ -144,6 +143,13 @@ public class MilitaryUnitFlag : Item
         attachedUnit.GridPosition = newGridPos;
         attachedUnit.AttachedSTile = hitStile;
 
+        if (resetter == null)
+        {
+            Debug.LogError($"[Military] FlagResetter was dead! Am I dead?! Aborting!");
+            reason = "Something went wrong!";
+            return false;
+        }
+
         resetter.SetResetTransform(hitStile.transform);
         resetter.ResetItem(onFinish: () => { 
             resetter.SetResetTransform(attachedUnit.NPCController.transform);
@@ -176,8 +182,17 @@ public class MilitaryUnitFlag : Item
 
         // Reset the flag
         MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
-        Debug.Log($"unsubscribe {name}");
         resetter.ResetItem(onFinish: null);
+    }
+
+    private void CheckPlayerHoldingOnRestartMilitary(object sender, System.EventArgs e)
+    {
+        if (PlayerInventory.GetCurrentItem() == this)
+        {
+            Debug.Log($"[Military] Did player reset while holding the flag?");
+            resetter.RemoveFromPlayer();
+            resetter.gameObject.SetActive(false);
+        }
     }
 
     private void DoFightChecks(object sender, System.EventArgs e) => DoFightChecks();

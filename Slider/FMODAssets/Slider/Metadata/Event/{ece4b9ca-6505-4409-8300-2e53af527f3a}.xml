@@ -5,7 +5,7 @@
 			<value>Gem Ambience</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{ad803405-3b49-4312-8705-f2c5ba4dabd3}</destination>
@@ -267,7 +267,6 @@
 	<object class="MixerBusEffectChain" id="{4fe23a62-ff92-4ee5-8df5-0252a6d4d5ee}">
 		<relationship name="effects">
 			<destination>{9b28b8d3-738c-4eb6-8919-6467cc1f0cb1}</destination>
-			<destination>{948e4152-2820-4756-b1ba-9aeb06ff4d0a}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{09051f49-ec9a-4fdc-b51c-27df440e56bc}" />
@@ -336,7 +335,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{21283cc0-f58e-4f98-aaf1-1f3cb63c7581}" />
 	<object class="MixerBusFader" id="{9b28b8d3-738c-4eb6-8919-6467cc1f0cb1}" />
-	<object class="SpatialiserEffect" id="{948e4152-2820-4756-b1ba-9aeb06ff4d0a}" />
 	<object class="AutomationPoint" id="{2d23ebf1-7fed-4e00-a420-70f2b3b9c554}">
 		<property name="position">
 			<value>10</value>
