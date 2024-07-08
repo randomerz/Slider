@@ -160,8 +160,8 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void RepairedGemAbsorb()
     {
-        // if(!isPowered)
-        //     return;
+        if(!isPowered)
+            return; 
         numGems++;
         animator.Play("AbsorbGem");
         minecart.UpdateState(MinecartState.Empty);
@@ -189,7 +189,7 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public void ResetGemLoop(bool minecart, bool fromSave)
     {
-        if(numGems <= 1 || numGems >= 3) return;
+        if(numGems != 2) return;
         numGems = 1;
         animator.Play("Empty");
         pipeLiquid.SetPipeEmpty();
@@ -205,7 +205,6 @@ public class GemMachine : MonoBehaviour, ISavable
             SaveSystem.Current.SetBool("MountainGemResetMove", true);
             SaveSystem.Current.SetBool("MountainGemResetMinecart", false);
         }
-
 
         AudioManager.Play("Artifact Error");
     }

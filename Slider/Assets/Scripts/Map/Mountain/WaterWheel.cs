@@ -77,7 +77,7 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void AddHeaterLava()
     {
-        //if(!heaterFixed) return;
+        if(!heaterFixed) return;
         
         lavaCount++;
         mc.UpdateState(MinecartState.Empty);
@@ -102,7 +102,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     
     private void CheckMinecartStop()
     {
-        if(heaterFixed && lavaCount < 2)
+        if(heaterFixed && lavaCount == 1)
             ResetLavaOnMinecartStop();
     }
 
@@ -112,7 +112,7 @@ public class WaterWheel : MonoBehaviour, ISavable
         lavaExtractorAnimator.Play("Empty");
         lavaPipe.StopAllCoroutines();
         lavaPipe.SetPipeEmpty();
-        AudioManager.Play("Artfact Error");
+        AudioManager.Play("Artifact Error");
     }
 
     public void FixHeater() => FixHeater(false);

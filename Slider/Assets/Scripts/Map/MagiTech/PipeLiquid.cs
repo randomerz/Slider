@@ -131,7 +131,6 @@ public class PipeLiquid : MonoBehaviour
     //Fills the segment of the pipe (0-1) from start to end.
     private void Fill(float startPos, float endPos)
     {
-        print("fill " + startPos + " " + endPos);
         if (!didInit)
         {
             Init();

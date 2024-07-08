@@ -335,7 +335,7 @@ public class Minecart : Item, ISavable
         } 
     }
 
-    public void StopMoving(bool onTrack = false)
+    public void StopMoving(bool onTrack = false, bool elevator = false)
     {
         isMoving = false;
         if(!onTrack)
@@ -346,7 +346,8 @@ public class Minecart : Item, ISavable
         }
         collisionPause = false;
         collidingObjects.Clear();
-        OnMinecartStop?.Invoke();
+        if(!elevator)
+            OnMinecartStop?.Invoke();
     }
 
     public void ResetTiles()
@@ -486,6 +487,7 @@ public class Minecart : Item, ISavable
 
     public bool TryDrop(bool dropImmediate = false)
     {   
+        print("checking drop");
         STile tile = CheckDropTileBelow();
         bool canDrop = tile != null && CheckFreeInFrontAndBelow();
         if(canDrop)
@@ -505,6 +507,7 @@ public class Minecart : Item, ISavable
         //Only the big Ice patch allows for drops now. Must be vertical on tile 4.
         if(currentSTile == null || currentSTile.islandId != 4 || currentDirection % 2 == 0 || transform.localPosition.y > 7) 
         {
+            print("not free in front");
             return false;
         }
 
@@ -513,8 +516,10 @@ public class Minecart : Item, ISavable
         Vector3 loc = ItemPlacerSolver.FindItemPlacePosition(checkloc, 0, blocksSpawnMask, true);
         if( loc.x == float.MaxValue)
         {
+            print("not free below");
             return false;
         }
+        print("free in front and below");
         return true;
     }
 
