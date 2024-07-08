@@ -67,6 +67,8 @@ public class Minecart : Item, ISavable
     private bool nextTile = false;
     public LayerMask blocksSpawnMask;
 
+    public static Action OnMinecartStop;
+
 
 
     public override void Awake() 
@@ -344,6 +346,7 @@ public class Minecart : Item, ISavable
         }
         collisionPause = false;
         collidingObjects.Clear();
+        OnMinecartStop?.Invoke();
     }
 
     public void ResetTiles()

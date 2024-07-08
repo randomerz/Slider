@@ -15,7 +15,6 @@ public class WaterWheel : MonoBehaviour, ISavable
     public bool heaterFixed = false;
     public bool heaterFull = false;
     public int lavaCount = 0;
-    private bool hasMovedTile = false;
     private bool firstPower = false;
     private bool firstLavaPower = false;
     public WaterWheelAnimator animator;
@@ -29,17 +28,11 @@ public class WaterWheel : MonoBehaviour, ISavable
     public List<GameObject> heaterLavaGO;
 
     private void OnEnable() {
-        SGridAnimator.OnSTileMoveStart += CheckMove;
+        Minecart.OnMinecartStop += () => CheckMinecartStop();
     }
 
     private void OnDisable() {
-        SGridAnimator.OnSTileMoveStart -= CheckMove;
-    }
-
-    private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-       // if(e.stile == stile)
-            //ResetOnMove();
+        Minecart.OnMinecartStop -= () => CheckMinecartStop();
     }
 
 
@@ -89,6 +82,10 @@ public class WaterWheel : MonoBehaviour, ISavable
         lavaCount++;
         mc.UpdateState(MinecartState.Empty);
         lavaExtractorAnimator.Play("Fill");
+        if(lavaCount == 2)
+        {
+            AudioManager.Play("Puzzle Complete");
+        }
     }
 
     public void OnEndAbsorbLava()
@@ -102,25 +99,21 @@ public class WaterWheel : MonoBehaviour, ISavable
             lavaPipe.FillPipe(new Vector2(0, 0.5f), Vector2.up, 3f);
         }
     }
+    
+    private void CheckMinecartStop()
+    {
+        if(heaterFixed && lavaCount < 2)
+            ResetLavaOnMinecartStop();
+    }
 
-    // public void ResetOnMove()
-    // {
-    //     if(!inLavaStage) return;
-    //     if(lavaCount > 1)
-    //     {
-    //        // cog2.RemoveLava();
-    //         cog2.SetRefreezeOnTop(true);
-
-    //     }
-    //     if(lavaCount > 0)
-    //     {
-    //        // cog1.RemoveLava();
-    //         cog1.SetRefreezeOnTop(true);
-    //     }
-    //     lavaCount = 0;
-    //     heaterAnimator.SetInteger("Lava",lavaCount);
-    //     hasMovedTile = true;
-    // }
+    public void ResetLavaOnMinecartStop()
+    {
+        lavaCount = 0;
+        lavaExtractorAnimator.Play("Empty");
+        lavaPipe.StopAllCoroutines();
+        lavaPipe.SetPipeEmpty();
+        AudioManager.Play("Artfact Error");
+    }
 
     public void FixHeater() => FixHeater(false);
 
@@ -163,10 +156,6 @@ public class WaterWheel : MonoBehaviour, ISavable
         c.SetSpec(lavaCount > 0);
     }
 
-    public void HasMovedTile(Condition c) {
-        c.SetSpec(hasMovedTile);
-    }
-
     public void IsDone(Condition c){
         c.SetSpec(lavaCount > 1 && powered);
     }
@@ -186,7 +175,6 @@ public class WaterWheel : MonoBehaviour, ISavable
     {
         SaveSystem.Current.SetBool("MountainWaterwheelLavaStage", heaterFixed);
         SaveSystem.Current.SetInt("MountainHeaterLavaCount", lavaCount);
-        SaveSystem.Current.SetBool("MountainHeaterHasMovedTile", hasMovedTile);
         SaveSystem.Current.SetBool("MountainHeaterFirstPower", firstPower);
         SaveSystem.Current.SetBool("MountainHeaterFirstLavaPower", firstLavaPower);
     }
@@ -195,7 +183,6 @@ public class WaterWheel : MonoBehaviour, ISavable
     {
         heaterFixed = profile.GetBool("MountainWaterwheelLavaStage", heaterFixed);
         lavaCount = profile.GetInt("MountainHeaterLavaCount", lavaCount);
-        hasMovedTile = profile.GetBool("MountainHeaterHasMovedTile", hasMovedTile);
         firstPower = profile.GetBool("MountainHeaterFirstPower", firstPower);
         firstLavaPower = profile.GetBool("MountainHeaterFirstLavaPower", firstPower);
 

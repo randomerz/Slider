@@ -104,10 +104,10 @@ public class MountainGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        if(stile.islandId == 7)
+        if(stile.islandId == 7 && !stile.isTileActive)
             SaveSystem.Current.SetBool("forceAutoMoveMountain", true);
         base.EnableStile(stile, shouldFlicker);
-         if(stile.islandId == 8)
+        if(stile.islandId == 8 && !stile.isTileActive) 
             CheckForMountainCompletion();
     }
 

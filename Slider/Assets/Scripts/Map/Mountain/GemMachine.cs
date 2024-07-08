@@ -37,16 +37,34 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
+        Minecart.OnMinecartStop += () => CheckMinecartStop();
     }
 
     private void OnDisable() {
         SGridAnimator.OnSTileMoveStart -= CheckMove;
+        Minecart.OnMinecartStop -= () => CheckMinecartStop();
     }
 
     private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (e.stile == sTile)
-            ResetGems();
+        if (e.stile != sTile) return;
+        switch(gemMachineState)
+        {
+            case GemMachineState.INITIAL:
+                ResetFirstGem();
+                break;
+            case GemMachineState.FIXED:
+                ResetGemLoop(false, false);
+                break;
+        }
+    }
+
+    private void CheckMinecartStop()
+    {
+        if(gemMachineState == GemMachineState.FIXED)
+        {
+            ResetGemLoop(true, false);
+        }
     }
 
     // Called by NPC sara
@@ -110,6 +128,11 @@ public class GemMachine : MonoBehaviour, ISavable
         {
             return;
         }
+        if(!isPowered)
+        {
+            SaveSystem.Current.SetBool("MountainTriedCrystalNoPower", true);
+            return;
+        }
 
         switch(gemMachineState)
         {
@@ -153,10 +176,35 @@ public class GemMachine : MonoBehaviour, ISavable
         gemMachineState = GemMachineState.FULLY_GOOED;
     }
 
-    public void ResetGems(){
-        if(gemMachineState != GemMachineState.FIXED) return;
+    public void ResetFirstGem()
+    {
+        if(numGems != 1) return;
+        numGems = 0;
+        animator.Play("Empty");
+        SaveSystem.Current.SetBool("MountainFirstGemReset", true);
+        AudioManager.Play("Artfact Error");
+    }
 
+    public void ResetGemLoop(bool minecart, bool fromSave)
+    {
+        if(numGems <= 1 || numGems >= 3) return;
         numGems = 1;
+        animator.Play("Empty");
+        if(fromSave) return;
+        if(minecart)
+        {
+            SaveSystem.Current.SetBool("MountainGemResetMinecart", true);
+            SaveSystem.Current.SetBool("MountainGemResetMove", false);
+
+        }
+        else
+        {
+            SaveSystem.Current.SetBool("MountainGemResetMove", true);
+            SaveSystem.Current.SetBool("MountainGemResetMinecart", false);
+        }
+
+
+        AudioManager.Play("Artfact Error");
     }
 
     public void OnEndAbsorb(){
@@ -177,7 +225,7 @@ public class GemMachine : MonoBehaviour, ISavable
 
 
     public void Save(){
-        ResetGems(); //You have to do the loop 
+        ResetGemLoop(false, true); //You have to do the loop 
         SaveSystem.Current.SetInt("mountainGemMachineNumGems", numGems);        
         SaveSystem.Current.SetInt("mountainGemMachinePhase", (int)gemMachineState);
     }
