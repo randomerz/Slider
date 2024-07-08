@@ -284,6 +284,10 @@ public class DesyncItem : Item
 
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
+        if (currentTile == null)
+        {
+            return;
+        }
         isDesynced = currentTile.islandId == e.desyncIslandId || currentTile.islandId == e.anchoredTileIslandId;
         UpdateItemPair();
     }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{b0916122-6391-4abf-8bed-71a750b2362b}">
+		<property name="name">
+			<value>AmbienceDistToPipe</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{d3d2e889-7386-48cd-ac38-a24d7cff5ee1}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{d3d2e889-7386-48cd-ac38-a24d7cff5ee1}">
+		<property name="maximum">
+			<value>15</value>
+		</property>
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>15</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

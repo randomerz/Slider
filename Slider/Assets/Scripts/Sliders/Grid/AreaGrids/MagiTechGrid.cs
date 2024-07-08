@@ -93,6 +93,12 @@ public class MagiTechGrid : SGrid
         base.Start();
         contactFilter = new ContactFilter2D();
         
+        // If they came from Factory Past
+        if (Player.GetIsInHouse())
+        {
+            Player.SetIsInHouse(false);
+        }
+        
         AudioManager.PlayMusic("MagiTech");
         AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", IsInPast(Player._instance.transform) ? 0 : 1);
     }
