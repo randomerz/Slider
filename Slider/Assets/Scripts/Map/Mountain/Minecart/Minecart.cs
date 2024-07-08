@@ -365,8 +365,11 @@ public class Minecart : Item, ISavable
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
-        if(currentTile == null)
-            print("current tile null");
+        if(currentTile == null && direction == -1)
+        {
+            Debug.LogWarning("Cannot get default direction of null tile!");
+            return;
+        }
         currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
@@ -487,7 +490,6 @@ public class Minecart : Item, ISavable
 
     public bool TryDrop(bool dropImmediate = false)
     {   
-        print("checking drop");
         STile tile = CheckDropTileBelow();
         bool canDrop = tile != null && CheckFreeInFrontAndBelow();
         if(canDrop)
@@ -507,7 +509,6 @@ public class Minecart : Item, ISavable
         //Only the big Ice patch allows for drops now. Must be vertical on tile 4.
         if(currentSTile == null || currentSTile.islandId != 4 || currentDirection % 2 == 0 || transform.localPosition.y > 7) 
         {
-            print("not free in front");
             return false;
         }
 
@@ -516,10 +517,8 @@ public class Minecart : Item, ISavable
         Vector3 loc = ItemPlacerSolver.FindItemPlacePosition(checkloc, 0, blocksSpawnMask, true);
         if( loc.x == float.MaxValue)
         {
-            print("not free below");
             return false;
         }
-        print("free in front and below");
         return true;
     }
 
