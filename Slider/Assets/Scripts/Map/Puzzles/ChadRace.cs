@@ -77,7 +77,7 @@ public class ChadRace : MonoBehaviour, ISavable
         }
         else
         {
-            DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+            DisplayAndTriggerDialogue("Race time! Set up the race track following these cones to the bell.");
             raceState = State.TrackNotSetup;
         }
         
@@ -102,7 +102,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.NotStarted:
                 if (!tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+                    DisplayAndTriggerDialogue("Race time! Set up the race track following these cones to the bell.");
                     raceState = State.TrackNotSetup;
                 }
                 ActivateSpeedLines(false);
@@ -289,7 +289,7 @@ public class ChadRace : MonoBehaviour, ISavable
             }
             else
             {
-                DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+                DisplayAndTriggerDialogue("Race time! Set up the race track following these cones to the bell.");
                 raceState = State.TrackNotSetup;
             }
         }
