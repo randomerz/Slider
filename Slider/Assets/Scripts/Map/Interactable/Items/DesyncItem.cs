@@ -172,7 +172,6 @@ public class DesyncItem : Item
             if(checkPos.y > 42f)
                 checkPos.y = 3f;
         }
-        print(checkPos);
         Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true, 10, 0.25f);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         if(targetPos.x == float.MaxValue)
