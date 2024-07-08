@@ -23,18 +23,18 @@ public class ItemPlacerSolver
         }
     }
 
-    public static Vector3 FindItemPlacePosition(Vector3 targetPos, int maxDistance, LayerMask blocksSpawnMask, bool forceSameStile)
+    public static Vector3 FindItemPlacePosition(Vector3 targetPos, int maxDistance, LayerMask blocksSpawnMask, bool forceSameStile, int resolution = 4, float radiusInc = 1)
     {
 
         STile sTile = SGrid.GetSTileUnderneath(targetPos);
         int tries = 0;
         do
         {
-            for(int i = 0; i <= 4 * tries; i++ )
+            for(int i = 0; i <= resolution * tries; i++ )
             {
                 float theta = (2f * Mathf.PI * i) / (4 * Mathf.Max(1, tries));
-                Vector3 checkPos = targetPos + tries * new Vector3(Mathf.Cos(theta), Mathf.Sin(theta));
-                var cast = Physics2D.OverlapBoxAll(checkPos, Vector2.one, blocksSpawnMask);
+                Vector3 checkPos = targetPos + tries * radiusInc * new Vector3(Mathf.Cos(theta), Mathf.Sin(theta));
+                var cast = Physics2D.OverlapCircleAll(checkPos, 0.5f, blocksSpawnMask);
                 bool valid = true;
                 foreach(Collider2D c in cast)
                 {
@@ -48,7 +48,7 @@ public class ItemPlacerSolver
             }
             tries++;
         }
-        while (tries <= maxDistance);
+        while (tries <= maxDistance / radiusInc);
         return new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
     }      
 }
