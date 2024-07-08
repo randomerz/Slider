@@ -77,7 +77,7 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void AddHeaterLava()
     {
-        if(!heaterFixed) return;
+        //if(!heaterFixed) return;
         
         lavaCount++;
         mc.UpdateState(MinecartState.Empty);

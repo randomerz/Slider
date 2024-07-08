@@ -33,6 +33,9 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void Start() {
         sTile = GetComponentInParent<STile>();
+        if (numGems >= 3)
+            pipeLiquid.Fill(new(0, 1f));
+
     }
 
     private void OnEnable() {
@@ -157,13 +160,12 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void RepairedGemAbsorb()
     {
-        if(!isPowered)
-            return;
+        // if(!isPowered)
+        //     return;
         numGems++;
         animator.Play("AbsorbGem");
         minecart.UpdateState(MinecartState.Empty);
         //TODO: Play absorb crystal sound
-
         if(numGems == 3)
         {
             FinishCrystalLoopPuzzle();
@@ -182,7 +184,7 @@ public class GemMachine : MonoBehaviour, ISavable
         numGems = 0;
         animator.Play("Empty");
         SaveSystem.Current.SetBool("MountainFirstGemReset", true);
-        AudioManager.Play("Artfact Error");
+        AudioManager.Play("Artifact Error");
     }
 
     public void ResetGemLoop(bool minecart, bool fromSave)
@@ -190,6 +192,7 @@ public class GemMachine : MonoBehaviour, ISavable
         if(numGems <= 1 || numGems >= 3) return;
         numGems = 1;
         animator.Play("Empty");
+        pipeLiquid.SetPipeEmpty();
         if(fromSave) return;
         if(minecart)
         {
@@ -204,25 +207,24 @@ public class GemMachine : MonoBehaviour, ISavable
         }
 
 
-        AudioManager.Play("Artfact Error");
+        AudioManager.Play("Artifact Error");
     }
 
     public void OnEndAbsorb(){
         animator.Play("Empty");
+        if(numGems == 2)
+        {
+            pipeLiquid.FillPipe(Vector2.zero, new Vector2(0, 0.5f), 3f);
+        }
+        if(numGems == 3)
+        {
+            pipeLiquid.FillPipe(new Vector2(0, 0.5f), Vector2.up, 3f);
+        }
     }
 
     public void SetIsPowered(bool value){
         isPowered = value;
     }
-    
-    public void EnableGoo(bool fillImmediate = false)
-    {
-        if(fillImmediate)
-            pipeLiquid.SetPipeFull();
-        else
-            pipeLiquid.FillPipe();
-    }
-
 
     public void Save(){
         ResetGemLoop(false, true); //You have to do the loop 
@@ -233,6 +235,7 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         gemMachineState = (GemMachineState) profile.GetInt("mountainGemMachinePhase");
+        numGems = SaveSystem.Current.GetInt("mountainGemMachineNumGems");        
         switch(gemMachineState)
         {
             case GemMachineState.BROKEN:
@@ -242,10 +245,6 @@ public class GemMachine : MonoBehaviour, ISavable
                 FixGemMachine(true);
                 break;
         }
-        if (profile.GetBool("MountainGooFull"))
-            EnableGoo(true);
-        else if (profile.GetBool("MountainGooFilling"))
-            EnableGoo();
     }
 
     public void CheckIsPowered(Condition c){
