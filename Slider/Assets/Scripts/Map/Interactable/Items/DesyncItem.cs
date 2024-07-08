@@ -111,7 +111,11 @@ public class DesyncItem : Item
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null)
     {
-        STile tile = base.DropItem(dropLocation, callback);
+        System.Action newCallback = () => {
+            callback();
+            UpdateDesyncOnChangeTile();
+        };
+        STile tile = base.DropItem(dropLocation, newCallback);
         currentTile = tile;
         if(isTracked)
         {
@@ -144,7 +148,7 @@ public class DesyncItem : Item
 
     private void MovePresentItemToPastLocation()
     {
-        Vector3 pastLocalLoc = transform.localPosition;
+        Vector3 pastLocalLoc = GetLocalPosition();
         Vector3 checkPos;
         STile presentTile = null;
         if(currentTile != null)
@@ -158,15 +162,23 @@ public class DesyncItem : Item
         }
         else
         {
-            checkPos = transform.localPosition + new Vector3(-100f, 0, 0);
+            checkPos = transform.position + new Vector3(-100f, 0, 0);
             checkPos.x = Mathf.Clamp(checkPos.x, -9f, 43f);
             checkPos.y = Mathf.Clamp(checkPos.y, -16f, 43f);
+            if(checkPos.x < -8f)
+                checkPos.x = -9f;
+            if(checkPos.x > 42f)
+                checkPos.x = 43f;
+            if(checkPos.y > 42f)
+                checkPos.y = 3f;
         }
-        Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true);
+        print(checkPos);
+        Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true, 10, 0.25f);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         if(targetPos.x == float.MaxValue)
         {
             Debug.LogWarning("Could not find valid position for present item. Moving anyways");
+            targetPos = pastLocalLoc;
         }
         presentItem.transform.position = targetPos;
         if(presentTile != null)
@@ -177,6 +189,24 @@ public class DesyncItem : Item
         {
             presentItem.transform.parent = null;
         }
+        foreach (GameObject go in presentItem.enableOnDrop)
+        {
+            go.SetActive(false);
+        }
+        CoroutineUtils.ExecuteAfterEndOfFrame(() =>{
+        foreach (GameObject go in presentItem.enableOnDrop)
+        {
+            go.SetActive(true);
+        }}, this);
+    }
+
+    private Vector3 GetLocalPosition()
+    {
+        if(PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().itemName == itemName)
+        {
+            return Player.GetInstance().transform.localPosition;
+        }
+        return transform.localPosition;
     }
 
     public void MoveIfInIllegalBounds()
@@ -237,6 +267,11 @@ public class DesyncItem : Item
             {
                 UpdateItemPair();
             }
+
+            if(ShouldMovePresentItem())
+            {
+                MovePresentItemToPastLocation();
+            }
         }
         else if(!isDesynced && MagiTechGrid.IsTileDesynced(currentTile))
         {
@@ -296,6 +331,10 @@ public class DesyncItem : Item
     {
         isDesynced = false;
         UpdateItemPair();
+        if(ShouldMovePresentItem())
+        {
+            MovePresentItemToPastLocation();
+        }
     }
 
     private void UpdateItemPair(bool fromPortal = false)
@@ -327,8 +366,19 @@ public class DesyncItem : Item
         myCollider.enabled = active;
         particles.SetActive(active);
         if(isTracked)
+        {   
+            if(active)
+            {
+                AddTracker();
+            }
+            else
+            {
+                UITrackerManager.RemoveTracker(gameObject);
+            }
+        }
+        foreach (GameObject go in enableOnDrop)
         {
-            UITrackerManager.RemoveTracker(gameObject);
+            go.SetActive(active);
         }
     }
 
