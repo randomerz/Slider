@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GemMachine : MonoBehaviour, ISavable
 {
-    private int numGems;
+    public int numGems;
     private STile sTile;
     private bool isPowered;
     // private bool isDone;
@@ -124,6 +124,7 @@ public class GemMachine : MonoBehaviour, ISavable
         brokenObj.SetActive(false);
         fixedObj.SetActive(true);
         gemChecker.SetActive(true);
+        if(numGems < 1) numGems = 1;
     }
 
     public void AddGem(){
@@ -192,6 +193,7 @@ public class GemMachine : MonoBehaviour, ISavable
         if(numGems != 2) return;
         numGems = 1;
         animator.Play("Empty");
+        pipeLiquid.StopAllCoroutines();
         pipeLiquid.SetPipeEmpty();
         if(fromSave) return;
         if(minecart)

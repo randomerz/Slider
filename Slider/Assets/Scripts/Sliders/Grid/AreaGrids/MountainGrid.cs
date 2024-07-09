@@ -6,7 +6,6 @@ public class MountainGrid : SGrid
 {
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
-    [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
     [SerializeField] private SpriteSwapper crystalSpriteSwapper;
     public Minecart minecart;
@@ -104,9 +103,9 @@ public class MountainGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
+        base.EnableStile(stile, shouldFlicker);
         if(stile.islandId == 7 && !stile.isTileActive)
             SaveSystem.Current.SetBool("forceAutoMoveMountain", true);
-        base.EnableStile(stile, shouldFlicker);
         if(stile.islandId == 8 && !stile.isTileActive) 
             CheckForMountainCompletion();
     }
@@ -123,7 +122,7 @@ public class MountainGrid : SGrid
             StartCoroutine(ShowButtonAndMapCompletions());
             SaveSystem.Current.SetBool("completedMountain", true);
             AchievementManager.SetAchievementStat("completedMountain", 1);
-            if(minecart.NumPickups <= 2)
+            if(minecart.NumPickups <= 2 && gemMachine.numGems >= 3)
             {
                 AchievementManager.SetAchievementStat("mountainMinMinecart", 1);
             }
@@ -171,24 +170,10 @@ public class MountainGrid : SGrid
 
     #region Save/Load
 
-    //C: for some reason the meltables save on their own but don't load
-    public override void Save()
-    {
-        base.Save();
-        mountainCaveWall.Save();
-        gemMachine.Save();
-    }
-
     public override void Load(SaveProfile profile)
     {
-        base.Load(profile);
-        mountainCaveWall.Load(profile);
-        gemMachine.Load(profile);
         if(profile.GetBool("MountainCrystalDelivered"))
             SetCrystalDelivered(true);
-        Meltable[] meltables = FindObjectsOfType<Meltable>();
-        foreach(Meltable m in meltables)
-            m.Load(profile);
     }
 
     #endregion
