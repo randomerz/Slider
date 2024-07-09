@@ -46,7 +46,10 @@ public class CaveChadGameCutscene : MonoBehaviour
         smokeParticles.Play();
 
         yield return new WaitForSeconds(1.5f);
+    }
 
+    public void ExplodeComputer()
+    {
         // Explode
         smokeParticles.Stop();
         AudioManager.Play("Slide Explosion");

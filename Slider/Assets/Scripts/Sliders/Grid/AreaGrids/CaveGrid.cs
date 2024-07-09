@@ -167,7 +167,7 @@ public class CaveGrid : SGrid
 
     private IEnumerator ICavesShake3()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
         CameraShake.Shake(1.5f, 2.5f);
         AudioManager.Play("Slide Explosion");
