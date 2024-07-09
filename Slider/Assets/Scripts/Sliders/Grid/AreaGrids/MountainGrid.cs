@@ -169,9 +169,11 @@ public class MountainGrid : SGrid
 
 
     #region Save/Load
+    
 
     public override void Load(SaveProfile profile)
     {
+        base.Load(profile);
         if(profile.GetBool("MountainCrystalDelivered"))
             SetCrystalDelivered(true);
     }
