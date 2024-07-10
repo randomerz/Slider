@@ -519,7 +519,7 @@ GameObject:
   - component: {fileID: 3011595017151321962}
   - component: {fileID: 6473400322286170107}
   m_Layer: 5
-  m_Name: OptionsPanel
+  m_Name: DEPRECATED_OptionsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -606,6 +606,7 @@ MonoBehaviour:
   - {fileID: 8292675729436426446}
   - {fileID: 3516294938470570099}
   - {fileID: 7763130322787013086}
+  subSelectableSets: []
 --- !u!114 &3011595017151321962
 MonoBehaviour:
   m_ObjectHideFlags: 0

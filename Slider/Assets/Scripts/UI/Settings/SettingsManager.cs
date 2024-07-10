@@ -24,7 +24,15 @@ public class SettingsManager : MonoBehaviour
     private static readonly Dictionary<Settings, ISetting> settings = new();
     public static readonly Dictionary<Settings, Action<object>> OnSettingChanged = new();
 
-    void Awake()
+    private void Awake()
+    {
+        if (settings.Count == 0)
+        {
+            Init();
+        }
+    }
+
+    private static void Init()
     {
         RegisterAndLoadSetting(Settings.MasterVolume,
             defaultValue: 0.5f,
@@ -118,6 +126,11 @@ public class SettingsManager : MonoBehaviour
     /// <returns></returns>
     public static Setting<T> Setting<T>(Settings setting)
     {
+        if (!settings.ContainsKey(setting))
+        {
+            Debug.LogWarning($"Could not find ${setting} in Settings. Likely was not able to initialize settings!");
+            Init();
+        }
         return (Setting<T>)settings[setting];
     }
 

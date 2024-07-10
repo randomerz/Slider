@@ -145,6 +145,9 @@
 		<property name="length">
 			<value>4.9000000000000004</value>
 		</property>
+		<property name="volume">
+			<value>10</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{41b80119-6670-434e-8d61-a4a2677605d0}</destination>
 		</relationship>
@@ -468,6 +471,9 @@
 		</relationship>
 	</object>
 	<object class="ThreeEQEffect" id="{e3a07bf2-2156-4167-9fbc-dfca9d460173}">
+		<property name="lowGain">
+			<value>10</value>
+		</property>
 		<property name="midGain">
 			<value>-80</value>
 		</property>
@@ -484,7 +490,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-8</value>
+			<value>-18.5</value>
 		</property>
 		<property name="curveShape">
 			<value>0.545761168</value>
@@ -520,7 +526,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-13</value>
+			<value>-31</value>
 		</property>
 		<property name="curveShape">
 			<value>0.326760113</value>

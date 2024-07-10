@@ -689,7 +689,7 @@ public void SetGrid(int[,] puzzle)
         //Debug.Log(realigningGrid);
     }
 
-    public virtual void LoadRealigningGrid()
+    public virtual void LoadRealigningGrid(bool setRealigningGridToNull=true)
     {
         //Debug.Log("Loaded!");
         if (realigningGrid == null)
@@ -699,6 +699,15 @@ public void SetGrid(int[,] puzzle)
             return;
         }
         SetGrid(realigningGrid);
+
+        if (setRealigningGridToNull)
+        {
+            realigningGrid = null;
+        }
+    }
+
+    public void ResetRealigningGrid()
+    {
         realigningGrid = null;
     }
 

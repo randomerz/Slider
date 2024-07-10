@@ -20,11 +20,13 @@ public class MilitaryUnitFlag : Item
     private void OnEnable()
     {
         MilitaryTurnAnimator.AfterCheckQueue += DoFightChecks;
+        MilitaryGrid.OnRestartMilitary += CheckPlayerHoldingOnRestartMilitary;
     }
 
     private void OnDisable()
     {
         MilitaryTurnAnimator.AfterCheckQueue -= DoFightChecks;
+        MilitaryGrid.OnRestartMilitary -= CheckPlayerHoldingOnRestartMilitary;
         MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
     }
 
@@ -141,6 +143,13 @@ public class MilitaryUnitFlag : Item
         attachedUnit.GridPosition = newGridPos;
         attachedUnit.AttachedSTile = hitStile;
 
+        if (resetter == null)
+        {
+            Debug.LogError($"[Military] FlagResetter was dead! Am I dead?! Aborting!");
+            reason = "Something went wrong!";
+            return false;
+        }
+
         resetter.SetResetTransform(hitStile.transform);
         resetter.ResetItem(onFinish: () => { 
             resetter.SetResetTransform(attachedUnit.NPCController.transform);
@@ -174,6 +183,16 @@ public class MilitaryUnitFlag : Item
         // Reset the flag
         MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
         resetter.ResetItem(onFinish: null);
+    }
+
+    private void CheckPlayerHoldingOnRestartMilitary(object sender, System.EventArgs e)
+    {
+        if (PlayerInventory.GetCurrentItem() == this)
+        {
+            Debug.Log($"[Military] Did player reset while holding the flag?");
+            resetter.RemoveFromPlayer();
+            resetter.gameObject.SetActive(false);
+        }
     }
 
     private void DoFightChecks(object sender, System.EventArgs e) => DoFightChecks();

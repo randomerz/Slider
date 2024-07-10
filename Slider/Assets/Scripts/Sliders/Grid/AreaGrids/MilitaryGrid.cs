@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MilitaryGrid : SGrid
 {
-    // public static System.EventHandler<System.EventArgs> OnRestartMilitary;
+    public static System.EventHandler<System.EventArgs> OnRestartMilitary;
 
     private bool isRestarting;
 
@@ -103,6 +103,8 @@ public class MilitaryGrid : SGrid
     private void DoRestartSimulation()
     {
         Debug.Log("[Military] Restart sim!");
+        OnRestartMilitary?.Invoke(this, new System.EventArgs());
+
         SaveSystem.Current.SetBool("militaryFailedOnce", true);
         SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 

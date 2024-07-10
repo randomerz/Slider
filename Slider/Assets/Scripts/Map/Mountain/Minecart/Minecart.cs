@@ -67,6 +67,8 @@ public class Minecart : Item, ISavable
     private bool nextTile = false;
     public LayerMask blocksSpawnMask;
 
+    public static Action OnMinecartStop;
+
 
 
     public override void Awake() 
@@ -333,7 +335,7 @@ public class Minecart : Item, ISavable
         } 
     }
 
-    public void StopMoving(bool onTrack = false)
+    public void StopMoving(bool onTrack = false, bool elevator = false)
     {
         isMoving = false;
         if(!onTrack)
@@ -344,6 +346,8 @@ public class Minecart : Item, ISavable
         }
         collisionPause = false;
         collidingObjects.Clear();
+        if(!elevator)
+            OnMinecartStop?.Invoke();
     }
 
     public void ResetTiles()
@@ -361,8 +365,11 @@ public class Minecart : Item, ISavable
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
-        if(currentTile == null)
-            print("current tile null");
+        if(currentTile == null && direction == -1)
+        {
+            Debug.LogWarning("Cannot get default direction of null tile!");
+            return;
+        }
         currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
@@ -674,6 +681,7 @@ public class Minecart : Item, ISavable
         //magic number based on enum order
         int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
+        AudioManager.PickSound("Minecart Corner").WithAttachmentToTransform(transform).AndPlay();
     }
     
     private void PlayStraightAnimation()

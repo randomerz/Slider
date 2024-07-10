@@ -17,13 +17,15 @@ public class MagiTechTabManager : ArtifactTabManager
         InitBindingHeldBehavior();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         Controls.RegisterBindingBehavior(bindingHeldBehavior);
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         Controls.UnregisterBindingBehavior(bindingHeldBehavior);
     }
 

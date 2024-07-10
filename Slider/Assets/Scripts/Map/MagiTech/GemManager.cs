@@ -317,7 +317,7 @@ public class GemManager : MonoBehaviour, ISavable
             }
         }
 
-        string combined = $"Hmmm... we're missing multiple gems. Can you get me: {String.Join(", ", all)}?";
+        string combined = $"Hmmm... the gems should be somewhere in this area. Can you get me: {String.Join(", ", all)}?";
 
         SaveSystem.Current.SetString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
     }

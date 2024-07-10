@@ -77,7 +77,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public void SendMinecartDown(Minecart mc)
     {
         if(elevatorState == ElevatorState.BROKEN) return;
-        mc.StopMoving();
+        mc.StopMoving(elevator:true);
         animationManager.SendDown();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3, true));
     }
@@ -85,7 +85,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public void SendMinecartUp(Minecart mc)
     {
         if(elevatorState == ElevatorState.BROKEN) return;
-        mc.StopMoving();
+        mc.StopMoving(elevator:true);
         animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
         hasGoneUp = true;

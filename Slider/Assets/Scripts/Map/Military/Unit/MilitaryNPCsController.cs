@@ -144,6 +144,8 @@ public class MilitaryNPCController : MonoBehaviour
     private void FinishAnimation(Vector3 targetPos, STile endStile)
     {
         hasMoveQueuedOrIsExecuting = false;
+
+        militaryUnit.transform.position = targetPos;
         SetPosition(targetPos);
         // militaryUnit.AttachedSTile = endStile;
         System.Action callback = moveFinishCallback;
