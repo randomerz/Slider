@@ -14,6 +14,7 @@ public class CaveChadGameCutscene : MonoBehaviour
     public Animator computerAnimator;
     public SpriteRenderer computerTable;
     public Sprite explodedComputerTableSprite;
+    public NPC chadNPC;
 
     // Start is called before the first frame update
     void Start()
@@ -46,10 +47,7 @@ public class CaveChadGameCutscene : MonoBehaviour
         smokeParticles.Play();
 
         yield return new WaitForSeconds(1.5f);
-    }
 
-    public void ExplodeComputer()
-    {
         // Explode
         smokeParticles.Stop();
         AudioManager.Play("Slide Explosion");
@@ -58,6 +56,7 @@ public class CaveChadGameCutscene : MonoBehaviour
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, computerGameObject.transform.position, computerGameObject.transform.parent);
 
         SaveSystem.Current.SetBool(CUTSCENE_FINISHED_SAVE_STRING, true);
+        chadNPC.AdvanceDialogueChain();
 
         FinishCutscene();
     }

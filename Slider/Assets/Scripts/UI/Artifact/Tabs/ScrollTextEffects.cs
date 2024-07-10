@@ -19,6 +19,11 @@ public class ScrollTextEffects : MonoBehaviour
 
     private Coroutine transformationCoroutine;
 
+    private void OnDisable()
+    {
+        OnEffectFinish();
+    }
+
     public void DoEffect()
     {
         if (transformationCoroutine != null)
@@ -37,13 +42,16 @@ public class ScrollTextEffects : MonoBehaviour
                 rectTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(rotationStart, rotationEnd, trans));
                 canvasGroup.alpha = 1 - x;
             },
-            () => {
-                rectTransform.anchoredPosition = Vector3.zero;
-                rectTransform.rotation = Quaternion.identity;
-                canvasGroup.alpha = 0;
-            },
+            () => OnEffectFinish(),
             this,
             duration
         );
+    }
+
+    private void OnEffectFinish()
+    {
+        rectTransform.anchoredPosition = Vector3.zero;
+        rectTransform.rotation = Quaternion.identity;
+        canvasGroup.alpha = 0;
     }
 }

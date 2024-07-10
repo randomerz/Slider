@@ -49,6 +49,7 @@ public class DesertTemple : MonoBehaviour, ISavable
         {
             ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
         }
+        templeMusic.SetIsInTemple(false);
     }
     
     public void SetIsInTemple(bool isInTemple)

@@ -8,6 +8,7 @@ public class AnchorFirstAppearance : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public PlayerActionHints hints;
     public static event System.EventHandler<System.EventArgs> OnAnchorAcquire;
+    
     void Start()
     {
         if (PlayerInventory.Instance.GetHasCollectedAnchor())
@@ -16,7 +17,6 @@ public class AnchorFirstAppearance : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        // add to tracker
         UITrackerManager.AddNewTracker(gameObject, anchor.trackerSprite);
         
         anchor.OnPickUp.AddListener(DoCutscene);
