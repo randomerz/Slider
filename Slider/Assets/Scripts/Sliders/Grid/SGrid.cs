@@ -706,6 +706,11 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
+    public void ResetRealigningGrid()
+    {
+        realigningGrid = null;
+    }
+
     public virtual void RearrangeGrid()
     {
         //Convert the target grid into the proper int[] and pass into setgrid

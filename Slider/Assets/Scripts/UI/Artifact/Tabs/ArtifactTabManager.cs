@@ -56,11 +56,13 @@ public class ArtifactTabManager : MonoBehaviour
     protected virtual void OnEnable()
     {
         UIArtifact.MoveMadeOnArtifact += ButtonInteract;
+        SGrid.OnSTileCollected += OnSTileCollected;
     }
 
     protected virtual void OnDisable()
     {
         UIArtifact.MoveMadeOnArtifact -= ButtonInteract;
+        SGrid.OnSTileCollected -= OnSTileCollected;
         justClickedLoad = false;
     }
 
@@ -96,6 +98,12 @@ public class ArtifactTabManager : MonoBehaviour
     private void ButtonInteract(object sender, System.EventArgs e)
     {
         justClickedLoad = false;
+    }
+
+    private void OnSTileCollected(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        SGrid.Current.ResetRealigningGrid();
+        SetSaveLoadTabSprites(false);
     }
 
 
