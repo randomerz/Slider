@@ -21,7 +21,6 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private bool isGear2Frozen = false;
     private bool isGear4Frozen = false;
-    public bool usedTools = false;
 
     private void Awake() 
     {
@@ -66,12 +65,12 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private bool IsGeneratorOn()
     {
-        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen;
     }
 
     private bool IsFullSpeed()
     {
-        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen;
     }
 
     private void UpdateAnimationSpeedTarget()
@@ -101,7 +100,7 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private void UpdateGears()
     {
-        if (!isGear2Frozen && !isGear4Frozen && usedTools)
+        if (!isGear2Frozen && !isGear4Frozen)
         {
             // No frozen gears => all move
 
