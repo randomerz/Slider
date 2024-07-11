@@ -127,15 +127,15 @@ public class Minecart : Item, ISavable
 
         if (AllMovingConds())
         {
-            if(!minecartAmbience.IsEnabled)
+            if(minecartAmbience != null && !minecartAmbience.IsEnabled)
             {
                 minecartAmbience.SetParameterEnabled(true);
             }
             Move();
         }
         else
-        {
-            if(minecartAmbience.IsEnabled)
+        {   
+            if(minecartAmbience != null && minecartAmbience.IsEnabled)
             {
                 minecartAmbience.SetParameterEnabled(false);
             }
@@ -450,6 +450,8 @@ public class Minecart : Item, ISavable
 
     private bool TryGetNextTileDiffRM()
     {
+        if(SGrid.Current == null)
+            return false;
         List<STile> stileList = SGrid.Current.GetActiveTiles();
         List<RailManager> rmList = new List<RailManager>();
         Vector3Int targetLoc;
@@ -524,6 +526,8 @@ public class Minecart : Item, ISavable
 
     private STile CheckDropTileBelow()
     {
+        if(SGrid.Current == null)
+            return null;
         Vector3 checkloc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)) + GetTileOffsetVector(currentDirection);
         STile tile = null;
         var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.4f, 0);
