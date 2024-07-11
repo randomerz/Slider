@@ -11,11 +11,16 @@ public class Rocket : MonoBehaviour
     public Transform rocketStart;
     public Transform rocketEnd;
     public AnimationCurve rocketCurve;
-
     public CameraDolly rocketCameraDolly;
+    public Animator catwalkAnimator;
+    public Animator capAnimator;
+    public Animator supportAnimator;
+    public GameObject rocketFlamesParent;
     public List<ParticleSystem> rocketParticles;
 
     private bool isPlaying;
+    private const float CAP_ANIMATION_LENGTH = 3.0f;
+    private const float RAISE_ANIMATION_UNTIL_SPARKS = 1.25f;
     private const float ROCKET_DURATION = 8.0f;
 
     private AsyncOperation sceneLoad;
@@ -26,24 +31,18 @@ public class Rocket : MonoBehaviour
         if (isPlaying) 
             return;
 
-        StartCoroutine(RocketCutscene());
+        isPlaying = true;
+
+        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+
+        UIEffects.FadeToBlack(() => {
+            StartCoroutine(RocketCutscene());
+        }, disableAtEnd: false);
     }
 
     private IEnumerator RocketCutscene()
     {
-        isPlaying = true;
-        
-        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
-        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
-
-        rocketSpriteRenderer.sortingOrder = 25; // set to entity 25
-        UIEffects.FadeToBlack(disableAtEnd: false);
-
-        foreach (ParticleSystem ps in rocketParticles)
-        {
-            ps.Play();
-        }
-
         // Really jank way of turning down music
         AudioManager.DampenMusic(this, 0, 6);
         CoroutineUtils.ExecuteAfterDelay(() => {
@@ -51,10 +50,38 @@ public class Rocket : MonoBehaviour
             AudioManager.StopMusic("MagiTech");
             AudioManager.Play("MagiTech Blast Off");
         }, this, 1);
+        
+        rocketCameraDolly.OnRollercoasterEnd += OnSkipCutscene;
+        rocketCameraDolly.StartTrack(true);
 
         yield return new WaitForSeconds(3f);
 
+        catwalkAnimator.SetTrigger("detach");
+        AudioManager.Play("Hat Click");
+
+        yield return new WaitForSeconds(1);
+
+        capAnimator.SetTrigger("detach");
+        AudioManager.Play("Hat Click");
+
+        yield return new WaitForSeconds(CAP_ANIMATION_LENGTH - 0.5f);
+
+        supportAnimator.SetTrigger("raise");
+
+        yield return new WaitForSeconds(RAISE_ANIMATION_UNTIL_SPARKS);
+        
+        AudioManager.Play("Hat Click");
         AudioManager.Play("Rumble Increase 8s");
+
+        rocketFlamesParent.SetActive(true);
+        foreach (ParticleSystem ps in rocketParticles)
+        {
+            ps.Play();
+        }
+
+        rocketSpriteRenderer.sortingOrder = 25; // set to entity 25
+
+        yield return new WaitForSeconds(1.75f);
 
         Player.GetSpriteRenderer().enabled = false;
         List<Vector2> shakeData = new()
@@ -65,9 +92,6 @@ public class Rocket : MonoBehaviour
             new(9f, 0f)
         };
         CameraShake.ShakeCustom(shakeData);
-        
-        rocketCameraDolly.OnRollercoasterEnd += OnSkipCutscene;
-        rocketCameraDolly.StartTrack(true);
 
         CoroutineUtils.ExecuteEachFrame(
             (x) => {

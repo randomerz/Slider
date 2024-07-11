@@ -1211,7 +1211,7 @@ public class ShopDialogueManager : MonoBehaviour
             
                 new ShopDialogue(
                     null,
-                    dialogueTable[ShopDialogueCode.TheVeil][1],
+                    dialogueTable[ShopDialogueCode.TheVeil][2],
                     TKSprite.Question,
                     () => {
                         FoggyMusicHintManager.Instance.SetBobHint(false);
