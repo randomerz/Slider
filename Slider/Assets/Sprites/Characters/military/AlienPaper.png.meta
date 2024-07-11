@@ -127,7 +127,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 336
+        y: 112
         width: 112
         height: 112
       alignment: 0
@@ -148,7 +148,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 112
-        y: 336
+        y: 112
         width: 112
         height: 112
       alignment: 0
@@ -169,7 +169,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 224
-        y: 336
+        y: 112
         width: 112
         height: 112
       alignment: 0
@@ -190,7 +190,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 336
-        y: 336
+        y: 112
         width: 112
         height: 112
       alignment: 0
@@ -211,7 +211,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 448
-        y: 336
+        y: 112
         width: 112
         height: 112
       alignment: 0
@@ -232,7 +232,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 560
-        y: 336
+        y: 112
         width: 112
         height: 112
       alignment: 0
@@ -253,7 +253,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 224
+        y: 0
         width: 112
         height: 112
       alignment: 0
@@ -274,7 +274,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 112
-        y: 224
+        y: 0
         width: 112
         height: 112
       alignment: 0
@@ -295,7 +295,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 224
-        y: 224
+        y: 0
         width: 112
         height: 112
       alignment: 0
@@ -316,7 +316,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 336
-        y: 224
+        y: 0
         width: 112
         height: 112
       alignment: 0
@@ -337,7 +337,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 448
-        y: 224
+        y: 0
         width: 112
         height: 112
       alignment: 0
@@ -358,7 +358,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 560
-        y: 224
+        y: 0
         width: 112
         height: 112
       alignment: 0
@@ -370,48 +370,6 @@ TextureImporter:
       bones: []
       spriteID: 876b6cb49d7164c44a1b43a6a04ebde0
       internalID: -293291937
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AlienPaper_12
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 112
-        width: 112
-        height: 112
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 366d4db68cd467e40a72f2591ddc34b7
-      internalID: -198424426
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AlienPaper_13
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 112
-        width: 112
-        height: 112
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b04a984ffba83174ebfa9de8e1b365ad
-      internalID: 2054938600
       vertices: []
       indices: 
       edges: []
@@ -431,8 +389,6 @@ TextureImporter:
       AlienPaper_1: -813442526
       AlienPaper_10: -304499857
       AlienPaper_11: -293291937
-      AlienPaper_12: -198424426
-      AlienPaper_13: 2054938600
       AlienPaper_2: 410195615
       AlienPaper_3: 831291167
       AlienPaper_4: -912143708
