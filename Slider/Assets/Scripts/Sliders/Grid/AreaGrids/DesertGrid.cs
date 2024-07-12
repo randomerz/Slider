@@ -14,10 +14,13 @@ public class DesertGrid : SGrid
     private bool campfireIsLit = false;
     private Coroutine shuffleBuildUpCoroutine;
     private Coroutine placeTile9Coroutine;
+    public GameObject bird;
+    public GameObject deadBird;
 
     public Animator playerAnimator;
     public RuntimeAnimatorController playerShadesController;
 
+    private const string DESERT_KILLED_BIRD = "desertKilledBird";
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
 
@@ -145,6 +148,10 @@ public class DesertGrid : SGrid
         base.Load(profile);
         campfireIsLit = profile.GetBool("desertCamp");
         checkCompletion = profile.GetBool("desertCheckCompletion");
+        if(profile.GetBool(DESERT_KILLED_BIRD))
+        {
+            KillBird(true);
+        }
     }
 
     #region Oasis
@@ -165,6 +172,19 @@ public class DesertGrid : SGrid
     public void EnableSunglassesForPlayer()
     {
         playerAnimator.runtimeAnimatorController = playerShadesController;
+    }
+
+    public void KillBird(bool fromSave)
+    {
+        SaveSystem.Current.SetBool(DESERT_KILLED_BIRD, true);
+        bird.gameObject.SetActive(false);
+        deadBird.gameObject.SetActive(true);
+        if(!fromSave)
+        {
+            AchievementManager.IncrementAchievementStat("desertKilledBird");
+            //TODO: Get bird squak sound
+            AudioManager.Play("Hurt");
+        }
     }
 
     #region Gazelle
