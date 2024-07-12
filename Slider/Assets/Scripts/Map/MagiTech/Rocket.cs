@@ -57,12 +57,12 @@ public class Rocket : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         catwalkAnimator.SetTrigger("detach");
-        AudioManager.Play("Hat Click");
+        AudioManager.PlayWithVolume("Hat Click", 0.5f);
 
         yield return new WaitForSeconds(1);
 
         capAnimator.SetTrigger("detach");
-        AudioManager.Play("Hat Click");
+        AudioManager.PlayWithVolume("Hat Click", 0.5f);
 
         yield return new WaitForSeconds(CAP_ANIMATION_LENGTH - 0.5f);
 
@@ -70,7 +70,7 @@ public class Rocket : MonoBehaviour
 
         yield return new WaitForSeconds(RAISE_ANIMATION_UNTIL_SPARKS);
         
-        AudioManager.Play("Hat Click");
+        AudioManager.PlayWithVolume("Hat Click", 0.7f);
         AudioManager.Play("Rumble Increase 8s");
 
         rocketFlamesParent.SetActive(true);

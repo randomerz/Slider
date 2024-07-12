@@ -25,6 +25,7 @@ public class VillageGrid : SGrid
 
     public CameraDolly introCameraDolly;
     public const string INTRO_CUTSCENE_SAVE_STRING = "villageIntroCutscene";
+    private const string VILLAGE_PENDING_COMPLETE = "villagePendingComplete";
 
     public override void Init()
     {
@@ -48,6 +49,12 @@ public class VillageGrid : SGrid
             UITrackerManager.AddNewTracker(slider2Collectible, sprite: UITrackerManager.DefaultSprites.circle3, blinkTime: 3);
         }
         CheckHole();
+
+        
+        if (SaveSystem.Current.GetBool(VILLAGE_PENDING_COMPLETE))
+        {
+            placeTile9Coroutine = StartCoroutine(PlaceTile9());
+        }
     }
 
     private void OnEnable()
@@ -292,6 +299,7 @@ public class VillageGrid : SGrid
             // Disable artifact movement
             UIArtifact.DisableMovement(false);
             SaveSystem.Current.SetBool("forceAutoMoveVillage", false);
+            SaveSystem.Current.SetBool(VILLAGE_PENDING_COMPLETE, true);
 
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
 

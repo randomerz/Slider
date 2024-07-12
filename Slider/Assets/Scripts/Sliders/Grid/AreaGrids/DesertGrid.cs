@@ -23,6 +23,7 @@ public class DesertGrid : SGrid
     private const string DESERT_KILLED_BIRD = "desertKilledBird";
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
+    private const string DESERT_PENDING_COMPLETE = "desertPendingComplete";
 
     public override void Init() 
     {
@@ -42,6 +43,11 @@ public class DesertGrid : SGrid
             EnableSunglassesForPlayer();
         }
 
+        if (SaveSystem.Current.GetBool(DESERT_PENDING_COMPLETE, true) && !PlayerInventory.Contains("Slider 9", Area.Desert))
+        {
+            CompleteDesert();
+        }
+
         GiveTilesIfFromMagitech();
     }
 
@@ -50,7 +56,7 @@ public class DesertGrid : SGrid
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
         {
             for (int i = 1; i <= 9; i++)
-            Current.GetCollectible("Slider " + i)?.DoPickUp(true);
+            GetCollectible("Slider " + i).DoPickUp(true);
         }
     }
     
@@ -293,11 +299,15 @@ public class DesertGrid : SGrid
         {
             AudioManager.Play("Puzzle Complete");
 
-            // Disable artifact movement
-            UIArtifact.DisableMovement(false); // TODO: make sure this works with scrap of the scroll
-
-            placeTile9Coroutine = StartCoroutine(PlaceTile9());
+            SaveSystem.Current.SetBool(DESERT_PENDING_COMPLETE, true);
+            CompleteDesert();
         }
+    }
+
+    private void CompleteDesert()
+    {
+        UIArtifact.DisableMovement(false); 
+        placeTile9Coroutine = StartCoroutine(PlaceTile9());
     }
 
     private IEnumerator PlaceTile9()
