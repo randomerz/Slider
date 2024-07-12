@@ -43,7 +43,12 @@ public class DesertGrid : SGrid
             EnableSunglassesForPlayer();
         }
 
-        if (SaveSystem.Current.GetBool(DESERT_PENDING_COMPLETE, true) && !PlayerInventory.Contains("Slider 9", Area.Desert))
+        if (SaveSystem.Current.GetBool(DESERT_PARTY_STARTED) && !SaveSystem.Current.GetBool(DESERT_PARTY_FINISHED))
+        {
+            SaveSystem.Current.SetBool(DESERT_PARTY_FINISHED, true);
+        }
+
+        if (SaveSystem.Current.GetBool(DESERT_PENDING_COMPLETE) && !PlayerInventory.Contains("Slider 9", Area.Desert))
         {
             CompleteDesert();
         }

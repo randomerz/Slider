@@ -51,7 +51,7 @@ public class VillageGrid : SGrid
         CheckHole();
 
         
-        if (SaveSystem.Current.GetBool(VILLAGE_PENDING_COMPLETE))
+        if (SaveSystem.Current.GetBool(VILLAGE_PENDING_COMPLETE) && !PlayerInventory.Contains("Slider 9", Area.Village))
         {
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
         }

@@ -88,6 +88,7 @@ public class Collectible : MonoBehaviour
     {
         PlayerInventory.AddCollectible(this);
         onCollect.Invoke();
+        SaveSystem.SaveGame("New Collectible");
     }
 
     public void SpawnCollectable(bool withAudio = true)
