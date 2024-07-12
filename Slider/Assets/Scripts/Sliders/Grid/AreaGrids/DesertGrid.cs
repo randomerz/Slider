@@ -181,7 +181,7 @@ public class DesertGrid : SGrid
         deadBird.gameObject.SetActive(true);
         if(!fromSave)
         {
-            AchievementManager.IncrementAchievementStat("desertKilledBird");
+            AchievementManager.SetAchievementStat("desertKilledBird", true, 1);
             //TODO: Get bird squak sound
             AudioManager.Play("Hurt");
         }

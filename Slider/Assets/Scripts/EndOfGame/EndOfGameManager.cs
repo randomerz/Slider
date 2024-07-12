@@ -28,7 +28,8 @@ public class EndOfGameManager : MonoBehaviour
     public CanvasGroup timeCanvasGroup;
 
     private const float MAXIMUM_TIME_DISPLAY_SECONDS = 3600 * 3;
-    private const float MAXIMUM_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600;
+    private const float MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600 * 2;
+    private const float MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600;
     private const float PARALLAX_ANIMATION_DURATION = 5;
     private const float FADE_ANIMATION_DURATION = 1;
     private const float FADE_INBETWEEN_DURATION = 0.75f;
@@ -37,6 +38,8 @@ public class EndOfGameManager : MonoBehaviour
     private System.IDisposable listener;
     private AsyncOperation sceneLoad;
 
+    private float time;
+
     private void OnDisable() 
     {
         listener?.Dispose();
@@ -44,16 +47,21 @@ public class EndOfGameManager : MonoBehaviour
 
     public void Start()
     {
+        time = SaveSystem.Current.GetPlayTimeInSeconds();
         UpdateTexts();
         StartCoroutine(AnimateEndScene());
     }
 
     private void GiveAchievements()
     {
-        AchievementManager.SetAchievementStat("savedCat", 1);
-        if (SaveSystem.Current != null && SaveSystem.Current.GetPlayTimeInSeconds() < MAXIMUM_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
+        AchievementManager.SetAchievementStat("savedCat", false, 1);
+        if (SaveSystem.Current != null && time < MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
         {
-            AchievementManager.SetAchievementStat("completedGame1Hour", 1);
+            AchievementManager.SetAchievementStat("completedGame2Hours", true, 1);
+        }
+        if (SaveSystem.Current != null && time < MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
+        {
+            AchievementManager.SetAchievementStat("completedGame1Hour", true, 1);
         }
     }
 
@@ -66,7 +74,7 @@ public class EndOfGameManager : MonoBehaviour
         }
 
         nameText.SetText($"{SaveSystem.Current.GetProfileName()}!");
-        TimeSpan ts = TimeSpan.FromSeconds(SaveSystem.Current.GetPlayTimeInSeconds());
+        TimeSpan ts = TimeSpan.FromSeconds(time);
         timeText.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}:{3:D3}",
             ts.Hours,
@@ -75,7 +83,7 @@ public class EndOfGameManager : MonoBehaviour
             ts.Milliseconds
         ));
 
-        bool enableTimeText = SaveSystem.Current.GetPlayTimeInSeconds() <= MAXIMUM_TIME_DISPLAY_SECONDS;
+        bool enableTimeText = time <= MAXIMUM_TIME_DISPLAY_SECONDS;
         timeText.gameObject.SetActive(enableTimeText);
     }
 
@@ -182,9 +190,9 @@ public class EndOfGameManager : MonoBehaviour
 
     private void GoToCredits()
     {
-        SaveSystem.SetCurrentProfile(-1); //We need the current profile to display values
+        SaveSystem.SetCurrentProfile(-1); 
         sceneLoad = SceneManager.LoadSceneAsync(CREDITS_SCENE);
-        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+        sceneLoad.allowSceneActivation = false;
 
         GiveAchievements();
 

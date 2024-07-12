@@ -77,7 +77,7 @@ public class CaveGrid : SGrid
         base.EnableStile(stile, shouldFlicker);
         if(stile.islandId == 7)
         {
-            AchievementManager.SetAchievementStat("completedBigMoss", 1);
+            AchievementManager.SetAchievementStat("completedBigMoss", false, 1);
         }
     }
 
@@ -197,7 +197,7 @@ public class CaveGrid : SGrid
         UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
 
-        AchievementManager.SetAchievementStat("completedCaves", 1);
+        AchievementManager.SetAchievementStat("completedCaves", false, 1);
     }
 
     private void SetMagicRocks(bool value)

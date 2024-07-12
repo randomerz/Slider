@@ -78,7 +78,7 @@ public class JungleGrid : SGrid
 
         if(stile.islandId == 9)
         {
-            AchievementManager.SetAchievementStat("jungleAllTiles", 1);
+            AchievementManager.SetAchievementStat("jungleAllTiles", false, 1);
         }
     }
 
@@ -265,7 +265,7 @@ public class JungleGrid : SGrid
         if (IsJungleComplete()) 
         {
             StartCoroutine(ShowButtonAndMapCompletions());
-            AchievementManager.SetAchievementStat("completedJungle", 1);
+            AchievementManager.SetAchievementStat("completedJungle", false, 1);
         }
     }
 
