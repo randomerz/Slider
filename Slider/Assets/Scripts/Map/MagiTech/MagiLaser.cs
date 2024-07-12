@@ -132,7 +132,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
         // Set origin point
         lr.positionCount = 1;
-        lr.SetPosition(lr.positionCount - 1, pos);
+        lr.SetPosition(0, pos);
         float playerDist;
         
         for (int ct = 0; ct < MAX_LASER_BOUNCES; ct++) {

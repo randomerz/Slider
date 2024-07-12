@@ -126,13 +126,55 @@ public class LocalizationSkeletonGenerator : EditorWindow
    public static void GenerateSkeleton(
        LocalizationProjectConfiguration projectConfiguration, GenerateSkeletonStrategy strategy = GenerateSkeletonStrategy.AllLocales, string root = null, string referenceRoot = null)
    {
+       var buildPlayerOptions = new BuildPlayerOptions();
+       buildPlayerOptions = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(buildPlayerOptions);
+       bool buildDevelopment = (buildPlayerOptions.options & BuildOptions.Development) != 0;
+       
+       Dictionary<string, bool> localeIsValid = new();
+       if (buildDevelopment)
+       {
+           foreach (var locale in projectConfiguration.InitialLocales)
+           {
+               localeIsValid[locale.name] = true;
+           }
+       }
+       else
+       {
+           foreach (var locale in projectConfiguration.InitialLocales)
+           {
+               bool isValid = true;
+               foreach (var option in locale.options)
+               {
+                   if (option.name == LocalizationFile.Config.IsValid)
+                   {
+                       if (!int.TryParse(option.value, out int isValidFlag) || isValidFlag != 1)
+                       {
+                           isValid = false;
+                           break;
+                       }
+                   }
+               }
+
+               localeIsValid[locale.name] = isValid;
+           }
+       }
+       
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
        foreach (var locale in projectConfiguration.InitialLocales)
        {
            LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale);
            string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
-           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
+
+           string path = LocalizationFile.LocaleGlobalFilePath(locale.name, root);
+           if (localeIsValid[locale.name])
+           {
+               WriteFileAndForceParentPath(path, serializedConfigs);
+           }
+           else
+           {
+               GuardedDeleteFile(path);
+           }
        }
 
        // AT: note: reference file = old translations that should be considered for migration into new translations
@@ -157,16 +199,27 @@ public class LocalizationSkeletonGenerator : EditorWindow
            return referenceFile;
        }
 
+
        foreach (var prefab in projectConfiguration.RelevantPrefabs)
        {
            var skeleton = LocalizableContext.ForSinglePrefab(prefab);
+           
            foreach (var locale in projectConfiguration.InitialLocales)
            {
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
                    referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot))
                );
-               WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, prefab, root), serializedSkeleton);
+
+               string path = LocalizationFile.AssetPath(locale.name, prefab, root);
+               if (localeIsValid[locale.name])
+               {
+                   WriteFileAndForceParentPath(path, serializedSkeleton);
+               }
+               else
+               {
+                   GuardedDeleteFile(path);
+               }
            }
        }
        
@@ -205,7 +258,16 @@ public class LocalizationSkeletonGenerator : EditorWindow
                    serializeConfigurationDefaults: false,
                    referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, scene, referenceRoot))
                );
-               WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, scene, root), serializedSkeleton);
+
+               string path = LocalizationFile.AssetPath(locale.name, scene, root);
+               if (localeIsValid[locale.name])
+               {
+                   WriteFileAndForceParentPath(path, serializedSkeleton);
+               }
+               else
+               {
+                   GuardedDeleteFile(path);
+               }
            }
        }
 
@@ -217,6 +279,14 @@ public class LocalizationSkeletonGenerator : EditorWindow
        catch (Exception e)
        {
            Debug.LogWarning(e);
+       }
+   }
+
+   private static void GuardedDeleteFile(string path)
+   {
+       if (File.Exists(path))
+       {
+           File.Delete(path);
        }
    }
 

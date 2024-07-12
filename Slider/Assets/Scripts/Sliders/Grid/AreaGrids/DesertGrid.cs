@@ -14,12 +14,16 @@ public class DesertGrid : SGrid
     private bool campfireIsLit = false;
     private Coroutine shuffleBuildUpCoroutine;
     private Coroutine placeTile9Coroutine;
+    public GameObject bird;
+    public GameObject deadBird;
 
     public Animator playerAnimator;
     public RuntimeAnimatorController playerShadesController;
 
+    private const string DESERT_KILLED_BIRD = "desertKilledBird";
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
+    private const string DESERT_PENDING_COMPLETE = "desertPendingComplete";
 
     public override void Init() 
     {
@@ -39,6 +43,16 @@ public class DesertGrid : SGrid
             EnableSunglassesForPlayer();
         }
 
+        if (SaveSystem.Current.GetBool(DESERT_PARTY_STARTED) && !SaveSystem.Current.GetBool(DESERT_PARTY_FINISHED))
+        {
+            SaveSystem.Current.SetBool(DESERT_PARTY_FINISHED, true);
+        }
+
+        if (SaveSystem.Current.GetBool(DESERT_PENDING_COMPLETE) && !PlayerInventory.Contains("Slider 9", Area.Desert))
+        {
+            CompleteDesert();
+        }
+
         GiveTilesIfFromMagitech();
     }
 
@@ -47,7 +61,7 @@ public class DesertGrid : SGrid
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
         {
             for (int i = 1; i <= 9; i++)
-            Current.GetCollectible("Slider " + i)?.DoPickUp(true);
+            GetCollectible("Slider " + i).DoPickUp(true);
         }
     }
     
@@ -145,6 +159,10 @@ public class DesertGrid : SGrid
         base.Load(profile);
         campfireIsLit = profile.GetBool("desertCamp");
         checkCompletion = profile.GetBool("desertCheckCompletion");
+        if(profile.GetBool(DESERT_KILLED_BIRD))
+        {
+            KillBird(true);
+        }
     }
 
     #region Oasis
@@ -165,6 +183,19 @@ public class DesertGrid : SGrid
     public void EnableSunglassesForPlayer()
     {
         playerAnimator.runtimeAnimatorController = playerShadesController;
+    }
+
+    public void KillBird(bool fromSave)
+    {
+        SaveSystem.Current.SetBool(DESERT_KILLED_BIRD, true);
+        bird.gameObject.SetActive(false);
+        deadBird.gameObject.SetActive(true);
+        if(!fromSave)
+        {
+            AchievementManager.IncrementAchievementStat("desertKilledBird");
+            //TODO: Get bird squak sound
+            AudioManager.Play("Hurt");
+        }
     }
 
     #region Gazelle
@@ -273,11 +304,15 @@ public class DesertGrid : SGrid
         {
             AudioManager.Play("Puzzle Complete");
 
-            // Disable artifact movement
-            UIArtifact.DisableMovement(false); // TODO: make sure this works with scrap of the scroll
-
-            placeTile9Coroutine = StartCoroutine(PlaceTile9());
+            SaveSystem.Current.SetBool(DESERT_PENDING_COMPLETE, true);
+            CompleteDesert();
         }
+    }
+
+    private void CompleteDesert()
+    {
+        UIArtifact.DisableMovement(false); 
+        placeTile9Coroutine = StartCoroutine(PlaceTile9());
     }
 
     private IEnumerator PlaceTile9()
