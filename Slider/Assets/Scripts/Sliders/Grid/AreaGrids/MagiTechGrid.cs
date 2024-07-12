@@ -487,7 +487,7 @@ public class MagiTechGrid : SGrid
     {
         if(GetNumTilesCollected() == 0)
         {
-            AchievementManager.IncrementAchievementStat("magitechEarlyGem");
+            AchievementManager.SetAchievementStat("magitechEarlyGem", true, 1);
         }
     }
 

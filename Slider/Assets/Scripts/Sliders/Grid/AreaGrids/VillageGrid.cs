@@ -303,10 +303,10 @@ public class VillageGrid : SGrid
 
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
 
-            AchievementManager.SetAchievementStat("completedVillage", 1);
+            AchievementManager.SetAchievementStat("completedVillage", false, 1);
             if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
             {
-                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", true, 1);
             }
         }
     }

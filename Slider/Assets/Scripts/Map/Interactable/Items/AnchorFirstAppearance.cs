@@ -29,7 +29,7 @@ public class AnchorFirstAppearance : MonoBehaviour
         OnAnchorAcquire?.Invoke(this, new System.EventArgs{});
         hints.TriggerHint("anchor");
 
-        AchievementManager.SetAchievementStat("collectedAnchor", 1);
+        AchievementManager.SetAchievementStat("collectedAnchor", false, 1);
 
         Destroy(this);
     }

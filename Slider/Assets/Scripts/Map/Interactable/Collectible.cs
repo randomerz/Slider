@@ -125,7 +125,7 @@ public class Collectible : MonoBehaviour
     public void ActivateSTile(int stileId) 
     {
         SGrid.Current.CollectSTile(stileId);
-        AchievementManager.IncrementAchievementStat("slidersCollected");
+        AchievementManager.IncrementAchievementStat("slidersCollected", false);
     }
 
 
