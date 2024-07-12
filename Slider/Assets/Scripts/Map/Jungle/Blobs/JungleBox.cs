@@ -312,7 +312,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
         }
         else
         {
-            pathController.DisableMarching(sendingDirection);
+            pathController?.DisableMarching(sendingDirection);
         }
     }
 

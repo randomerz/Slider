@@ -63,6 +63,13 @@ public class Blob : MonoBehaviour
         this.targetDistanceTraveled = targetDistanceTraveled;
         parentPath = owner;
 
+        InitSTile(owner);
+        
+        ResetJump();
+    }
+
+    protected virtual void InitSTile(JungleBlobPathController owner)
+    {
         currentSTileUnder = SGrid.GetSTileUnderneath(gameObject);
         if (currentSTileUnder == null)
         {
@@ -72,8 +79,6 @@ public class Blob : MonoBehaviour
         {
             transform.SetParent(currentSTileUnder.transform);
         }
-        
-        ResetJump();
     }
 
     private void Update()
@@ -105,6 +110,11 @@ public class Blob : MonoBehaviour
             RemoveBlob();
         }
 
+        CheckSTile(deltaPosition);
+    }
+
+    protected virtual void CheckSTile(Vector3 deltaPosition)
+    {
         // Check for reparenting
         STile under = SGrid.GetSTileUnderneath(gameObject);
 
