@@ -152,7 +152,9 @@ namespace Localization
 
     public class LocalizationFile
     {
-        private static string LocalizationFolderPath(string root = null) => Path.Join(root ?? Application.streamingAssetsPath, "Localizations");
+        public static string LocalizationRootPath(string root = null) => root ?? Application.streamingAssetsPath;
+        
+        public static string LocalizationFolderPath(string root = null) => Path.Join(LocalizationRootPath(root), "Localizations");
 
         public static List<string> LocaleList(string playerPrefLocale, string root = null)
         {
@@ -839,7 +841,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             if (isEnglish && canUsePixelFont)
             {
-                Debug.Log("[Localization] Localization strategy: skipping...");
+                // Debug.Log("[Localization] Localization strategy: skipping...");
                 return;
             }
 

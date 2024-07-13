@@ -10,7 +10,7 @@ public class DesyncItem : Item
     [SerializeField] private LayerMask noDropItemsMask;
 
     private bool isItemInPast;
-    private bool fromPast;
+    public bool fromPast;
     private STile currentTile;
     private bool isDesynced;
     private DesyncItem presentItem;
@@ -41,9 +41,10 @@ public class DesyncItem : Item
     private IEnumerator LateStart()
     {
         yield return new WaitForEndOfFrame();
-
-        // For checking if item spawns in a portal bc of save/load or scene change
+        
+        isItemInPast = MagiTechGrid.IsInPast(transform);
         MoveIfInIllegalBounds();
+        UpdateItemPair();
     }
 
     private void Init()
@@ -53,8 +54,6 @@ public class DesyncItem : Item
 
         didInit = true;
         isItemInPast = MagiTechGrid.IsInPast(transform);
-        fromPast = isItemInPast;
-        currentTile = SGrid.GetSTileUnderneath(gameObject, includeInactive: true);
         if (fromPast)
         {
             pastItem = this;
@@ -143,7 +142,7 @@ public class DesyncItem : Item
 
     private bool ShouldMovePresentItem()
     {
-        return fromPast && pastItem.isItemInPast && !presentItem.isDesynced && ! pastItem.isDesynced;
+        return fromPast && pastItem.isItemInPast && !presentItem.isDesynced && !pastItem.isDesynced;
     }
 
     private void MovePresentItemToPastLocation()
@@ -151,6 +150,7 @@ public class DesyncItem : Item
         Vector3 pastLocalLoc = GetLocalPosition();
         Vector3 checkPos;
         STile presentTile = null;
+        currentTile = SGrid.GetSTileUnderneath(gameObject, includeInactive: true);
         if(currentTile != null)
         {
             presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
@@ -170,14 +170,15 @@ public class DesyncItem : Item
             if(checkPos.x > 42f)
                 checkPos.x = 43f;
             if(checkPos.y > 42f)
-                checkPos.y = 3f;
+                checkPos.y = 43f;
         }
-        Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true, 10, 0.25f);
+        presentItem.isItemInPast = false;
+        Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true, 10, 0.1f);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         if(targetPos.x == float.MaxValue)
         {
             Debug.LogWarning("Could not find valid position for present item. Moving anyways");
-            targetPos = pastLocalLoc;
+            targetPos = checkPos;
         }
         presentItem.transform.position = targetPos;
         if(presentTile != null)
