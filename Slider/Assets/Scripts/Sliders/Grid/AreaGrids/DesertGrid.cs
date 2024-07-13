@@ -61,7 +61,14 @@ public class DesertGrid : SGrid
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
         {
             for (int i = 1; i <= 9; i++)
-            GetCollectible("Slider " + i).DoPickUp(true);
+            {
+                if (GetCollectible("Slider " + i) != null)
+                {
+                    GetCollectible("Slider " + i).DoPickUp(true);
+                }
+            }
+
+            PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Explosives", Area.Military));
         }
     }
     

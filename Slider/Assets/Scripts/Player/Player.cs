@@ -297,10 +297,12 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetIsOnWater(sp.isOnWater);
         SetIsInHouse(sp.isInHouse);
 
+        Debug.Log($"player load: {DebugUIManager.justDidSetScene}");
         // Update position
         if (SettingsManager.Setting<bool>(Settings.DevConsole).CurrentValue && DebugUIManager.justDidSetScene)
         {
             // skip setting position if just did SetScene()
+            Debug.Log($"justDidSetScene false");
             DebugUIManager.justDidSetScene = false;
 
             SetIsOnWater(SGrid.Current.MyArea == Area.Ocean);

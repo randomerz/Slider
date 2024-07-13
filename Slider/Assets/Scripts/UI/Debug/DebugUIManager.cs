@@ -148,7 +148,7 @@ public class DebugUIManager : MonoBehaviour
 
     private void SetCheated()
     {
-        if(SaveSystem.Current != null)
+        if (SaveSystem.Current != null)
         {
             SaveSystem.Current.SetBool("UsedCheats", true);
         }

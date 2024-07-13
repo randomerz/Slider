@@ -841,7 +841,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             if (isEnglish && canUsePixelFont)
             {
-                Debug.Log("[Localization] Localization strategy: skipping...");
+                // Debug.Log("[Localization] Localization strategy: skipping...");
                 return;
             }
 

@@ -37,7 +37,7 @@ public class Collectible : MonoBehaviour
     public UnityEvent onCollect;
 
     [SerializeField] private CollectibleData cData;
-    [SerializeField] private bool shouldDisableAtStart = false;
+    public bool shouldDisableAtStart = false;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleType particle = ParticleType.SmokePoof;
     
@@ -95,7 +95,7 @@ public class Collectible : MonoBehaviour
     {
         if(!gameObject.activeSelf)
         {
-            if(withAudio)
+            if (withAudio)
                 AudioManager.Play("Puzzle Complete");
             ParticleManager.SpawnParticle(particle, transform.position, transform);
         }

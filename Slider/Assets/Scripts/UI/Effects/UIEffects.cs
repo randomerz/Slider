@@ -69,6 +69,11 @@ public class UIEffects : Singleton<UIEffects>
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd));
     }
 
+    public static void FadeToBlackExtra(System.Action callbackHalf=null, System.Action callbackNinety=null, System.Action callbackEnd=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
+    {
+        StartEffectCoroutine(_instance.FadeMoreCallbacksCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callbackHalf, callbackNinety, callbackEnd, speed, disableAtEnd));
+    }
+
     public static void FadeFromWhite(System.Action callback=null, float speed=1)
     {
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed));
@@ -77,6 +82,11 @@ public class UIEffects : Singleton<UIEffects>
     public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1, bool useUnscaledTime = false)
     {
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd, useUnscaledTime));
+    }
+
+    public static void FadeToWhiteExtra(System.Action callbackHalf=null, System.Action callbackThreeFourth=null, System.Action callbackEnd=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
+    {
+        StartEffectCoroutine(_instance.FadeMoreCallbacksCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callbackHalf, callbackThreeFourth, callbackEnd, speed, disableAtEnd));
     }
 
     public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
@@ -103,6 +113,14 @@ public class UIEffects : Singleton<UIEffects>
         _instance.screenshotPanel.SetActive(false);
         _instance.screenshotCanvasGroup.alpha = 0;
         DisablePixel();
+    }
+
+    public static void StopCurrentCoroutine()
+    {
+        if (previousCoroutine != null)
+        {
+            _instance.StopCoroutine(previousCoroutine);
+        }
     }
 
     private static void StartEffectCoroutine(IEnumerator coroutine, bool stopable = true)
@@ -136,6 +154,51 @@ public class UIEffects : Singleton<UIEffects>
             gameObject.SetActive(false);
 
         callback?.Invoke();
+    }
+
+    private IEnumerator FadeMoreCallbacksCoroutine(
+        GameObject gameObject, 
+        CanvasGroup group, 
+        float startAlpha, 
+        float endAlpha, 
+        System.Action callbackHalf=null, 
+        System.Action callbackNinety=null, 
+        System.Action callbackEnd=null, 
+        float speed=1, 
+        bool disableAtEnd = true, 
+        bool useUnscaledTime = false
+    ) {
+        float t = 0;
+        bool calledHalf = false;
+        bool calledNinety = false;
+        gameObject.SetActive(true);
+        group.alpha = startAlpha;
+
+        while (t < fadeDuration)
+        {
+            group.alpha = Mathf.Lerp(startAlpha, endAlpha, t / fadeDuration);
+
+            if (t >= fadeDuration * 0.5f && !calledHalf)
+            {
+                calledHalf = true;
+                callbackHalf?.Invoke();
+            }
+
+            if (t >= fadeDuration * 0.9f && !calledNinety)
+            {
+                calledNinety = true;
+                callbackNinety?.Invoke();
+            }
+
+            yield return null;
+            t += (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
+        }
+
+        group.alpha = endAlpha;
+        if (disableAtEnd)
+            gameObject.SetActive(false);
+
+        callbackEnd?.Invoke();
     }
 
     private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
