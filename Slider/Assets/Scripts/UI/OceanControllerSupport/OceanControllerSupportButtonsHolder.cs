@@ -18,7 +18,7 @@ public class OceanControllerSupportButtonsHolder : MonoBehaviour
 
     public void MakeLastControllerButtonClickedDisappear()
     {
-        if (lastControllerSupportButtonClicked != null)
+        if (lastControllerSupportButtonClicked == null)
         {
             Debug.LogError($"[Controller] last controller support button was null! This may or may not be an error");
             return;
