@@ -186,7 +186,35 @@ public class CheatsControlPanel : MonoBehaviour
     {
         SetCheated();
 
-        Debug.LogError($"Not Implemented!");
+        if (SceneSpawns.lastSpawn != SceneSpawns.SpawnLocation.Default)
+        {
+            // Try spawning player at that spawn
+            SceneSpawns[] spawns = FindObjectsOfType<SceneSpawns>(includeInactive: true);
+            foreach (SceneSpawns spawn in spawns)
+            {
+                if (spawn.spawnName == SceneSpawns.lastSpawn)
+                {
+                    spawn.TeleportPlayerToSpawn();
+                    return;
+                }
+            }
+        }
+
+        if (SGrid.Current.DefaultSpawn != null)
+        {
+            if (SGrid.Current is FactoryGrid factoryGrid && FactoryGrid.PlayerInPast)
+            {
+                factoryGrid.DefaultSpawnFactoryPast.TeleportPlayerToSpawn();
+                return;
+            }
+
+            SGrid.Current.DefaultSpawn.TeleportPlayerToSpawn();
+            return;
+        }
+        else
+        {
+            Debug.LogError($"SGrid did not have a DefaultSpawn!");
+        }
     }
 
 
@@ -239,17 +267,4 @@ public class CheatsControlPanel : MonoBehaviour
 
         sceneChanger.ChangeScenes();
     }
-
-    // private bool IsSceneInBuild(string name)
-    // {
-    //     for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
-    //     {
-    //         string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
-    //         int lastSlash = scenePath.LastIndexOf("/");
-    //         if (name == scenePath.Substring(lastSlash + 1, scenePath.LastIndexOf(".") - lastSlash - 1))
-    //             return true;
-    //     }
-
-    //     return false;
-    // }
 }

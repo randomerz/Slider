@@ -7,6 +7,7 @@ public class FactoryGrid : SGrid
     // [Header("FactoryGrid")]
     // [SerializeField] private PowerCrystal powerCrystal;
     public FactoryMusicController factoryMusicController;
+    [HideInInspector] public SceneSpawns DefaultSpawnFactoryPast;
 
     public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
     private bool _lastPlayerInPast = false;
