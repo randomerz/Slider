@@ -25,7 +25,6 @@ public class ItemPlacerSolver
 
     public static Vector3 FindItemPlacePosition(Vector3 targetPos, int maxDistance, LayerMask blocksSpawnMask, bool forceSameStile, int resolution = 4, float radiusInc = 1)
     {
-
         STile sTile = SGrid.GetSTileUnderneath(targetPos);
         int tries = 0;
         do
@@ -34,7 +33,7 @@ public class ItemPlacerSolver
             {
                 float theta = (2f * Mathf.PI * i) / (4 * Mathf.Max(1, tries));
                 Vector3 checkPos = targetPos + tries * radiusInc * new Vector3(Mathf.Cos(theta), Mathf.Sin(theta));
-                var cast = Physics2D.OverlapCircleAll(checkPos, 0.5f, blocksSpawnMask);
+                var cast = Physics2D.OverlapCircleAll(checkPos, 0.47f, blocksSpawnMask);
                 bool valid = true;
                 foreach(Collider2D c in cast)
                 {
