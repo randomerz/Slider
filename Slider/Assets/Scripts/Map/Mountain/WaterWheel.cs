@@ -113,6 +113,7 @@ public class WaterWheel : MonoBehaviour, ISavable
         lavaPipe.StopAllCoroutines();
         lavaPipe.SetPipeEmpty();
         AudioManager.Play("Artifact Error");
+        SaveSystem.Current.SetBool("MountainLavaReset", true);
     }
 
     public void FixHeater() => FixHeater(false);
