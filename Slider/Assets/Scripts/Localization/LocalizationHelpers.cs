@@ -152,7 +152,9 @@ namespace Localization
 
     public class LocalizationFile
     {
-        private static string LocalizationFolderPath(string root = null) => Path.Join(root ?? Application.streamingAssetsPath, "Localizations");
+        public static string LocalizationRootPath(string root = null) => root ?? Application.streamingAssetsPath;
+        
+        public static string LocalizationFolderPath(string root = null) => Path.Join(LocalizationRootPath(root), "Localizations");
 
         public static List<string> LocaleList(string playerPrefLocale, string root = null)
         {

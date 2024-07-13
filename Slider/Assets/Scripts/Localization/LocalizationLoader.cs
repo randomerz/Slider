@@ -30,6 +30,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 
     public static void RefreshLocalization()
     {
+        Debug.LogError("Test msg for dev build");
         if (_instance != null)
         {
             _instance.RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
