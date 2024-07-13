@@ -40,4 +40,6 @@ public class ShapePlacer : MonoBehaviour
 
         this.gameObject.SetActive(false);
     }
+
+    public void IsShapeSemiCircle(Condition c) => c.SetSpec(makeShape != null && makeShape.shapeName == "Semicircle");
 }

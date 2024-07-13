@@ -9,12 +9,12 @@ public class GameSaver : MonoBehaviour
     private void OnEnable()
     {
         // Saving Game on Quit to Main Menu is handled in UIManager.cs
-        PlayerInventory.OnPlayerGetCollectible += SaveGame;
+        // PlayerInventory.OnPlayerGetCollectible += SaveGame;
     }
 
     private void OnDisable()
     {
-        PlayerInventory.OnPlayerGetCollectible -= SaveGame;
+        // PlayerInventory.OnPlayerGetCollectible -= SaveGame;
     }
 
     private void Start()

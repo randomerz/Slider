@@ -933,6 +933,26 @@ MonoBehaviour:
       Path: event:/SFX/Mountain/Pipe Fill
     canPause: 1
     dopplerScale: 1
+  - name: Dog Bark 1
+    fmodEvent:
+      Guid:
+        Data1: 541813952
+        Data2: 1106627644
+        Data3: -2048116586
+        Data4: -2061847869
+      Path: event:/SFX/Mountain/Dog Bark 1
+    canPause: 1
+    dopplerScale: 1
+  - name: Dog Bark 2
+    fmodEvent:
+      Guid:
+        Data1: -1960056638
+        Data2: 1341876692
+        Data3: -1421887319
+        Data4: -1876793318
+      Path: event:/SFX/Mountain/Dog Bark 2
+    canPause: 1
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:

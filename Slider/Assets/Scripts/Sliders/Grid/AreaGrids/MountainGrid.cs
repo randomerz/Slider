@@ -121,10 +121,10 @@ public class MountainGrid : SGrid
             SaveSystem.Current.SetBool("forceAutoMoveMountain", false);
             StartCoroutine(ShowButtonAndMapCompletions());
             SaveSystem.Current.SetBool("completedMountain", true);
-            AchievementManager.SetAchievementStat("completedMountain", 1);
+            AchievementManager.SetAchievementStat("completedMountain", false, 1);
             if(minecart.NumPickups <= 2 && gemMachine.numGems >= 3)
             {
-                AchievementManager.SetAchievementStat("mountainMinMinecart", 1);
+                AchievementManager.SetAchievementStat("mountainMinMinecart", true, 1);
             }
         }
     }

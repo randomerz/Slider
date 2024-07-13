@@ -483,6 +483,14 @@ public class MagiTechGrid : SGrid
         }
     }
 
+    public void CheckGemAchievement()
+    {
+        if(GetNumTilesCollected() == 0)
+        {
+            AchievementManager.SetAchievementStat("magitechEarlyGem", true, 1);
+        }
+    }
+
     #region Conditions
 
     public void FireHasStool(Condition c) => c.SetSpec(FireHasStool());

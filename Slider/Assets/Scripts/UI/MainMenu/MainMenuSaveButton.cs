@@ -13,6 +13,7 @@ public class MainMenuSaveButton : MonoBehaviour
     public TextMeshProUGUI completionText;
     public TextMeshProUGUI timeText;
     public Image catSticker;
+    public GameObject breadge;
 
     [SerializeField] private int profileIndex = -1;
     private SaveProfile profile;
@@ -20,6 +21,9 @@ public class MainMenuSaveButton : MonoBehaviour
     private static bool deleteMode;
 
     private static Action onDeleteModeChanged;
+
+    private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
+
 
     private void OnEnable() 
     {
@@ -62,6 +66,7 @@ public class MainMenuSaveButton : MonoBehaviour
             int minutes = (int)seconds / 60;
             timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
             catSticker.gameObject.SetActive(profile.GetCompletionStatus());
+            breadge.SetActive(profile.GetBool(RAINBOW_BREADGE_ACQUIRED));
         }
         else
         {
@@ -69,6 +74,7 @@ public class MainMenuSaveButton : MonoBehaviour
             completionText.gameObject.SetActive(false);
             timeText.gameObject.SetActive(false);
             catSticker.gameObject.SetActive(false);
+            breadge.SetActive(false);
         }
     }
 

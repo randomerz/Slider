@@ -103,7 +103,7 @@ public class PastLargeCrystal : ElectricalNode
         // if the bool is true that means we did kill him, so we want to give achievement if it is false
         if (!SaveSystem.Current.GetBool("ChadSrPuzzleComplete"))
         {
-            AchievementManager.SetAchievementStat("sparedChadSr", 1);
+            AchievementManager.SetAchievementStat("sparedChadSr", true, 1);
         }
 
         StopAllCoroutines();

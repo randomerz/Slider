@@ -314,9 +314,9 @@ public class OceanGrid : SGrid
             StartCoroutine(ShowMapAfterDelay(1));
 
 
-            AchievementManager.SetAchievementStat("completedOcean", 1);
+            AchievementManager.SetAchievementStat("completedOcean", false, 1);
             if (numAnchorUses <= 2) {
-                AchievementManager.SetAchievementStat("completedOceanMinAnchor", 1);
+                AchievementManager.SetAchievementStat("completedOceanMinAnchor", true, 1);
             }
         }
     }

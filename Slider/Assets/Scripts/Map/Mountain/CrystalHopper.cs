@@ -12,7 +12,7 @@ public class CrystalHopper : MonoBehaviour
         if(minecart.TryAddCrystals())
         {
             animator.Play("Dispense");
-            AudioManager.Play("Gem Dispenser");
+            AudioManager.Play("Gem Dispenser", transform);
         }
     }
 }

@@ -68,7 +68,7 @@ public class FactoryGrid : SGrid
     public void CheckForFactoryCompletion() {
         if(CheckGrid.contains(GetGridString(), "851_769_243")) {
             StartCoroutine(ShowButtonAndMapCompletions());
-            AchievementManager.SetAchievementStat("completedFactory", 1);
+            AchievementManager.SetAchievementStat("completedFactory", false, 1);
         }
     }
 

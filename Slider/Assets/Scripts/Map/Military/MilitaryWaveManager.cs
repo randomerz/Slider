@@ -227,10 +227,10 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     private void GiveAchievements()
     {
-        AchievementManager.SetAchievementStat("completedMilitary", 1);
+        AchievementManager.SetAchievementStat("completedMilitary", false, 1);
         if (MilitaryResetChecker._instance.NumUnspawnedAlliesActive > 0)
         {
-            AchievementManager.SetAchievementStat("militaryExtraAlly", 1);
+            AchievementManager.SetAchievementStat("militaryExtraAlly", true, 1);
         }
     }
 }

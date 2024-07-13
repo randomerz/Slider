@@ -16,12 +16,23 @@ public class FlashWhiteSprite : MonoBehaviour, IFlashWhite
     {
         mySprite = GetComponent<SpriteRenderer>();
         oldMat = mySprite.material;
+
+        if (oldMat == whiteSpriteMat)
+        {
+            Debug.LogWarning($"FlashWhite oldMat was the same as whiteSpriteMat!");
+        }
     }
     
     public void Flash(int n, Action callback = null)
     {
         StopAllCoroutines();
         StartCoroutine(_Flash(n, callback));
+    }
+    
+    public void StopFlashing()
+    {
+        StopAllCoroutines();
+        mySprite.material = oldMat;
     }
 
     public void SetSpriteActive(bool value)
