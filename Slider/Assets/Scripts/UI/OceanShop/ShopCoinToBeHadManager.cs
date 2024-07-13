@@ -152,6 +152,12 @@ public class ShopCoinToBeHadManager : MonoBehaviour, ISavable
 
     public void UnNew(int index)
     {
+        if (ShopManager.Instance.IsSwitchPanelBufferOn())
+        {
+            Debug.Log($"[Ocean Shop] Skipped input because buffer was on.");
+            return;
+        }
+        
         if (isNew[index])
         {
             isNew[index] = false;

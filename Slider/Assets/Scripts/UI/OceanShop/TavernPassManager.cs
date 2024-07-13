@@ -112,12 +112,18 @@ public class TavernPassManager : MonoBehaviour, ISavable
             Sprite rewardSprite = tavernPassButtons[0].rewardImage.sprite;
 
             UICanvasScreenShake.Shake(2, 20);
-            rewardEffect.StartEffect(rewardName, rewardSprite, () => {
-                GiveRewards(0);
-                IncrementButton();
-                ShopManager.CanClosePanel = true;
-            },
-            () => tavernPassButtons[0].PlayEffect());
+            rewardEffect.StartEffect(
+                rewardName, 
+                rewardSprite, 
+                () => {
+                    GiveRewards(0);
+                    IncrementButton();
+                },
+                () => {
+                    tavernPassButtons[0].PlayEffect();
+                    ShopManager.CanClosePanel = true;
+                }
+            );
 
             return;
         }
@@ -185,13 +191,13 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 canvasZoomer.DoZoomReleaseBig(2);
                 rewardEffect.StartEffect(rewardName, rewardSprite, () => {
                     displayedCredits = to;
-                    ShopManager.CanClosePanel = true;
 
                     GiveRewards(tier);
                 },
                 () => {
                     DisableButtonPassRenderTextures();
                     tavernPassButtons[tier].PlayEffect();
+                    ShopManager.CanClosePanel = true;
                 });
                 yield break;
             }

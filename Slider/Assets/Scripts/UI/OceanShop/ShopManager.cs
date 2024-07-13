@@ -5,7 +5,8 @@ using TMPro;
 
 public class ShopManager : Singleton<ShopManager>, ISavable
 {
-    //private static ShopManager _instance;
+    public static ShopManager Instance => _instance;
+
     public class OnTurnedItemInArgs : System.EventArgs
     {
         public string item;
@@ -32,6 +33,9 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     private bool turnedInRock;
     private bool turnedInRose;
     private bool startedFinalQuest;
+
+    private float timeSinceOpenedPanel;
+    private const float CHANGE_PANEL_NO_INTERACT_BUFFER = 0.3f;
 
 
     [Header("References")]
@@ -85,12 +89,16 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     {
         bindingBehaviors = new List<BindingBehavior>();
         bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.ExitCurrentPanel()));
+        // Cancel does not have keyboard binds
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel, context => _instance.ExitCurrentPanel()));
+
         bindingBehaviors.Add(
             Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context =>
             {
                 if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); }
             })
         );
+
         // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
         bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.shopDialogueManager.OnActionPressed(context)));
         bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => _instance.shopDialogueManager.OnActionPressed(context)));
@@ -148,6 +156,11 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     }
     
     #endregion
+
+    private void Update()
+    {
+        timeSinceOpenedPanel += Time.deltaTime;
+    }
 
     public void CheckTavernKeep()
     {
@@ -343,6 +356,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     // Called whenever you press 'Esc'
     public void ExitCurrentPanel()
     {
+        Debug.Log($"can close: {canClosePanel}");
         if (!canClosePanel)
             return;
 
@@ -374,6 +388,11 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         }
     }
 
+    public bool IsSwitchPanelBufferOn()
+    {
+        return timeSinceOpenedPanel <= CHANGE_PANEL_NO_INTERACT_BUFFER;
+    }
+
 
     public void CloseAllPanels()
     {
@@ -391,6 +410,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     public void OpenMainPanel()
     {
         CloseAllPanels();
+        UpdateTimeSinceOpenedPanel();
         UIState = States.Main;
         mainPanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
@@ -398,7 +418,13 @@ public class ShopManager : Singleton<ShopManager>, ISavable
 
     public void OpenBuyPanel()
     {
+        if (IsSwitchPanelBufferOn())
+        {
+            return;
+        }
+
         CloseAllPanels();
+        UpdateTimeSinceOpenedPanel();
         UIState = States.Buy;
         buyPanel.SetActive(true);
         tavernPassManager.OnOpenTavernPass();
@@ -408,6 +434,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     public void OpenTalkPanel()
     {
         CloseAllPanels();
+        UpdateTimeSinceOpenedPanel();
         UIState = States.Talk;
         talkPanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
@@ -426,9 +453,15 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     public void OpenDialoguePanel()
     {
         CloseAllPanels();
+        UpdateTimeSinceOpenedPanel();
         UIState = States.Dialogue;
         dialoguePanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
+    }
+
+    private void UpdateTimeSinceOpenedPanel()
+    {
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => timeSinceOpenedPanel = 0, this);
     }
 
     #endregion
