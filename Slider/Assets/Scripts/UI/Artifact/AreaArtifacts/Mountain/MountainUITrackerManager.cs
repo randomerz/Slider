@@ -10,8 +10,8 @@ public class MountainUITrackerManager : UITrackerManager
 
     private Vector2 xOffset = new Vector2(40f/34f, -18f/34f);
     private Vector2 yOffset = new Vector2(40f/34f, 18f/34f);
-    private Vector2 xCenterOffset = new Vector2(53f/34f, -29f/34f);
-    private Vector2 yCenterOffset = new Vector2(53f/34f, 29f/34f);
+    private Vector2 xCenterOffset = new Vector2(53f/34f, -25f/34f);
+    private Vector2 yCenterOffset = new Vector2(53f/34f, 25f/34f);
     private Vector2 lowerCenter = new Vector2(8.5f, 8.5f);
     private Vector2 upperCenter = new Vector2(8.5f, 108.5f);
 
@@ -24,8 +24,8 @@ public class MountainUITrackerManager : UITrackerManager
     {
         Vector2 position = tracker.GetPosition();
         Vector2 temp = (position - (position.y > 62.5? upperCenter: lowerCenter));
-        temp.x = ScaleOutsideCutoff(temp.x, -17, 17, .5f);
-        temp.y = ScaleOutsideCutoff(temp.y, -17, 17, .5f);
+        temp.x = ScaleOutsideCutoff(temp.x, -17, 17, .3f);
+        temp.y = ScaleOutsideCutoff(temp.y, -17, 17, .3f);
         Vector2 offset = temp.x * xCenterOffset + temp.y * yCenterOffset;
         offset += (position.y > 62.5 ? new Vector2(0, 29.5f) : new Vector2(0, -29.5f));
         return offset;

@@ -39,6 +39,10 @@ public class SceneChanger : MonoBehaviour
             callbackEnd: () => { 
                 fadeToBlackDone = true; 
                 SceneTransitionOverlayManager.ShowOverlay();
+                foreach (GameObject go in deactivateOnTransition)
+                {
+                    go.SetActive(false);
+                }
             }, 
             speed: 2
         );
@@ -57,10 +61,6 @@ public class SceneChanger : MonoBehaviour
 
     private IEnumerator StartLoadingScene()
     {
-        foreach (GameObject go in deactivateOnTransition)
-        {
-            go.SetActive(false);
-        }
 
         // As it turns out, Unity's LoadSceneAsync() is not actually async :(
         // https://issuetracker.unity3d.com/issues/async-load-is-not-async

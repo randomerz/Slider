@@ -21,7 +21,7 @@ public class DogProp : MonoBehaviour
             timeUntilCanBark = BARK_COOLDOWN;
             float randomPitch = Random.Range(0.8f, 1.1f);
             string sound = Random.Range(0, 2) == 0 ? "Dog Bark 1" : "Dog Bark 2";
-            AudioManager.PickSound(sound).WithPitch(randomPitch).WithAttachmentToTransform(transform).AndPlay();
+            AudioManager.PickSound(sound).WithPitch(randomPitch).WithVolume(0.5f).WithAttachmentToTransform(transform).AndPlay();
             
             emoteGameObject.SetActive(true);
             StopAllCoroutines();
