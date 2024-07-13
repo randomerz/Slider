@@ -157,6 +157,10 @@ public class WaterWheel : MonoBehaviour, ISavable
         c.SetSpec(lavaCount > 0);
     }
 
+    public void TwoLava(Condition c) {
+        c.SetSpec(lavaCount >= 2);
+    }
+
     public void IsDone(Condition c){
         c.SetSpec(lavaCount > 1 && powered);
     }

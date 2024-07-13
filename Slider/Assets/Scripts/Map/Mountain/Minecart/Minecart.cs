@@ -95,13 +95,14 @@ public class Minecart : Item, ISavable
 
     private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        RemoveCrystals();
         if(currentSTile == null || e.stile == null) return;
         if(e.stile == currentSTile && isMoving) Derail();
     }
 
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
+        RemoveCrystals();
     }
 
     private void OnScrollRearrange(object sender, EventArgs e)
@@ -140,6 +141,15 @@ public class Minecart : Item, ISavable
                 minecartAmbience.SetParameterEnabled(false);
             }
             animator.SetSpeed(0);
+        }
+    }
+
+    private void RemoveCrystals()
+    {
+        if(mcState == MinecartState.Crystal) 
+        {
+            AudioManager.Play("Glass Clink");
+            UpdateState(MinecartState.Empty);
         }
     }
 
@@ -328,7 +338,7 @@ public class Minecart : Item, ISavable
 
     public void StartMoving() 
     {
-        if(isOnTrack && canStartMoving && !collisionPause)
+        if(isOnTrack && canStartMoving)
         {
             isMoving = true; 
             animator.SetSpeed(1);
