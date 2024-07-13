@@ -46,6 +46,7 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected STileTilemap worldGridTilemaps;
     [SerializeField] protected AudioModifierOverrides audioModifierOverrides;
     public SGridTilesExplored gridTilesExplored;
+    [HideInInspector] public SceneSpawns DefaultSpawn;
 
     //L: This is the end goal for the slider puzzle.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
@@ -96,6 +97,11 @@ public class SGrid : Singleton<SGrid>, ISavable
         if (gridTilesExplored == null)
         {
             Debug.LogError("SGridTilesExplored is null. Please add the script to the 8Puzzle Game Object and assign the reference.");
+        }
+
+        if (DefaultSpawn == null)
+        {
+            Debug.LogError("DefaultSpawn is null. Please add a Game Object with the SceneSpawns.cs script and SpawnName set to Default.");
         }
         
         UIEffects.FadeFromBlack(() => PauseManager.RemoveAllPauseRestrictions());

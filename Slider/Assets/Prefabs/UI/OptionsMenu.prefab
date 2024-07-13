@@ -25,9 +25,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 870439834096054287}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -119.45235, y: 23.199997, z: 5.310258}
-  m_LocalScale: {x: 0.33357474, y: 0.33357474, z: 0.33357474}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3487192642209625774}
@@ -228,8 +228,8 @@ MonoBehaviour:
   - {fileID: 1008343911732832864}
   - {fileID: 2369200419615329958}
   - {fileID: 7350939152235431265}
-  - {fileID: 4117726820364073324}
   - {fileID: 69362815434122608}
+  - {fileID: 4117726820364073324}
   - {fileID: 7692091251335941615}
   subSelectableSets: []
 --- !u!1 &4229531394297225192
@@ -602,7 +602,7 @@ PrefabInstance:
     - target: {fileID: 841417290619510121, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 69362815434122608}
+      objectReference: {fileID: 2905154067163065431}
     - target: {fileID: 841417290619510121, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -898,7 +898,7 @@ PrefabInstance:
     - target: {fileID: 5742687296706520928, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 69362815434122608}
+      objectReference: {fileID: 2905154067163065431}
     - target: {fileID: 5742687296706520928, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1002,7 +1002,7 @@ PrefabInstance:
     - target: {fileID: 6724682186761896947, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 69362815434122608}
+      objectReference: {fileID: 2905154067163065431}
     - target: {fileID: 6724682186761896947, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -1054,7 +1054,7 @@ PrefabInstance:
     - target: {fileID: 7151524733465464736, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 69362815434122608}
+      objectReference: {fileID: 2905154067163065431}
     - target: {fileID: 7151524733465464736, guid: 753dce056d7a3524f8946fdfec57d412, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1586,7 +1586,7 @@ PrefabInstance:
     - target: {fileID: 357164634488009481, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 7692091251335941615}
+      objectReference: {fileID: 2905154067163065431}
     - target: {fileID: 1138034111241829049, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_Name
       value: ControlsPanel
