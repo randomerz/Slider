@@ -107,7 +107,7 @@ public class SceneSpawns : MonoBehaviour
         {
             SGrid.Current.DefaultSpawn = this;
             Vector3 pp = GameObject.Find("Player").transform.position;
-            if (pp != transform.position)
+            if (pp != transform.position && nextSpawn == SpawnLocation.Default && lastSpawn == SpawnLocation.Default)
             {
                 Debug.LogWarning($"Default Spawn position was not the same as the player's position. Player: {pp}, spawn: {transform.position}");
             }

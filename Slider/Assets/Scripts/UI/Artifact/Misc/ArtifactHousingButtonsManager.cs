@@ -13,6 +13,10 @@ public class ArtifactHousingButtonsManager : MonoBehaviour
     {
         if (Player.GetIsInHouse())
         {
+            foreach (ArtifactTileButton b in uiArtifact.buttons)
+            {
+                b.Init();
+            }
             SetSpritesToHousing(true);
         }
     }

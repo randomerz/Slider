@@ -66,7 +66,7 @@ public class JungleGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
-        if (GetNumTilesCollected() == 3)
+        if (stile.islandId == 3)
         {
             HandleSTile3Placement(stile);
         }

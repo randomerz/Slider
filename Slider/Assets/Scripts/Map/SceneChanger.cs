@@ -14,12 +14,18 @@ public class SceneChanger : MonoBehaviour
     public List<GameObject> deactivateOnTransition;
 
     // We need our loading op stored between both of our loading helper methods
+    private Coroutine coroutine;
     private AsyncOperation sceneLoad;
     private bool fadeToBlackAlmostDone;
     private bool fadeToBlackDone;
 
     public void ChangeScenes() 
     {
+        if (coroutine != null)
+        {
+            return;
+        }
+        
         SaveSystem.Current.Save();
         SceneSpawns.nextSpawn = sceneSpawnName;
         SceneSpawns.lastArea = SGrid.Current.GetArea();
@@ -48,7 +54,7 @@ public class SceneChanger : MonoBehaviour
         );
 
         try {
-            StartCoroutine(StartLoadingScene());
+            coroutine = StartCoroutine(StartLoadingScene());
         }
         catch (System.Exception e) {
             Debug.LogWarning("Scene could not be loaded! Is it properly named and added to build?");
