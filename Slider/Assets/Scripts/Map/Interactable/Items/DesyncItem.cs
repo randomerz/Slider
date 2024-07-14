@@ -129,6 +129,7 @@ public class DesyncItem : Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) 
     {
+        SetMoved();
         if(ShouldMovePresentItem())
         {
             MovePresentItemToPastLocation();
@@ -140,9 +141,19 @@ public class DesyncItem : Item
         }
     }
 
+    private void SetMoved()
+    {
+        SaveSystem.Current.SetBool($"{saveString}_Moved", true);
+    }
+
+    private bool GetMoved()
+    {
+        return SaveSystem.Current.GetBool($"{saveString}_Moved");
+    }
+
     private bool ShouldMovePresentItem()
     {
-        return fromPast && pastItem.isItemInPast && !presentItem.isDesynced && !pastItem.isDesynced;
+        return fromPast && GetMoved() && pastItem.isItemInPast && !presentItem.isDesynced && !pastItem.isDesynced;
     }
 
     private void MovePresentItemToPastLocation()

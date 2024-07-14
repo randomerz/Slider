@@ -154,7 +154,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 7
+        y: 23
         width: 7
         height: 9
       alignment: 0
@@ -175,7 +175,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 9
+        y: 25
         width: 7
         height: 7
       alignment: 0
@@ -195,8 +195,8 @@ TextureImporter:
       name: ui_object_trackers_circle1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 1
+        y: 10
         width: 5
         height: 5
       alignment: 0
@@ -216,8 +216,8 @@ TextureImporter:
       name: ui_object_trackers_circle_empty
       rect:
         serializedVersion: 2
-        x: 5
-        y: 0
+        x: 1
+        y: 2
         width: 5
         height: 5
       alignment: 0
@@ -237,8 +237,8 @@ TextureImporter:
       name: ui_object_trackers_circle2
       rect:
         serializedVersion: 2
-        x: 11
-        y: 0
+        x: 17
+        y: 10
         width: 5
         height: 5
       alignment: 0
@@ -259,7 +259,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 24
-        y: 9
+        y: 25
         width: 3
         height: 7
       alignment: 0
@@ -280,7 +280,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 8
-        y: 7
+        y: 23
         width: 7
         height: 9
       alignment: 0
@@ -300,8 +300,8 @@ TextureImporter:
       name: ui_object_trackers_circle3
       rect:
         serializedVersion: 2
-        x: 16
-        y: 0
+        x: 17
+        y: 2
         width: 5
         height: 5
       alignment: 0
@@ -321,8 +321,8 @@ TextureImporter:
       name: ui_object_trackers_minecart
       rect:
         serializedVersion: 2
-        x: 22
-        y: 0
+        x: 0
+        y: 17
         width: 7
         height: 5
       alignment: 0
@@ -343,11 +343,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 27
-        y: 9
+        y: 25
         width: 3
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -355,6 +355,90 @@ TextureImporter:
       bones: []
       spriteID: 58f3d9290a48cdd4f9f5a11e32d69973
       internalID: 1054107625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_circle1w
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 10
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50c8aa01177d0344cbe081d3d96a4e8e
+      internalID: 444793153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_circle_empty_w
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 2
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d5f9ed7763fade4eb7ee632c31c0cc0
+      internalID: -952475258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_circle2w
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 10
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13a6a3337bbf6a041bc8acce36ada012
+      internalID: -1337424844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_circle3w
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 2
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41a64c033fd6692418b35efd0e3a6bfb
+      internalID: -1617775134
       vertices: []
       indices: 
       edges: []
@@ -372,9 +456,13 @@ TextureImporter:
     nameFileIdTable:
       ui_object_trackers_anchor: 7068379093299224626
       ui_object_trackers_circle1: 2475121381554812345
+      ui_object_trackers_circle1w: 444793153
       ui_object_trackers_circle2: 2476852888312564660
+      ui_object_trackers_circle2w: -1337424844
       ui_object_trackers_circle3: 5333845850840386237
+      ui_object_trackers_circle3w: -1617775134
       ui_object_trackers_circle_empty: -7897595385744405872
+      ui_object_trackers_circle_empty_w: -952475258
       ui_object_trackers_exclamation: 7914938972093050573
       ui_object_trackers_exclamation_white: 1054107625
       ui_object_trackers_minecart: -1334703156212787541
