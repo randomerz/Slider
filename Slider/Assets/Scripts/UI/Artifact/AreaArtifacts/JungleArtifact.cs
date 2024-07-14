@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class JungleArtifact : UIArtifact
 {
@@ -91,6 +92,57 @@ public class JungleArtifact : UIArtifact
     protected override void HandleControllerCheck()
     {
         base.HandleControllerCheck();
+    }
+
+    protected override void OnEnable()
+    {
+        UIArtifactMenus.OnArtifactOpened += CheckUsingController;
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        UIArtifactMenus.OnArtifactOpened -= CheckUsingController;
+        base.OnDisable();
+    }
+
+
+
+    public void CheckUsingController(object sender, System.EventArgs e)
+    {
+        if (Controls.CurrentControlScheme.Equals(Controls.CONTROL_SCHEME_CONTROLLER))
+        {
+            Debug.Log($"IS USING CONTROLLER: {Controls.CurrentControlScheme}");
+            directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
+                context => {
+                    HandleDirectionalInput(context.ReadValue<Vector2>());
+                    //Debug.Log($"CONTEXT ACTION: {context.control}");
+                }
+            );
+            quitBindingBehaviorAction = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action,
+                context =>
+                {
+                    Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+                    Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
+                    Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
+                }
+            );
+            quitBindingBehaviorEsc = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel,
+                context =>
+                {
+                    Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+                    Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
+                    Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
+                }
+
+            );
+
+        }
+        else
+        {
+            Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+
+        }
     }
 
     //Checks if the move can happen on the grid.
@@ -262,6 +314,7 @@ public class JungleArtifact : UIArtifact
             lastDirectionalInput = Vector2.right;
             //jungleRecipeBookUI.IncrementCurrentShape();
         }
+        
     }
 
     public override void SelectButton(ArtifactTileButton button, bool isDragged = false)

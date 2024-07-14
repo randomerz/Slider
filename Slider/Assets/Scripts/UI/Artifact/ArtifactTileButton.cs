@@ -117,6 +117,19 @@ public class ArtifactTileButton : MonoBehaviour
     {
         if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
+            // 
+            //ArtifactTileButton prev = buttonManager.GetPreviousSelectedButton();
+            //ArtifactTileButton now = buttonManager.GetSelectedButton();
+
+            //buttonManager.SetPreviousSelectedButton(now);
+            //buttonManager.SetSelectedButton(this);
+
+            //if (buttonManager.GetPreviousSelectedButton().islandId == buttonManager.GetSelectedButton().islandId)
+            //{
+
+            //}
+
+
             SetControllerHoverHighlighted(true);
         }
     }
@@ -257,7 +270,7 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetControllerHoverHighlight(v);
         if (this.LinkButton != null && this.TileIsActive)
         {
-            this.LinkButton.buttonAnimator.SetControllerHoverHighlight(v);
+            this.LinkButton.buttonAnimator.SetControllerHoverHighlightComplement(v);
         }
     }
 
