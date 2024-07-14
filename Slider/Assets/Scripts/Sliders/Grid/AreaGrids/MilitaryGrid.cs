@@ -121,9 +121,6 @@ public class MilitaryGrid : SGrid
         MilitaryWaveManager.Reset();
         MilitaryResetChecker.ResetCounters();
 
-        // In case they lost on the final wave!
-        SGrid.Current.CheckCompletion = false;
-
         SaveSystem.SaveGame("Finished Restarting Military Sim");
     }
 
@@ -131,12 +128,13 @@ public class MilitaryGrid : SGrid
     {
         foreach (STile s in grid)
         {
+            UIArtifact.SetButtonComplete(s.islandId, false);
+            gridTilesExplored.SetTileExplored(s.islandId, false);
             if (s.isTileActive)
             {
                 s.SetTileActive(false);
                 UIArtifact.GetInstance().RemoveButton(s);
             }
-            gridTilesExplored.SetTileExplored(s.islandId, false);
         }
 
         if (GetStileAt(0, 3).islandId != 1)

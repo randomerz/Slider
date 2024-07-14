@@ -30,7 +30,7 @@ TextureImporter:
       213: -1334703156212787541
     second: ui_object_trackers_minecart
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -47,11 +47,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,6 +91,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -101,6 +104,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -113,6 +117,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -125,6 +130,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -307,7 +326,7 @@ TextureImporter:
         width: 7
         height: 5
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -315,6 +334,27 @@ TextureImporter:
       bones: []
       spriteID: ba6185d0d8e2a7de0800000000000000
       internalID: -1334703156212787541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_exclamation_white
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 9
+        width: 3
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58f3d9290a48cdd4f9f5a11e32d69973
+      internalID: 1054107625
       vertices: []
       indices: 
       edges: []
@@ -331,17 +371,17 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       ui_object_trackers_anchor: 7068379093299224626
-      ui_object_trackers_pin: -4728094066367508418
-      ui_object_trackers_circle_empty: -7897595385744405872
-      ui_object_trackers_circle2: 2476852888312564660
-      ui_object_trackers_pin2: 259427318395890041
-      ui_object_trackers_exclamation: 7914938972093050573
       ui_object_trackers_circle1: 2475121381554812345
+      ui_object_trackers_circle2: 2476852888312564660
       ui_object_trackers_circle3: 5333845850840386237
+      ui_object_trackers_circle_empty: -7897595385744405872
+      ui_object_trackers_exclamation: 7914938972093050573
+      ui_object_trackers_exclamation_white: 1054107625
       ui_object_trackers_minecart: -1334703156212787541
-  spritePackingTag: 
+      ui_object_trackers_pin: -4728094066367508418
+      ui_object_trackers_pin2: 259427318395890041
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

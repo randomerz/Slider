@@ -80,6 +80,7 @@ public class UITrackerManager : MonoBehaviour
     public Sprite circleEmpty;
     public Sprite pin;
     public Sprite exclamation;
+    public Sprite exclamationWhite;
     
     public Sprite playerBlackCircle;
     public Sprite playerBlackCircleEmpty;
@@ -100,6 +101,7 @@ public class UITrackerManager : MonoBehaviour
         circleEmpty,
         pin,
         exclamation,
+        exclamationWhite,
         playerBlackCircle,
         playerBlackCircleEmpty,
         playerWhiteCircle,
@@ -333,6 +335,8 @@ public class UITrackerManager : MonoBehaviour
                 return _instance.pin;
             case DefaultSprites.exclamation:
                 return _instance.exclamation;
+            case DefaultSprites.exclamationWhite:
+                return _instance.exclamationWhite;
             case DefaultSprites.playerBlackCircle:
                 return _instance.playerBlackCircle;
             case DefaultSprites.playerBlackCircleEmpty:
