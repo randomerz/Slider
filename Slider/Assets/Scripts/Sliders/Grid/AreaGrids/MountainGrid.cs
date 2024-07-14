@@ -30,6 +30,7 @@ public class MountainGrid : SGrid
     private bool crystalDelivered = false;
     private float musicValue = 0;
 
+
     public override void Init() 
     {
         InitArea(Area.Mountain);
@@ -103,11 +104,15 @@ public class MountainGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        base.EnableStile(stile, shouldFlicker);
         if(stile.islandId == 7 && !stile.isTileActive)
             SaveSystem.Current.SetBool("forceAutoMoveMountain", true);
-        if(stile.islandId == 8 && !stile.isTileActive) 
+        if(stile.islandId == 8 && !stile.isTileActive)
+        {
+            base.EnableStile(stile, shouldFlicker);
             CheckForMountainCompletion();
+            return;
+        }
+        base.EnableStile(stile, shouldFlicker);
     }
 
 

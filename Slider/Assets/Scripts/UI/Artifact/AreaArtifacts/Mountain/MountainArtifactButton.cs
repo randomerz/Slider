@@ -7,7 +7,7 @@ public class MountainArtifactButton : ArtifactTileButton
 {
     private Vector3 xOffset = new Vector3(28, -14);
     private Vector3 yOffset = new Vector3(28, 14);
-    private Vector3 zOffset = new Vector3(0, 56);
+    private Vector3 zOffset = new Vector3(0, 53);
     public Vector3 button1Position;
 
     protected override void Start()
