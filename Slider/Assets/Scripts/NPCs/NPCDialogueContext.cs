@@ -325,7 +325,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
         }
     }
 
-    private void SkipText()
+    public void SkipText()
     {
         display.textTyperText.TrySkipText();
         display.textTyperBG.TrySkipText();
