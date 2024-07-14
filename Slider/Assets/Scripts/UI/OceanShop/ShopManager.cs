@@ -356,7 +356,6 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     // Called whenever you press 'Esc'
     public void ExitCurrentPanel()
     {
-        Debug.Log($"can close: {canClosePanel}");
         if (!canClosePanel)
             return;
 
