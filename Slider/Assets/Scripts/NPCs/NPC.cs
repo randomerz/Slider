@@ -110,6 +110,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         dialogueCtx.OnDialogueTriggerExit();
     }
+
+    public void SkipText()
+    {
+        dialogueCtx.SkipText();
+    }
     
     public void TypeCurrentDialogueAfterTime(float time)
     {

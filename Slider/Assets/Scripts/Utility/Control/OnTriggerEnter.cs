@@ -9,18 +9,39 @@ public class OnTriggerEnter : MonoBehaviour
     public UnityEvent onEnter;
     public UnityEvent onExit;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private bool playerIsInTrigger = false;
+
+    public void SetOnPlayerEnterActive(bool active, bool triggerIfAlreadyInside = true)
     {
-        if (onPlayerEnter && other.tag == "Player")
+        onPlayerEnter = active;
+        if (onPlayerEnter && triggerIfAlreadyInside && playerIsInTrigger)
         {
             onEnter.Invoke();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            playerIsInTrigger = true;
+
+            if (onPlayerEnter)
+            {
+                onEnter.Invoke();
+            }
+        }
+    }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (onPlayerEnter && other.tag == "Player")
+        if (other.tag == "Player")
         {
-            onExit.Invoke();
+            playerIsInTrigger = false;
+
+            if (onPlayerEnter)
+            {
+                onExit.Invoke();
+            }
         }
     }
 }
