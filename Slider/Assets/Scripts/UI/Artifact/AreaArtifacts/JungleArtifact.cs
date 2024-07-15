@@ -7,14 +7,6 @@ using UnityEngine.InputSystem;
 
 public class JungleArtifact : UIArtifact
 {
-    // private static STile prevLinkTile = null;
-
-    // Taking some inspo from the JungleRecipeBook class
-    private BindingBehavior directionalBindingBehavior;
-    private BindingBehavior quitBindingBehaviorEsc;
-    private BindingBehavior quitBindingBehaviorAction;
-    private Vector2 lastDirectionalInput;
-
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         if (buttonCurrent.LinkButton == null)
@@ -88,62 +80,6 @@ public class JungleArtifact : UIArtifact
             }
         }
     }
-
-    //protected override void HandleControllerCheck()
-    //{
-    //    base.HandleControllerCheck();
-    //}
-
-    //protected override void OnEnable()
-    //{
-    //    UIArtifactMenus.OnArtifactOpened += CheckUsingController;
-    //    base.OnEnable();
-    //}
-
-    //protected override void OnDisable()
-    //{
-    //    UIArtifactMenus.OnArtifactOpened -= CheckUsingController;
-    //    base.OnDisable();
-    //}
-
-
-
-    //public void CheckUsingController(object sender, System.EventArgs e)
-    //{
-    //    if (Controls.CurrentControlScheme.Equals(Controls.CONTROL_SCHEME_CONTROLLER))
-    //    {
-    //        Debug.Log($"IS USING CONTROLLER: {Controls.CurrentControlScheme}");
-    //        directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
-    //            context => {
-    //                HandleDirectionalInput(context.ReadValue<Vector2>());
-    //                //Debug.Log($"CONTEXT ACTION: {context.control}");
-    //            }
-    //        );
-    //        quitBindingBehaviorAction = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action,
-    //            context =>
-    //            {
-    //                Controls.UnregisterBindingBehavior(directionalBindingBehavior);
-    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
-    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
-    //            }
-    //        );
-    //        quitBindingBehaviorEsc = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel,
-    //            context =>
-    //            {
-    //                Controls.UnregisterBindingBehavior(directionalBindingBehavior);
-    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
-    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
-    //            }
-
-    //        );
-
-    //    }
-    //    else
-    //    {
-    //        Controls.UnregisterBindingBehavior(directionalBindingBehavior);
-
-    //    }
-    //}
 
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?

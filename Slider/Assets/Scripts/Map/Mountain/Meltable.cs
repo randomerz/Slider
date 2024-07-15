@@ -53,6 +53,7 @@ public class Meltable : FlashWhiteSprite, ISavable
 
     private float currFreezeTime;
     private float blinkTime;
+    private bool hasPlayedRiser;
     private bool hasFixed = false;
 
     public List<Lava> lavasources = new();
@@ -81,8 +82,15 @@ public class Meltable : FlashWhiteSprite, ISavable
             currFreezeTime -= Time.deltaTime;
             if(state != MeltableState.FROZEN && currFreezeTime < blinkTime && currFreezeTime > 0)
                 ToggleBlinkSprite(blinkTime - currFreezeTime);
-            if(currFreezeTime < 0)
+            if (currFreezeTime < 2f && !hasPlayedRiser && state != MeltableState.FROZEN)
+            {
+                hasPlayedRiser = true;
+                AudioManager.PickSound("Ice Freeze Riser").WithAttachmentToTransform(transform).AndPlay();
+            }
+            if (currFreezeTime < 0)
+            {
                 Freeze();
+            }
         }
     }
 
@@ -148,7 +156,7 @@ public class Meltable : FlashWhiteSprite, ISavable
                 onBreak?.Invoke();
                 currFreezeTime = freezeTime;
                 if(!fromLoad)
-                    AudioManager.PickSound("Ice Break").WithVolume(4).AndPlay();
+                    AudioManager.PickSound("Ice Break").WithAttachmentToTransform(transform).AndPlay();
             }
         }
     }
@@ -168,13 +176,14 @@ public class Meltable : FlashWhiteSprite, ISavable
             onMelt?.Invoke();
             currFreezeTime = freezeTime;
             if(!fromLoad)
-                AudioManager.PickSound("Ice Break").WithVolume(4).AndPlay();
+                AudioManager.PickSound("Ice Break").WithAttachmentToTransform(transform).AndPlay();
         }
     }
 
     public void Freeze(bool fromLoad = false)
     {
-        if(fromLoad || state != MeltableState.FROZEN)
+        hasPlayedRiser = false;
+        if (fromLoad || state != MeltableState.FROZEN)
         {
             state = MeltableState.FROZEN;
             if(spriteRenderer)
@@ -182,7 +191,7 @@ public class Meltable : FlashWhiteSprite, ISavable
             onFreeze?.Invoke();
             currFreezeTime = freezeTime;
             if(!fromLoad)
-                AudioManager.PickSound("Ice Freeze").WithVolume(7).AndPlay();
+                AudioManager.PickSound("Ice Freeze").WithAttachmentToTransform(transform).AndPlay();
         }
     }
 

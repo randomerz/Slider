@@ -173,11 +173,13 @@ public class PlayerInventory : MonoBehaviour
             currentItem.gameObject.SetActive(true);
             currentItem.OnEquip();
             currentItem.SetSortingOrder(itemSortingOrder);
+            AudioManager.PlayWithVolume("Create Save", 0.4f);
         }
         else
         {
             itemIterator.Reset();
             currentItem = null;
+            AudioManager.PlayWithVolume("Delete Save", 0.4f);
         }
     }
 

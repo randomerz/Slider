@@ -272,4 +272,12 @@ public class Blob : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void DoPlopSound()
+    {
+        if (Vector3.Distance(Player.GetPosition(), transform.position) < 15)
+        {
+            AudioManager.PickSound("Slime Footstep").WithAttachmentToTransform(transform).AndPlay();
+        }
+    }
 }
