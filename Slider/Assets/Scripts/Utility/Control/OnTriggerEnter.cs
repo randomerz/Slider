@@ -5,17 +5,16 @@ using UnityEngine.Events;
 
 public class OnTriggerEnter : MonoBehaviour
 {
-    public bool watchingForPlayer { get; private set; } = true;
-    private bool playerIsInTrigger = false;
-
+    public bool onPlayerEnter = true;
     public UnityEvent onEnter;
     public UnityEvent onExit;
 
-    public void EnableWatchForPlayer(bool enabled, bool triggerIfAlreadyInside = true)
-    {
-        watchingForPlayer = enabled;
+    private bool playerIsInTrigger = false;
 
-        if (enabled && triggerIfAlreadyInside && playerIsInTrigger)
+    public void SetOnPlayerEnterActive(bool active, bool triggerIfAlreadyInside = true)
+    {
+        onPlayerEnter = active;
+        if (onPlayerEnter && triggerIfAlreadyInside && playerIsInTrigger)
         {
             onEnter.Invoke();
         }
@@ -23,30 +22,26 @@ public class OnTriggerEnter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag != "Player")
+        if (other.tag == "Player")
         {
-            return;
-        }
+            playerIsInTrigger = true;
 
-        playerIsInTrigger = true;
-
-        if (watchingForPlayer)
-        {
-            onEnter.Invoke();
+            if (onPlayerEnter)
+            {
+                onEnter.Invoke();
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag != "Player")
+        if (other.tag == "Player")
         {
-            return;
-        }
+            playerIsInTrigger = true;
 
-        playerIsInTrigger = false;
-
-        if (watchingForPlayer)
-        {
-            onExit.Invoke();
+            if (onPlayerEnter)
+            {
+                onExit.Invoke();
+            }
         }
     }
 }

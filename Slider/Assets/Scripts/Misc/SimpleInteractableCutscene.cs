@@ -160,7 +160,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         OnTriggerEnter triggerEnterScript = character.GetComponent<OnTriggerEnter>();
         if (triggerEnterScript != null)
         {
-            triggerEnterScript.EnableWatchForPlayer(enable);
+            triggerEnterScript.SetOnPlayerEnterActive(enable);
         }
     }
 
