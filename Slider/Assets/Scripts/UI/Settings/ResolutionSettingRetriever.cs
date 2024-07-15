@@ -22,6 +22,12 @@ public class ResolutionSettingRetriever : AbstractSettingRetriever
     public override object ReadSettingValue()
     {
         Resolution currentResolution = (Resolution)SettingsManager.Setting(Settings.Resolution).GetCurrentValue();
+        if (!resolutionToDropdownIndex.ContainsKey(currentResolution))
+        {
+            Debug.LogError($"Key {currentResolution} was not found in resolution dictionary. Setting to index 5 instead.");
+            WriteSettingValue(5);
+            currentResolution = (Resolution)SettingsManager.Setting(Settings.Resolution).GetCurrentValue();
+        }
         return resolutionToDropdownIndex[currentResolution];
     }
 
