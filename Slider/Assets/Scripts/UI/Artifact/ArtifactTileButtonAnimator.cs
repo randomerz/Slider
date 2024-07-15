@@ -101,9 +101,10 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     public void SetControllerHoverHighlight(bool value, bool log=false)
     {
         controllerHoverFrame.gameObject.SetActive(value);
+        SetControllerHoverHighlightComplement(value, log);
     }
 
-    public void SetControllerHoverHighlightComplement(bool value, bool log=false)
+    private void SetControllerHoverHighlightComplement(bool value, bool log = false)
     {
         if (this.controllerHoverComplementFrame != null)
         {
