@@ -20,6 +20,7 @@ public class UIArtifact : Singleton<UIArtifact>
     protected Queue<SMove> moveQueue = new Queue<SMove>();    //Queue of moves to perform on the grid from the artifact
     protected bool playerCanAddSMoves;
     protected bool playerCanQueue;
+    protected ArtifactTileButton prevButtonSelected;
 
     private bool didInit;
 
@@ -97,7 +98,7 @@ public class UIArtifact : Singleton<UIArtifact>
         HandleControllerCheck();
     }
 
-    private void HandleControllerCheck()
+    protected virtual void HandleControllerCheck()
     {
         if (!UIArtifactMenus.IsArtifactOpen())
         {
@@ -740,11 +741,21 @@ public class UIArtifact : Singleton<UIArtifact>
         SetButtonPositionsToMatchGrid();
     }
 
-    private void SetSelectedButton(ArtifactTileButton button)
+    protected virtual void SetSelectedButton(ArtifactTileButton button)
     {
         buttonSelected = button;
         button.SetSelected(true);
     }
+
+    //public ArtifactTileButton GetSelectedButton()
+    //{
+    //    return buttonSelected;
+    //}
+
+    //public ArtifactTileButton GetPreviousSelectedButton()
+    //{
+    //    return this.prevButtonSelected;
+    //}
 
     protected void UpdateMoveOptions()
     {

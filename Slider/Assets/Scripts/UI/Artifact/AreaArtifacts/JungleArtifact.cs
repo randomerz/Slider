@@ -3,10 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class JungleArtifact : UIArtifact
 {
     // private static STile prevLinkTile = null;
+
+    // Taking some inspo from the JungleRecipeBook class
+    private BindingBehavior directionalBindingBehavior;
+    private BindingBehavior quitBindingBehaviorEsc;
+    private BindingBehavior quitBindingBehaviorAction;
+    private Vector2 lastDirectionalInput;
 
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
@@ -81,6 +88,62 @@ public class JungleArtifact : UIArtifact
             }
         }
     }
+
+    //protected override void HandleControllerCheck()
+    //{
+    //    base.HandleControllerCheck();
+    //}
+
+    //protected override void OnEnable()
+    //{
+    //    UIArtifactMenus.OnArtifactOpened += CheckUsingController;
+    //    base.OnEnable();
+    //}
+
+    //protected override void OnDisable()
+    //{
+    //    UIArtifactMenus.OnArtifactOpened -= CheckUsingController;
+    //    base.OnDisable();
+    //}
+
+
+
+    //public void CheckUsingController(object sender, System.EventArgs e)
+    //{
+    //    if (Controls.CurrentControlScheme.Equals(Controls.CONTROL_SCHEME_CONTROLLER))
+    //    {
+    //        Debug.Log($"IS USING CONTROLLER: {Controls.CurrentControlScheme}");
+    //        directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
+    //            context => {
+    //                HandleDirectionalInput(context.ReadValue<Vector2>());
+    //                //Debug.Log($"CONTEXT ACTION: {context.control}");
+    //            }
+    //        );
+    //        quitBindingBehaviorAction = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action,
+    //            context =>
+    //            {
+    //                Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
+    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
+    //            }
+    //        );
+    //        quitBindingBehaviorEsc = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel,
+    //            context =>
+    //            {
+    //                Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
+    //                Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
+    //            }
+
+    //        );
+
+    //    }
+    //    else
+    //    {
+    //        Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+
+    //    }
+    //}
 
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?
@@ -198,6 +261,62 @@ public class JungleArtifact : UIArtifact
 
         return options;
     }
+
+    /// <summary>
+    /// Leaving this here in case we decide to try to reprogram the long
+    /// tile to be treated as one button on controller support.  Until then,
+    /// this method doesn't really do anything.
+    /// </summary>
+    /// <param name="input">Input direction vector</param>
+    //private void HandleDirectionalInput(Vector2 input)
+    //{
+    //    if (input.magnitude < 0.5f)
+    //    {
+    //        lastDirectionalInput = Vector2.zero;
+    //        return;
+    //    }
+
+    //    float angle = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
+
+    //    // Up
+    //    if (45 <= angle && angle < 135)
+    //    {
+    //        if (lastDirectionalInput == Vector2.up)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.up;
+    //        //jungleRecipeBookUI.IncrementCurrentShape();
+    //        // TODO: handle the directional input stuff for the UI Artifact for Jungle
+    //    }
+    //    // Left
+    //    else if (135 <= angle && angle < 225)
+    //    {
+    //        if (lastDirectionalInput == Vector2.left)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.left;
+    //        //jungleRecipeBookUI.DecrementCurrentShape();
+    //    }
+    //    // Down
+    //    else if (225 <= angle && angle < 315)
+    //    {
+    //        if (lastDirectionalInput == Vector2.down)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.down;
+    //        //jungleRecipeBookUI.DecrementRecipeDisplay();
+    //    }
+    //    // Right
+    //    else
+    //    {
+    //        if (lastDirectionalInput == Vector2.right)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.right;
+    //        //jungleRecipeBookUI.IncrementCurrentShape();
+    //    }
+        
+    //}
 
     public override void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {
