@@ -108,18 +108,13 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
 
     private void StartCutScene()
     {
-        foreach (NPC character in cutsceneCharacters)
-        {
-            if (character.IsDialogueBoxActive())
-            {
-                character.DeactivateDialogueBox();
-            }
-        }
         StartCoroutine(StartCutSceneCoroutine());
     }
 
     private IEnumerator StartCutSceneCoroutine()
     {
+        EnableAllNormalCharacterDialogueTriggers(false);
+
         cutsceneStarted = true;
 
         if (cutsceneStartedFlag != null)
@@ -127,7 +122,13 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
             SaveSystem.Current.SetBool(cutsceneStartedFlag, true);
         }
 
-        EnableAllNormalCharacterDialogueTriggers(false);
+        foreach (NPC character in cutsceneCharacters)
+        {
+            if (character.IsDialogueBoxActive())
+            {
+                character.DeactivateDialogueBox();
+            }
+        }
 
         yield return CutScene();
 

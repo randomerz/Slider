@@ -18,6 +18,10 @@ public class OnTriggerEnter : MonoBehaviour
         {
             onEnter.Invoke();
         }
+        else if (!onPlayerEnter && triggerIfAlreadyInside && playerIsInTrigger)
+        {
+            onExit.Invoke();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
