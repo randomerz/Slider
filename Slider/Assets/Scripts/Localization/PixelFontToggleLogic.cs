@@ -42,7 +42,7 @@ public class PixelFontToggleLogic : MonoBehaviour
         }
         
         // for main menu scene, apply setting directly
-        if (!SceneManager.GetActiveScene().name.Equals("MainMenu"))
+        if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
         {
             if (toggleIsOn)
             {
