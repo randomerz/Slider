@@ -51,7 +51,7 @@ public class FactoryMagnet : MonoBehaviour
     private void UpdatePoweredState()
     {
         bool isPowered = GetPowered();
-        poweredSprite.enabled = isPowered;
+        poweredSprite.gameObject.SetActive(isPowered);
         bobAnimation.enabled = isPowered;
         if(uiIcon)
             uiIcon.SetActive(isPowered);
