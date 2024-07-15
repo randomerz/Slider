@@ -345,6 +345,9 @@
 		</relationship>
 	</object>
 	<object class="PitchShifterEffect" id="{eff804ef-4010-4c77-8ae0-a55cde8f776d}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
 		<property name="pitch">
 			<value>0.889999986</value>
 		</property>
