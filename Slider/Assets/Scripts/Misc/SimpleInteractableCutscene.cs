@@ -184,7 +184,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         float currentTime = Time.time;
         while ((currentTime - startTime < timeWaitAfterFinishedTyping) && !skipWaitingAfterTyped)
         {
-            yield return new WaitForFixedUpdate();
+            yield return null;
             currentTime = Time.time;
         }
 
