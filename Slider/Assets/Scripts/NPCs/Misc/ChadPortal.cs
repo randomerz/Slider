@@ -16,7 +16,7 @@ public class ChadPortal : MonoBehaviour
     {
         SGrid.OnSTileEnabled -= DebugOnStileEnable;
     }
-
+    /*
     private void Start() 
     {
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
@@ -25,10 +25,10 @@ public class ChadPortal : MonoBehaviour
         }
         else
         {
-            animator.SetBool("hasPortalGun", true);
+            //animator.SetBool("hasPortalGun", true);
         }
     }
-
+    */
     public void DebugOnStileEnable(object sender, SGrid.OnSTileEnabledArgs e)
     {
         if (e.stile.islandId == 2 && !SaveSystem.Current.GetBool("magitechDesertPortal"))

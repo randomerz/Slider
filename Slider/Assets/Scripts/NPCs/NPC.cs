@@ -10,6 +10,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     [SerializeField] public string characterName;
     [SerializeField] private List<NPCConditionals> conds;
     public float speed;
+    public void SetSpeed(float newSpeed) { speed = newSpeed; }
 
     public NPCEmotes emoteController;// { get; private set; }
     public Animator animator { 
