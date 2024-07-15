@@ -13,13 +13,13 @@ public class Anchor : Item
 
     public static event System.EventHandler<OnAnchorInteractArgs> OnAnchorInteract;
     
-    
-    // Start is called before the first frame update
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDuration;
-    //[SerializeField] private ConductiveElectricalNode conductiveNode;
     public Sprite trackerSprite;
-    private STile currentSTile; //C: used so it can be passed as a parameter in OnAnchorDrop
+    private STile currentSTile; 
+
+    public ParticleSystem splashParticle;
+    private bool shouldSpawnSplashParticle = false;
 
     public override void Start()
     {
@@ -35,11 +35,6 @@ public class Anchor : Item
                     OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true, fromStart = true });
             }
         }
-    }
-
-    private void OnEnable()
-    {
-        
     }
 
     private void OnDisable()
@@ -62,7 +57,6 @@ public class Anchor : Item
     public void RemoveFromTile()
     {
         OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=false });
-        
         UnanchorTile();
         UITrackerManager.RemoveTracker(gameObject);
     }
@@ -87,6 +81,10 @@ public class Anchor : Item
         AddToTile(hitTile);
 
         Player.SetMoveSpeedMultiplier(1f);
+        if(Player.GetInstance().GetIsOnWater())
+        {
+            shouldSpawnSplashParticle = true;
+        }
         return hitTile;
     }
 
@@ -106,8 +104,19 @@ public class Anchor : Item
         base.dropCallback();
         CameraShake.Shake(shakeDuration, shakeAmount);
         AudioManager.Play("Slide Explosion");
+        if(shouldSpawnSplashParticle)
+        {
+            SpawnSplashParticle();
+        }
         
         OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+    }
+
+    private void SpawnSplashParticle()
+    {
+        splashParticle.Play();
+        AudioManager.Play("Boat Splash");
+        shouldSpawnSplashParticle = false;
     }
 
     public void DropThroughIce()

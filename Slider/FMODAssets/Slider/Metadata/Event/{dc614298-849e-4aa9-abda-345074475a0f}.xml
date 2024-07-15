@@ -262,9 +262,6 @@
 		<relationship name="endPoint">
 			<destination>{16f6d158-7726-45fd-899a-a544c97e19ad}</destination>
 		</relationship>
-		<relationship name="relatedModule">
-			<destination>{a1dfc55c-f181-4953-9937-f216aaf6c6fd}</destination>
-		</relationship>
 	</object>
 	<object class="FadeCurve" id="{be7d4b2d-1d3d-4775-ad57-ab4d97c2d4fb}">
 		<relationship name="startPoint">
@@ -357,7 +354,7 @@
 	</object>
 	<object class="AutomationPoint" id="{6c948c63-5a7c-4f36-a1ba-c271d7504fd0}">
 		<property name="position">
-			<value>1.3746305418719214</value>
+			<value>1.55</value>
 		</property>
 		<property name="value">
 			<value>1</value>

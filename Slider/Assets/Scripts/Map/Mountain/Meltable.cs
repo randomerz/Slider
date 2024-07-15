@@ -36,6 +36,7 @@ public class Meltable : FlashWhiteSprite, ISavable
     [SerializeField] private bool refreezeFromBroken = false;
     [SerializeField] private bool fixBackToFrozen = false;
     [SerializeField] private float freezeTime = 5.0f;
+    public bool meltToBroken = false;
 
     public enum MeltableState
     {
@@ -67,6 +68,8 @@ public class Meltable : FlashWhiteSprite, ISavable
     }
 
     private void Start() {
+        if(breakToMelted && meltToBroken)
+            Debug.LogError("Break to melted and melt to broken cannot both be true!");
         if (blinkCurve.length > 0)
             blinkTime = blinkCurve[blinkCurve.length - 1].time;
     }
@@ -144,12 +147,19 @@ public class Meltable : FlashWhiteSprite, ISavable
                     spriteRenderer.sprite = anchorBrokenSprite;
                 onBreak?.Invoke();
                 currFreezeTime = freezeTime;
+                if(!fromLoad)
+                    AudioManager.PickSound("Ice Break").WithVolume(4).AndPlay();
             }
         }
     }
 
     public void Melt(bool fromLoad = false)
     {
+        if(meltToBroken)
+        {
+            Break();
+            return;
+        }
         if(fromLoad || (state == MeltableState.FROZEN && numLavaSources > 0)) 
         {
             state = MeltableState.MELTED;
@@ -157,6 +167,8 @@ public class Meltable : FlashWhiteSprite, ISavable
                 spriteRenderer.sprite = meltedSprite;
             onMelt?.Invoke();
             currFreezeTime = freezeTime;
+            if(!fromLoad)
+                AudioManager.PickSound("Ice Break").WithVolume(4).AndPlay();
         }
     }
 
@@ -169,6 +181,8 @@ public class Meltable : FlashWhiteSprite, ISavable
                 spriteRenderer.sprite = hasFixed && newFrozenSprite != null ? newFrozenSprite : frozenSprite;
             onFreeze?.Invoke();
             currFreezeTime = freezeTime;
+            if(!fromLoad)
+                AudioManager.PickSound("Ice Freeze").WithVolume(7).AndPlay();
         }
     }
 

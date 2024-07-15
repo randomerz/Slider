@@ -34,11 +34,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -17.9, y: 23.3}
+  m_AnchoredPosition: {x: -18.5, y: 18.5}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4478772050193225013
@@ -147,8 +146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58870e91e3bdfbd40bc77a23f3f35e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holder: {fileID: 0}
   image: {fileID: 4151758805469938702}
   button: {fileID: 7763899677382564669}
+  UIRotateParams: {fileID: 0}
   currentlySelected: 0
 --- !u!114 &4233551580684013105
 MonoBehaviour:

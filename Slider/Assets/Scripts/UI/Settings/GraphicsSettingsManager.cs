@@ -34,7 +34,7 @@ public class GraphicsSettingsManager : MonoBehaviour
     {
         if(width == 0)
         {
-            Screen.SetResolution(Screen.width, Screen.height, mode);
+            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, mode);
         }
         else
         {

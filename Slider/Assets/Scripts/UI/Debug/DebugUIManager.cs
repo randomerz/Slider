@@ -146,8 +146,17 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
+    private void SetCheated()
+    {
+        if (SaveSystem.Current != null)
+        {
+            SaveSystem.Current.SetBool("UsedCheats", true);
+        }
+    }
+
     public void BroadcastMessageToAllObjects()
     {
+        SetCheated();
         string[] p = consoleText.text.Split(new char[]{' '}, 2);
 
         commandIndex = commandHistory.Count;
@@ -230,8 +239,12 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.SetGrid(grid);
     }
 
-    public void SpawnAnchor() => Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
-    
+    public void SpawnAnchor()
+    {
+        SetCheated();
+        Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
+    }
+
     public void GPTC(string collectibleName) => SGrid.Current.GivePlayerTheCollectible(collectibleName);
     
     public void Give(string collectibleName) => SGrid.Current.GivePlayerTheCollectible(collectibleName);
@@ -309,17 +322,20 @@ public class DebugUIManager : MonoBehaviour
 
     public void NoClip()
     {
+        SetCheated();
         Player p = GameObject.Find("Player").GetComponent<Player>();
         p.toggleCollision();
     }
 
     public void EnableScroll()
     {
+        SetCheated();
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
     }
 
     public void GiveBoots()
     {
+        SetCheated();
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Boots", Area.Jungle));
         Player.GetInstance().UpdatePlayerSpeed();
     }

@@ -96,6 +96,12 @@ public class PipeLiquid : MonoBehaviour
         isFilling = true;
         OnStartFill?.Invoke();
         Fill(startState);
+
+        GameObject audioGO = new GameObject("Pipe Audio GameObject");
+        audioGO.transform.position = points[0];
+        Destroy(audioGO, 30);
+        AudioManager.Play("Pipe Fill", audioGO.transform);
+
         float t = 0;
         while (t < duration)
         {

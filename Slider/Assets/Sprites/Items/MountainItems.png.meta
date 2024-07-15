@@ -320,7 +320,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -328,6 +328,48 @@ TextureImporter:
       bones: []
       spriteID: 6842a2100ec166e4782076601d3d062c
       internalID: -1156411444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MountainItems_9
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bd712906e9251541a9badf4e105581c
+      internalID: 496899885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MountainItems_10
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc0c70f4953104240b565eb341455aec
+      internalID: -1317345751
       vertices: []
       indices: 
       edges: []
@@ -345,6 +387,7 @@ TextureImporter:
     nameFileIdTable:
       MountainItems_0: 526614594
       MountainItems_1: 502137757
+      MountainItems_10: -1317345751
       MountainItems_2: 1410197264
       MountainItems_3: -1605105292
       MountainItems_4: 1271884339
@@ -352,6 +395,7 @@ TextureImporter:
       MountainItems_6: -1141180103
       MountainItems_7: 1564581372
       MountainItems_8: -2141092467
+      MountainItems_9: 496899885
       MountainItems_CrystalSample: -1156411444
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

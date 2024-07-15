@@ -81,7 +81,7 @@ public class JungleRecipeBook : MonoBehaviour
 
         if (JungleRecipeBookSave.AllRecipesCompleted())
         {
-            AchievementManager.SetAchievementStat("completedAllJungleRecipes", 1);
+            AchievementManager.SetAchievementStat("completedAllJungleRecipes", true, 1);
         }
     }
 

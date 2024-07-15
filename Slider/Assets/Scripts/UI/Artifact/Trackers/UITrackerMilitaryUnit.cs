@@ -21,11 +21,25 @@ public class UITrackerMilitaryUnit : UITracker
         }
         set => _targetUnit = value;
     }
+    private bool isTargetAlien;
 
     public RectTransform rectTransform;
     public RectTransform imageRectTransform;
     public AnimationCurve transitionOffsetCurve;
     private Coroutine coroutine;
+
+    private void Start()
+    {
+        isTargetAlien = TargetUnit.UnitTeam == MilitaryUnit.Team.Alien;
+    }
+
+    private void Update()
+    {
+        if (isTargetAlien && coroutine == null)
+        {
+            imageRectTransform.anchoredPosition = GetBasePosition();
+        }
+    }
 
     public void AnimateImageFrom(Vector2 offset)
     {
@@ -37,15 +51,26 @@ public class UITrackerMilitaryUnit : UITracker
 
         coroutine = CoroutineUtils.ExecuteEachFrame(
             (x) => {
-                imageRectTransform.anchoredPosition = Vector2.Lerp(offset, Vector2.zero, x);
+                imageRectTransform.anchoredPosition = Vector2.Lerp(offset, GetBasePosition(), x);
             },
             () => {
-                imageRectTransform.anchoredPosition = Vector2.zero;
+                imageRectTransform.anchoredPosition = GetBasePosition();
                 coroutine = null;
             },
             this,
             0.5f,
             transitionOffsetCurve
         );
+    }
+
+    public Vector2 GetBasePosition()
+    {
+        if (isTargetAlien)
+        {
+            int t = (int)Time.time;
+            return t % 2 == 0 ? Vector2.zero : Vector2.up;
+        }
+
+        return Vector2.zero;
     }
 }

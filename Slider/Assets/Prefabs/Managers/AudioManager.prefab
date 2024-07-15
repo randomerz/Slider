@@ -743,6 +743,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Portal
     canPause: 1
     dopplerScale: 1
+  - name: Portal Open
+    fmodEvent:
+      Guid:
+        Data1: 1361104093
+        Data2: 1221380617
+        Data3: -1018079580
+        Data4: -1086575032
+      Path: event:/SFX/Magic/Portal Open
+    canPause: 1
+    dopplerScale: 1
   - name: Desync Tear Open
     fmodEvent:
       Guid:
@@ -911,6 +921,36 @@ MonoBehaviour:
         Data3: 1596107655
         Data4: 1491869152
       Path: event:/SFX/Mountain/Minecart Corner
+    canPause: 1
+    dopplerScale: 1
+  - name: Pipe Fill
+    fmodEvent:
+      Guid:
+        Data1: -305969014
+        Data2: 1166233899
+        Data3: -1941263966
+        Data4: 362449177
+      Path: event:/SFX/Mountain/Pipe Fill
+    canPause: 1
+    dopplerScale: 1
+  - name: Dog Bark 1
+    fmodEvent:
+      Guid:
+        Data1: 541813952
+        Data2: 1106627644
+        Data3: -2048116586
+        Data4: -2061847869
+      Path: event:/SFX/Mountain/Dog Bark 1
+    canPause: 1
+    dopplerScale: 1
+  - name: Dog Bark 2
+    fmodEvent:
+      Guid:
+        Data1: -1960056638
+        Data2: 1341876692
+        Data3: -1421887319
+        Data4: -1876793318
+      Path: event:/SFX/Mountain/Dog Bark 2
     canPause: 1
     dopplerScale: 1
   music:
@@ -1112,6 +1152,15 @@ MonoBehaviour:
         Data3: -301586019
         Data4: -750450934
       Path: event:/Ambience/Mountain/Minecart Ambience
+    emitter: {fileID: 0}
+  - name: Pipe Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1757817469
+        Data2: 1313016578
+        Data3: -1506555720
+        Data4: -407871025
+      Path: event:/Ambience/Pipe Ambience
     emitter: {fileID: 0}
   - name: Portal Ambience
     fmodEvent:

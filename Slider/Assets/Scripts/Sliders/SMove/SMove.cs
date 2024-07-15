@@ -194,6 +194,27 @@ public class SMoveMountainSwap: SMove
             AddBorder(p, 2, p + Vector2Int.left);
         }
     }
+
+    public override Dictionary<Vector2Int, List<int>> GenerateBorders()
+    {
+        if(!isLayerSwap)
+        {
+            return base.GenerateBorders();
+        }
+
+        positions.Clear();
+        borders.Clear();
+
+        foreach (Movement m in moves)
+        {
+            positions.Add(new Vector2Int(m.startLoc.x, m.startLoc.y));
+            positions.Add(new Vector2Int(m.endLoc.x, m.endLoc.y));
+        }
+
+        AddBordersByPositions(positions);
+
+        return borders;
+    }
 }
 
 //C: used in magitech to move a tile in the past/present at the same time

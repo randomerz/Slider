@@ -215,17 +215,7 @@ public class SGridAnimator : MonoBehaviour
     {
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
 
-        // enable borders colliders
-        foreach (Vector2Int p in borders.Keys)
-        {
-            if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
-            {
-                foreach (int i in borders[p])
-                {
-                    bgGrid[p.x, p.y].SetBorderCollider(i, true);
-                }
-            }
-        }
+        SetBorders(move, bgGrid);
 
         // DC: bug involving anchoring a tile in a rotate, lets you walk into void
         STile anchorRotationPlayerStile = null;
@@ -274,6 +264,23 @@ public class SGridAnimator : MonoBehaviour
         foreach (STile t in disabledColliders)
         {
             t.SetSliderCollider(true);
+        }
+    }
+
+    protected virtual void SetBorders(SMove move, SGridBackground[,] bgGrid)
+    {
+        Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
+
+        // enable borders colliders
+        foreach (Vector2Int p in borders.Keys)
+        {
+            if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
+            {
+                foreach (int i in borders[p])
+                {
+                    bgGrid[p.x, p.y].SetBorderCollider(i, true);
+                }
+            }
         }
     }
 

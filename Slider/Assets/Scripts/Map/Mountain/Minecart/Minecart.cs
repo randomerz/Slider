@@ -67,6 +67,8 @@ public class Minecart : Item, ISavable
     private bool nextTile = false;
     public LayerMask blocksSpawnMask;
 
+    public static Action OnMinecartStop;
+
 
 
     public override void Awake() 
@@ -93,13 +95,14 @@ public class Minecart : Item, ISavable
 
     private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        RemoveCrystals();
         if(currentSTile == null || e.stile == null) return;
         if(e.stile == currentSTile && isMoving) Derail();
     }
 
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
+        RemoveCrystals();
     }
 
     private void OnScrollRearrange(object sender, EventArgs e)
@@ -125,19 +128,28 @@ public class Minecart : Item, ISavable
 
         if (AllMovingConds())
         {
-            if(!minecartAmbience.IsEnabled)
+            if(minecartAmbience != null && !minecartAmbience.IsEnabled)
             {
                 minecartAmbience.SetParameterEnabled(true);
             }
             Move();
         }
         else
-        {
-            if(minecartAmbience.IsEnabled)
+        {   
+            if(minecartAmbience != null && minecartAmbience.IsEnabled)
             {
                 minecartAmbience.SetParameterEnabled(false);
             }
             animator.SetSpeed(0);
+        }
+    }
+
+    private void RemoveCrystals()
+    {
+        if(mcState == MinecartState.Crystal) 
+        {
+            AudioManager.Play("Glass Clink");
+            UpdateState(MinecartState.Empty);
         }
     }
 
@@ -326,14 +338,14 @@ public class Minecart : Item, ISavable
 
     public void StartMoving() 
     {
-        if(isOnTrack && canStartMoving && !collisionPause)
+        if(isOnTrack && canStartMoving)
         {
             isMoving = true; 
             animator.SetSpeed(1);
         } 
     }
 
-    public void StopMoving(bool onTrack = false)
+    public void StopMoving(bool onTrack = false, bool elevator = false)
     {
         isMoving = false;
         if(!onTrack)
@@ -344,6 +356,8 @@ public class Minecart : Item, ISavable
         }
         collisionPause = false;
         collidingObjects.Clear();
+        if(!elevator)
+            OnMinecartStop?.Invoke();
     }
 
     public void ResetTiles()
@@ -361,8 +375,11 @@ public class Minecart : Item, ISavable
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
-        if(currentTile == null)
-            print("current tile null");
+        if(currentTile == null && direction == -1)
+        {
+            Debug.LogWarning("Cannot get default direction of null tile!");
+            return;
+        }
         currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
@@ -443,6 +460,8 @@ public class Minecart : Item, ISavable
 
     private bool TryGetNextTileDiffRM()
     {
+        if(SGrid.Current == null)
+            return false;
         List<STile> stileList = SGrid.Current.GetActiveTiles();
         List<RailManager> rmList = new List<RailManager>();
         Vector3Int targetLoc;
@@ -517,6 +536,8 @@ public class Minecart : Item, ISavable
 
     private STile CheckDropTileBelow()
     {
+        if(SGrid.Current == null)
+            return null;
         Vector3 checkloc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)) + GetTileOffsetVector(currentDirection);
         STile tile = null;
         var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.4f, 0);
@@ -674,6 +695,7 @@ public class Minecart : Item, ISavable
         //magic number based on enum order
         int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
+        AudioManager.PickSound("Minecart Corner").WithAttachmentToTransform(transform).AndPlay();
     }
     
     private void PlayStraightAnimation()

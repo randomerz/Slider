@@ -7,6 +7,7 @@ public class LavaBucket : MonoBehaviour, ISavable
     [SerializeField] private SpriteSwapper spriteSwapper;
     [SerializeField] private GameObject particles;
     [SerializeField] private string saveString;
+    public SpriteRenderer spriteRenderer;
 
     private STile sTile;
 

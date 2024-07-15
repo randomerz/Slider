@@ -20,6 +20,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
     // includes BGFrame colliders, stile colliders, collider tilemap, etc
     protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; 
 
+    [SerializeField] protected Direction defaultDirection = 0;
     [SerializeField] protected string saveString = "";
 
     [Header("References")]
@@ -119,7 +120,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
             return;
         }
 
-        direction = (Direction)profile.GetInt(saveString);
+        direction = (Direction)profile.GetInt(saveString, (int)defaultDirection);
     }
 
     /// <summary>
@@ -312,7 +313,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
         }
         else
         {
-            pathController.DisableMarching(sendingDirection);
+            pathController?.DisableMarching(sendingDirection);
         }
     }
 

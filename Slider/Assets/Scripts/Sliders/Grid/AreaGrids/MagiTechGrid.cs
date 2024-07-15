@@ -93,6 +93,12 @@ public class MagiTechGrid : SGrid
         base.Start();
         contactFilter = new ContactFilter2D();
         
+        // If they came from Factory Past
+        if (Player.GetIsInHouse())
+        {
+            Player.SetIsInHouse(false);
+        }
+        
         AudioManager.PlayMusic("MagiTech");
         AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", IsInPast(Player._instance.transform) ? 0 : 1);
     }
@@ -302,16 +308,16 @@ public class MagiTechGrid : SGrid
         return transform.position.x > 67;
     }
 
-    public override void LoadRealigningGrid()
+    public override void LoadRealigningGrid(bool setRealigningGridToNull=true)
     {
-        base.LoadRealigningGrid();
+        base.LoadRealigningGrid(setRealigningGridToNull);
 
         EndDesync();
     }
 
     public void TryEnableHint()
     {
-        if (GetNumTilesCollected() >= 1)
+        if (GetNumTilesCollected() >= 2)
         {
             hints.TriggerHint("altview");
         }
@@ -474,6 +480,14 @@ public class MagiTechGrid : SGrid
         foreach (GameObject g in bridgeFenceObjects)
         {
             g.SetActive(true);
+        }
+    }
+
+    public void CheckGemAchievement()
+    {
+        if(GetNumTilesCollected() == 0)
+        {
+            AchievementManager.SetAchievementStat("magitechEarlyGem", true, 1);
         }
     }
 

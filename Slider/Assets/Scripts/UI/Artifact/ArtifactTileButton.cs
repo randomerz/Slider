@@ -70,10 +70,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected void OnDisable()
     {
-        if (MyStile != null && MyStile.isTileActive)
-        {
-            SetSpriteToIslandOrEmpty();
-        }
+        SetSpriteToIslandOrEmpty();
     }
 
     public void Init()

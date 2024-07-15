@@ -53,7 +53,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private bool didInit;
 
-    private static float houseYThreshold = -75; // below this y value the player must be in a house
+    public static float houseYThreshold { get; private set; }= -75; // below this y value the player must be in a house
 
     private bool trackerEnabled = true;
 

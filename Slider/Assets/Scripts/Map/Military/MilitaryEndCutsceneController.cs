@@ -45,7 +45,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
         UITrackerManager.AddNewTracker(
             alienCommander.gameObject, 
             UITrackerManager.DefaultSprites.exclamation, 
-            UITrackerManager.DefaultSprites.none,
+            UITrackerManager.DefaultSprites.exclamationWhite,
             blinkTime: 3
         );
 
