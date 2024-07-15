@@ -264,9 +264,9 @@
 		<relationship name="effects">
 			<destination>{9261ab8f-2997-4d9f-9256-2606ff2d5d49}</destination>
 			<destination>{87da693c-315d-4fd0-b49f-d181b02c17a1}</destination>
-			<destination>{6dd99bfe-e91b-42d0-9187-9b05379fa299}</destination>
 			<destination>{99459914-99be-462f-b011-0ce21a129b01}</destination>
 			<destination>{7ddb994f-6257-4983-8469-0334abdc5431}</destination>
+			<destination>{6dd99bfe-e91b-42d0-9187-9b05379fa299}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{41d24148-5e38-48d1-aa4d-ee868138c025}" />
@@ -404,20 +404,6 @@
 			<destination>{aa5ca1bf-62e4-490c-9db5-e49bc68d5965}</destination>
 		</relationship>
 	</object>
-	<object class="PitchShifterEffect" id="{6dd99bfe-e91b-42d0-9187-9b05379fa299}">
-		<property name="pitch">
-			<value>1.5</value>
-		</property>
-		<property name="fftSize">
-			<value>3360</value>
-		</property>
-		<property name="overlap">
-			<value>1</value>
-		</property>
-		<property name="maxChannels">
-			<value>3</value>
-		</property>
-	</object>
 	<object class="PitchShifterEffect" id="{99459914-99be-462f-b011-0ce21a129b01}">
 		<property name="pitch">
 			<value>1.02999997</value>
@@ -433,6 +419,20 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{7ddb994f-6257-4983-8469-0334abdc5431}" />
+	<object class="PitchShifterEffect" id="{6dd99bfe-e91b-42d0-9187-9b05379fa299}">
+		<property name="pitch">
+			<value>1.5</value>
+		</property>
+		<property name="fftSize">
+			<value>3360</value>
+		</property>
+		<property name="overlap">
+			<value>1</value>
+		</property>
+		<property name="maxChannels">
+			<value>3</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{881be584-37df-408c-b716-b50e7f6100b8}">
 		<property name="position">
 			<value>10</value>

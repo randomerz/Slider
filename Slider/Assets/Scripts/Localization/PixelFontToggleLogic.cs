@@ -41,25 +41,25 @@ public class PixelFontToggleLogic : MonoBehaviour
             return;
         }
         
-        // Otherwise, either directly apply the style or notify the player that it will be applied later
-        if (toggleIsOn)
+        // for main menu scene, apply setting directly
+        if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
         {
-            // TODO: get rid of this literal
-            if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
+            if (toggleIsOn)
             {
+                // to reload pixel font into the scene, a reload is required
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
             else
             {
-                popup.SetActive(
-                    true); // there's no way to just swap out every different pixel font at once, just tell the player to cope
+                // to unload pixel font (and apply fallback), just refresh
+                LocalizationLoader.RefreshLocalization();
             }
         }
+        // for non-main menu scenes, just apply the setting and tell players to restart
         else
         {
-            popup.SetActive(false);
-            // when switching from pixel font to a uniform fallback font, a simple refresh is ok without reload
-            LocalizationLoader.RefreshLocalization();
+            popup.SetActive(
+                true); // there's no way to just swap out every different pixel font at once, just tell the player to cope
         }
     }
 }
