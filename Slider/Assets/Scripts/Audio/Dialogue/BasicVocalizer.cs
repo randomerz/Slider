@@ -177,6 +177,13 @@ namespace SliderVocalization
             initialPitch = context.lastWordFinalPitch;
             middlePitch = context.wordPitchIntonated * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
             finalPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
+
+            initialPitch = Mathf.Clamp(initialPitch, 0.5f, 2.0f);
+            middlePitch = Mathf.Clamp(middlePitch, 0.5f, 2.0f);
+            finalPitch = Mathf.Clamp(finalPitch, 0.5f, 2.0f);
+
+            // Debug.Log($"{initialPitch} -> {middlePitch}={context.wordPitchIntonated}*{wordIntonationMultiplier} -> {finalPitch}={context.wordPitchBase} * {wordIntonationMultiplier}");
+            
             context.lastWordFinalPitch = finalPitch;
             volumeAdjustmentDB = preset.volumeAdjustmentDb;
             return totalDuration;
@@ -219,6 +226,8 @@ namespace SliderVocalization
                     playingInstance.Tick(delegate (ref EventInstance inst)
                     {
                         float overallT = (totalT / totalDuration);
+                        // inst.setParameterByName("Pitch",
+                        //     Mathf.Lerp(initialPitch, finalPitch, overallT));
                         inst.setParameterByName("Pitch", 
                             overallT < 0.5f ? 
                                 Mathf.Lerp(initialPitch, middlePitch, overallT * 2) 

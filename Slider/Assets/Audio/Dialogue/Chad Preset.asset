@@ -27,7 +27,7 @@ MonoBehaviour:
     isPronouncePerClause: 0
     isPronouncedSyllables: 1
     maximumFadeout: 0.5
-    pitch: 0.866
+    pitch: 0.953
     duration: 0.1586
     volume: 1
     volumeAdjustmentDb: 0
@@ -37,13 +37,13 @@ MonoBehaviour:
       durationAddition: 0.069
       overrideIntonation: 0
       intonationOverride: 0
-    lerpSmoothnessInverted: 1.39
-    wordIntonation: 0.412
+    lerpSmoothnessInverted: 5.09
+    wordIntonation: 0.112
     energeticWordSpeedup: 0.33
-    pLowToHigh: 0.828
-    pHighToLow: 0.567
-    clauseGap: 0.251
-    sentenceIntonationUp: 1
-    sentenceIntonationDown: 0
+    pLowToHigh: 0.651
+    pHighToLow: 0.487
+    clauseGap: 0.073
+    sentenceIntonationUp: 0.603
+    sentenceIntonationDown: 0.681
     overrideIntonation: 0
     intonationOverride: 0
