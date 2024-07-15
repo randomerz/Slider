@@ -9,7 +9,6 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     public Image pushedDownFrame;
     public Image highlightedFrame;
     public Image controllerHoverFrame;
-    public Image controllerHoverComplementFrame; // Only use with the link button in Jungle
 
     //The button is pushed down, regardless of the method
     private bool isPushedDown;
@@ -101,16 +100,9 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     public void SetControllerHoverHighlight(bool value, bool log=false)
     {
         controllerHoverFrame.gameObject.SetActive(value);
-        SetControllerHoverHighlightComplement(value, log);
     }
 
-    private void SetControllerHoverHighlightComplement(bool value, bool log = false)
-    {
-        if (this.controllerHoverComplementFrame != null)
-        {
-            controllerHoverComplementFrame.gameObject.SetActive(value);
-        }
-    }
+    
 
     public void SetHighlighted(bool value)
     {
