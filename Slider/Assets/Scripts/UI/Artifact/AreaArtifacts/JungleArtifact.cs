@@ -89,22 +89,22 @@ public class JungleArtifact : UIArtifact
         }
     }
 
-    protected override void HandleControllerCheck()
-    {
-        base.HandleControllerCheck();
-    }
+    //protected override void HandleControllerCheck()
+    //{
+    //    base.HandleControllerCheck();
+    //}
 
-    protected override void OnEnable()
-    {
-        UIArtifactMenus.OnArtifactOpened += CheckUsingController;
-        base.OnEnable();
-    }
+    //protected override void OnEnable()
+    //{
+    //    UIArtifactMenus.OnArtifactOpened += CheckUsingController;
+    //    base.OnEnable();
+    //}
 
-    protected override void OnDisable()
-    {
-        UIArtifactMenus.OnArtifactOpened -= CheckUsingController;
-        base.OnDisable();
-    }
+    //protected override void OnDisable()
+    //{
+    //    UIArtifactMenus.OnArtifactOpened -= CheckUsingController;
+    //    base.OnDisable();
+    //}
 
 
 
@@ -263,8 +263,9 @@ public class JungleArtifact : UIArtifact
     }
 
     /// <summary>
-    /// Note: This method should only be invoked when the controller is used for
-    /// Jungle.
+    /// Leaving this here in case we decide to try to reprogram the long
+    /// tile to be treated as one button on controller support.  Until then,
+    /// this method doesn't really do anything.
     /// </summary>
     /// <param name="input">Input direction vector</param>
     private void HandleDirectionalInput(Vector2 input)
