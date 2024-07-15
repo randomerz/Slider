@@ -36,7 +36,7 @@ public class OnTriggerEnter : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            playerIsInTrigger = true;
+            playerIsInTrigger = false;
 
             if (onPlayerEnter)
             {
