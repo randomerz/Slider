@@ -747,15 +747,15 @@ public class UIArtifact : Singleton<UIArtifact>
         button.SetSelected(true);
     }
 
-    public ArtifactTileButton GetSelectedButton()
-    {
-        return buttonSelected;
-    }
+    //public ArtifactTileButton GetSelectedButton()
+    //{
+    //    return buttonSelected;
+    //}
 
-    public ArtifactTileButton GetPreviousSelectedButton()
-    {
-        return this.prevButtonSelected;
-    }
+    //public ArtifactTileButton GetPreviousSelectedButton()
+    //{
+    //    return this.prevButtonSelected;
+    //}
 
     protected void UpdateMoveOptions()
     {
