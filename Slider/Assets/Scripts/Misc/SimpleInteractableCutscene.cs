@@ -19,6 +19,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
     private bool currentlyTyping = false;
     private bool currentlyWaitingAfterTyped = false;
     private bool skipWaitingAfterTyped = false;
+    private bool currentDialogueAllowedToSkip = false;
     private bool playerInTrigger = false;
 
     public bool cutsceneStarted { get; private set; } = false;
@@ -92,7 +93,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
 
     private void TrySkipCurrentDialogue()
     {
-        if (currentlyTalkingCharacter != null)
+        if (currentlyTalkingCharacter != null && currentDialogueAllowedToSkip)
         {
             if (currentlyTyping)
             {
@@ -169,11 +170,12 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         yield return null;
     }
    
-    protected IEnumerator SayNextDialogue(NPC character, float timeWaitAfterFinishedTyping = DEFAULT_TIME_BETWEEN_DIALOGUE_LINES)
+    protected IEnumerator SayNextDialogue(NPC character, bool skippable = true, float timeWaitAfterFinishedTyping = DEFAULT_TIME_BETWEEN_DIALOGUE_LINES)
     {
         character.TypeCurrentDialogue();
         currentlyTalkingCharacter = character;
         currentlyTyping = true;
+        currentDialogueAllowedToSkip = skippable;
 
         yield return new WaitWhile(() => character.IsTypingDialogue());
 
@@ -189,6 +191,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         }
 
         currentlyWaitingAfterTyped = false;
+        currentDialogueAllowedToSkip = false;
         //yield return new WaitForSeconds(timeWaitAfterFinishedTyping);
 
         character.AdvanceDialogueChain(); //moves dialogue to next part in chain, considering this line to be said

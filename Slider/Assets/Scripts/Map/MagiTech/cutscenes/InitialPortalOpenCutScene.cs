@@ -19,7 +19,7 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(fezziwig);
-        yield return SayNextDialogue(fezziwig);
+        yield return SayNextDialogue(fezziwig, false);
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(fezziwig);
         yield return SayNextDialogue(fezziwig);
