@@ -17,7 +17,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         Following,
     }
 
-    private const string FOLLOW_SAVE_STRING = "MiscChadIsFollowingPlayer";
+    public string FOLLOW_SAVE_STRING = "MiscChadIsFollowingPlayer";
 
     public bool isFollowingEnabled;
     private FollowState state;
