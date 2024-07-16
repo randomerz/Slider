@@ -31,6 +31,9 @@ public class MagiLaser : MonoBehaviour, ISavable
     public ArtifactTBPluginLaser laserUI;
     public UILaserManager uILaserManager;
 
+    public Lever laserLever;
+    public BoxCollider2D laserLeverTrigger;
+
     private void Start()
     {
         SetEnabled(isEnabled);
@@ -251,5 +254,28 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
     public void CheckIsEnabled(Condition c) => c.SetSpec(isEnabled);
+
+    public void StartForemanLaserShutoff()
+    {
+        StartCoroutine(ForemanLaserShutoff());
+    }
+
+    private IEnumerator ForemanLaserShutoff()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        Debug.Log("Foreman shutting down laser");
+
+        if (isEnabled)
+        {
+            laserLever.Switch();
+            laserLever.SetState(false);
+            laserLeverTrigger.enabled = false;
+        }
+
+        SaveSystem.Current.SetBool("magitechForemanLaserShutoff", true);
+
+        Save();
+    }
 }
 
