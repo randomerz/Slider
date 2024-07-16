@@ -399,7 +399,8 @@ public class ShopDialogueManager : MonoBehaviour
     public Sprite tkQuestion;
     public Sprite tkAngry;
     public Sprite tkNone;
-    
+
+    public VocalizableParagraph Vocalizer => vocalizer;
     [SerializeField]
     private VocalizableParagraph vocalizer;
     
@@ -445,7 +446,7 @@ public class ShopDialogueManager : MonoBehaviour
         // I thought this was safer than changing the controls to only trigger on press.
         if (context.control.IsPressed())
         {
-            if (currentTyperText.TrySkipText())
+            if (currentTyperText != null && currentTyperText.TrySkipText())
             {
                 // skip typing!
             }
@@ -458,6 +459,8 @@ public class ShopDialogueManager : MonoBehaviour
 
     public void SetDialogue(ShopDialogue dialogue)
     {
+        vocalizer.Stop();
+        
         dialogue.onStart?.Invoke();
 
         TMPTextTyper typerText = null;
