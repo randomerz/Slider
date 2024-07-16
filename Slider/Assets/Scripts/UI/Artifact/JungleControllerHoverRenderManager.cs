@@ -5,51 +5,75 @@ using UnityEngine.UI;
 
 public class JungleControllerHoverRenderManager : MonoBehaviour
 {
-    [SerializeField] private ArtifactTileButton currButton;
-    [SerializeField] private ArtifactTileButton linkButton;
+    private const string SLIDER_COLLECTIBLE = "Slider 2 & 3";
 
-    [SerializeField] private Image linkButtonDashed;
-    [SerializeField] private Image currButtonSolid;
+    [SerializeField] private Image button2Default;
+    [SerializeField] private Image button2Solid;
+    [SerializeField] private Image button2Dashed;
+    [SerializeField] private Image button3Default;
+    [SerializeField] private Image button3Solid;
+    [SerializeField] private Image button3Dashed;
 
     // Start is called before the first frame update
     void Start()
     {
-        linkButtonDashed.gameObject.SetActive(false);
-        currButtonSolid.gameObject.SetActive(false);
+        bool hasSlider = PlayerInventory.Contains(SLIDER_COLLECTIBLE);
+
+        button2Default.enabled = !hasSlider;
+        button3Default.enabled = !hasSlider;
+
+        button2Solid.gameObject.SetActive(hasSlider);
+        button2Dashed.gameObject.SetActive(hasSlider);
+
+        button3Solid.gameObject.SetActive(hasSlider);
+        button3Dashed.gameObject.SetActive(hasSlider);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetTile2Selected()
     {
-        //linkButtonDashed.transform.position = linkButton.transform.position;
-        if (!currButton.TileIsActive)
+        bool hasSlider = PlayerInventory.Contains(SLIDER_COLLECTIBLE);
+        
+        button2Default.enabled = !hasSlider;
+        button3Default.enabled = !hasSlider;
+
+        if (!hasSlider)
         {
-            linkButtonDashed.gameObject.SetActive(false);
-            currButtonSolid.gameObject.SetActive(false);
+            return;
         }
-        else
-        {
-            linkButtonDashed.gameObject.SetActive(true);
-            currButtonSolid.gameObject.SetActive(true);
 
-            if (currButton.islandId == 2)
-            {
-                currButtonSolid.gameObject.transform.position = currButton.transform.position + new Vector3(4, 0, 0);
-                linkButtonDashed.gameObject.transform.position = linkButton.transform.position - new Vector3(5, 0, 0);
-            }
-            else if (currButton.islandId == 3)
-            {
-                currButtonSolid.gameObject.transform.position = currButton.transform.position - new Vector3(4, 0, 0);
-                linkButtonDashed.gameObject.transform.position = linkButton.transform.position + new Vector3(5, 0, 0);
+        button3Default.gameObject.SetActive(true);
 
-            }
+        button2Solid.gameObject.SetActive(true);
+        button2Dashed.gameObject.SetActive(false);
 
-        }
+        button3Solid.gameObject.SetActive(false);
+        button3Dashed.gameObject.SetActive(true);
     }
 
-    public void SetDottedControllerFrames(bool v)
+    public void SetTile3Selected()
     {
-        linkButtonDashed.enabled = v;
-        currButtonSolid.enabled = v;
+        bool hasSlider = PlayerInventory.Contains(SLIDER_COLLECTIBLE);
+        
+        button2Default.enabled = !hasSlider;
+        button3Default.enabled = !hasSlider;
+
+        if (!hasSlider)
+        {
+            return;
+        }
+
+        button2Default.gameObject.SetActive(true);
+
+        button2Solid.gameObject.SetActive(false);
+        button2Dashed.gameObject.SetActive(true);
+
+        button3Solid.gameObject.SetActive(true);
+        button3Dashed.gameObject.SetActive(false);
+    }
+
+    public void OnDeselect()
+    {
+        button2Default.gameObject.SetActive(false);
+        button3Default.gameObject.SetActive(false);
     }
 }

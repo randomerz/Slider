@@ -59,7 +59,7 @@ public class FactoryTimeGlitch : MonoBehaviour
     {
         StartCoroutine(largeCrystal.BTTFParticleAnimation(2));
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         // Do screen tearing here
 

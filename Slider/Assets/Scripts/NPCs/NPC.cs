@@ -311,8 +311,10 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     }
 
     // (deprecated) Used somewhere in ocean by npc I think :(
+    [Obsolete]
     public void makeFaceRight()
     {
+        Debug.LogError($"makeFaceRight() is deprecated! Use SetFacingRight() instead.");
         if (spriteDefaultFacingLeft)
         {
             sr.flipX = true;
