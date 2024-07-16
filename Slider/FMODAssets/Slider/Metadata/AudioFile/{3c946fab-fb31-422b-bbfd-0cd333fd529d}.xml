@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{4806efff-4bfd-435f-a507-669f6f157a05}">
+	<object class="AudioFile" id="{3c946fab-fb31-422b-bbfd-0cd333fd529d}">
 		<property name="assetPath">
-			<value>SFX/misc/white_nosie_riser_4s.wav</value>
+			<value>Ambience/Minecart/minecart_rolling.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>44.0999985</value>
+			<value>48</value>
 		</property>
 		<property name="channelCount">
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>4.4567800453514739</value>
+			<value>15.624000000000001</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{d8f08288-15bb-4f0d-b3d6-616c13ec65d6}</destination>

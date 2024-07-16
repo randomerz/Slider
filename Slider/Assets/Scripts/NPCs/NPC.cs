@@ -10,6 +10,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     [SerializeField] public string characterName;
     [SerializeField] private List<NPCConditionals> conds;
     public float speed;
+    public void SetSpeed(float newSpeed) { speed = newSpeed; }
 
     public NPCEmotes emoteController;// { get; private set; }
     public Animator animator { 
@@ -109,6 +110,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public void OnDialogueTriggerExit()
     {
         dialogueCtx.OnDialogueTriggerExit();
+    }
+
+    public void SkipText()
+    {
+        dialogueCtx.SkipText();
     }
     
     public void TypeCurrentDialogueAfterTime(float time)
@@ -305,8 +311,10 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     }
 
     // (deprecated) Used somewhere in ocean by npc I think :(
+    [Obsolete]
     public void makeFaceRight()
     {
+        Debug.LogError($"makeFaceRight() is deprecated! Use SetFacingRight() instead.");
         if (spriteDefaultFacingLeft)
         {
             sr.flipX = true;

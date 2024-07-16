@@ -16,6 +16,8 @@ public class FactoryTimeGlitch : MonoBehaviour
 
     [SerializeField] private UIHousingTracker housingTracker;
 
+    [SerializeField] private PastLargeCrystal largeCrystal;
+
     [SerializeField] private GameObject errorCanvas;
     [SerializeField] private CanvasGroup transparentBackgroundGroup;
     [SerializeField] private GameObject windowsError;
@@ -55,8 +57,20 @@ public class FactoryTimeGlitch : MonoBehaviour
     
     private IEnumerator TimeGlitch()
     {
+        StartCoroutine(largeCrystal.BTTFParticleAnimation(2));
+
+        yield return new WaitForSeconds(1f);
+
+        // Do screen tearing here
+
+        AudioManager.Play("Glass Crash Before");
+
+        yield return new WaitForSeconds(0.75f);
+
         TimeGlitchInit();
+
         yield return new WaitForSecondsRealtime(2f);
+
         bool playerClicked = false;
         BindingBehavior clickBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => {
             if(context.control.IsPressed())
@@ -80,7 +94,9 @@ public class FactoryTimeGlitch : MonoBehaviour
         UIEffects.FadeFromScreenshot(callbackEnd: () =>  UpdateMap(), type: UIEffects.ScreenshotEffectType.PORTAL);
         UIEffects.FlashWhite(callbackEnd: () => SpawnParticles(), useUnscaledTime:true);
 
-        AudioManager.Play("Glass Clink");
+        largeCrystal.StopParticles();
+
+        AudioManager.Play("Glass Crash After");
 
         SGrid.Current.gridTilesExplored.SetTileExplored(TIME_GLITCH_ISLAND_ID, false);
 
@@ -112,19 +128,24 @@ public class FactoryTimeGlitch : MonoBehaviour
         }
         else
         {
-            CoroutineUtils.ExecuteEachFrame(
-                (x) => {
-                    transparentBackgroundGroup.alpha = x;
-                },
-                () => {
-                    windowsError.SetActive(true);
-                },
-                this,
-                1
-            );
-            
+            StartCoroutine(WindowsErrorCoroutine());
         }
         errorCanvas.SetActive(true);
+    }
+
+    private IEnumerator WindowsErrorCoroutine()
+    {
+        float t = 0;
+        while (t < 1)
+        {
+            float x = t;
+            
+            transparentBackgroundGroup.alpha = x;
+
+            yield return new WaitForSecondsRealtime(0.05f);
+            t += 0.05f;
+        }
+        windowsError.SetActive(true);
     }
 
     private void TimeGlitchCleanup()

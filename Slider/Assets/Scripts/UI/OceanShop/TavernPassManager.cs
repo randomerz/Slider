@@ -172,6 +172,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
         int from = displayedCredits;
         int to = Mathf.Min(currentNumCredits, nextTarget);
 
+        AudioManager.Play("Tavern Riser");
         canvasZoomer.DoZoomIn(progressAnimationDuration);
         UICanvasScreenShake.ShakeIncrease(progressAnimationDuration - 0.25f, 30);
         yield return StartCoroutine(AnimateProgressBar(
@@ -197,6 +198,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 () => {
                     DisableButtonPassRenderTextures();
                     tavernPassButtons[tier].PlayEffect();
+                    AudioManager.Play("Tavern Release");
                     ShopManager.CanClosePanel = true;
                 });
                 yield break;
@@ -210,6 +212,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 () => {
                     DisableButtonPassRenderTextures();
                     tavernPassButtons[tier].PlayEffect();
+                    AudioManager.Play("Tavern Release");
                 }
             );
 
@@ -217,6 +220,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
         }
         else
         {
+            AudioManager.Play("Tavern Release");
             canvasZoomer.DoZoomReleaseSmall(1);
         }
 

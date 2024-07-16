@@ -107,10 +107,17 @@ namespace SliderVocalization
 
         void IVocalizer.Stop()
         {
+            if (Vocalizers == null)
+            {
+                StateTransition(VocalizerCompositeState.CanPlay);
+                return;
+            }
+
             foreach (var voc in Vocalizers)
             {
                 voc.Stop();
             }
+            
 
             ClearProgress();
             

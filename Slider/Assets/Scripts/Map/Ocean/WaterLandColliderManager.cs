@@ -11,6 +11,8 @@ public class WaterLandColliderManager : MonoBehaviour
     // for the player to go under the bridges in the jungle/desert
     public List<SpriteRenderer> bridgeSpriteRenderers = new List<SpriteRenderer>();
 
+    private bool hasStartHappened;
+
     void Start()
     {
         if (player == null) 
@@ -19,10 +21,17 @@ public class WaterLandColliderManager : MonoBehaviour
             player = Player.GetInstance();
         }
         UpdateColliders();
+
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => hasStartHappened = true, this);
     }
 
     public void SetOnWater(bool isOnWater)
     {
+        if (hasStartHappened)
+        {
+            // same sound as the anchor equip :/
+            // AudioManager.Play(isOnWater ? "Create Save" : "Delete Save");
+        }
         player.SetIsOnWater(isOnWater);
         UpdateColliders();
     }

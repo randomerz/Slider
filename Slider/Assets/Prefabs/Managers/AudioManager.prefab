@@ -753,16 +753,6 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Portal Open
     canPause: 1
     dopplerScale: 1
-  - name: Desync Tear Open
-    fmodEvent:
-      Guid:
-        Data1: -597605736
-        Data2: 1252623518
-        Data3: 1345641131
-        Data4: 257574772
-      Path: event:/SFX/Magic/Desync Tear Open
-    canPause: 1
-    dopplerScale: 1
   - name: Desync Tear Close
     fmodEvent:
       Guid:
@@ -913,6 +903,16 @@ MonoBehaviour:
       Path: event:/SFX/Mountain/Ice Freeze Combined
     canPause: 1
     dopplerScale: 1
+  - name: Ice Freeze Riser
+    fmodEvent:
+      Guid:
+        Data1: 1318870318
+        Data2: 1201196550
+        Data3: 147842988
+        Data4: 43205369
+      Path: event:/SFX/Mountain/Ice Freeze Riser
+    canPause: 1
+    dopplerScale: 1
   - name: Minecart Corner
     fmodEvent:
       Guid:
@@ -951,6 +951,86 @@ MonoBehaviour:
         Data3: -1421887319
         Data4: -1876793318
       Path: event:/SFX/Mountain/Dog Bark 2
+    canPause: 1
+    dopplerScale: 1
+  - name: Create Save
+    fmodEvent:
+      Guid:
+        Data1: -1856851136
+        Data2: 1126459929
+        Data3: 1073995402
+        Data4: -1425913766
+      Path: event:/SFX/Misc/Create Save
+    canPause: 1
+    dopplerScale: 1
+  - name: Delete Save
+    fmodEvent:
+      Guid:
+        Data1: -1284638036
+        Data2: 1230321032
+        Data3: 1850472612
+        Data4: 1758497326
+      Path: event:/SFX/Misc/Delete Save
+    canPause: 1
+    dopplerScale: 1
+  - name: Tavern Riser
+    fmodEvent:
+      Guid:
+        Data1: -1271920401
+        Data2: 1301148058
+        Data3: -199264590
+        Data4: 1019113601
+      Path: event:/SFX/Ocean/Tavern Rise
+    canPause: 1
+    dopplerScale: 1
+  - name: Tavern Release
+    fmodEvent:
+      Guid:
+        Data1: -1072163900
+        Data2: 1119902337
+        Data3: 623612560
+        Data4: -906851318
+      Path: event:/SFX/Ocean/Tavern Release
+    canPause: 1
+    dopplerScale: 1
+  - name: Slime Footstep
+    fmodEvent:
+      Guid:
+        Data1: -271067349
+        Data2: 1246741567
+        Data3: 992163510
+        Data4: -2051836301
+      Path: event:/SFX/Footsteps/slime_footstep
+    canPause: 0
+    dopplerScale: 1
+  - name: Gem Break
+    fmodEvent:
+      Guid:
+        Data1: 713813467
+        Data2: 1286336347
+        Data3: 1016629426
+        Data4: 1564241696
+      Path: event:/SFX/Mountain/Gem Break
+    canPause: 1
+    dopplerScale: 1
+  - name: Glass Crash Before
+    fmodEvent:
+      Guid:
+        Data1: -1198057820
+        Data2: 1132763407
+        Data3: 783080626
+        Data4: -1603765405
+      Path: event:/SFX/Misc/Glass Crash Before
+    canPause: 1
+    dopplerScale: 1
+  - name: Glass Crash After
+    fmodEvent:
+      Guid:
+        Data1: -900397401
+        Data2: 1182935530
+        Data3: -1149190268
+        Data4: -578417515
+      Path: event:/SFX/Misc/Glass Crash After
     canPause: 1
     dopplerScale: 1
   music:
@@ -1099,6 +1179,15 @@ MonoBehaviour:
         Data4: -2101295235
       Path: event:/Ambience/Conveyor Ambience
     emitter: {fileID: 0}
+  - name: Desync Tear Open
+    fmodEvent:
+      Guid:
+        Data1: -597605736
+        Data2: 1252623518
+        Data3: 1345641131
+        Data4: 257574772
+      Path: event:/Ambience/Desync Tear Open
+    emitter: {fileID: 0}
   - name: Electricity Ambience
     fmodEvent:
       Guid:
@@ -1143,6 +1232,15 @@ MonoBehaviour:
         Data3: 177102507
         Data4: 865687615
       Path: event:/Ambience/Mountain/Lava
+    emitter: {fileID: 0}
+  - name: Magnet Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1829374046
+        Data2: 1102029550
+        Data3: -246341494
+        Data4: 2069037299
+      Path: event:/Ambience/Magnet Ambience
     emitter: {fileID: 0}
   - name: Minecart Ambience
     fmodEvent:

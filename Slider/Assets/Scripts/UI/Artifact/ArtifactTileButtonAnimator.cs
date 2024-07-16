@@ -102,6 +102,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         controllerHoverFrame.gameObject.SetActive(value);
     }
 
+    
+
     public void SetHighlighted(bool value)
     {
         if (!isHighlighted && value)

@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class JungleArtifact : UIArtifact
 {
-    // private static STile prevLinkTile = null;
-
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         if (buttonCurrent.LinkButton == null)
@@ -198,6 +197,62 @@ public class JungleArtifact : UIArtifact
 
         return options;
     }
+
+    /// <summary>
+    /// Leaving this here in case we decide to try to reprogram the long
+    /// tile to be treated as one button on controller support.  Until then,
+    /// this method doesn't really do anything.
+    /// </summary>
+    /// <param name="input">Input direction vector</param>
+    //private void HandleDirectionalInput(Vector2 input)
+    //{
+    //    if (input.magnitude < 0.5f)
+    //    {
+    //        lastDirectionalInput = Vector2.zero;
+    //        return;
+    //    }
+
+    //    float angle = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
+
+    //    // Up
+    //    if (45 <= angle && angle < 135)
+    //    {
+    //        if (lastDirectionalInput == Vector2.up)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.up;
+    //        //jungleRecipeBookUI.IncrementCurrentShape();
+    //        // TODO: handle the directional input stuff for the UI Artifact for Jungle
+    //    }
+    //    // Left
+    //    else if (135 <= angle && angle < 225)
+    //    {
+    //        if (lastDirectionalInput == Vector2.left)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.left;
+    //        //jungleRecipeBookUI.DecrementCurrentShape();
+    //    }
+    //    // Down
+    //    else if (225 <= angle && angle < 315)
+    //    {
+    //        if (lastDirectionalInput == Vector2.down)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.down;
+    //        //jungleRecipeBookUI.DecrementRecipeDisplay();
+    //    }
+    //    // Right
+    //    else
+    //    {
+    //        if (lastDirectionalInput == Vector2.right)
+    //            return;
+
+    //        lastDirectionalInput = Vector2.right;
+    //        //jungleRecipeBookUI.IncrementCurrentShape();
+    //    }
+        
+    //}
 
     public override void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {

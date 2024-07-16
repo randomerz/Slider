@@ -310,6 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatorMain: {fileID: 2102842614371287936}
   animatorWater: {fileID: 5079995372460651569}
+  waterSpriteRenderer: {fileID: 4254864104796103235}
   animatorWorm: {fileID: 2226537957965459877}
   animatorGenerator: {fileID: 739581512517706715}
   gearAnimators:
@@ -321,7 +322,6 @@ MonoBehaviour:
   - {fileID: 4423902021011887979}
   waterWheelAmbienceSource: {fileID: 4629114393443578246}
   fullSpeedGridRegex: (3._..|.._3.)_.._..
-  usedTools: 0
 --- !u!1 &4109343674284568463
 GameObject:
   m_ObjectHideFlags: 0

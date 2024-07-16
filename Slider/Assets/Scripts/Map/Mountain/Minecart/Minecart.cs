@@ -42,6 +42,7 @@ public class Minecart : Item, ISavable
 
     public STile currentSTile;
     public DistanceBasedAmbience minecartAmbience;
+    private const string CRYSTAL_IN_CART_AMBIENCE_NAME = "AmbienceAreCrystalsInMinecart";
 
     private bool dropOnNextMove = false;
 
@@ -148,7 +149,8 @@ public class Minecart : Item, ISavable
     {
         if(mcState == MinecartState.Crystal) 
         {
-            AudioManager.Play("Glass Clink");
+            AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 0);
+            AudioManager.Play("Gem Break");
             UpdateState(MinecartState.Empty);
         }
     }
@@ -648,6 +650,7 @@ public class Minecart : Item, ISavable
         if(mcState != MinecartState.Crystal)
         {
             UpdateState(MinecartState.Crystal); 
+            AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 1);
             return true;
         }
         return false;
