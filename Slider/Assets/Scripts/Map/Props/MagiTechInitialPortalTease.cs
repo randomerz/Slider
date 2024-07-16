@@ -58,6 +58,11 @@ public class MagiTechInitialPortalTease : MonoBehaviour
         }
 
         //UpdateUITracker();
+
+        if (!initialPortalOpened && PlayerInventory.Contains("Slider 2", Area.MagiTech))
+        {
+            EnableRealPortal(true);
+        }
     }
 
     public void ResetTimer()
