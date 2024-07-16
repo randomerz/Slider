@@ -165,6 +165,7 @@ public class PlayerInventory : MonoBehaviour
         {
             itemIterator = equipables.GetEnumerator();
         }
+        Item prev = currentItem;
         bool res = itemIterator.MoveNext();
 
         if (res)
@@ -179,7 +180,12 @@ public class PlayerInventory : MonoBehaviour
         {
             itemIterator.Reset();
             currentItem = null;
-            AudioManager.PlayWithVolume("Delete Save", 0.4f);
+
+            // no items
+            if (prev != null) 
+            {
+                AudioManager.PlayWithVolume("Delete Save", 0.4f);
+            }
         }
     }
 
