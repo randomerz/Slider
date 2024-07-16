@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using AOT;
 using UnityEngine;
 using Cinemachine;
-using FMODUnity;
+using FMOD;
 using FMOD.Studio;
+using FMODUnity;
 using SliderVocalization;
+using Debug = UnityEngine.Debug;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -55,7 +60,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private static bool paused;
     private static bool musicPaused;
-    private static List<EventInstance> pausedMusic;
+    private static List<FMOD.Studio.EventInstance> pausedMusic;
 
     [SerializeField]
     private bool IndoorIsolatedFromWorld = false;
@@ -93,7 +98,13 @@ public class AudioManager : Singleton<AudioManager>
     }
     private Dictionary<string, Sound> _soundsDict;
 
-    static List<ManagedInstance> managedInstances;
+    static List<ManagedInstance> managedInstances = new(25);
+
+    /// <summary>
+    /// Singe instance sounds are identified through a key they provide, if a sound instance already exists with that
+    /// key, then any new sounds providing the same key will not be played (until that previous sound has stopped)
+    /// </summary>
+    private static HashSet<string> currentSingleInstanceKeys = new();
 
     static CinemachineBrain currentCinemachineBrain;
 
@@ -229,11 +240,20 @@ public class AudioManager : Singleton<AudioManager>
         return a;
     }
 
-    public delegate void EventInstanceTick(ref EventInstance item);
+    public delegate void EventInstanceTick(ref FMOD.Studio.EventInstance item);
 
     public static ManagedInstance Play(ref SoundWrapper soundWrapper)
     {
         if (!soundWrapper.valid) return null;
+
+        if (soundWrapper.singleInstanceKey != null)
+        {
+            if (!currentSingleInstanceKeys.Add(soundWrapper.singleInstanceKey))
+            {
+                return null;
+            }
+            // Debug.Log($"+{soundWrapper.singleInstanceKey}");
+        }
 
         if (soundWrapper.useSpatials)
         {
@@ -246,7 +266,6 @@ public class AudioManager : Singleton<AudioManager>
                 soundWrapper.fmodInstance.set3DAttributes(_instance.transform.To3DAttributes());
                 return null;
             }
-            managedInstances ??= new List<ManagedInstance>(10);
             ManagedInstance instance = new (soundWrapper, isOverridingTransform, Mathf.Pow(2, -_instance.indoorMuteDB));
             managedInstances.Add(instance);
             if (soundWrapper.isPriority)
@@ -257,9 +276,26 @@ public class AudioManager : Singleton<AudioManager>
             return instance;
         } else
         {
-            soundWrapper.PlayAsOneshot();
+            soundWrapper.PlayAsOneshot(RemoveSingleInstanceKeyCallback);
             return null;
         }
+    }
+
+    [AOT.MonoPInvokeCallback(typeof(FMOD.Studio.EVENT_CALLBACK))]
+    static FMOD.RESULT RemoveSingleInstanceKeyCallback(EVENT_CALLBACK_TYPE type, IntPtr _event, IntPtr parameters)
+    {
+        FMOD.Studio.EventInstance instance = new FMOD.Studio.EventInstance(_event);
+        if (instance.getUserData(out var userData) == RESULT.OK)
+        {
+            if (userData != IntPtr.Zero)
+            {
+                GCHandle keyHandle = GCHandle.FromIntPtr(userData);
+                string key = (string)keyHandle.Target;
+                currentSingleInstanceKeys?.Remove(key);
+            }
+        }
+        
+        return RESULT.OK;
     }
 
     public static SoundWrapper PickSound(string name)
@@ -292,7 +328,6 @@ public class AudioManager : Singleton<AudioManager>
     public static void SetPaused(bool paused)
     {
         AudioManager.paused = paused;
-        managedInstances ??= new List<ManagedInstance>(10);
         foreach (ManagedInstance instance in managedInstances)
         {
             instance.SetPaused(paused);
@@ -301,12 +336,20 @@ public class AudioManager : Singleton<AudioManager>
 
     private static void UpdateManagedInstances(float dt)
     {
-        managedInstances ??= new List<ManagedInstance>(10);
         managedInstances.RemoveAll(delegate (ManagedInstance instance)
         {
             if (!instance.Nullified && instance.Valid && !instance.Stopped) return false;
             
             PrioritySounds.Remove(instance);
+            
+            // Debug.Log($"rm {instance.Name}");
+
+            if (instance.SingleInstanceKey(out string k))
+            {
+                // Debug.Log($"-{k}");
+                currentSingleInstanceKeys.Remove(k);
+            }
+            
             instance.HardStop();
             return true;
         });
@@ -427,7 +470,7 @@ public class AudioManager : Singleton<AudioManager>
     public static void ResumeMusicAndAmbience()
     {
         musicPaused = false;
-        foreach (EventInstance instance in pausedMusic)
+        foreach (FMOD.Studio.EventInstance instance in pausedMusic)
         {
             instance.setPaused(false);
         }
@@ -586,7 +629,7 @@ public class AudioManager : Singleton<AudioManager>
     public static float GetAmbienceVolume() => ambienceVolume;
     public static float GetMusicVolume() => musicVolume;
 
-    public static void EnqueueModifier(AudioModifier.ModifierType m)
+    private static void EnqueueModifier(AudioModifier.ModifierType m)
     {
         if (modifiers.ContainsKey(m))
         {
@@ -695,6 +738,14 @@ public class AudioManager : Singleton<AudioManager>
                     if (!managedInstance.IsIndoor)
                     {
                         managedInstance.SoftStop();
+                        
+                        // Debug.Log($"rm {managedInstance.Name}");
+                        
+                        if (managedInstance.SingleInstanceKey(out string k))
+                        {
+                            // Debug.Log($"-{k}");
+                            currentSingleInstanceKeys.Remove(k);
+                        }
                         PrioritySounds.Remove(managedInstance);
                         return true;
                     }
@@ -713,6 +764,16 @@ public class AudioManager : Singleton<AudioManager>
                     if (managedInstance.IsIndoor)
                     {
                         managedInstance.SoftStop();
+                        
+                        
+                        // Debug.Log($"rm {managedInstance.Name}");
+                        
+                        if (managedInstance.SingleInstanceKey(out string k))
+                        {
+                            // Debug.Log($"-{k}");
+                            currentSingleInstanceKeys.Remove(k);
+                        }
+                        PrioritySounds.Remove(managedInstance);
                         return true;
                     }
                     return false;
@@ -726,20 +787,34 @@ public class AudioManager : Singleton<AudioManager>
     {
         private SoundWrapper soundWrapper;
         /// <summary>
-        /// For wrappers with useSpatials but no root transform, the listener transform is injected to root. isOverridingTransform is ony set to true in this case.
+        /// For wrappers with useSpatials but no root transform, the listener transform is injected to root. isOverridingTransform is only set to true in this case.
         /// </summary>
         private readonly bool isOverridingTransform;
         private float progress;
         private Vector3 position;
 
         public bool Valid => soundWrapper.fmodInstance.isValid();
+
         public bool Stopped
-            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback == PLAYBACK_STATE.STOPPED;
+        {
+            get
+            {
+                // AT: it is possible to use callbacks but there's a bunch of malloc bs so this polling is kept for now
+                var stopped = soundWrapper.fmodInstance.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback == FMOD.Studio.PLAYBACK_STATE.STOPPED;
+                return stopped;
+            }
+        }
 
         public bool Started
-            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
+            => soundWrapper.fmodInstance.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == FMOD.Studio.PLAYBACK_STATE.STARTING;
         public readonly bool IsIndoor;
         public string Name => soundWrapper.sound?.name ?? "(No name)";
+
+        public bool SingleInstanceKey(out string k)
+        {
+            k = soundWrapper.singleInstanceKey;
+            return k != null;
+        }
 
         public bool CanPause => soundWrapper.sound.canPause;
         public bool IsDialogue => soundWrapper.dialogueParent;
@@ -779,7 +854,7 @@ public class AudioManager : Singleton<AudioManager>
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
         }
-
+        
         public void SoftStop()
         {
             soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -797,6 +872,10 @@ public class AudioManager : Singleton<AudioManager>
         public void SetPaused(bool paused)
         {
             if (soundWrapper.sound.canPause) soundWrapper.fmodInstance.setPaused(paused);
+            if (paused && IsDialogue)
+            {
+                HardStop();
+            }
         }
 
         public void Tick(EventInstanceTick tick)
@@ -870,7 +949,7 @@ public class AudioManager : Singleton<AudioManager>
         
         public float GetDurationSeconds()
         {
-            soundWrapper.fmodInstance.getDescription(out EventDescription description);
+            soundWrapper.fmodInstance.getDescription(out FMOD.Studio.EventDescription description);
             description.getLength(out int fmodMilisecondLength); // https://www.fmod.com/docs/2.01/api/studio-api-eventdescription.html#studio_eventdescription_getlength
             return fmodMilisecondLength / 1000.0f;
         }
