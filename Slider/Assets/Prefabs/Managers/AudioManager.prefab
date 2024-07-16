@@ -760,7 +760,7 @@ MonoBehaviour:
         Data2: 1252623518
         Data3: 1345641131
         Data4: 257574772
-      Path: event:/SFX/Magic/Desync Tear Open
+      Path: event:/Ambience/Desync Tear Open
     canPause: 1
     dopplerScale: 1
   - name: Desync Tear Close
@@ -1296,6 +1296,15 @@ MonoBehaviour:
         Data3: -1523523706
         Data4: -1247538484
       Path: event:/Ambience/Mountain/Waterwheel Ambience
+    emitter: {fileID: 0}
+  - name: Desync Tear Open
+    fmodEvent:
+      Guid:
+        Data1: -597605736
+        Data2: 1252623518
+        Data3: 1345641131
+        Data4: 257574772
+      Path: event:/Ambience/Desync Tear Open
     emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2
