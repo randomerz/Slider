@@ -163,7 +163,7 @@ public class FoggySeasManager : MonoBehaviour, ISavable
             StopCoroutine(islandFadeCoroutine);
         }
         fogIsland.SetActive(true);
-        islandFadeCoroutine = StartCoroutine(FadeIsland(0, 1, 2));
+        FadeIsland(0, 1, 2);
     }
 
     public void DeactivateIsland()
@@ -174,7 +174,7 @@ public class FoggySeasManager : MonoBehaviour, ISavable
             {
                 StopCoroutine(islandFadeCoroutine);
             }
-            islandFadeCoroutine = StartCoroutine(FadeIsland(islandAlpha, 0, 2 * islandAlpha));
+            FadeIsland(islandAlpha, 0, 2 * islandAlpha);
         }
         else
         {
@@ -255,21 +255,25 @@ public class FoggySeasManager : MonoBehaviour, ISavable
         }
     }
 
-    private IEnumerator FadeIsland(float start, float end, float duration)
+    private void FadeIsland(float start, float end, float duration)
     {
         SetIslandAlpha(start);
-        float t = 0;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            SetIslandAlpha(Mathf.Lerp(start, end, t/duration));
-            yield return null;
-        }
-        SetIslandAlpha(end);
-        if(end == 0)
-        {
-            fogIsland.SetActive(false);
-        }
+        islandFadeCoroutine = CoroutineUtils.ExecuteEachFrame(
+            (x) => {
+                SetIslandAlpha(Mathf.Lerp(start, end, x));
+            },
+            () => {
+                        
+                SetIslandAlpha(end);
+                if(end == 0)
+                {
+                    fogIsland.SetActive(false);
+                }
+            },
+            this,
+            duration
+        );
+
     }
 
     private void SetIslandAlpha(float alpha)
