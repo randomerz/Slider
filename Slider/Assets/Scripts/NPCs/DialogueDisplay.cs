@@ -28,7 +28,7 @@ public class DialogueDisplay : MonoBehaviour
 
     public void DisplaySentence(string originalMessage, string localizedMessage, NPCEmotes.Emotes emote)
     {
-        CheckContrast();
+        CheckContrast(originalMessage);
         CheckSize();
         DeactivateMessagePing();
         canvas.SetActive(true);
@@ -111,10 +111,11 @@ public class DialogueDisplay : MonoBehaviour
         ping.SetActive(value);
     }
 
-    private void CheckContrast()
+    private void CheckContrast(string message)
     {
         bool highContrastMode = SettingsManager.Setting<bool>(Settings.HighContrastTextEnabled).CurrentValue;
-        highContrastBG.SetActive(highContrastMode);
+        bool emptyMessage = message.Trim().Length == 0;
+        highContrastBG.SetActive(highContrastMode && !emptyMessage);
     }
 
     public void SetFont(TMP_FontAsset font, float scale, bool clearWordSpacing, FontWeight? weight = null)
