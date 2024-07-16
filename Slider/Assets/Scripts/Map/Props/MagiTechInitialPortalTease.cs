@@ -106,8 +106,9 @@ public class MagiTechInitialPortalTease : MonoBehaviour
         teaseSpriteRenderer.enabled = false;
         animator.enabled = false;
         realPortal.SetActive(true);
-        //to prevent player from going in during chad cutscene
-        realPortal.GetComponent<Portal>().SetPlayerAllowedToUse(false);
+
+        // // to prevent player from going in during chad cutscene
+        // realPortal.GetComponent<Portal>().SetPlayerAllowedToUse(false);
     }
 
     private void FlashScreen()

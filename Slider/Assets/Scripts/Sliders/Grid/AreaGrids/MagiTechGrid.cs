@@ -117,6 +117,14 @@ public class MagiTechGrid : SGrid
         Anchor.OnAnchorInteract -= OnAnchorInteract;
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+
+        // serialization coping
+        if (SaveSystem.Current.GetBool("magitechInitialPortalOpened") && !SaveSystem.Current.GetBool("magitechInitialPortalCutsceneFinished"))
+        {
+            Debug.LogWarning($"Disabled before finishing portal cutscene, setting some variables on!");
+            SaveSystem.Current.SetBool("magitechInitialPortalCutsceneFinished", true);
+            SaveSystem.Current.SetBool("chadFinishedRunningIntoPortal", true);
+        }
     }
 
     private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)

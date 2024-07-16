@@ -15,6 +15,16 @@ public class DesertCasino : MonoBehaviour
         if (SaveSystem.Current.GetBool("desertDiscoBallFell"))
         {
             RemoveDiceItem();
+            dice1.gameObject.SetActive(true);
+            dice2.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (SaveSystem.Current.GetBool("desertTurnedInDice") && !SaveSystem.Current.GetBool("desertDiscoBallFell"))
+        {
+
         }
     }
 

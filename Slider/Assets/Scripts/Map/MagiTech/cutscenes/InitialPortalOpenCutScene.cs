@@ -6,10 +6,21 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
     private NPC portalOperator;
     private NPC fezziwig;
 
-    private void Start()
+    public GameObject portalGunGO;
+
+    protected override void Start()
     {
+        base.Start();
+
         portalOperator = cutsceneCharacters[0];
         fezziwig = cutsceneCharacters[1];
+    }
+
+    protected override void OnCutsceneNotFinished()
+    {
+        base.OnCutsceneNotFinished();
+
+        SaveSystem.Current.SetBool("chadFinishedRunningIntoPortal", true);
     }
 
     protected override IEnumerator CutScene()
@@ -26,5 +37,14 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         yield return SayNextDialogue(fezziwig, false, 0);
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(portalOperator);
+
+        OnCutSceneFinish();
+    }
+
+    protected override void OnCutSceneFinish()
+    {
+        base.OnCutSceneFinish();
+
+        portalGunGO.SetActive(false);
     }
 }

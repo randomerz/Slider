@@ -58,8 +58,15 @@ public class Portal : MonoBehaviour
         }
         else
         {
-            AudioManager.Play("Portal");
-            sceneChanger.ChangeScenes();
+            if (sceneChanger != null)
+            {
+                AudioManager.Play("Portal");
+                sceneChanger.ChangeScenes();
+            }
+            else
+            {
+                Debug.LogError($"sceneChanger was null. Doing nothing");
+            }
         }
         
     }

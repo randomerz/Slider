@@ -12,6 +12,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
     [SerializeField] private string cutsceneFinishedFlag;
     [Tooltip("Array of all the characters in the cutscene")]
     [SerializeField] protected NPC[] cutsceneCharacters;
+    [SerializeField] protected bool stillResolveCutsceneIfNotFinished = true;
 
     private const float DEFAULT_TIME_BETWEEN_DIALOGUE_LINES = 1.3f;
 
@@ -24,6 +25,31 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
 
     public bool cutsceneStarted { get; private set; } = false;
     public bool cutsceneFinished { get; private set; } = false;
+
+    protected virtual void Start()
+    {
+        if (!string.IsNullOrEmpty(cutsceneFinishedFlag) && SaveSystem.Current.GetBool(cutsceneFinishedFlag))
+        {
+            OnCutSceneFinish();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (stillResolveCutsceneIfNotFinished && cutsceneStarted && !cutsceneFinished)
+        {
+            Debug.Log($"Cutscene didn't finish, trying to resolve...");
+            OnCutsceneNotFinished();
+        }
+    }
+
+    protected virtual void OnCutsceneNotFinished()
+    {
+        if (!string.IsNullOrEmpty(cutsceneFinishedFlag))
+        {
+            SaveSystem.Current.SetBool(cutsceneFinishedFlag, true);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -169,6 +195,14 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
     protected virtual IEnumerator CutScene()
     {
         yield return null;
+        OnCutSceneFinish();
+    }
+
+    // Enable/disable gameobjects, colliders, etc.
+    // This way we can call this when you load in from a save.
+    protected virtual void OnCutSceneFinish()
+    {
+
     }
    
     protected IEnumerator SayNextDialogue(NPC character, bool skippable = true, float timeWaitAfterFinishedTyping = DEFAULT_TIME_BETWEEN_DIALOGUE_LINES)
