@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using FMODUnity;
@@ -89,6 +90,8 @@ public class AudioManager : Singleton<AudioManager>
     static List<ManagedInstance> managedInstances;
 
     static CinemachineBrain currentCinemachineBrain;
+    
+    public static List<string> deviceNames = new();
 
     void Awake()
     {
@@ -168,6 +171,13 @@ public class AudioManager : Singleton<AudioManager>
 
         soundDampenInstances = new ();
         PrioritySounds = new ();
+        
+        RefreshDeviceList();
+        FMODUnity.RuntimeManager.CoreSystem.setDriver(0);
+
+        // AT: for some reason adding DEVICELOST will cause both of them to not work
+        FMODUnity.RuntimeManager.CoreSystem.setCallback(OnDeviceListChanged, FMOD.SYSTEM_CALLBACK_TYPE.DEVICELISTCHANGED);
+        // FMODUnity.RuntimeManager.CoreSystem.setCallback(OnDeviceListLost, FMOD.SYSTEM_CALLBACK_TYPE.DEVICELOST);
     }
 
     private void Update()
@@ -698,6 +708,88 @@ public class AudioManager : Singleton<AudioManager>
             }
             DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
         }
+    }
+    
+    /// <returns>List of new strings not originally registered</returns>
+    static SortedDictionary<int ,string> RefreshDeviceList()
+    {
+        FMODUnity.RuntimeManager.CoreSystem.getNumDrivers(out int num);
+        List<string> devicesRefreshed = new(num);
+        SortedDictionary<int, string> newDevices = new();
+        var existingDevices = deviceNames.ToHashSet();
+
+        for (int i = 0; i < num; i++)
+        {
+            FMODUnity.RuntimeManager.CoreSystem.getDriverInfo(i, out var name, 100, out var guid,
+                out var rate, out var speakermode, out var spearkermodeChannels);
+
+            // Debug.Log($"[{i}] {name} {speakermode}");
+
+            if (!existingDevices.Contains(name))
+            {
+                newDevices.Add(i, name);
+            }
+
+            devicesRefreshed.Add(name);
+        }
+
+        deviceNames = devicesRefreshed;
+        return newDevices;
+    }
+
+    [AOT.MonoPInvokeCallback(typeof(FMOD.SYSTEM_CALLBACK))]
+    static FMOD.RESULT OnDeviceListChanged(IntPtr systemPtr, FMOD.SYSTEM_CALLBACK_TYPE type, IntPtr commanddata1,
+        IntPtr commanddata2, IntPtr userdata)
+    {
+        // command data exists but isn't supported on c# so we'll have to poll all devices and compare manually...
+        var newDevices = RefreshDeviceList();
+
+        if (newDevices.Count == 0)
+        {
+            // purely lost device, just switch to last one
+            // TODO: test for cross-platform behavior, whether priority is actually kept
+            FMODUnity.RuntimeManager.CoreSystem.getDriver(out int driver);
+            if (driver >= deviceNames.Count)
+            {
+                Debug.Log($"Device unplugged, switching to most prioritized device {deviceNames[0]}");
+                FMODUnity.RuntimeManager.CoreSystem.setDriver(0);
+            }
+            else
+            {
+                Debug.Log($"Remaining on existing device {deviceNames[driver]}");
+            }
+        }
+        else
+        {
+            // new device
+            Debug.Log($"Switching to newly detected device {newDevices.First().Value}");
+            FMODUnity.RuntimeManager.CoreSystem.setDriver(newDevices.First().Key);
+        }
+
+        return FMOD.RESULT.OK;
+    }
+
+    [AOT.MonoPInvokeCallback(typeof(FMOD.SYSTEM_CALLBACK))]
+    static FMOD.RESULT OnDeviceListLost(IntPtr systemPtr, FMOD.SYSTEM_CALLBACK_TYPE type, IntPtr commanddata1,
+        IntPtr commanddata2, IntPtr userdata)
+    {
+        // command data exists but isn't supported on c# so we'll have to poll all devices and compare manually...
+        var newDevices = RefreshDeviceList();
+
+        if (newDevices.Count == 0)
+        {
+            // purely lost device, just switch to last one
+            // TODO: test for cross-platform behavior, whether priority is actually kept
+            FMODUnity.RuntimeManager.CoreSystem.setDriver(0);
+        }
+        else
+        {
+            // new device
+            Debug.Log($"Switching to {newDevices.First().Value} due to always preferring newly added devices");
+            FMODUnity.RuntimeManager.CoreSystem.setDriver(newDevices.First().Key);
+        }
+
+        return FMOD.RESULT.OK;
     }
 
     public class ManagedInstance
