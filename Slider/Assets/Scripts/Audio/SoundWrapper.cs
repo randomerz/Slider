@@ -1,7 +1,5 @@
+using System.Runtime.InteropServices;
 using SliderVocalization;
-using Steamworks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Remember to add an Sound extension below with the same method name so it's more versatile
@@ -17,6 +15,8 @@ public struct SoundWrapper
     public float volume;
     public bool isPriority;
     public VocalizableParagraph dialogueParent;
+    public string singleInstanceKey;
+    public GCHandle singleInstanceKeyHandle;
 
     public enum IndoorStatus
     {
@@ -43,6 +43,9 @@ public struct SoundWrapper
         isPriority = false;
 
         dialogueParent = null;
+        singleInstanceKey = null;
+
+        singleInstanceKeyHandle = new GCHandle(); // idk what defaults should be with this
 
         if (ToFmodInstance())
         {
@@ -109,6 +112,20 @@ public struct SoundWrapper
         return this;
     }
 
+    /// <summary>
+    /// Setting this key will prevent all other sounds with the same key to be played before this sound is finished
+    /// Will be ignored from this single-instance limit only if set to `null`
+    /// Key is separate from sound name, they can either be the same or not. This allows for shared channels between
+    /// different sounds.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public SoundWrapper WithSingleInstanceKey(string key)
+    {
+        singleInstanceKey = key;
+        return this;
+    }
+
     public AudioManager.ManagedInstance AndPlay() => valid ? AudioManager.Play(ref this) : null;
 
     private bool ToFmodInstance()
@@ -129,11 +146,18 @@ public struct SoundWrapper
         return true;
     }
 
-    public void PlayAsOneshot()
+    public void PlayAsOneshot(FMOD.Studio.EVENT_CALLBACK removeSingleInstanceKeyHandle)
     {
         if (!valid)
         {
             Debug.LogWarning($"Trying to play invalid { sound?.name } as oneshot");
+        }
+
+        if (singleInstanceKey != null)
+        {
+            fmodInstance.setCallback(removeSingleInstanceKeyHandle, FMOD.Studio.EVENT_CALLBACK_TYPE.STOPPED);
+            singleInstanceKeyHandle = GCHandle.Alloc(singleInstanceKey);
+            fmodInstance.setUserData(GCHandle.ToIntPtr(singleInstanceKeyHandle));
         }
         fmodInstance.start();
         fmodInstance.setVolume(volume);
