@@ -16,6 +16,10 @@ public class FactoryNorthWestTracker : MonoBehaviour
     }
 
     private NorthWestPosition playerPosition;
+    private NorthWestPosition anchorPosition;
+
+    public void SetAnchorAirlock() => anchorPosition = NorthWestPosition.Airlock;
+    public void SetAnchorElectric() => anchorPosition = NorthWestPosition.Electric;
 
     public void SetPlayerAirlock()  => SetPlayerPosition(NorthWestPosition.Airlock);
     public void SetPlayerElectric() => SetPlayerPosition(NorthWestPosition.Electric);
@@ -35,15 +39,17 @@ public class FactoryNorthWestTracker : MonoBehaviour
                     {
                         if (IsRightDoorPowered())
                         {
-                            SaveSystem.Current.SetBool("factoryAcquiredBob", true);
+                            SaveSystem.Current.SetBool("factoryAcquiredBob", anchorPosition == NorthWestPosition.Airlock); // anchor outside electric
                         }
                         else
                         {
                             SaveSystem.Current.SetBool("factoryBobCheated", true);
                         }
                     }
+                    
+                    SaveSystem.Current.SetBool("factoryAcquiredBobWithAnchor", anchorPosition == NorthWestPosition.Electric); // anchor inside electric
 
-                    if(SaveSystem.Current.GetBool("factoryClosetSoftlock"))
+                    if (SaveSystem.Current.GetBool("factoryClosetSoftlock"))
                     {
                         //was softlocked and escaped
                         SaveSystem.Current.SetBool("factoryClosetSoftlock", false);
