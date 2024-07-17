@@ -42,7 +42,7 @@ public class MaterialSoundMapping : ScriptableObject
 
             if (t == null || t is not Tile)
             {
-                Debug.LogWarning($"Not a proper tile: {t}");
+                Debug.LogWarning($"Not a proper tile: {t}. Player position: {Player.GetPosition()}");
                 return fallbackMapping;
             }
             else if (!_CachedMapping.ContainsKey(t as Tile))
