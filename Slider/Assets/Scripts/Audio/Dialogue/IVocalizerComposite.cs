@@ -162,8 +162,16 @@ public static class VocalizerCompositeExtensions
         composite.Stop();
         if (composite is VocalizableParagraph paragraph)
         {
-            VocalizableParagraph.speakers.Remove(paragraph);
-            AudioManager.StopDampen(paragraph);
+            if (VocalizableParagraph.speakers.Contains(paragraph))
+            {
+                // Debug.Log($"Speaker unregistered at {paragraph.transform.parent.name}");
+                VocalizableParagraph.speakers.RemoveAll(p => p == paragraph);
+            }
+
+            if (VocalizableParagraph.speakers.Count == 0)
+            {
+                AudioManager.StopDampen<VocalizableParagraph>();
+            }
         }
     }
 

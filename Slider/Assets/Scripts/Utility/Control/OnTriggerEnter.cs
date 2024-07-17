@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class OnTriggerEnter : MonoBehaviour
 {
     public bool onPlayerEnter = true;
+    [FormerlySerializedAs("onItemAnchorEnter")]
+    public bool onAnchorEnter = false;
     public UnityEvent onEnter;
     public UnityEvent onExit;
 
@@ -26,7 +29,7 @@ public class OnTriggerEnter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             playerIsInTrigger = true;
 
@@ -35,14 +38,28 @@ public class OnTriggerEnter : MonoBehaviour
                 onEnter.Invoke();
             }
         }
+        if (other.CompareTag("Item"))
+        {
+            if (onAnchorEnter && other.GetComponent<Anchor>() != null)
+            {
+                onEnter.Invoke();
+            }
+        }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             playerIsInTrigger = false;
 
             if (onPlayerEnter)
+            {
+                onExit.Invoke();
+            }
+        }
+        if (other.CompareTag("Item"))
+        {
+            if (onAnchorEnter && other.GetComponent<Anchor>() != null)
             {
                 onExit.Invoke();
             }
