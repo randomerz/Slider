@@ -30,8 +30,8 @@ public class OverlayCameraImageScaler : MonoBehaviour
         rt.Release();
         currScreenWidth = Screen.width;
         currScreenHeight = Screen.height;
-        rt.width = currScreenWidth * 2;
-        rt.height = currScreenHeight * 2;
+        rt.width = (int)(currScreenWidth * 1.25f);
+        rt.height = (int)(currScreenHeight * 1.25f);
         rt.Create();
     }
 

@@ -30,7 +30,7 @@ public class CameraZoom : Singleton<CameraZoom>
     public IEnumerator AdjustZoom(float duration, AnimationCurve curve)
     {
         duration *= extraDurationMultiplier;
-        image.transform.localScale = Vector3.one * 2;
+        image.transform.localScale = Vector3.one * 1.25f;
         image.SetActive(true);
         float curTime = 0;
         float zoomLevel = 1;
@@ -40,11 +40,11 @@ public class CameraZoom : Singleton<CameraZoom>
                 break;
             
             zoomLevel = curve.Evaluate(curTime/duration);
-            image.transform.localScale = new Vector3 (zoomLevel * 2, zoomLevel * 2, 2);
+            image.transform.localScale = new Vector3 (zoomLevel, zoomLevel, 1) * 1.25f;
             curTime += Time.deltaTime;
 
             yield return null;
         }
-        image.transform.localScale = Vector3.one * 2;
+        image.transform.localScale = Vector3.one * 1.25f;
     }
 }
