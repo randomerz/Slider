@@ -258,6 +258,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         dialogueCtx.OnConditionalsChanged();
     }
 
+    public void RefreshEmoteOnEnter()
+    {
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
+    }
+
     private int GetCondIndexWithMaxPriority()
     {
         int maxPrioIndex = -1;

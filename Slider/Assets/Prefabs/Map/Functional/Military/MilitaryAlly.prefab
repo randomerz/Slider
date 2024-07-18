@@ -60,6 +60,7 @@ MonoBehaviour:
   - {fileID: 3709000477011539968}
   - {fileID: 7751627697850716757}
   myFlag: {fileID: 6998752250836028153}
+  hasMoveQueuedOrIsExecuting: 0
 --- !u!1 &2606370981105054504
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: conds.Array.data[0].name
-      value: 0. Use that flag to move us around!
+      value: 0. Use that flag to move us to adjacent tiles!
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: conds.Array.data[0].emoteOnEnter
@@ -359,7 +360,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].dialogue
-      value: Use that flag to move us around!
+      value: Use that flag to move us to adjacent tiles!
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].editorIsAnimatorUnfolded

@@ -913,6 +913,16 @@ MonoBehaviour:
       Path: event:/SFX/Mountain/Ice Freeze Riser
     canPause: 1
     dopplerScale: 1
+  - name: Ice Melt
+    fmodEvent:
+      Guid:
+        Data1: -922968427
+        Data2: 1239088195
+        Data3: -798732869
+        Data4: 1223304254
+      Path: event:/SFX/Mountain/Ice Melt
+    canPause: 1
+    dopplerScale: 1
   - name: Minecart Corner
     fmodEvent:
       Guid:

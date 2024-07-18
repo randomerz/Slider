@@ -71,6 +71,7 @@ public class MilitaryUnitFlag : Item
             }
             else
             {
+                representativeNPC.RefreshEmoteOnEnter();
                 AudioManager.Play("Hurt");
             }
             resetter.ResetItem(onFinish: null);
