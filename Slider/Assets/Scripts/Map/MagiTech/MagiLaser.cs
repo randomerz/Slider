@@ -244,7 +244,10 @@ public class MagiLaser : MonoBehaviour, ISavable
         if (laserUI != null)
         {
             laserUI.InitAndFindButton();
-            uILaserManager.AddSource(laserUI.laserUIData);
+            if(value)
+                uILaserManager.AddSource(laserUI.laserUIData);
+            else
+                uILaserManager.RemoveSource(laserUI.laserUIData);
         }
 
     }
