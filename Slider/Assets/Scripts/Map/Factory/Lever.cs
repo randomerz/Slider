@@ -85,6 +85,17 @@ public class Lever : ElectricalNode
         SetState(false);
     }
 
+    public void TurnOffImmediate()
+    {
+        _targetVisualOn = false;
+        SetState(false);
+
+        if (shouldSaveLeverState) // stay powered
+        {
+            SaveSystem.Current.SetBool(saveLeverString, false);
+        }
+    }
+
     private void HandleBlackoutEnded()
     {
         _pConds.EnableConditionals();
@@ -160,6 +171,11 @@ public class Lever : ElectricalNode
         });
 
         StartSignal(false);
+
+        if (shouldSaveLeverState) // stay powered
+        {
+            SaveSystem.Current.SetBool(saveLeverString, false);
+        }
         
         yield return new WaitUntil(() =>
         {

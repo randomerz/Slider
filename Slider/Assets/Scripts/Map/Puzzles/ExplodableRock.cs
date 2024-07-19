@@ -18,6 +18,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
     public List<GameObject> raycastColliderObjects = new List<GameObject>();
+    public UnityEvent OnExplosionStart;
     public UnityEvent OnExplosionFinish;
 
     [Header("Collectible Fall Arc")]
@@ -111,6 +112,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
         explosiveDecals.SetActive(false);
         animator.SetBool("explode", true);
         AudioManager.Play("Slide Explosion");
+
+        OnExplosionStart?.Invoke();
 
         CameraShake.Shake(0.75f, 1);
         foreach (ParticleSystem p in explosionParticles)

@@ -120,8 +120,6 @@ public class TimedGate : ElectricalNode, ISavable
     {
         bool allInputsPowered = _inputsPowered != null && _inputsPowered.Count >= numInputs;
         allInputsPowered = allInputsPowered || _saveForcePowerOn;
-        if (_gateActive)
-            Debug.Log($"name: {name}, allInputsPowered: {allInputsPowered}, _inputsPowered.Count: {_inputsPowered.Count}, numInputs: {numInputs}");
         return (invertSignal ? !allInputsPowered : allInputsPowered);
     }
 
