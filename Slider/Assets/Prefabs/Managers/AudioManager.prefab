@@ -543,6 +543,16 @@ MonoBehaviour:
       Path: event:/SFX/Desert/Croco Grab Sequence
     canPause: 1
     dopplerScale: 0
+  - name: Crocodile Grab Credits
+    fmodEvent:
+      Guid:
+        Data1: -587457833
+        Data2: 1260283301
+        Data3: -200842345
+        Data4: -1941101863
+      Path: event:/SFX/Desert/Croco Grab Credits
+    canPause: 1
+    dopplerScale: 1
   - name: Water Drop Water
     fmodEvent:
       Guid:

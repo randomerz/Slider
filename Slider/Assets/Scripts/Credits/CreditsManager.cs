@@ -21,6 +21,9 @@ public class CreditsManager : MonoBehaviour
 
 
     protected BindingHeldBehavior dollySkipBindingBehavior;
+
+    [SerializeField] private GameObject backgroundTextDanielAndVGDev;
+    [SerializeField] private GameObject backgroundTextThankYouForPlaying;
     
     [SerializeField] private Slider skipPromptSlider;
     [SerializeField] private TextMeshProUGUI skipPromptText;
@@ -61,9 +64,14 @@ public class CreditsManager : MonoBehaviour
                 StartCoroutine(MoveTile(ctm.tiles[j], ctm.directions[j]));
             }
             AudioManager.PlayWithVolume("Slide Rumble", 0.5f);
+            CameraShake.Shake(0.5f, 0.1f);
             yield return new WaitForSeconds(MOVE_DURATION);
             AudioManager.PlayWithVolume("Slide Explosion", 0.5f);
+            CameraShake.Shake(0.2f, 0.2f);
             yield return new WaitForSeconds(REST_DURATION);
+
+            backgroundTextDanielAndVGDev.SetActive(false);
+            backgroundTextThankYouForPlaying.SetActive(true);
         }
         EndCredits();
     }

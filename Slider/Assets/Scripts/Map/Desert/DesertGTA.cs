@@ -45,10 +45,17 @@ public class DesertGTA : ExplodableRock
             UpdateExplosionDoorGameObjects();
             FinishAnimators();
         }
+        else if (profile.GetBool(DesertChadGTA.CHAD_STARTED_HEIST_SAVE_STRING))
+        {
+            ArmRock();
+        }
     }
 
     public override void ArmRock()
     {
+        if (isArmed || isExploded)
+            return;
+
         if (!PlayerInventory.Contains("Explosives", Area.Military))
         {
             AudioManager.Play("Artifact Error");
@@ -71,6 +78,12 @@ public class DesertGTA : ExplodableRock
 
     public void ChadWentThroughPortal()
     {
+        if (isExploded)
+        {
+            Debug.LogError($"Called ChadWentThroughPortal even though it was already exploded. This shouldn't happen! Skipping explosion.");
+            return;
+        }
+
         StartCoroutine(DoAudioBuildUp());
         desertChadGTA.chadNPC.gameObject.SetActive(false);
     }
@@ -101,7 +114,7 @@ public class DesertGTA : ExplodableRock
 
         magiLaser.EnableLaser();
 
-        CameraShake.Shake(0.75f, 0.25f);
+        CameraShake.Shake(0.75f, 0.5f);
         
         yield return new WaitForSeconds(1);
 

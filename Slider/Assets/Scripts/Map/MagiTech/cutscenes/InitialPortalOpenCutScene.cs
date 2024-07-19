@@ -14,11 +14,11 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
 
         portalOperator = cutsceneCharacters[0];
         fezziwig = cutsceneCharacters[1];
+    }
 
-        if (PlayerInventory.Contains("Slider 2", Area.MagiTech))
-        {
-            gameObject.SetActive(false);
-        }
+    protected override bool ShouldCutsceneBeSkipped()
+    {
+        return PlayerInventory.Contains("Slider 2", Area.MagiTech);
     }
 
     protected override void OnCutsceneNotFinished()
