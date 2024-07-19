@@ -149,8 +149,6 @@ public class Minecart : Item, ISavable
     {
         if(mcState == MinecartState.Crystal) 
         {
-            AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 0);
-            AudioManager.Play("Gem Break");
             UpdateState(MinecartState.Empty);
         }
     }
@@ -639,6 +637,12 @@ public class Minecart : Item, ISavable
     #region State
 
     public void UpdateState(MinecartState state, bool addTracker = true){
+        if(state == mcState) return;
+        if(mcState == MinecartState.Crystal)
+        {
+            AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 0);
+            AudioManager.Play("Gem Break");
+        }
         mcState = state;
         if(addTracker)
             UpdateIcon();
