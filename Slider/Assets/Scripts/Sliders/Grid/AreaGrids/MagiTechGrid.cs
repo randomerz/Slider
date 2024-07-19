@@ -66,7 +66,7 @@ public class MagiTechGrid : SGrid
     public List<Transform> bridgeSmokeTransforms;
     public List<GameObject> bridgeFenceObjects;
 
-    [SerializeField] private ConditionChecker archeologistChecker;
+    [SerializeField] private GameObject archeologist;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
@@ -150,7 +150,10 @@ public class MagiTechGrid : SGrid
             }
         }
 
-        archeologistChecker.CheckConditions();
+        if (islandId == 4)
+        {
+            archeologist.SetActive(true);
+        }
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
