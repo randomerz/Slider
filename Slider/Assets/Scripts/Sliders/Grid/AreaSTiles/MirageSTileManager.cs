@@ -122,6 +122,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private void OnDisable()
     {
         UnSubscribeMirageEvents();
+        templeMusic.SetReverb(false);
     }
 
     private void EnableButtonsOnStart()
@@ -151,7 +152,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public void EnableMirageVFX(bool fromSave) 
     {
-        if(fromSave)
+        if (fromSave)
         {
             volume.weight = 1;
         }
@@ -170,9 +171,9 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
                 this,
                 1.5f
             );
-            templeMusic.SetReverb(true);
         }
 
+        templeMusic.SetReverb(true);
     }
 
     public void DisableMirage()

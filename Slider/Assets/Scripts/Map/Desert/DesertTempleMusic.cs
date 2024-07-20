@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using FMODUnity;
 
 public class DesertTempleMusic : MonoBehaviour
@@ -59,6 +60,9 @@ public class DesertTempleMusic : MonoBehaviour
 
     public void SetReverb(bool value)
     {
+        if (reverbEmitter == null)
+            Init();
+
         if (value)
         {
             reverbEmitter.Play();
