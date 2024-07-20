@@ -262,6 +262,7 @@ public class GemManager : MonoBehaviour, ISavable
                 return false;
             }
         }
+        SGrid.Current.GivePlayerTheCollectible("Gem Fuel Recipe");
         return true;
     }
 

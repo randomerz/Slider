@@ -36,8 +36,10 @@ public class MoveObjectsOffIce : MonoBehaviour
                 if(!ItemPlacerSolver.TryPlaceItem(checkpos, player, 10, blocksSpawnMask, true))
                 {
                     player.position = playerRespawn.position;
+                    AudioManager.Play("Hurt");
+                    return;
                 }
-                AudioManager.Play("Hurt");
+                AudioManager.Play("Fall");
             }
             else
             {    
@@ -79,7 +81,8 @@ public class MoveObjectsOffIce : MonoBehaviour
                     if(!moved)
                     {
                         if(ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
-                        {   
+                        {
+                            AudioManager.Play("Fall");       
                             Anchor a;
                             if(go.TryGetComponent<Anchor>(out a))
                             {

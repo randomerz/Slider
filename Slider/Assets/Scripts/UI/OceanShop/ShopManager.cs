@@ -358,6 +358,8 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     {
         if (!canClosePanel)
             return;
+        
+        shopDialogueManager.Vocalizer.Stop();
 
         switch (UIState)
         {
@@ -395,6 +397,8 @@ public class ShopManager : Singleton<ShopManager>, ISavable
 
     public void CloseAllPanels()
     {
+        shopDialogueManager.Vocalizer.Stop();
+        
         UIState = States.None;
         mainPanel.SetActive(false);
         buyPanel.SetActive(false);

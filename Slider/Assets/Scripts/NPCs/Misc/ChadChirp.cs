@@ -198,10 +198,10 @@ public partial class ChadChirp : MonoBehaviour, ISavable
         {
             return "CameFromMilitary";
         }
-        if (currentArea == Area.Desert)
-        {
-            return "ArrivedInDesert";
-        }
+        // if (currentArea == Area.Desert)
+        // {
+        //     return "ArrivedInDesert";
+        // }
         if (currentArea == Area.Factory && !FactoryGrid.PlayerInPast)
         {
             return "ArrivedInFactoryPresent";

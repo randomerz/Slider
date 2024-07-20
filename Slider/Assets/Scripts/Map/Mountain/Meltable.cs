@@ -151,12 +151,16 @@ public class Meltable : FlashWhiteSprite, ISavable
             {
                 state = MeltableState.BROKEN;
                 numTimesBroken++;
-                if(spriteRenderer)
+                if (spriteRenderer)
+                {
                     spriteRenderer.sprite = anchorBrokenSprite;
+                }
                 onBreak?.Invoke();
                 currFreezeTime = freezeTime;
-                if(!fromLoad)
-                    AudioManager.PickSound("Ice Break").WithAttachmentToTransform(transform).AndPlay();
+                if (!fromLoad)
+                {
+                    AudioManager.PickSound("Ice Break").WithAttachmentToTransform(transform).WithPriorityOverDucking(true).AndPlay();
+                }
             }
         }
     }
@@ -176,7 +180,7 @@ public class Meltable : FlashWhiteSprite, ISavable
             onMelt?.Invoke();
             currFreezeTime = freezeTime;
             if(!fromLoad)
-                AudioManager.PickSound("Ice Break").WithAttachmentToTransform(transform).AndPlay();
+                AudioManager.PickSound("Ice Melt").WithAttachmentToTransform(transform).AndPlay();
         }
     }
 

@@ -17,7 +17,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         Following,
     }
 
-    private const string FOLLOW_SAVE_STRING = "MiscChadIsFollowingPlayer";
+    public string FOLLOW_SAVE_STRING = "MiscChadIsFollowingPlayer";
 
     public bool isFollowingEnabled;
     private FollowState state;
@@ -130,7 +130,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
     }
 
 
-    private void Update() 
+    private void FixedUpdate() 
     {
         if (isFollowingEnabled)
         {
@@ -238,7 +238,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
     {
         float distToTarget = Vector3.Distance(transform.position, walkEnd.position);
         float speed = npc.speed;
-        if (speed * Time.deltaTime >= distToTarget)
+        if (speed * Time.fixedDeltaTime >= distToTarget)
         {
             // Reached target
             transform.position = walkEnd.transform.position;
@@ -247,7 +247,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         {
             // Move towards target
             Vector3 dirToTarget = (walkEnd.position - transform.position).normalized;
-            transform.position = transform.position + speed * Time.deltaTime * dirToTarget;
+            transform.position = transform.position + speed * Time.fixedDeltaTime * dirToTarget;
 
             bool isWalkingLeft = dirToTarget.x <= 0;
             spriteRenderer.flipX = isWalkingLeft != npc.spriteDefaultFacingLeft;

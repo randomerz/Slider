@@ -17,10 +17,10 @@ public class PlayerAction : Singleton<PlayerAction>
     [SerializeField] private LayerMask anchorDropCollidingMask;
     [SerializeField] private LayerMask noDropItemsLayerMask; // we want to pick up, but not drop, ex magitech portals
 
-    [SerializeField] private float minimumDropDistance = 0.5f;
-    [SerializeField] private float maximumDropDistance = 1.5f;
-    [SerializeField] private float dropBoxcastWidth = 0.75f; // 12/16
-    [SerializeField] private float dropBoxcastHeight = 7f / 16f;
+    private const float MIN_DROP_DISTANCE = 0.35f;
+    private const float MAX_DROP_DISTANCE = 1f;
+    private const float DROP_BOXCAST_WIDTH = 1f;
+    private const float DROP_BOXCAST_HEIGHT = 10f / 16f;
 
     private Item lastDroppedItem;
     private bool isPicking;  //Picking up animation is happening
@@ -52,7 +52,7 @@ public class PlayerAction : Singleton<PlayerAction>
             // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
             Vector3 basePosition = GetPlayerTransformRaycastPosition();
 
-            canDrop = Vector2.Distance(basePosition, closestValidDropPosition) > minimumDropDistance;
+            canDrop = Vector2.Distance(basePosition, closestValidDropPosition) > MIN_DROP_DISTANCE;
             itemDropIndicator.SetActive(canDrop);
             itemDropIndicator.transform.position = closestValidDropPosition;
         }
@@ -74,14 +74,14 @@ public class PlayerAction : Singleton<PlayerAction>
 
         RaycastHit2D[] hits = Physics2D.BoxCastAll(
             basePosition, 
-            new Vector2(dropBoxcastWidth, dropBoxcastHeight), 
+            new Vector2(DROP_BOXCAST_WIDTH, DROP_BOXCAST_HEIGHT), 
             Mathf.Atan2(raycastDirection.y, raycastDirection.x) * Mathf.Rad2Deg,
             raycastDirection, 
-            maximumDropDistance,
+            MAX_DROP_DISTANCE,
             layerMask: lm
         );
 
-        Vector2 closestPossibleDropPosition = basePosition + maximumDropDistance * raycastDirection;
+        Vector2 closestPossibleDropPosition = basePosition + MAX_DROP_DISTANCE * raycastDirection;
         bool collisionOccured = false;
 
         foreach (RaycastHit2D hit in hits)
@@ -104,7 +104,7 @@ public class PlayerAction : Singleton<PlayerAction>
         if (!collisionOccured)
         {
             Vector3 moveDir = Player.GetLastMoveDirection().normalized;
-            closestPossibleDropPosition = basePosition + moveDir * maximumDropDistance;
+            closestPossibleDropPosition = basePosition + moveDir * MAX_DROP_DISTANCE;
         }
 
         return closestPossibleDropPosition;

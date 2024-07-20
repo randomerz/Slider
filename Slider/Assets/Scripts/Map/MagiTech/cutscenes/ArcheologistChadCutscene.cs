@@ -38,6 +38,8 @@ public class ArcheologistChadCutscene : SimpleInteractableCutscene
 
         // chad... im sorry... i should have noticed sooner.
         yield return SayNextDialogue(archeologist);
+        // but you shouldnt feel bad! youve done so much to help me!
+        yield return SayNextDialogue(archeologist);
         // you helped us journey to this continent, and you even found relics in the village and jungle!
         yield return SayNextDialogue(archeologist);
         // stop comparing yourself to others. think about what <wavy>you</wavy> can do!

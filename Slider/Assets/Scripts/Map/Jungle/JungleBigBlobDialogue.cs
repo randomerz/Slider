@@ -25,7 +25,6 @@ public class JungleBigBlobDialogue : MonoBehaviour
 
         if (!IsInRecipeList(item.itemName))
         {
-            Debug.Log($"{item.itemName} is not in recipe list {BASIC_SHAPES.Contains(item.itemName)}");
             c.SetSpec(false);
             return;
         }

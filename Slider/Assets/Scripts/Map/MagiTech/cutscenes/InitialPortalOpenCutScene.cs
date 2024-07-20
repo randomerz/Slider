@@ -16,6 +16,11 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         fezziwig = cutsceneCharacters[1];
     }
 
+    protected override bool ShouldCutsceneBeSkipped()
+    {
+        return PlayerInventory.Contains("Slider 2", Area.MagiTech);
+    }
+
     protected override void OnCutsceneNotFinished()
     {
         base.OnCutsceneNotFinished();

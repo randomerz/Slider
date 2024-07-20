@@ -15,6 +15,11 @@ public class MilitaryUnitFlag : Item
     {
         base.Awake();
         attachedUnit.OnDeath.AddListener(() => gameObject.SetActive(false));
+
+        if (resetter == null)
+        {
+            Debug.LogError($"Resetter was null on awake. Check your build!");
+        }
     }
 
     private void OnEnable()
@@ -66,6 +71,7 @@ public class MilitaryUnitFlag : Item
             }
             else
             {
+                representativeNPC.RefreshEmoteOnEnter();
                 AudioManager.Play("Hurt");
             }
             resetter.ResetItem(onFinish: null);

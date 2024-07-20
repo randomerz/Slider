@@ -543,6 +543,16 @@ MonoBehaviour:
       Path: event:/SFX/Desert/Croco Grab Sequence
     canPause: 1
     dopplerScale: 0
+  - name: Crocodile Grab Credits
+    fmodEvent:
+      Guid:
+        Data1: -587457833
+        Data2: 1260283301
+        Data3: -200842345
+        Data4: -1941101863
+      Path: event:/SFX/Desert/Croco Grab Credits
+    canPause: 1
+    dopplerScale: 1
   - name: Water Drop Water
     fmodEvent:
       Guid:
@@ -753,16 +763,6 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Portal Open
     canPause: 1
     dopplerScale: 1
-  - name: Desync Tear Open
-    fmodEvent:
-      Guid:
-        Data1: -597605736
-        Data2: 1252623518
-        Data3: 1345641131
-        Data4: 257574772
-      Path: event:/SFX/Magic/Desync Tear Open
-    canPause: 1
-    dopplerScale: 1
   - name: Desync Tear Close
     fmodEvent:
       Guid:
@@ -921,6 +921,16 @@ MonoBehaviour:
         Data3: 147842988
         Data4: 43205369
       Path: event:/SFX/Mountain/Ice Freeze Riser
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Melt
+    fmodEvent:
+      Guid:
+        Data1: -922968427
+        Data2: 1239088195
+        Data3: -798732869
+        Data4: 1223304254
+      Path: event:/SFX/Mountain/Ice Melt
     canPause: 1
     dopplerScale: 1
   - name: Minecart Corner
@@ -1189,6 +1199,15 @@ MonoBehaviour:
         Data4: -2101295235
       Path: event:/Ambience/Conveyor Ambience
     emitter: {fileID: 0}
+  - name: Desync Tear Open
+    fmodEvent:
+      Guid:
+        Data1: -597605736
+        Data2: 1252623518
+        Data3: 1345641131
+        Data4: 257574772
+      Path: event:/Ambience/Desync Tear Open
+    emitter: {fileID: 0}
   - name: Electricity Ambience
     fmodEvent:
       Guid:
@@ -1340,3 +1359,5 @@ MonoBehaviour:
   duckingDbFactor: 0.5
   duckingThreshold: -14
   dialogueDuckingDbFactor: 0.75
+  duckingSmoothnessInverted: 6.42
+  maxConcurrentSpeakers: 2

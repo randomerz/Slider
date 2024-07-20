@@ -224,7 +224,7 @@ public class TimedGate : ElectricalNode, ISavable
             
             if (numTurns != 0)
             {
-                StartCoroutine(BlinkThenShowNext());
+                StartCoroutine(BlinkThenShowNext(doAudio: false));
             }
             else
             {
@@ -254,7 +254,7 @@ public class TimedGate : ElectricalNode, ISavable
         _inputsPowered.Clear();
         OnGateDeactivated?.Invoke();
         _queuedNextSprite = waitingSprite;
-        StartCoroutine(BlinkThenShowNext());
+        StartCoroutine(BlinkThenShowNext(doAudio: false));
     }
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -266,7 +266,7 @@ public class TimedGate : ElectricalNode, ISavable
             if (_countdown > 0)
             {
                 _queuedNextSprite = countdownSprite[_countdown];
-                StartCoroutine(BlinkThenShowNext());
+                StartCoroutine(BlinkThenShowNext(doAudio: true));
             }
             else if (_countdown == 0)
             {
@@ -312,7 +312,7 @@ public class TimedGate : ElectricalNode, ISavable
             _inputsPowered.Clear();
 
             _queuedNextSprite = failureSprite;
-            StartCoroutine(BlinkThenShowNext());
+            StartCoroutine(BlinkThenShowNext(doAudio: false));
             OnGateDeactivated?.Invoke();
         }
     }
@@ -327,7 +327,7 @@ public class TimedGate : ElectricalNode, ISavable
         
         StartSignal(true);
         _queuedNextSprite = successSprite;
-        StartCoroutine(BlinkThenShowNext());
+        StartCoroutine(BlinkThenShowNext(doAudio: false));
     }
 
     private IEnumerator WaitAfterMove(System.Action callback)
@@ -386,7 +386,7 @@ public class TimedGate : ElectricalNode, ISavable
         StartCoroutine(WaitAfterMove(callback));
     }
 
-    private IEnumerator BlinkThenShowNext(int numBlinks = 1)
+    private IEnumerator BlinkThenShowNext(int numBlinks = 1, bool doAudio = true)
     {
         if (!_blinking)
         {
@@ -395,6 +395,10 @@ public class TimedGate : ElectricalNode, ISavable
             while (currBlinks > 0)
             {
                 sr.sprite = blinkSprite;
+                if (doAudio)
+                {
+                    AudioManager.PickSound("Hat Click").WithPitch(2.6f).WithVolume(0.7f).AndPlay();
+                }
                 yield return new WaitForSeconds(0.25f);
                 sr.sprite = _queuedNextSprite;
                 currBlinks--;
@@ -418,6 +422,10 @@ public class TimedGate : ElectricalNode, ISavable
             while (_queuedNextSprite == currSprite)
             {
                 sr.sprite = blinkSprite;
+                if (UIArtifactMenus.IsArtifactOpen())
+                {
+                    AudioManager.PickSound("Hat Click").WithPitch(2.6f).WithVolume(0.7f).AndPlay();
+                }
                 yield return new WaitForSeconds(0.25f);
                 sr.sprite = _queuedNextSprite;
                 if (currSprite == _queuedNextSprite)

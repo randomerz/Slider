@@ -298,6 +298,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         Debug.Log("[NPC] Forcing dialogue deactivation.");
 
+        SkipText();
         DeactivateDialogueBox();
     }
 

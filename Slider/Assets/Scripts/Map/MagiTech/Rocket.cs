@@ -18,6 +18,9 @@ public class Rocket : MonoBehaviour
     public GameObject rocketFlamesParent;
     public List<ParticleSystem> rocketParticles;
 
+    public SpriteRenderer playerSprite;
+    public SpriteRenderer chadSprite;
+
     private bool isPlaying;
     private const float CAP_ANIMATION_LENGTH = 3.0f;
     private const float RAISE_ANIMATION_UNTIL_SPARKS = 1.25f;
@@ -33,9 +36,6 @@ public class Rocket : MonoBehaviour
 
         isPlaying = true;
 
-        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
-        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
-
         UIEffects.FadeToBlack(() => {
             StartCoroutine(RocketCutscene());
         }, disableAtEnd: false);
@@ -43,6 +43,12 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator RocketCutscene()
     {
+        playerSprite.gameObject.SetActive(false);
+        chadSprite.enabled = false;
+
+        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+
         // Really jank way of turning down music
         AudioManager.DampenMusic(this, 0, 6);
         CoroutineUtils.ExecuteAfterDelay(() => {

@@ -32,6 +32,14 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         {
             OnCutSceneFinish();
         }
+        else
+        {
+            if (ShouldCutsceneBeSkipped())
+            {
+                OnCutSceneFinish();
+                return;
+            }
+        }
     }
 
     private void OnDisable()
@@ -51,10 +59,22 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         }
     }
 
+    protected virtual bool ShouldCutsceneBeSkipped()
+    {
+        // For example, if the cutscene is on Slider 1 and you get Slider 2, skip it.
+        return false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag != "Player")
         {
+            return;
+        }
+
+        if (ShouldCutsceneBeSkipped())
+        {
+            OnCutSceneFinish();
             return;
         }
 
@@ -63,12 +83,6 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         if (!cutsceneFinished)
         {
             AllowPlayerInteraction(true);
-            /*
-            foreach (NPC character in cutsceneCharacters)
-            {
-                character.OnDialogueTriggerEnter();
-            }
-            */
         }
 
         if (!cutsceneStarted)
@@ -89,12 +103,6 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         if (!cutsceneFinished)
         {
             AllowPlayerInteraction(false);
-            /*
-            foreach (NPC character in cutsceneCharacters)
-            {
-                character.OnDialogueTriggerExit();
-            }
-            */
         }
     }
 

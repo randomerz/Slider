@@ -259,6 +259,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1044107752}
     - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 1750501877}
+    - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -638,7 +642,7 @@ PrefabInstance:
     - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 980652920}
+      objectReference: {fileID: 0}
     - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 3
@@ -3052,6 +3056,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 107549986}
     - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 1750501877}
+    - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 1945056786}
@@ -4657,10 +4665,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.014583334
+    y: 0.10185185
+    width: 0.16666667
+    height: 0.16666666
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -8026,17 +8034,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6b1d709ed1d7c7418ea980ab066ea8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &980652920 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 268417503762707519, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-  m_PrefabInstance: {fileID: 41878716}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &985964665
@@ -11772,6 +11769,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2045284463}
     - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1750501877}
+    - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
       objectReference: {fileID: 560398812}
@@ -14592,6 +14593,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
+--- !u!114 &1750501877 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
+  m_PrefabInstance: {fileID: 1750501876}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1765090967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15010,6 +15022,10 @@ PrefabInstance:
       propertyPath: m_Navigation.m_Mode
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 1750501877}
     - target: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 

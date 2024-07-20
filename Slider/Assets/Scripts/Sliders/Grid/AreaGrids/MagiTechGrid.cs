@@ -66,6 +66,8 @@ public class MagiTechGrid : SGrid
     public List<Transform> bridgeSmokeTransforms;
     public List<GameObject> bridgeFenceObjects;
 
+    [SerializeField] private GameObject archeologist;
+
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
     exactly 9 more than its corresponding present tile. Note that in strings, the past tiles
@@ -146,6 +148,11 @@ public class MagiTechGrid : SGrid
             {
                 tabManager.EnableTab();
             }
+        }
+
+        if (islandId == 4)
+        {
+            archeologist.SetActive(true);
         }
     }
 

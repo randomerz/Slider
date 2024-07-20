@@ -29,12 +29,12 @@ public partial class ChadChirp
                 priority = 2,
                 canBeRepeated = true,
             },
-            new() { 
-                id = "ArrivedInDesert", 
-                text = "Oh... what are we doing here?",
-                priority = 2,
-                canBeRepeated = true,
-            },
+            // new() { 
+            //     id = "ArrivedInDesert", 
+            //     text = "Oh... what are we doing here?",
+            //     priority = 2,
+            //     canBeRepeated = true,
+            // },
             new() { 
                 id = "ArrivedInFactoryPresent", 
                 text = "You know trespassing is a crime right? Right? Please say something.",
@@ -89,7 +89,7 @@ public partial class ChadChirp
             },
             new() { 
                 id = "WalkNearLaser", 
-                text = "That laser is so... big...",
+                text = "Woah, who's this guy?",
                 priority = 1,
                 canBeRepeated = false,
             },
@@ -127,7 +127,7 @@ public partial class ChadChirp
             },
             new() { 
                 id = "WalkNearCasinoExplosives", 
-                text = "Wait... what are you going to do with those explosives..?",
+                text = "Explosives..?",
                 priority = 2,
                 canBeRepeated = false,
             },

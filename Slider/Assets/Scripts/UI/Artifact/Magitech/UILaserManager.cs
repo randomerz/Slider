@@ -45,6 +45,8 @@ public class UILaserManager : MonoBehaviour
     {
         if (sources == null) return;
         sources.Remove(data);
+        data.UpdateSprites();
+        UpdateSpritesFromSource();
     }
 
     public void UpdateSpritesFromSource()
