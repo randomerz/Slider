@@ -17,6 +17,11 @@ public class DesertTempleMusic : MonoBehaviour
         Init();
     }
 
+    private void OnDisable()
+    {
+        SetReverb(false);
+    }
+
     private void Init()
     {
         if (didInit)
@@ -45,11 +50,21 @@ public class DesertTempleMusic : MonoBehaviour
         if (isInTemple)
         {
             AudioManager.PlayMusic("Desert Snail", false);
-            reverbEmitter.Play();
         }
         else
         {
             AudioManager.StopMusic("Desert Snail");
+        }
+    }
+
+    public void SetReverb(bool value)
+    {
+        if (value)
+        {
+            reverbEmitter.Play();
+        }
+        else
+        {
             reverbEmitter.Stop();
         }
     }

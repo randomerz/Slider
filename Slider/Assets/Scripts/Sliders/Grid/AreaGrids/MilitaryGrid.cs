@@ -165,4 +165,6 @@ public class MilitaryGrid : SGrid
         // CoroutineUtils.ExecuteAfterEndOfFrame(() => MilitaryTurnManager.EndPlayerTurn(), this);
         MilitaryTurnManager.EndPlayerTurn();
     }
+
+    public void FailedMilitary4Times(Condition c) => c.SetSpec(SaveSystem.Current.GetInt("militaryAttempts") >= 4);
 }

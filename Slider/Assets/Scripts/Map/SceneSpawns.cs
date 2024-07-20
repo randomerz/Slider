@@ -119,6 +119,22 @@ public class SceneSpawns : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        QuitHandler.OnQuit += ClearStatics;
+    }
+
+    private void OnDisable()
+    {
+        QuitHandler.OnQuit -= ClearStatics;
+    }
+
+    private void ClearStatics(object sender, System.EventArgs e)
+    {
+        nextSpawn = SpawnLocation.Default;
+        lastSpawn = SpawnLocation.Default;
+    }
+
     // Used by CheatsControlPanel.cs
     public void TeleportPlayerToSpawn()
     {

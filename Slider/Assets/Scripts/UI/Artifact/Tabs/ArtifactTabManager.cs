@@ -118,6 +118,12 @@ public class ArtifactTabManager : MonoBehaviour
             return;
         }
 
+        if (SGrid.Current.TargetGrid.Contains("*"))
+        {
+            AudioManager.Play("Artifact Error");
+            return;
+        }
+
         if (isRearranging)
         {
             return;
