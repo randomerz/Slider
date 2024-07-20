@@ -9,7 +9,6 @@ public class QuitHandler : MonoBehaviour
     public void LoadMainMenu()
     {
         SaveSystem.SaveGame("Quitting to Main Menu");
-        SaveSystem.SetCurrentProfile(-1);
         PauseManager.SetPauseState(false);
 
         // Undo lazy singletons
@@ -19,6 +18,9 @@ public class QuitHandler : MonoBehaviour
         OnQuit?.Invoke(this, new System.EventArgs());
 
         SceneManager.LoadScene("MainMenu");
+        SaveSystem.SetCurrentProfile(-1);
+        // Sometimes NPC's Update() will poll the current save profile
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => SaveSystem.SetCurrentProfile(-1), this);
     }
 
     public void QuitGame()

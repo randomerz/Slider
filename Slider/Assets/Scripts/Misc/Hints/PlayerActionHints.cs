@@ -41,6 +41,14 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Load(SaveSystem.Current);
     }
 
+    private void OnDisable()
+    {
+        foreach (Hint h in hintsList)
+        {
+            h.DisableHint();
+        }
+    }
+
     void Update()
     {
        foreach (Hint h in hintsList)

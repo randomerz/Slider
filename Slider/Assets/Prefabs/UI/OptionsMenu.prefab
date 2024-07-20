@@ -1527,6 +1527,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4117726820364073324}
     - target: {fileID: 7019485687949755063, guid: 4d2352e370120d9499cdae5ac570bea3, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 8992503754115416075}
+    - target: {fileID: 7019485687949755063, guid: 4d2352e370120d9499cdae5ac570bea3, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}

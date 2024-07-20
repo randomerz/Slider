@@ -60,7 +60,14 @@ public class UIHints : Singleton<UIHints>
     /// Removes a hint from the list of hints
     /// </summary>
     /// <param name="hintID">ID of the hint to be removed</param>
-    public static void RemoveHint(string hintID = "") { _instance._RemoveHint(hintID); }
+    public static void RemoveHint(string hintID = "") 
+    { 
+        if (_instance == null)
+        {
+            return;
+        }
+        _instance._RemoveHint(hintID); 
+    }
 
     public void _RemoveHint(string hintID)
     {
