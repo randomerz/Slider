@@ -7,6 +7,7 @@ using System;
 public class ArtifactTabManager : MonoBehaviour 
 {
     public static System.EventHandler<System.EventArgs> AfterScrollRearrage;
+    public static System.EventHandler<System.EventArgs> OnUIArtifactExternallyUpdated; // To be invoked by other methods
 
     public List<ArtifactTab> tabs = new List<ArtifactTab>();
     protected ArtifactTab realignTab;
@@ -57,12 +58,14 @@ public class ArtifactTabManager : MonoBehaviour
     {
         UIArtifact.MoveMadeOnArtifact += ButtonInteract;
         SGrid.OnSTileCollected += OnSTileCollected;
+        OnUIArtifactExternallyUpdated += UIArtifactExternallyUpdated;
     }
 
     protected virtual void OnDisable()
     {
         UIArtifact.MoveMadeOnArtifact -= ButtonInteract;
         SGrid.OnSTileCollected -= OnSTileCollected;
+        OnUIArtifactExternallyUpdated -= UIArtifactExternallyUpdated;
         justClickedLoad = false;
     }
 
@@ -309,7 +312,11 @@ public class ArtifactTabManager : MonoBehaviour
         }
     }
 
-    public void LoadOnHoverExit()
+    public void LoadOnHoverExit() => TryEndPreviewAndHover();
+    
+    private void UIArtifactExternallyUpdated(object sender, System.EventArgs e) => TryEndPreviewAndHover();
+
+    private void TryEndPreviewAndHover()
     {
         if (InPreview)
         {
