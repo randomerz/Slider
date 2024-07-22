@@ -20,7 +20,7 @@ public class DesertCasino : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (SaveSystem.Current.GetBool("desertTurnedInDice") && !SaveSystem.Current.GetBool("desertDiscoBallFell"))
         {
