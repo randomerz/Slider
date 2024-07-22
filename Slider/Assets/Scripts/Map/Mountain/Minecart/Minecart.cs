@@ -61,9 +61,13 @@ public class Minecart : Item, ISavable
     private bool tileSwitch = false; //set to true when halfway between tiles, used for updating animation
 
     [Header("UI")]
-    public Sprite trackerSpriteEmpty;
-    public Sprite trackerSpriteLava;
-    public Sprite trackerSpriteCrystal;
+    public GameObject mcTrackerPrefab;
+    // public Sprite trackerSpriteEmpty;
+    // public Sprite trackerSpriteLava;
+    // public Sprite trackerSpriteCrystal;
+    // public Sprite trackerSpriteEmptyWhite;
+    // public Sprite trackerSpriteLavaWhite;
+    // public Sprite trackerSpriteCrystalWhite;
 
     private bool nextTile = false;
     public LayerMask blocksSpawnMask;
@@ -230,7 +234,7 @@ public class Minecart : Item, ISavable
         UITrackerManager.RemoveTracker(gameObject);
         animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
-            UpdateState(MinecartState.Empty, addTracker: false);
+            UpdateState(MinecartState.Empty);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -636,7 +640,7 @@ public class Minecart : Item, ISavable
 
     #region State
 
-    public void UpdateState(MinecartState state, bool addTracker = true){
+    public void UpdateState(MinecartState state){
         if(state == mcState) return;
         if(mcState == MinecartState.Crystal)
         {
@@ -644,8 +648,6 @@ public class Minecart : Item, ISavable
             AudioManager.Play("Gem Break");
         }
         mcState = state;
-        if(addTracker)
-            UpdateIcon();
         UpdateContentsSprite();
     }
 
@@ -665,20 +667,14 @@ public class Minecart : Item, ISavable
 
     #region UI
 
-    private void UpdateIcon()
-    {
-        UITrackerManager.RemoveTracker(gameObject);
-        AddTracker();
-    }
 
     private void AddTracker()
     {
-        if(mcState == MinecartState.Lava)
-            UITrackerManager.AddNewTracker(gameObject, trackerSpriteLava);
-        else if(mcState == MinecartState.Crystal)
-            UITrackerManager.AddNewTracker(gameObject, trackerSpriteCrystal);
-        else if(mcState == MinecartState.Empty)
-            UITrackerManager.AddNewTracker(gameObject, trackerSpriteEmpty);
+        if(mcTrackerPrefab == null) return;
+        GameObject trackerObj = Instantiate(mcTrackerPrefab);
+        UITrackerMinecart tracker = trackerObj.GetComponent<UITrackerMinecart>();
+        tracker.minecart = this;
+        UITrackerManager.AddNewCustomTracker(tracker, gameObject);
     }
 
     #endregion
