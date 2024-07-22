@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
+/// Assumptions
+/// - Units can only mgmove once per turn
+
 public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 {
     public static System.EventHandler<System.EventArgs> AfterCheckQueue;
@@ -22,12 +26,8 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     public static Speed CurrentGlobalAnimationsSpeed = Speed.Slow;
     public static Speed BaseGlobalAnimationsSpeed = Speed.Slow;
 
-    private Queue<IMGAnimatable> moveQueue = new();
-
-    private Queue<IMGAnimatable> moveBuffer = new();
-    private Queue<IMGAnimatable> fightBuffer = new();
-    private Queue<IMGAnimatable> deathBuffer = new();
-    private Coroutine updateBuffersCoroutine;
+    private MGTurnAnimatables endOfQueueTurn = null; // This is what is being added to -- not the one currently being processesd
+    private Queue<MGTurnAnimatables> turnQueue = new();
 
     private List<IMGAnimatable> activeMoves = new();
     private QueueStatus status = QueueStatus.Off;
@@ -40,79 +40,71 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private void Awake()
     {
         InitializeSingleton();
+        CloseAndAddNewTurnToQueue();
         CurrentGlobalAnimationsSpeed = Speed.Slow;
         BaseGlobalAnimationsSpeed = Speed.Slow;
     }
 
+    private void OnEnable()
+    {
+        MilitaryTurnManager.OnEnemyEndTurn += OnEnemyEndTurn;
+    }
+
+    private void OnDisable()
+    {
+        MilitaryTurnManager.OnEnemyEndTurn -= OnEnemyEndTurn;
+    }
+
+    // Usually it will be player moves -> enemy moves, but stuff can happen outside that (like spawning a unit under an enemy)
     public static void AddToQueue(IMGAnimatable move) => _instance._AddToQueue(move);
 
     public void _AddToQueue(IMGAnimatable move)
     {
-        if (move is MGMove)
-        {
-            moveBuffer.Enqueue(move);
-        }
-        else if (move is MGFight)
-        {
-            fightBuffer.Enqueue(move);
-        }
-        else
-        {
-            deathBuffer.Enqueue(move);
-        }
+        // Debug.Log($"Added {move} to queue for {move.unit.UnitTeam} {move.unit.UnitType}");
+        endOfQueueTurn.mgAnimatables.Add(move);
         
-        // Speed up animations if there were already moves in before
-        if (moveQueue.Count > 0)
+        // Speed up animations if we're adding and there is already another turn
+        if (turnQueue.Count > 1)
         {
             SpeedUpAnimations();
         }
+        
+        CheckQueue();
+    }
 
-        if (updateBuffersCoroutine == null)
-        {
-            updateBuffersCoroutine = CoroutineUtils.ExecuteAfterEndOfFrame(
-                () => {
-                    while (moveBuffer.Count > 0)
-                    {
-                        moveQueue.Enqueue(moveBuffer.Dequeue());
-                    }
-                    while (fightBuffer.Count > 0)
-                    {
-                        moveQueue.Enqueue(fightBuffer.Dequeue());
-                    }
-                    while (deathBuffer.Count > 0)
-                    {
-                        moveQueue.Enqueue(deathBuffer.Dequeue());
-                    }
-                    CheckQueue();
-                    updateBuffersCoroutine = null;
-                }, this
-            );
-        }
+    private void OnEnemyEndTurn(object sender, System.EventArgs e) => CloseAndAddNewTurnToQueue();
+
+    public void CloseAndAddNewTurnToQueue()
+    {
+        endOfQueueTurn = new();
+        turnQueue.Enqueue(endOfQueueTurn);
     }
 
     public static bool IsUnitInActiveOrQueue(MilitaryUnit unit) => _instance._IsUnitInActiveOrQueue(unit);
 
     public bool _IsUnitInActiveOrQueue(MilitaryUnit unit)
     {
-        List<IEnumerable<IMGAnimatable>> enumerables = new() {
-            moveQueue,
-            moveBuffer,
-            fightBuffer,
-            deathBuffer,
-            activeMoves,
-        };
-        foreach (IEnumerable<IMGAnimatable> enumerable in enumerables)
+        // Active
+        foreach (IMGAnimatable i in activeMoves)
         {
-            foreach (IMGAnimatable i in enumerable)
+            if (IsUnitInAnimatable(i, unit))
+                return true;
+        }
+
+        // Queue
+        foreach (MGTurnAnimatables turn in turnQueue)
+        {
+            foreach (IMGAnimatable i in turn.mgAnimatables)
             {
                 if (IsUnitInAnimatable(i, unit))
                     return true;
             }
         }
+
         return false;
     }
 
-    private bool IsUnitInAnimatable(IMGAnimatable animatable, MilitaryUnit unit)
+    public static bool IsUnitInAnimatable(IMGAnimatable animatable, MilitaryUnit unit)
     {
         if (animatable is MGFight fight)
         {
@@ -124,61 +116,61 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 
     private void CheckQueue()
     {
-        if (moveQueue.Count == 0)
+        if (turnQueue.Count == 0)
         {
+            Debug.LogError($"Turn Queue was empty. This shouldn't happen!");
             return;
         }
 
-        switch (status)
+        MGTurnAnimatables animatables = turnQueue.Peek();
+        if (animatables.mgAnimatables.Count == 0)
         {
-            case QueueStatus.Off:
-            case QueueStatus.Ready:
-                IMGAnimatable nextMove = moveQueue.Dequeue();
-                activeMoves.Add(nextMove);
-                ExecuteMove(nextMove);
+            // If move queue is getting stale then lets just do something about it
+            if (Time.time - timeLastMoveExecuted > 3f)
+            {
+                Debug.LogError($"Time in queue took an unexpectedly long time. Last move was {lastMoveExecuted}, {lastMoveExecuted.unit.UnitTeam} {lastMoveExecuted.unit.UnitType}");
+                activeMoves.Clear();
+            }
 
-                // If next move is not player movement, try to play all of the same type at same time
-                while (moveQueue.Count > 0 && IsNotPlayerMGMove(nextMove))
+            // When all active moves are done, start animating the next turn
+            if (activeMoves.Count == 0)
+            {
+                if (turnQueue.Count == 1)
                 {
-                    IMGAnimatable newestMove = moveQueue.Peek();
-                    if (AreSameType(newestMove, nextMove))
-                    {
-                        moveQueue.Dequeue();
-                        activeMoves.Add(newestMove);
-                        ExecuteMove(newestMove);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    // There are no other turns in the queue! We're done here.
+                    return;
                 }
-
-                break;
-
-            case QueueStatus.Processing:
-                // Queue is processing!
-
-                // Try to play all of the same type at same time
-                if (moveQueue.Count > 0 && AreSameType(moveQueue.Peek(), lastMoveExecuted) && IsNotPlayerMGMove(moveQueue.Peek()))
+                else
                 {
-                    IMGAnimatable topMove = moveQueue.Dequeue();
-                    activeMoves.Add(topMove);
-                    ExecuteMove(topMove);
-                }
-
-                // if move queue is getting stale then lets just do something about it
-                if (Time.time - timeLastMoveExecuted > 2)
-                {
-                    if (lastMoveExecuted is MGMove)
-                    {
-                        Debug.LogError($"Time in queue took an unexpectedly long time. Last move was {(lastMoveExecuted as MGMove).unit.UnitTeam} {(lastMoveExecuted as MGMove).unit.UnitType}");
-                    }
-                    Debug.Log($"Allowing queue to process more.");
-                    status = QueueStatus.Ready;
+                    Debug.Log($"Finished animating turn!");
+                    turnQueue.Dequeue();
                     CheckQueue();
+                    return;
                 }
+            }
+        }
 
-                break;
+        // Try and play all moves that don't overlap in the current turn
+        for (int i = 0; i < animatables.mgAnimatables.Count; i++)
+        {
+            IMGAnimatable animatable = animatables.mgAnimatables[i];
+
+            if (animatable.DoesOverlapWithAny(activeMoves))
+            {
+                continue;
+            }
+
+            // Don't die before a unit moves to the fight
+            if (animatable.DoesOverlapWithAny(animatables.mgAnimatables.GetRange(0, i)))
+            {
+                continue;
+            }
+
+
+            activeMoves.Add(animatable);
+            ExecuteMove(animatable);
+            animatables.mgAnimatables.RemoveAt(i);
+            i -= 1;
         }
 
         AfterCheckQueue?.Invoke(this, new System.EventArgs());
@@ -208,7 +200,8 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private void FinishMove(IMGAnimatable move)
     {
         activeMoves.Remove(move);
-        status = moveQueue.Count == 0 ? QueueStatus.Off : QueueStatus.Ready;
+        bool queueEmpty = turnQueue.Count == 1 && turnQueue.Peek().mgAnimatables.Count == 0;
+        status = queueEmpty ? QueueStatus.Off : QueueStatus.Ready;
         if (activeMoves.Count == 0)
         {
             CheckQueue();
@@ -222,6 +215,35 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     public static void SpawnFightParticles(Transform transform)
     {
         Instantiate(_instance.fightParticles, transform.position, Quaternion.identity, transform);
+    }
+
+    public static void Reset() => _instance.DoReset();
+
+    public void DoReset()
+    {
+        foreach (IMGAnimatable animatable in activeMoves)
+        {
+            if (animatable is MGFight fight)
+            {
+                fight.RemoveUITracker();
+            }
+        }
+
+        foreach (MGTurnAnimatables turn in turnQueue)
+        {
+            foreach (IMGAnimatable animatable in turn.mgAnimatables)
+            {
+                if (animatable is MGFight fight)
+                {
+                    fight.RemoveUITracker();
+                }
+            }
+        }
+
+        activeMoves.Clear();
+        turnQueue.Clear();
+        CloseAndAddNewTurnToQueue();
+        MGFight.numberOfActiveFights = 0;
     }
 
     

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MGFight : IMGAnimatable
@@ -6,6 +7,8 @@ public class MGFight : IMGAnimatable
 
     public MilitaryUnit unitOther;
     private System.Action onExecute;
+
+    private GameObject fightTrackerTarget;
 
     public static float FightDuration => MilitaryTurnAnimator.CurrentGlobalAnimationsSpeed switch 
     {
@@ -65,36 +68,40 @@ public class MGFight : IMGAnimatable
 
     private void AddUITracker()
     {
-        GameObject go = new GameObject("Fight Tracker Target");
+        fightTrackerTarget = new GameObject("Fight Tracker Target");
         if (unit.AttachedSTile != null)
         {
-            go.transform.SetParent(unit.AttachedSTile.transform);
-            go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unit.GridPosition);
+            fightTrackerTarget.transform.SetParent(unit.AttachedSTile.transform);
+            fightTrackerTarget.transform.position = MilitaryUnit.GridPositionToWorldPosition(unit.GridPosition);
         }
         else if (unitOther.AttachedSTile != null)
         {
-            go.transform.SetParent(unitOther.AttachedSTile.transform);
-            go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unitOther.GridPosition);
+            fightTrackerTarget.transform.SetParent(unitOther.AttachedSTile.transform);
+            fightTrackerTarget.transform.position = MilitaryUnit.GridPositionToWorldPosition(unitOther.GridPosition);
         }
         else
         {
             Debug.LogError($"Nothing to attach tracker to!");
         }
 
-        MilitaryUITrackerManager.AddFightTracker(go);
+        MilitaryUITrackerManager.AddFightTracker(fightTrackerTarget);
 
-        unit.OnDeath.AddListener(() => {
-            MilitaryUITrackerManager.RemoveTracker(go);
-            GameObject.Destroy(go);
-        });
-        unitOther.OnDeath.AddListener(() => {
-            MilitaryUITrackerManager.RemoveTracker(go);
-            GameObject.Destroy(go);
-        });
+        unit.OnDeath.AddListener(() => RemoveUITracker());
+        unitOther.OnDeath.AddListener(() => RemoveUITracker());
+    }
+
+    public void RemoveUITracker()
+    {
+        if (fightTrackerTarget != null)
+        {
+            MilitaryUITrackerManager.RemoveTracker(fightTrackerTarget);
+            GameObject.Destroy(fightTrackerTarget);
+        }
     }
     
     public override void Execute(System.Action finishedCallback)
     {
+        // Debug.Log($"Executed fight for {unit.UnitTeam} {unit.UnitType}");
         onExecute?.Invoke();
 
         Transform t;
@@ -132,5 +139,27 @@ public class MGFight : IMGAnimatable
                 i
             );
         }
+    }
+
+    public override bool DoesOverlapWithAny(List<IMGAnimatable> otherAnimatable)
+    {
+        foreach (IMGAnimatable animatable in otherAnimatable)
+        {
+            if (animatable is MGDeath)
+            {
+                continue;
+            }
+            
+            if (MilitaryTurnAnimator.IsUnitInAnimatable(animatable, unit))
+            {
+                return true;
+            }
+            
+            if (MilitaryTurnAnimator.IsUnitInAnimatable(animatable, unitOther))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

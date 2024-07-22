@@ -120,6 +120,7 @@ public class MilitaryGrid : SGrid
         MilitaryCollectibleController.Reset();
         MilitaryWaveManager.Reset();
         MilitaryResetChecker.ResetCounters();
+        MilitaryTurnAnimator.Reset();
 
         SaveSystem.SaveGame("Finished Restarting Military Sim");
     }
