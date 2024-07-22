@@ -73,6 +73,7 @@ public class WaterWheel : MonoBehaviour, ISavable
         bigIce.AddLava(heaterLava);
         cog1.SetRefreezeOnTop(false);
         cog2.SetRefreezeOnTop(false);
+        SaveSystem.Current.SetBool("MountainHeaterFull", true);
     }
 
     public void AddHeaterLava()
