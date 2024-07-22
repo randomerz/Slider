@@ -22,9 +22,7 @@ public class DiceGizmo : MonoBehaviour, ISavable
     public Sprite[] bumpSprites;
 
     private Coroutine diceShakeCoroutine;
-    //public Animator animator; // this is only based on Tree animator controller rn
-    //Chen: Should the above be changed to the Dice animator controller or something?
-    private bool animationFinished = false;
+    private bool animationFinished = true;
 
     private Transform nonHouseTransform;
 
