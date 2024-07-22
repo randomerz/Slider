@@ -114,6 +114,8 @@ public class GemMachine : MonoBehaviour, ISavable
     public void FixGemMachine(bool fromSave = false)
     {
         gemMachineState = GemMachineState.FIXED;
+        SaveSystem.Current.SetBool("MountainFixedGemMachine", true);
+
 
         if (!fromSave)
         {
