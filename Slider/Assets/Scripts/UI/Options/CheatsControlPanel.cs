@@ -16,8 +16,8 @@ public class CheatsControlPanel : MonoBehaviour
         Area.Jungle,
         Area.Desert,
         Area.Factory,
-        Area.Mountain,
         Area.Military,
+        Area.Mountain,
         Area.MagiTech,
     };
     private Area areaToTeleportTo = Area.None;

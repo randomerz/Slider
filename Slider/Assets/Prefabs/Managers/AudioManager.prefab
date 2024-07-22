@@ -1023,6 +1023,16 @@ MonoBehaviour:
       Path: event:/SFX/Ocean/Tavern Release
     canPause: 1
     dopplerScale: 1
+  - name: Riser 4s
+    fmodEvent:
+      Guid:
+        Data1: 244967003
+        Data2: 1080178520
+        Data3: -1402608985
+        Data4: -1547189196
+      Path: event:/SFX/Misc/Riser 4s
+    canPause: 1
+    dopplerScale: 1
   - name: Slime Footstep
     fmodEvent:
       Guid:

@@ -159,6 +159,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         else
         {
             StartCoroutine(MirageVFXCoroutine(0, 1));
+            AudioManager.Play("Tavern Release");
             CoroutineUtils.ExecuteEachFrame(
                 (x) => lensDistortion.intensity.Override(x),
                 () => lensDistortion.intensity.Override(lensDistortionBaseValue),
