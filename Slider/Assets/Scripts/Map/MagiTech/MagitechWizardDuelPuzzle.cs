@@ -10,8 +10,12 @@ public class MagitechWizardDuelPuzzle : MonoBehaviour
     [SerializeField] private DesyncItem presentStoolItem;
     private bool areTrackersOn;
 
+    [SerializeField] private ItemResetter fireItemResetter;
+    [SerializeField] private ItemResetter lightningItemResetter;
     [SerializeField] private List<ParticleSystem> fireWinningParticles;
     [SerializeField] private List<ParticleSystem> lightningWinningParticles;
+    [SerializeField] private ParticleSystem fireCastingParticles;
+    [SerializeField] private ParticleSystem lightningCastingParticles;
 
     private void Start() 
     {
@@ -55,12 +59,30 @@ public class MagitechWizardDuelPuzzle : MonoBehaviour
 
     public void PlayFireWinningParticles()
     {
+        fireCastingParticles.Play();
         StartCoroutine(DoWinningParticles(fireWinningParticles));
+    }
+
+    public void StopFireWinningParticles()
+    {
+        fireCastingParticles.Stop();
     }
 
     public void PlayLightningWinningParticles()
     {
+        lightningCastingParticles.Play();
         StartCoroutine(DoWinningParticles(lightningWinningParticles));
+    }
+
+    public void StopLightningWinningParticles()
+    {
+        lightningCastingParticles.Stop();
+    }
+
+    public void StopBothWinningParticles()
+    {
+        StopFireWinningParticles();
+        StopLightningWinningParticles();
     }
     
     private IEnumerator DoWinningParticles(List<ParticleSystem> particles)
@@ -71,6 +93,30 @@ public class MagitechWizardDuelPuzzle : MonoBehaviour
             AudioManager.PlayWithVolume("Hat Click", 0.4f);
 
             yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public void CheckTurnInShieldFire()
+    {
+        if (PlayerInventory.GetCurrentItem() == pastStoolItem)
+        {
+            fireItemResetter.ResetItem(pastStoolItem);
+        }
+        else if (PlayerInventory.GetCurrentItem() == presentStoolItem)
+        {
+            fireItemResetter.ResetItem(presentStoolItem);
+        }
+    }
+
+    public void CheckTurnInShieldLightning()
+    {
+        if (PlayerInventory.GetCurrentItem() == pastStoolItem)
+        {
+            lightningItemResetter.ResetItem(pastStoolItem);
+        }
+        else if (PlayerInventory.GetCurrentItem() == presentStoolItem)
+        {
+            lightningItemResetter.ResetItem(presentStoolItem);
         }
     }
 }

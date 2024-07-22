@@ -109,7 +109,7 @@ public class SceneSpawns : MonoBehaviour
             Vector3 pp = GameObject.Find("Player").transform.position;
             if (pp != transform.position && nextSpawn == SpawnLocation.Default && lastSpawn == SpawnLocation.Default)
             {
-                Debug.LogWarning($"Default Spawn position was not the same as the player's position. Player: {pp}, spawn: {transform.position}");
+                Debug.LogWarning($"Default Spawn position was not the same as the player's position. This is fine if it's loaded from a save. Player: {pp}, spawn: {transform.position}");
             }
         }
 
@@ -117,6 +117,22 @@ public class SceneSpawns : MonoBehaviour
         {
             (SGrid.Current as FactoryGrid).DefaultSpawnFactoryPast = this;
         }
+    }
+
+    private void OnEnable()
+    {
+        QuitHandler.OnQuit += ClearStatics;
+    }
+
+    private void OnDisable()
+    {
+        QuitHandler.OnQuit -= ClearStatics;
+    }
+
+    private void ClearStatics(object sender, System.EventArgs e)
+    {
+        nextSpawn = SpawnLocation.Default;
+        lastSpawn = SpawnLocation.Default;
     }
 
     // Used by CheatsControlPanel.cs

@@ -24,6 +24,9 @@ public class GemManager : MonoBehaviour, ISavable
     public PipeLiquid pipeLiquid;
     public Animator animator;
 
+    public DesyncItem presentConductiveBob;
+    public DesyncItem pastConductiveBob;
+
     private void Start() 
     {
         oceanDuplicateItem.gameObject.SetActive(false);
@@ -148,6 +151,7 @@ public class GemManager : MonoBehaviour, ISavable
             AudioManager.Play("Artifact Error");
             return;
         }
+
         if (Enum.TryParse(item.itemName, out Area itemNameAsEnum))
         {
             gems[itemNameAsEnum] = true;
@@ -166,6 +170,8 @@ public class GemManager : MonoBehaviour, ISavable
         {
             AudioManager.Play("Artifact Error");
         }
+
+        AudioManager.Play("Hat Click");
         UpdateGemSprites();
     }
 
@@ -318,6 +324,17 @@ public class GemManager : MonoBehaviour, ISavable
             }
         }
 
+        if (num == 0)
+        {
+            presentConductiveBob.SetIsTracked(false);
+            pastConductiveBob.SetIsTracked(false);
+        }
+        else if (num == 1 && specific == "The Cave Gem was a part of some Desync experiments in the past.")
+        {
+            presentConductiveBob.SetIsTracked(true);
+            pastConductiveBob.SetIsTracked(true);
+        }
+
         string combined = $"Hmmm... the gems should be somewhere in this area. Can you get me: {String.Join(", ", all)}?";
 
         SaveSystem.Current.SetString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
@@ -333,6 +350,7 @@ public class GemManager : MonoBehaviour, ISavable
         // As long as ocean gem isn't destroyed
         if (oceanDuplicateItem != null)
         {
+            AudioManager.PlayWithPitch("Hat Click", 0.7f);
             oceanDuplicateItem.gameObject.SetActive(true);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, oceanDuplicateItem.transform.position);
             DisableGem(Area.Ocean);

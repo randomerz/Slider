@@ -2857,6 +2857,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2374920193743737494, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      propertyPath: isSelectedOnMenuOpen
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2620790809561359190, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Name
       value: OceanArtifaceUIManager

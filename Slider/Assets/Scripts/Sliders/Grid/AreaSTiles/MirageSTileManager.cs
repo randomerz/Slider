@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 {
     public static EventHandler OnMirageSTilesEnabled; // Also invokes on stile move end late
@@ -42,6 +43,10 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     }
 
     public Volume volume;
+    private LensDistortion lensDistortion;
+    private float lensDistortionBaseValue = -0.2f;
+    public AnimationCurve lensDistortionIntensityCurve;
+    public DesertTempleMusic templeMusic;
 
     public void Save()
     {
@@ -94,6 +99,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void Awake()
     {
         InitializeSingleton();
+        volume.profile.TryGet(out lensDistortion);
     }
 
     private void SubscibeMirageEvents()
@@ -116,6 +122,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private void OnDisable()
     {
         UnSubscribeMirageEvents();
+        templeMusic.SetReverb(false);
     }
 
     private void EnableButtonsOnStart()
@@ -145,13 +152,28 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public void EnableMirageVFX(bool fromSave) 
     {
-        if(fromSave)
+        if (fromSave)
         {
             volume.weight = 1;
         }
         else
-        StartCoroutine(MirageVFXCoroutine(0, 1));
+        {
+            StartCoroutine(MirageVFXCoroutine(0, 1));
+            CoroutineUtils.ExecuteEachFrame(
+                (x) => lensDistortion.intensity.Override(x),
+                () => lensDistortion.intensity.Override(lensDistortionBaseValue),
+                this,
+                2,
+                lensDistortionIntensityCurve
+            );
+            CoroutineUtils.ExecuteAfterDelay(
+                () => UIEffects.FlashWhite(speed: 2),
+                this,
+                1.5f
+            );
+        }
 
+        templeMusic.SetReverb(true);
     }
 
     public void DisableMirage()
@@ -170,11 +192,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void DisableMirageVFX() 
     {
         StartCoroutine(MirageVFXCoroutine(1, 0));
+        templeMusic.SetReverb(false);
     }
 
     private IEnumerator MirageVFXCoroutine(float start, float end)
     {
-        float duration = 1;
+        float duration = 2;
         float t = 0;
         while(t < duration)
         {

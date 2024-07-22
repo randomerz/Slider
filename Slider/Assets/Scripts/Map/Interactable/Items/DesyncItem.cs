@@ -185,7 +185,8 @@ public class DesyncItem : Item
         }
         presentItem.isItemInPast = false;
         Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true, 10, 0.1f);
-        ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+        GameObject particle = ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+        AudioManager.Play("Desync Disappear", particle.transform);
         if(targetPos.x == float.MaxValue)
         {
             Debug.LogWarning("Could not find valid position for present item. Moving anyways");
@@ -306,6 +307,7 @@ public class DesyncItem : Item
         transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
         SetLayer(LayerMask.NameToLayer("Item"));
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
+        AudioManager.Play("Desync Disappear", transform);
         ResetSortingOrder();
         SetDesyncItemActive(false);
         UpdateLightning();
@@ -364,7 +366,8 @@ public class DesyncItem : Item
             else
             {
                 presentItem.SetDesyncItemActive(presentShouldBeActive);
-                ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+                GameObject particle = ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+                AudioManager.Play("Desync Disappear", particle.transform);
             }
         }
         presentItem.UpdateLightning();

@@ -187,7 +187,7 @@ public class OceanArtifact : UIArtifact
             rotateParams[minY * 2 + minX].RotateArrow(peekedMove.isCCW);
         }
 
-        if (oceanControllerSupportButtonsHolder != null && oceanControllerSupportButtonsHolder.isActiveAndEnabled /*Player.GetInstance().GetCurrentControlScheme() == "Controller"*/)
+        if (oceanControllerSupportButtonsHolder != null && oceanControllerSupportButtonsHolder.isActiveAndEnabled /*Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER*/)
         {
             oceanControllerSupportButtonsHolder.MakeLastControllerButtonClickedDisappear();
         }
@@ -227,10 +227,11 @@ public class OceanArtifact : UIArtifact
     public void AllowRotate(bool value)
     {
         canRotate = value;
-    }    
+    }
+
     private void OnPlayerControlSchemeChanged(string newControlScheme)
     {
-        if (newControlScheme == "Controller")
+        if (newControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
         {
             oceanControllerSupportButtonsHolder.gameObject.SetActive(true);
             topLeftControllerButton.Select();

@@ -76,7 +76,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
 
     private IEnumerator DoQueueAlienComplaints()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
 
         alienNPCs[0].TypeCurrentDialogue();
 

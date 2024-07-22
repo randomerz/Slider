@@ -51,6 +51,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
 
+    private int timesControlsChangedRecently;
+    private Coroutine timesControlsChangedCoroutine;
+    private bool controlsWarningEnabled;
+    private Coroutine controlsWarningCoroutine;
+
     private bool didInit;
 
     public static float houseYThreshold { get; private set; }= -75; // below this y value the player must be in a house
@@ -185,9 +190,52 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     public void OnControlsChanged()
     {
         string newControlScheme = GetCurrentControlScheme();
-        //Debug.Log("Control Scheme changed to: " + newControlScheme);
+        HandleControllerWarnings();
+        Debug.Log("[Input] Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
         Controls.CurrentControlScheme = newControlScheme;
+    }
+
+    private void HandleControllerWarnings()
+    {
+        timesControlsChangedRecently += 1;
+        UIControllerWarning.SetWarningTextEnabled(controlsWarningEnabled);
+
+        if (timesControlsChangedCoroutine != null)
+        {
+            StopCoroutine(timesControlsChangedCoroutine);
+            timesControlsChangedCoroutine = null;
+        }
+        if (controlsWarningCoroutine != null)
+        {
+            StopCoroutine(controlsWarningCoroutine);
+            controlsWarningCoroutine = null;
+        }
+
+        timesControlsChangedCoroutine = CoroutineUtils.ExecuteAfterDelay(
+            () => {
+                timesControlsChangedRecently = 0;
+                timesControlsChangedCoroutine = null;
+            },
+            this,
+            2
+        );
+
+        if (timesControlsChangedRecently > 4)
+        {
+            controlsWarningEnabled = true;
+            UIControllerWarning.SetWarningTextEnabled(controlsWarningEnabled);
+
+            controlsWarningCoroutine = CoroutineUtils.ExecuteAfterDelay(
+                () => {
+                    controlsWarningEnabled = false;
+                    UIControllerWarning.SetWarningTextEnabled(controlsWarningEnabled);
+                    controlsWarningCoroutine = null;
+                },
+                this,
+                4
+            );
+        }
     }
 
     // Here is where we pay for all our Singleton Sins
@@ -298,7 +346,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetIsInHouse(sp.isInHouse);
 
         // Update position
-        if (SettingsManager.Setting<bool>(Settings.DevConsole).CurrentValue && DebugUIManager.justDidSetScene)
+        if (DebugUIManager.justDidSetScene)
         {
             // skip setting position if just did SetScene()
             DebugUIManager.justDidSetScene = false;

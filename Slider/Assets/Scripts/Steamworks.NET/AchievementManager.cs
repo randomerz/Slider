@@ -22,15 +22,19 @@ public class AchievementManager : Singleton<AchievementManager>
     /// </summary>
     public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value)
     {
-        if(dontGiveIfCheated)
+        if (dontGiveIfCheated)
         {
-            if(SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
-            return;
+            if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
+            {
+                Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because this profile used cheats.");
+                return;
+            }
         }
 
         if (_instance != null)
         {
             _instance.achievementStats[statName] = value;
+            Debug.Log($"[AchievementManager] Updating {statName} to {value}.");
             _instance.SendAchievementStatsToSteam();
         }
         

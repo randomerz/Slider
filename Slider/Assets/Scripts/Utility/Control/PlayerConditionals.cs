@@ -41,7 +41,7 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
                         {
                             return;
                         }
-                        else if (!PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
+                        else if (!string.IsNullOrEmpty(itemNameCheck) && !PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
                         {
                             return;
                         }
@@ -95,7 +95,7 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
             {
                 return false;
             }
-            else if (!PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
+            else if (!string.IsNullOrEmpty(itemNameCheck) && !PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
             {
                 return false;
             }
@@ -118,7 +118,7 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
             {
                 Player.GetPlayerAction().RemoveInteractable(this);
             }
-            else if (!PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
+            else if (!string.IsNullOrEmpty(itemNameCheck) && !PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
             {
                 Player.GetPlayerAction().RemoveInteractable(this);
             }

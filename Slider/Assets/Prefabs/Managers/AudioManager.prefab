@@ -773,6 +773,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 1
     dopplerScale: 1
+  - name: Desync Disappear
+    fmodEvent:
+      Guid:
+        Data1: -1590503866
+        Data2: 1107121218
+        Data3: 1978478499
+        Data4: -488886213
+      Path: event:/SFX/Magic/Desync Disappear
+    canPause: 1
+    dopplerScale: 1
   - name: Laser Start
     fmodEvent:
       Guid:
