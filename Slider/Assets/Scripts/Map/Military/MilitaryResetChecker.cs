@@ -4,7 +4,10 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
 {
     private int numSliderCollectiblesActive = 0;
     private int numUnspawnedAlliesActive = 0;
-    public int NumUnspawnedAlliesActive => numUnspawnedAlliesActive;
+
+    private int numSpawnedAllies = 0;
+    public int NumSpawnedAllies => numSpawnedAllies;
+    public const int TOTAL_POSSIBLE_ALLIES = 8;
 
     private bool didInit = false;
     
@@ -36,6 +39,7 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
     {
         _instance.numSliderCollectiblesActive = 0;
         _instance.numUnspawnedAlliesActive = 0;
+        _instance.numSpawnedAllies = 0;
     }
 
     public void OnUnitDeath(object sender, MilitaryUnit.UnitArgs e)
@@ -102,6 +106,14 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
         if (_instance != null)
         {
             _instance.numUnspawnedAlliesActive -= 1;
+        }
+    }
+
+    public static void IncrementSpawnedAlly()
+    {
+        if (_instance != null)
+        {
+            _instance.numSpawnedAllies += 1;
         }
     }
 }

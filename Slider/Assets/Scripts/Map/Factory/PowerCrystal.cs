@@ -20,6 +20,16 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
         InitializeSingleton();
     }
 
+    private void Start()
+    {
+        if (_blackout && !_wentToPast)
+        {
+            // FactoryLightManager finds materials in Start()
+            CoroutineUtils.ExecuteAfterEndOfFrame(() => SetBlackout(_blackout && !_wentToPast), this);
+        }
+        
+    }
+
     public void Save()
     {
         SaveSystem.Current.SetBool("FactoryBlackout", _blackout);
@@ -30,7 +40,7 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
         _blackout = profile.GetBool("FactoryBlackout");
         _wentToPast = profile.GetBool("FactorySentToPast");
 
-        SetBlackout(_blackout && !_wentToPast);
+        // SetBlackout(_blackout && !_wentToPast);
     }
 
     public void CheckBlackout(Condition cond)
@@ -109,7 +119,6 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
     private void DoBlackout()
     {
         SetBlackout(true);
-        FactoryLightManager.SwitchLights(false);
     }
 
     public void TurnEverythingBackOn()
@@ -117,13 +126,14 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
         AudioManager.PlayWithVolume("Power On", 1.0f);
         AudioManager.PlayMusic("Factory");
         SetBlackout(false);
-        FactoryLightManager.SwitchLights(true);
     }
 
     private void SetBlackout(bool isBlackout)
     {
         _blackout = isBlackout;
 
+        FactoryLightManager.SwitchLights(!isBlackout);
+        
         if (isBlackout)
         {
             blackoutStarted?.Invoke();

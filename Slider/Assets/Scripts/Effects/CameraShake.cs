@@ -146,7 +146,7 @@ public class CameraShake : MonoBehaviour
         {
             if (cmCamera != vcam && !otherCMCameras.Contains(vcam))
             {
-                Debug.LogWarning($"[Cameras] Virtual Camera '{vcam.gameObject}' will not be affected by screen shake. Add it to 'otherCMCameras' if it should.");
+                Debug.Log($"[Cameras] Virtual Camera '{vcam.gameObject}' will not be affected by screen shake. Add it to 'otherCMCameras' if it should.");
             }
         }
     }

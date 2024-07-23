@@ -68,6 +68,8 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
     public void CycleUnitType()
     {
         SetUnitType((MilitaryUnit.Type)(((int)type + 1) % 3));
+        int numTimes = SaveSystem.Current.GetInt(MilitaryHints.CYCLE_UNIT_SAVE_STRING);
+        SaveSystem.Current.SetInt(MilitaryHints.CYCLE_UNIT_SAVE_STRING, numTimes + 1);
     }
 
     public void SpawnUnit()
@@ -90,6 +92,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
         }));
 
         // gameObject.SetActive(false);
+        MilitaryResetChecker.IncrementSpawnedAlly();
     }
 
     private IEnumerator DoSpawnSound(System.Action callback)

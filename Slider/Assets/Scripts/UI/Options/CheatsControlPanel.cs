@@ -16,8 +16,8 @@ public class CheatsControlPanel : MonoBehaviour
         Area.Jungle,
         Area.Desert,
         Area.Factory,
-        Area.Mountain,
         Area.Military,
+        Area.Mountain,
         Area.MagiTech,
     };
     private Area areaToTeleportTo = Area.None;
@@ -69,7 +69,7 @@ public class CheatsControlPanel : MonoBehaviour
         if (areaToTeleportTo != Area.None)
         {
             SetCheated();
-            SceneTransitionOverlayManager.ShowOverlay();
+            sceneChanger.ShowOverlayIfNotBusy();
             DoSetScene(areaToTeleportTo.ToString());
             areaToTeleportTo = Area.None;
             return;
@@ -156,6 +156,7 @@ public class CheatsControlPanel : MonoBehaviour
 
     public void DoSpawnAnchor()
     {
+        Debug.Log($"[Cheats] Spawned Anchor");
         SetCheated();
 
         Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
@@ -163,6 +164,7 @@ public class CheatsControlPanel : MonoBehaviour
 
     public void DoGiveScrollAndBoots()
     {
+        Debug.Log($"[Cheats] Gave Scroll and Boots");
         SetCheated();
 
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
@@ -173,6 +175,7 @@ public class CheatsControlPanel : MonoBehaviour
 
     public void DoNoClip()
     {
+        Debug.Log($"[Cheats] Called NoClip");
         SetCheated();
 
         Player p = GameObject.Find("Player").GetComponent<Player>();
@@ -184,6 +187,8 @@ public class CheatsControlPanel : MonoBehaviour
 
     public void DoRespawnPlayer()
     {
+        Debug.Log($"[Cheats] Called Respawn player");
+
         SetCheated();
 
         if (SceneSpawns.lastSpawn != SceneSpawns.SpawnLocation.Default)
@@ -246,6 +251,7 @@ public class CheatsControlPanel : MonoBehaviour
 
     private void DoGive(string collectibleName) 
     {
+        Debug.Log($"[Cheats] Gave collecible: {collectibleName}");
         SGrid.Current.GivePlayerTheCollectible(collectibleName);
     }
 
@@ -262,6 +268,7 @@ public class CheatsControlPanel : MonoBehaviour
 
     private void DoSetScene(string sceneName)
     {
+        Debug.Log($"[Cheats] Set Scene to {sceneName}");
         DebugUIManager.justDidSetScene = true;
         sceneChanger.sceneName = sceneName.Trim();
 

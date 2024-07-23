@@ -88,6 +88,7 @@ public class SaveSystem
 
     public static void SetCurrentProfile(int index)
     {
+        Debug.Log($"[Saves] Setting current profile to {index}");
         currentIndex = index;
         Current = GetProfile(index);
     }
@@ -101,7 +102,7 @@ public class SaveSystem
         if (currentIndex == -1)
             return;
 
-        if (reason != "") Debug.Log($"[Saves] Saving game: {reason}");
+        if (reason != "") Debug.Log($"[Saves] [{System.DateTime.Now}] Saving game: {reason}");
 
         Current.Save();
         SetProfile(currentIndex, Current);

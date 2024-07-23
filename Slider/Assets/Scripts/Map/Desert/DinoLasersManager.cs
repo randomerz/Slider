@@ -226,8 +226,9 @@ public class DinoLasersManager : MonoBehaviour
         firstTimeActivationAnimation.SetActive(true);
 
         CameraShake.ShakeIncrease(0.5f, 2);
+        AudioManager.Play("Riser 4s");
 
-        yield return new WaitForSeconds(2.167f); 
+        yield return new WaitForSeconds(4.75f); 
 
         firstTimeActivationAnimation.SetActive(false);
 
@@ -235,6 +236,8 @@ public class DinoLasersManager : MonoBehaviour
         SGridAnimator.OnSTileMoveStart -= CancelActivation;
 
         AudioManager.Play("Slide Explosion", firstTimeActivationAnimation.transform);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, dinoLasers[0].transform.position, dinoLasers[0].transform);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, dinoLasers[1].transform.position, dinoLasers[1].transform);
 
         SetSkullSpritesToBroken();
 

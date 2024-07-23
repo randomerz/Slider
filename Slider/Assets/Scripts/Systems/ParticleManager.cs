@@ -38,16 +38,16 @@ public class ParticleManager : Singleton<ParticleManager>
         }
     }
 
-    public static void SpawnParticle(ParticleType type, Vector3 position, Transform parent=null)
+    public static GameObject SpawnParticle(ParticleType type, Vector3 position, Transform parent=null)
     {
-        SpawnParticle(type, position, Quaternion.identity, parent);
+        return SpawnParticle(type, position, Quaternion.identity, parent);
     }
 
-    public static void SpawnParticle(ParticleType type, Vector3 position, Quaternion rotation, Transform parent=null)
+    public static GameObject SpawnParticle(ParticleType type, Vector3 position, Quaternion rotation, Transform parent=null)
     {
         GameObject prefab = GetPrefab(type);
 
-        GameObject.Instantiate(prefab, position, rotation, parent);
+        return GameObject.Instantiate(prefab, position, rotation, parent);
     }
 
     public static GameObject GetPrefab(ParticleType type)

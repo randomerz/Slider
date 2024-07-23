@@ -169,7 +169,7 @@ public class MilitaryUnitFlag : Item
             this, 0.1f
         );
 
-        reason = Random.Range(0, 2) == 0 ? "Let's go, soliders!" : "Keep moving forward!";
+        reason = Random.Range(0, 2) == 0 ? "Let's go, soldiers!" : "Keep moving forward!";
         return true;
     }
 

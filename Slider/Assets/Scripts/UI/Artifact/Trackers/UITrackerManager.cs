@@ -156,6 +156,14 @@ public class UITrackerManager : MonoBehaviour
         }
     }
 
+    public static void ResetStatics()
+    {
+        uiTrackerBuffer.Clear();
+        uiTrackerEnumBuffer.Clear();
+        uiCustomTrackerBuffer.Clear();
+        removeBuffer.Clear();
+    }
+
     private void PruneDestroyedTrackers()
     {
         for (int x = 0; x < targets.Count; x++) {

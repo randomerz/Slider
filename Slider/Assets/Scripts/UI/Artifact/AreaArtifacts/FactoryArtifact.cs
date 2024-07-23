@@ -92,6 +92,8 @@ public class FactoryArtifact : UIArtifact
 
     private void SwapButtonsBasedOnMove(SMove move)
     {
+        ArtifactTabManager.OnUIArtifactExternallyUpdated?.Invoke(this, new System.EventArgs());
+
         Dictionary<ArtifactTileButton, Vector2Int> buttonToNewPos = new();
 
         foreach (Movement m in move.moves)

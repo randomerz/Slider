@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using System;
 
 public class SceneChanger : MonoBehaviour
 {
@@ -18,6 +19,11 @@ public class SceneChanger : MonoBehaviour
     private AsyncOperation sceneLoad;
     private bool fadeToBlackAlmostDone;
     private bool fadeToBlackDone;
+
+    private void OnDisable()
+    {
+        SceneManager.sceneUnloaded -= ResetProperties;
+    }
 
     public void ChangeScenes() 
     {
@@ -84,6 +90,22 @@ public class SceneChanger : MonoBehaviour
             yield return null;
         }
 
+        SceneManager.sceneUnloaded += ResetProperties;
         sceneLoad.allowSceneActivation = true; // "Okay now do it and hurry up!!"
+    }
+
+    public void ShowOverlayIfNotBusy()
+    {
+        SceneTransitionOverlayManager.ShowOverlay();
+    }
+
+    private void ResetProperties(Scene scene)
+    {
+        sceneName = null;
+        coroutine = null;
+        sceneLoad = null;
+        fadeToBlackAlmostDone = false;
+        fadeToBlackDone = false;
+        SceneManager.sceneUnloaded -= ResetProperties;
     }
 }

@@ -773,6 +773,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 1
     dopplerScale: 1
+  - name: Desync Disappear
+    fmodEvent:
+      Guid:
+        Data1: -1590503866
+        Data2: 1107121218
+        Data3: 1978478499
+        Data4: -488886213
+      Path: event:/SFX/Magic/Desync Disappear
+    canPause: 1
+    dopplerScale: 1
   - name: Laser Start
     fmodEvent:
       Guid:
@@ -1011,6 +1021,16 @@ MonoBehaviour:
         Data3: 623612560
         Data4: -906851318
       Path: event:/SFX/Ocean/Tavern Release
+    canPause: 1
+    dopplerScale: 1
+  - name: Riser 4s
+    fmodEvent:
+      Guid:
+        Data1: 244967003
+        Data2: 1080178520
+        Data3: -1402608985
+        Data4: -1547189196
+      Path: event:/SFX/Misc/Riser 4s
     canPause: 1
     dopplerScale: 1
   - name: Slime Footstep
