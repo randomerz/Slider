@@ -92,6 +92,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
         }));
 
         // gameObject.SetActive(false);
+        MilitaryResetChecker.IncrementSpawnedAlly();
     }
 
     private IEnumerator DoSpawnSound(System.Action callback)

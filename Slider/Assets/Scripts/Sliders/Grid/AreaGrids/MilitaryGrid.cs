@@ -14,6 +14,8 @@ public class MilitaryGrid : SGrid
     [SerializeField] private List<MilitaryUnspawnedAlly> unspawnedAllies; // dont reset one on #16
 
     [SerializeField] private MilitaryResetChecker militaryResetChecker; // init order makes me cry
+    
+    [SerializeField] private GameObject allSlidersCollectible;
 
     public override void Init()
     {
@@ -33,13 +35,23 @@ public class MilitaryGrid : SGrid
             Debug.LogWarning("Unspawned allies list should be 15 long.");
         }
         
+        // if (
+        //     !SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
+        //     PlayerInventory.Contains("Slider 1", Area.Military)
+        // )
+        if (!SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING))
+        {
+            // Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
+            DoRestartSimulation();
+        }
+        
         if (
-            !SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
-            PlayerInventory.Contains("Slider 1", Area.Military)
+            SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
+            !HasAllTiles()
         )
         {
-            Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
-            DoRestartSimulation();
+            Debug.LogWarning($"[Military] Joined area without collecting all tiles.");
+            allSlidersCollectible.SetActive(true);
         }
     }
 
@@ -88,6 +100,10 @@ public class MilitaryGrid : SGrid
         MilitaryMusicController.DoLoseTrigger();
         UIEffects.Pixelize(
             () => {
+
+                SaveSystem.Current.SetBool("militaryFailedOnce", true);
+                SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
+
                 DoRestartSimulation();
                 AudioManager.Play("TFT Bell");
                 MilitaryMusicController.SetMilitaryLevel(0);
@@ -104,9 +120,6 @@ public class MilitaryGrid : SGrid
     {
         Debug.Log("[Military] Restart sim!");
         OnRestartMilitary?.Invoke(this, new System.EventArgs());
-
-        SaveSystem.Current.SetBool("militaryFailedOnce", true);
-        SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 
         if (Player.GetInstance().GetSTileUnderneath() != null)
         {
@@ -157,6 +170,15 @@ public class MilitaryGrid : SGrid
         foreach (MilitaryUnspawnedAlly m in unspawnedAllies)
         {
             m.Reset();
+        }
+    }
+
+    // In case you quit after you win
+    public void EnableAllSliders()
+    {
+        for (int i = 1; i <= 16; i++)
+        {
+            CollectSTile(i);
         }
     }
 

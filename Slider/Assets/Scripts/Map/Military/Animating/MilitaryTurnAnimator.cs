@@ -142,7 +142,7 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                 }
                 else
                 {
-                    Debug.Log($"Finished animating turn!");
+                    // Debug.Log($"Finished animating turn!");
                     turnQueue.Dequeue();
                     CheckQueue();
                     return;

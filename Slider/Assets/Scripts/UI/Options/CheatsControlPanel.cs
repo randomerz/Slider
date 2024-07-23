@@ -69,7 +69,7 @@ public class CheatsControlPanel : MonoBehaviour
         if (areaToTeleportTo != Area.None)
         {
             SetCheated();
-            SceneTransitionOverlayManager.ShowOverlay();
+            sceneChanger.ShowOverlayIfNotBusy();
             DoSetScene(areaToTeleportTo.ToString());
             areaToTeleportTo = Area.None;
             return;

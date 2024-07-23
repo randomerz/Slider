@@ -53,6 +53,7 @@ public class UIArtifact : Singleton<UIArtifact>
     protected virtual void OnDisable()
     {
         ClearQueues();
+        UITrackerManager.ResetStatics();
     }
 
     protected virtual void Start()
