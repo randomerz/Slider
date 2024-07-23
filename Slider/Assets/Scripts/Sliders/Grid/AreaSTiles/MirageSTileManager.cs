@@ -116,7 +116,9 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     
     private void Start()
     {
-        EnableButtonsOnStart();
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => {
+            EnableButtonsOnStart();}, 
+            this);
     }
 
     private void OnDisable()
@@ -301,9 +303,10 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         {
             STile realSTile = DesertGrid.Current.GetStile(mirageIsland);
             Vector3 relativePos = Player._instance.transform.position - mirageSTiles[mirageIsland - 1].transform.position;
-            realSTile.SetBorderColliders(false);
+            realSTile.SetBorderColliders(true);
             Player.SetParent(realSTile.transform);
             Player.SetPosition(realSTile.transform.position + relativePos);
+            
 
             AudioManager.Play("Portal");
             UIEffects.FadeFromScreenshot(type: UIEffects.ScreenshotEffectType.MIRAGE);
