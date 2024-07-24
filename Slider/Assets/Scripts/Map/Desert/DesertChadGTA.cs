@@ -38,8 +38,15 @@ public class DesertChadGTA : MonoBehaviour
     public void StartCasinoHeist()
     {
         chadFollowPlayer.SetFollowingPlayer(false);
+        chadNPC.SetSpeed(8);
         chadWalkStart.transform.position = chadNPC.transform.position;
         SaveSystem.Current.SetBool(CHAD_STARTED_HEIST_SAVE_STRING, true);
-        CoroutineUtils.ExecuteAfterEndOfFrame(() => chadNPC.TypeCurrentDialogue(), this);
+        chadNPC.DeactivateDialogueBox();
+        CoroutineUtils.ExecuteAfterDelay(() => {
+            if (!chadNPC.IsTypingDialogue())
+            {
+                chadNPC.TypeCurrentDialogue();
+            }
+        }, this, 0.05f);
     }
 }

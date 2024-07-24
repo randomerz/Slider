@@ -174,7 +174,7 @@ public class RatAI : MonoBehaviour, ISavable
             transform.SetParent(currentStileUnderneath.transform);
             visitedTiles.Add(currentStileUnderneath.islandId);
             if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
-                AchievementManager.SetAchievementStat("completedRatRace", 1);
+                AchievementManager.SetAchievementStat("completedRatRace", true, 1);
                 hasAchievement = true;
             }
         }

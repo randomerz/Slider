@@ -89,13 +89,16 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
                 GemStrings.SpecificMagitech,
                 "The MagiTech gem... is on the tile I haven't given you! Something went wrong!"
             },
-            { GemStrings.CombinedBeginning, "Hmmm... we're missing multiple gems. Can you get me: " },
+            { GemStrings.CombinedBeginning, "Hmmm... the gems should be somewhere in this area. Can you get me: " },
             { GemStrings.CombinedEnding, "?" },
         });
 
     #endregion
 
-    private void Start()
+    public DesyncItem presentConductiveBob;
+    public DesyncItem pastConductiveBob;
+
+    private void Start() 
     {
         oceanDuplicateItem.gameObject.SetActive(false);
         if (SaveSystem.Current.GetBool("MagiTechRemovedOceanGemAsExample"))
@@ -240,6 +243,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
             AudioManager.Play("Artifact Error");
         }
 
+        AudioManager.Play("Hat Click");
         UpdateGemSprites();
     }
 
@@ -340,7 +344,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
                 return false;
             }
         }
-
+        SGrid.Current.GivePlayerTheCollectible("Gem Fuel Recipe");
         return true;
     }
 
@@ -363,6 +367,8 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
         List<LocalizationPair> all = new();
         int num = 0;
 
+        bool isCave = false;
+
         foreach (Area a in gems.Keys)
         {
             if (a == Area.MagiTech)
@@ -382,6 +388,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
                         specific = this.GetLocalized(GemStrings.SpecificVillage);
                         break;
                     case Area.Caves:
+                        isCave = true;
                         specific = this.GetLocalized(GemStrings.SpecificCaves);
                         break;
                     case Area.Ocean:
@@ -409,9 +416,22 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
             }
         }
 
+        if (num == 0)
+        {
+            presentConductiveBob.SetIsTracked(false);
+            pastConductiveBob.SetIsTracked(false);
+        }
+        else if (num == 1 && isCave)
+        {
+            presentConductiveBob.SetIsTracked(true);
+            pastConductiveBob.SetIsTracked(true);
+        }
+
         LocalizationPair combined = this.GetLocalized(GemStrings.CombinedBeginning) 
                                     + LocalizationPair.Join(", ", all) 
                                     + this.GetLocalized(GemStrings.CombinedEnding);
+
+        // string combined = $"Hmmm... the gems should be somewhere in this area. Can you get me: {String.Join(", ", all)}?";
 
         SaveSystem.Current.SetLocalizedString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
     }
@@ -426,6 +446,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
         // As long as ocean gem isn't destroyed
         if (oceanDuplicateItem != null)
         {
+            AudioManager.PlayWithPitch("Hat Click", 0.7f);
             oceanDuplicateItem.gameObject.SetActive(true);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, oceanDuplicateItem.transform.position);
             DisableGem(Area.Ocean);

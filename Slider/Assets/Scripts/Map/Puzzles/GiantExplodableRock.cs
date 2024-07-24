@@ -71,7 +71,7 @@ public class GiantExplodableRock : ExplodableRock, ISavable
             case 0:
             case 1:
             default:
-                CameraShake.ShakeIncrease(2f, 0.25f);
+                CameraShake.ShakeIncrease(4f, 0.25f);
 
                 yield return new WaitForSeconds(3f);
                 break;
@@ -91,7 +91,7 @@ public class GiantExplodableRock : ExplodableRock, ISavable
         {
             AudioManager.Play("Rumble Decrease 5s");
 
-            CameraShake.Shake(0.75f, 1);
+            CameraShake.Shake(1.75f, 1);
             foreach (ParticleSystem p in explosionParticles)
             {
                 p.Play();

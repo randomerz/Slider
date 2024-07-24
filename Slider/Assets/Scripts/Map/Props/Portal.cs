@@ -26,6 +26,9 @@ public class Portal : MonoBehaviour
     private bool isTeleporting;
     public Transform desyncItemFallbackSpawn;
 
+    private bool playerAllowedToUse = true;
+    public void SetPlayerAllowedToUse(bool allowed) { playerAllowedToUse = allowed; }
+
     public class OnTimeChangeArgs : System.EventArgs
     {
         public bool fromPast;
@@ -43,7 +46,7 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerEnter()
     {
-        if(playerInPortal || isTeleporting) return;
+        if(playerInPortal || isTeleporting || !playerAllowedToUse) return;
         
         playerInPortal = true;
         recentPortal = portalEnum;
@@ -55,8 +58,15 @@ public class Portal : MonoBehaviour
         }
         else
         {
-            AudioManager.Play("Portal");
-            sceneChanger.ChangeScenes();
+            if (sceneChanger != null)
+            {
+                AudioManager.Play("Portal");
+                sceneChanger.ChangeScenes();
+            }
+            else
+            {
+                Debug.LogError($"sceneChanger was null. Doing nothing");
+            }
         }
         
     }

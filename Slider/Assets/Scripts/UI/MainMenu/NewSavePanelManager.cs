@@ -85,6 +85,7 @@ public class NewSavePanelManager : MonoBehaviour
 
             MainMenuManager.KeyboardEnabled = false;
 
+            Debug.Log($"[File IO] Creating new save profile #{saveProfileIndex} with name {profileName}!");
             SaveSystem.SetProfile(saveProfileIndex, new SaveProfile(profileName));
             SaveSystem.SetCurrentProfile(saveProfileIndex);
 

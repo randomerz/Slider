@@ -78,8 +78,13 @@ public class UITrackerManager : MonoBehaviour
     public Sprite circle2;
     public Sprite circle3;
     public Sprite circleEmpty;
+    public Sprite circle1W;
+    public Sprite circle2W;
+    public Sprite circle3W;
+    public Sprite circleEmptyW;
     public Sprite pin;
     public Sprite exclamation;
+    public Sprite exclamationWhite;
     
     public Sprite playerBlackCircle;
     public Sprite playerBlackCircleEmpty;
@@ -98,8 +103,13 @@ public class UITrackerManager : MonoBehaviour
         circle2,
         circle3,
         circleEmpty,
+        circle1W,
+        circle2W,
+        circle3W,
+        circleEmptyW,
         pin,
         exclamation,
+        exclamationWhite,
         playerBlackCircle,
         playerBlackCircleEmpty,
         playerWhiteCircle,
@@ -144,6 +154,14 @@ public class UITrackerManager : MonoBehaviour
         foreach (UITracker tracker in targets) {
             UpdateTrackerPostion(tracker);
         }
+    }
+
+    public static void ResetStatics()
+    {
+        uiTrackerBuffer.Clear();
+        uiTrackerEnumBuffer.Clear();
+        uiCustomTrackerBuffer.Clear();
+        removeBuffer.Clear();
     }
 
     private void PruneDestroyedTrackers()
@@ -244,8 +262,8 @@ public class UITrackerManager : MonoBehaviour
         GameObject target, 
         DefaultSprites sprite=DefaultSprites.circle1, 
         DefaultSprites blinkSprite=DefaultSprites.circleEmpty, 
-        DefaultSprites offMapSprite=DefaultSprites.none, 
-        DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
+        DefaultSprites offMapSprite=DefaultSprites.circle1W, 
+        DefaultSprites offMapBlinkSprite=DefaultSprites.circleEmptyW, 
         float blinkTime=-1,
         float timeUntilBlinkRepeat=-1
     ) {
@@ -329,10 +347,20 @@ public class UITrackerManager : MonoBehaviour
                 return _instance.circle3;
             case DefaultSprites.circleEmpty:
                 return _instance.circleEmpty;
+            case DefaultSprites.circle1W:
+                return _instance.circle1W;
+            case DefaultSprites.circle2W:
+                return _instance.circle2W;
+            case DefaultSprites.circle3W:
+                return _instance.circle3W;
+            case DefaultSprites.circleEmptyW:
+                return _instance.circleEmptyW;
             case DefaultSprites.pin:
                 return _instance.pin;
             case DefaultSprites.exclamation:
                 return _instance.exclamation;
+            case DefaultSprites.exclamationWhite:
+                return _instance.exclamationWhite;
             case DefaultSprites.playerBlackCircle:
                 return _instance.playerBlackCircle;
             case DefaultSprites.playerBlackCircleEmpty:

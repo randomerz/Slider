@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-//using static Cinemachine.CinemachineSmoothPath;
 
 public class DinoLasersManager : MonoBehaviour
 {
@@ -15,12 +14,14 @@ public class DinoLasersManager : MonoBehaviour
     [SerializeField] private SpriteRenderer[] dinoButtSpriteRenderers; //0 is normal tile 7 butt, 1 is mirage tile 7 butt 
 
     private bool moveEndWasCheckedThisFrame = false;
-    //private bool moveStartWasCheckedThisFrame = false;
 
     [SerializeField] private GameObject firstTimeActivationAnimation;
-    private const string desertDinoLaserActivatedAlready = "desertDinoLaserActivatedAlready";
+    private const string DINO_LASER_ACTIVATED = "desertDinoLaserActivatedAlready";
 
     private bool canFirstTimeActivate = false;
+
+    private bool activationCanceled = false;
+
     public void CheckCanFirstTimeActivate(Condition c) { c.SetSpec(canFirstTimeActivate); }
 
     private void Start()
@@ -40,16 +41,13 @@ public class DinoLasersManager : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        if (debugSkipFezziwigActivation)
+        if (debugSkipFezziwigActivation || SaveSystem.Current.GetBool(DINO_LASER_ACTIVATED))
         {
             Destroy(firstTimeActivationAnimation);
 
-            foreach (DinoLaser dinoLaser in dinoLasers)
-            {
-                dinoLaser.EnableSpriteRenderer(true); //now using post laser dino head (broken skull)
-            }
+            SetSkullSpritesToBroken();
 
-            SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
+            SaveSystem.Current.SetBool(DINO_LASER_ACTIVATED, true);
 
             MirageSTileManager.OnMirageSTilesEnabled += OnMoveEnd;
         }
@@ -62,31 +60,30 @@ public class DinoLasersManager : MonoBehaviour
 
     private void UnSubscribeFromEvents()
     {
-        if (debugSkipFezziwigActivation)
-        {
-            MirageSTileManager.OnMirageSTilesEnabled -= OnMoveEnd;
-        }
-        else
-        {
-            MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
-        }
+        MirageSTileManager.OnMirageSTilesEnabled -= OnMoveEnd;
+        MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
         SGridAnimator.OnSTileMoveStart -= OnMoveStart;
+        SGridAnimator.OnSTileMoveStart -= CancelActivation;
     }
 
     private void LateUpdate()
     {
         moveEndWasCheckedThisFrame = false;
-        //moveStartWasCheckedThisFrame = false;
     }
 
     private void UpdateCanFirstTimeActivate(object sender, System.EventArgs e)
     {
         UpdateCanFirstTimeActivate();
+        if(activationCanceled && canFirstTimeActivate)
+        {
+            activationCanceled = false;
+            FirstTimeActivate();
+        }
     }
 
     private void UpdateCanFirstTimeActivate()
     {
-        bool activatedPreviously = SaveSystem.Current.GetBool(desertDinoLaserActivatedAlready);
+        bool activatedPreviously = SaveSystem.Current.GetBool(DINO_LASER_ACTIVATED);
 
         string gridString = DesertGrid.GetGridString();
 
@@ -102,14 +99,7 @@ public class DinoLasersManager : MonoBehaviour
 
     private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        StartCoroutine(CheckEndOfFrame(() => CheckDisableLasers()));
-    }
-
-    private IEnumerator CheckEndOfFrame(System.Action action)
-    {
-        yield return new WaitForEndOfFrame();
-
-        action?.Invoke();
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => CheckDisableLasers(), this);
     }
 
     private void OnMoveEnd(object sender, System.EventArgs e)
@@ -130,9 +120,9 @@ public class DinoLasersManager : MonoBehaviour
     private void CheckEnableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        if (ShouldNeverHaveLasers() || !MirageSTileManager.GetInstance().MirageEnabled || ! SaveSystem.Current.GetBool("desertDinoLaserActivatedAlready")) 
+        if (ShouldNeverHaveLasers() || !MirageSTileManager.GetInstance().MirageEnabled || ! SaveSystem.Current.GetBool(DINO_LASER_ACTIVATED)) 
             return;
-
+        
         if (CheckGrid.contains(gridString, "74")) //normal tail | normal head
         {
             ActivateButt(true, dinoButtSpriteRenderers[0]);
@@ -225,6 +215,7 @@ public class DinoLasersManager : MonoBehaviour
 
     public void FirstTimeActivate()
     {
+        SGridAnimator.OnSTileMoveStart += CancelActivation;
         StartCoroutine(PlayFirstTimeActivationAnimation());
     }
 
@@ -235,26 +226,36 @@ public class DinoLasersManager : MonoBehaviour
         firstTimeActivationAnimation.SetActive(true);
 
         CameraShake.ShakeIncrease(0.5f, 2);
+        AudioManager.Play("Riser 4s");
 
-        yield return new WaitForSeconds(2.167f); 
+        yield return new WaitForSeconds(4.75f); 
 
         firstTimeActivationAnimation.SetActive(false);
 
         CameraShake.Shake(1, 1);
+        SGridAnimator.OnSTileMoveStart -= CancelActivation;
+
         AudioManager.Play("Slide Explosion", firstTimeActivationAnimation.transform);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, dinoLasers[0].transform.position, dinoLasers[0].transform);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, dinoLasers[1].transform.position, dinoLasers[1].transform);
 
-        foreach (DinoLaser dinoLaser in dinoLasers)
-        {
-            dinoLaser.EnableSpriteRenderer(true); // now using post laser dino head (broken skull)
-        }
+        SetSkullSpritesToBroken();
 
-        SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
+        SaveSystem.Current.SetBool(DINO_LASER_ACTIVATED, true);
 
         MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
 
         MirageSTileManager.OnMirageSTilesEnabled += OnMoveEnd;
 
         CheckEnableLasers();
+    }
+
+    private void CancelActivation(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        StopAllCoroutines();
+        firstTimeActivationAnimation.SetActive(false);
+        activationCanceled = true;
+        SGridAnimator.OnSTileMoveStart -= CancelActivation;
     }
 
     public void RemoveAllLasersPermanently()
@@ -269,6 +270,14 @@ public class DinoLasersManager : MonoBehaviour
             ActivateButt(false, dinoButt);
         }
 
-        MirageSTileManager.OnMirageSTilesEnabled-= OnMoveEnd;
+        UnSubscribeFromEvents();
+    }
+
+    private void SetSkullSpritesToBroken()
+    {
+        foreach (DinoLaser dinoLaser in dinoLasers)
+        {
+            dinoLaser.SetSkullSpriteToBroken();
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MagiLaser : MonoBehaviour, ISavable
@@ -31,8 +32,21 @@ public class MagiLaser : MonoBehaviour, ISavable
     public ArtifactTBPluginLaser laserUI;
     public UILaserManager uILaserManager;
 
+    public Lever laserLever;
+    public BoxCollider2D laserLeverTrigger;
+
+    private const string MAGITECH_FOREMAN_SHUTOFF = "magitechForemanLaserShutoff";
+
     private void Start()
     {
+        if (laserLever != null)
+        {
+            if (SaveSystem.Current.GetBool(MAGITECH_FOREMAN_SHUTOFF) && !SaveSystem.Current.GetBool(DesertChadGTA.CHAD_STARTED_HEIST_SAVE_STRING))
+            {
+                TurnOffLaserLever();
+            }
+        }
+
         SetEnabled(isEnabled);
         
         AudioManager.PlayAmbience("Laser Ambience");
@@ -132,7 +146,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
         // Set origin point
         lr.positionCount = 1;
-        lr.SetPosition(lr.positionCount - 1, pos);
+        lr.SetPosition(0, pos);
         float playerDist;
         
         for (int ct = 0; ct < MAX_LASER_BOUNCES; ct++) {
@@ -244,12 +258,43 @@ public class MagiLaser : MonoBehaviour, ISavable
         if (laserUI != null)
         {
             laserUI.InitAndFindButton();
-            uILaserManager.AddSource(laserUI.laserUIData);
+            if(value)
+                uILaserManager.AddSource(laserUI.laserUIData);
+            else
+                uILaserManager.RemoveSource(laserUI.laserUIData);
         }
 
     }
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
     public void CheckIsEnabled(Condition c) => c.SetSpec(isEnabled);
+
+    public void StartForemanLaserShutoff()
+    {
+        if (SaveSystem.Current.GetBool(DesertChadGTA.CHAD_STARTED_HEIST_SAVE_STRING))
+        {
+            return;
+        }
+
+        StartCoroutine(ForemanLaserShutoff());
+    }
+
+    private IEnumerator ForemanLaserShutoff()
+    {
+        yield return new WaitForSeconds(1f);
+
+        TurnOffLaserLever();
+
+        SaveSystem.Current.SetBool(MAGITECH_FOREMAN_SHUTOFF, true);
+
+        Save();
+    }
+
+    private void TurnOffLaserLever()
+    {
+        SetEnabled(false);
+        laserLever.TurnOffImmediate();
+        laserLeverTrigger.enabled = false;
+    }
 }
 

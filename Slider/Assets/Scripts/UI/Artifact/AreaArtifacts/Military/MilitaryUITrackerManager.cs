@@ -35,7 +35,7 @@ public class MilitaryUITrackerManager : UITrackerManager
         unitTrackerBuffer.Clear();
     }
 
-    private void OnDestroy()
+    public static void ResetTrackers()
     {
         unitTrackerBuffer.Clear();
     }

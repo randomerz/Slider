@@ -20,24 +20,35 @@ public class AchievementManager : Singleton<AchievementManager>
     /// <summary>
     /// Set a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
     /// </summary>
-    public static void SetAchievementStat(string statName, int value)
+    public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value)
     {
+        if (dontGiveIfCheated)
+        {
+            if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
+            {
+                Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because this profile used cheats.");
+                return;
+            }
+        }
+
         if (_instance != null)
         {
             _instance.achievementStats[statName] = value;
+            Debug.Log($"[AchievementManager] Updating {statName} to {value}.");
             _instance.SendAchievementStatsToSteam();
         }
+        
     }
 
     /// <summary>
     /// Increment a statistic with the given key by the given amount. This key needs to match one setup in Steamworks 
     /// (message Daniel or Travis to have them create a statistic!)
     /// </summary>
-    public static void IncrementAchievementStat(string statName, int increment = 1)
+    public static void IncrementAchievementStat(string statName, bool dontGiveIfCheated, int increment = 1)
     {
         if (_instance != null)
         {
-            SetAchievementStat(statName, _instance.achievementStats.GetValueOrDefault(statName, 0) + increment);
+            SetAchievementStat(statName, dontGiveIfCheated, _instance.achievementStats.GetValueOrDefault(statName, 0) + increment);
         }
     }
 

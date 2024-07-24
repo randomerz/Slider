@@ -44,6 +44,9 @@ public partial class ChadChirp
         );
 
     #endregion
+
+    // TODO: refactor to array of RandomSmallTalk strings in the table, then just use the table entry length
+    private const int NUMBER_OF_SMALL_TALKS = 3;
     
     public class ChadChirpData
     {
@@ -69,7 +72,7 @@ public partial class ChadChirp
             // Areas
             new() { 
                 id = "CameFromJungle", 
-                text = "Sorry... I'm not a big fan of the people in Canopy Town.",
+                text = "It's been so long since I've seen Barron... it'd probably be too awkward anyways.",
                 priority = 2,
                 canBeRepeated = true,
             },
@@ -79,15 +82,15 @@ public partial class ChadChirp
                 priority = 2,
                 canBeRepeated = true,
             },
-            new() { 
-                id = "ArrivedInDesert", 
-                text = "Oh... what are we doing here?",
-                priority = 2,
-                canBeRepeated = true,
-            },
+            // new() { 
+            //     id = "ArrivedInDesert", 
+            //     text = "Oh... what are we doing here?",
+            //     priority = 2,
+            //     canBeRepeated = true,
+            // },
             new() { 
                 id = "ArrivedInFactoryPresent", 
-                text = "Hey isn't this area closed to the public?",
+                text = "You know trespassing is a crime right? Right? Please say something.",
                 priority = 2,
                 canBeRepeated = true,
             },
@@ -99,7 +102,7 @@ public partial class ChadChirp
             // },
             new() { 
                 id = "ArrivedInMagiTechPresent", 
-                text = "They've really got some crazy ideas here.",
+                text = "They doing some wild stuff here dude. You know, science.",
                 priority = 2,
                 canBeRepeated = true,
             },
@@ -113,13 +116,19 @@ public partial class ChadChirp
             // General
             new() { 
                 id = "UsedAnchor", 
-                text = "aHh... Sorry that caught me off guard...",
+                text = "What in the- watch where you're dropping that thing!",
                 priority = 1,
                 canBeRepeated = false,
             },
             new() { 
-                id = "WentThroughPortal", 
+                id = "WentThroughPortalPast", 
                 text = "I'll never get used to that...",
+                priority = 1,
+                canBeRepeated = false,
+            },
+            new() { 
+                id = "WentThroughPortalPresent", 
+                text = "I think I'm gonna barf.",
                 priority = 1,
                 canBeRepeated = false,
             },
@@ -133,7 +142,7 @@ public partial class ChadChirp
             },
             new() { 
                 id = "WalkNearLaser", 
-                text = "That laser is so... big...",
+                text = "Woah, who's this guy?",
                 priority = 1,
                 canBeRepeated = false,
             },
@@ -151,7 +160,7 @@ public partial class ChadChirp
             },
             new() { 
                 id = "EnteredMuseum", 
-                text = "The museum? It could use some more artifacts I suppose...",
+                text = "For people with time travel you'd think they'd have more stuff.",
                 priority = 2,
                 canBeRepeated = false,
             },
@@ -165,13 +174,13 @@ public partial class ChadChirp
             // Desert
             new() { 
                 id = "WalkNearCasinoTable", 
-                text = "The location of our final duel...",
+                text = "Yeahhh I'm cool off dice for the time being.",
                 priority = 2,
                 canBeRepeated = false,
             },
             new() { 
                 id = "WalkNearCasinoExplosives", 
-                text = "Wait... what are you going to do with those explosives..?",
+                text = "Explosives..?",
                 priority = 2,
                 canBeRepeated = false,
             },
@@ -203,13 +212,13 @@ public partial class ChadChirp
             },
             new() { 
                 id = "WalkNearPresentMegaCrystal", 
-                text = "Hey, that crystal was in that paper the Archeologist was reading!",
+                text = "Didn't they dig this up recently? The Archeologist was going off about it.",
                 priority = 2,
                 canBeRepeated = false,
             },
             new() { 
                 id = "WalkNearPastMegaCrystal", 
-                text = "That crystal... it's stayed intact for a thousand years?!",
+                text = "That crystal... it's been here for a thousand years?!",
                 priority = 2,
                 canBeRepeated = false,
             },

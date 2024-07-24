@@ -349,7 +349,8 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
     public Sprite tkQuestion;
     public Sprite tkAngry;
     public Sprite tkNone;
-    
+
+    public VocalizableParagraph Vocalizer => vocalizer;
     [SerializeField]
     private VocalizableParagraph vocalizer;
     
@@ -395,7 +396,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         // I thought this was safer than changing the controls to only trigger on press.
         if (context.control.IsPressed())
         {
-            if (currentTyperText.TrySkipText())
+            if (currentTyperText != null && currentTyperText.TrySkipText())
             {
                 // skip typing!
             }
@@ -408,6 +409,8 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
 
     public void SetDialogue(ShopDialogue dialogue)
     {
+        vocalizer.Stop();
+        
         dialogue.onStart?.Invoke();
 
         TMPTextTyper typerText = null;
@@ -1161,7 +1164,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
             
                 new ShopDialogue(
                     null,
-                    this.GetLocalized(ShopDialogueCode.TheVeil, 1),
+                    this.GetLocalized(ShopDialogueCode.TheVeil, 2),
                     TKSprite.Question,
                     () => {
                         FoggyMusicHintManager.Instance.SetBobHint(false);

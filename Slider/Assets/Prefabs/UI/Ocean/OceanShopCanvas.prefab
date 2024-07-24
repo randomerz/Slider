@@ -1881,6 +1881,7 @@ MonoBehaviour:
   - {fileID: 8279323559339082720}
   - {fileID: 8279323559902231064}
   - {fileID: 8279323558721153781}
+  subSelectableSets: []
 --- !u!1 &8279323558144950347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2366,7 +2367,7 @@ MonoBehaviour:
   - {fileID: 2949683498223337671}
   rewardDescriptionText: {fileID: 8279323560015790382}
   progressBar: {fileID: 5375632573213578832}
-  progressAnimationDuration: 1.25
+  progressAnimationDuration: 1.5
   progressAnimationCurve:
     serializedVersion: 2
     m_Curve:
@@ -2418,6 +2419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectables:
   - {fileID: 8279323559282064934}
+  subSelectableSets: []
 --- !u!1 &8279323558264792262
 GameObject:
   m_ObjectHideFlags: 0
@@ -3471,6 +3473,7 @@ MonoBehaviour:
   tkQuestion: {fileID: 21300000, guid: 5f427936cf512ff4a97ed54f3c4c689a, type: 3}
   tkAngry: {fileID: 21300000, guid: dfb7a8f068179cf4e9b3427a3befa1c5, type: 3}
   tkNone: {fileID: 21300000, guid: 59156a7f991f8244bb46124ba8a6da98, type: 3}
+  vocalizer: {fileID: 0}
 --- !u!114 &3248741871879708941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3769,6 +3772,7 @@ MonoBehaviour:
   - {fileID: 8279323558922262530}
   - {fileID: 8279323559550162591}
   - {fileID: 8279323559935779700}
+  subSelectableSets: []
 --- !u!1 &8279323558697861161
 GameObject:
   m_ObjectHideFlags: 0
@@ -10341,6 +10345,7 @@ MonoBehaviour:
   - {fileID: 8279323559981625745}
   - {fileID: 8279323558926924650}
   - {fileID: 8279323559935779700}
+  subSelectableSets: []
 --- !u!1 &8279323559743396011
 GameObject:
   m_ObjectHideFlags: 0
@@ -11598,6 +11603,7 @@ MonoBehaviour:
   - {fileID: 8279323559290781166}
   - {fileID: 8279323558963225145}
   - {fileID: 8279323559935779700}
+  subSelectableSets: []
 --- !u!1 &8279323560015790376
 GameObject:
   m_ObjectHideFlags: 0
@@ -11824,6 +11830,7 @@ MonoBehaviour:
   - {fileID: 8279323559299851395}
   - {fileID: 8279323559067233762}
   - {fileID: 8279323559935779700}
+  subSelectableSets: []
 --- !u!1001 &1437085330471035874
 PrefabInstance:
   m_ObjectHideFlags: 0

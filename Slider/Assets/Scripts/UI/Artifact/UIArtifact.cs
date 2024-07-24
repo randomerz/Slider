@@ -12,7 +12,7 @@ public class UIArtifact : Singleton<UIArtifact>
     [SerializeField] protected int maxMoveQueueSize = 3;
     [SerializeField] private GameObject lightning;
     [SerializeField] private GameObject lightningImage;
-    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when you're on controller and have nothing to select
+    [SerializeField] protected List<GameObject> fallbackButtonsToSelect; // For when you're on controller and have nothing to select
 
     protected ArtifactTileButton buttonSelected;
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
@@ -53,6 +53,7 @@ public class UIArtifact : Singleton<UIArtifact>
     protected virtual void OnDisable()
     {
         ClearQueues();
+        UITrackerManager.ResetStatics();
     }
 
     protected virtual void Start()
@@ -94,10 +95,13 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
 
-        HandleControllerCheck();
+        if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            HandleControllerCheck();
+        }
     }
 
-    private void HandleControllerCheck()
+    protected virtual void HandleControllerCheck()
     {
         if (!UIArtifactMenus.IsArtifactOpen())
         {
@@ -111,14 +115,22 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 if (IsButtonValidForSelection(g))
                 {
-                    EventSystem.current.SetSelectedGameObject(g);
+                    if (g.TryGetComponent<Button>(out Button b))
+                    {
+                        b.Select();
+                    }
+                    else
+                    {
+                        EventSystem.current.SetSelectedGameObject(g);
+                    }
                     return;
                 }
             }
+            Debug.LogWarning($"No buttons were valid for selection for controller.");
         }
     }
 
-    private bool IsButtonValidForSelection(GameObject g)
+    protected bool IsButtonValidForSelection(GameObject g)
     {
         // If selected object is null or deactivated
         if (g == null || !g.activeInHierarchy)

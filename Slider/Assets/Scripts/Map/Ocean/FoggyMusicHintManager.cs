@@ -76,7 +76,6 @@ public class FoggyMusicHintManager : Singleton<FoggyMusicHintManager>
             wasOnLastFrame = false;
         }
 
-        // todo: sfx? will need to refactor
         foreach (ParticleSystem p in particles)
         {
             if (value)

@@ -14,7 +14,6 @@ public partial class ChadChirp : MonoBehaviour, ISavable, IDialogueTableProvider
     public static System.EventHandler<ChadChirpArgs> OnTryChirp; // First come first serve!
 
     private const string CHIRP_SAVE_STRING = "MiscChadFollowPlayerChirp";
-    private const int NUMBER_OF_SMALL_TALKS = 3;
 
     private const float CAN_CHIRP_COOLDOWN = 3.5f; // for special events, like meeting the money wizard
     private static float timeUntilCanChirp;
@@ -202,10 +201,10 @@ public partial class ChadChirp : MonoBehaviour, ISavable, IDialogueTableProvider
         {
             return "CameFromMilitary";
         }
-        if (currentArea == Area.Desert)
-        {
-            return "ArrivedInDesert";
-        }
+        // if (currentArea == Area.Desert)
+        // {
+        //     return "ArrivedInDesert";
+        // }
         if (currentArea == Area.Factory && !FactoryGrid.PlayerInPast)
         {
             return "ArrivedInFactoryPresent";
@@ -229,7 +228,8 @@ public partial class ChadChirp : MonoBehaviour, ISavable, IDialogueTableProvider
     {
         if (!e.betweenAreas)
         {
-            TryChirp("WentThroughPortal");
+            string version = e.fromPast ? "WentThroughPortalPast" : "WentThroughPortalPresent";
+            TryChirp(version);
         }
     }
 }

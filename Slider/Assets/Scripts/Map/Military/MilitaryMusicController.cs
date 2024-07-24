@@ -18,6 +18,10 @@ public class MilitaryMusicController : MonoBehaviour
         {
             SetMilitaryLevel(4);
         }
+        else
+        {
+            SetMilitaryLevel(0);
+        }
         AudioManager.SetGlobalParameter(LOSE_PARAM, 0);
         AudioManager.SetGlobalParameter(WIN_PARAM, 0);
     }

@@ -7,6 +7,6 @@ public class BootsSpeedIncrease : MonoBehaviour
     public void SpeedUp()
     {
         Player.GetInstance().UpdatePlayerSpeed();
-        AchievementManager.SetAchievementStat("collectedBoots", 1);
+        AchievementManager.SetAchievementStat("collectedBoots", false, 1);
     }
 }

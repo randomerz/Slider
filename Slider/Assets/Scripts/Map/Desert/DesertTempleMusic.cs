@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using FMODUnity;
 
 public class DesertTempleMusic : MonoBehaviour
@@ -15,6 +16,11 @@ public class DesertTempleMusic : MonoBehaviour
     private void Awake()
     {
         Init();
+    }
+
+    private void OnDisable()
+    {
+        SetReverb(false);
     }
 
     private void Init()
@@ -45,11 +51,24 @@ public class DesertTempleMusic : MonoBehaviour
         if (isInTemple)
         {
             AudioManager.PlayMusic("Desert Snail", false);
-            reverbEmitter.Play();
         }
         else
         {
             AudioManager.StopMusic("Desert Snail");
+        }
+    }
+
+    public void SetReverb(bool value)
+    {
+        if (reverbEmitter == null)
+            Init();
+
+        if (value)
+        {
+            reverbEmitter.Play();
+        }
+        else
+        {
             reverbEmitter.Stop();
         }
     }

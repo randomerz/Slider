@@ -6,22 +6,23 @@ public class WaterWheelAnimator : MonoBehaviour
 {
     public Animator animatorMain;
     public Animator animatorWater;
+    public SpriteRenderer waterSpriteRenderer;
     public Animator animatorWorm;
     public Animator animatorGenerator;
     public List<WW_GearAnimator> gearAnimators;
     public GameObject waterWheelAmbienceSource;
 
-    private const float WW_SLOW_SPEED = 0.25f;
+    private const float WW_SLOW_SPEED = 0.01f;
     private const float WW_NORMAL_SPEED = 1.0f;
+    private const float WW_SPLASH_CUTOFF = 0.25f;
 
     public string fullSpeedGridRegex = "(3._..|.._3.)_.._..";
     private float targetAnimationSpeed = WW_NORMAL_SPEED;
     private float currentAnimationSpeed = WW_NORMAL_SPEED;
-    private float trackingSpeed = 0.25f;
+    private const float TRACKING_SPEED = 0.25f;
 
     private bool isGear2Frozen = false;
     private bool isGear4Frozen = false;
-    public bool usedTools = false;
 
     private void Awake() 
     {
@@ -49,11 +50,11 @@ public class WaterWheelAnimator : MonoBehaviour
         {
             if (currentAnimationSpeed < targetAnimationSpeed)
             {
-                currentAnimationSpeed = Mathf.Clamp(currentAnimationSpeed + Time.deltaTime * trackingSpeed, WW_SLOW_SPEED, targetAnimationSpeed);
+                currentAnimationSpeed = Mathf.Clamp(currentAnimationSpeed + Time.deltaTime * TRACKING_SPEED, WW_SLOW_SPEED, targetAnimationSpeed);
             }
             else
             {
-                currentAnimationSpeed = Mathf.Clamp(currentAnimationSpeed - Time.deltaTime * trackingSpeed, targetAnimationSpeed, WW_NORMAL_SPEED);
+                currentAnimationSpeed = Mathf.Clamp(currentAnimationSpeed - Time.deltaTime * TRACKING_SPEED, targetAnimationSpeed, WW_NORMAL_SPEED);
             }
             SetAnimationSpeed(currentAnimationSpeed);
         }
@@ -66,17 +67,17 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private bool IsGeneratorOn()
     {
-        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen;
     }
 
     private bool IsFullSpeed()
     {
-        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen;
     }
 
     private void UpdateAnimationSpeedTarget()
     {
-        float newSpeed = IsFullSpeed() ? WW_NORMAL_SPEED : WW_SLOW_SPEED;
+        float newSpeed = CheckGrid.contains(SGrid.GetGridString(), fullSpeedGridRegex) ? WW_NORMAL_SPEED : WW_SLOW_SPEED;
         targetAnimationSpeed = newSpeed;
     }
 
@@ -92,6 +93,18 @@ public class WaterWheelAnimator : MonoBehaviour
         {
             ga.SetSpeed(gearSpeed);
         }
+
+        Color c = waterSpriteRenderer.color;
+        if (speed >= WW_SPLASH_CUTOFF)
+        {
+            c.a = 1;
+        }
+        else
+        {
+            float alpha = Mathf.InverseLerp(0, WW_SPLASH_CUTOFF, speed);
+            c.a = alpha;
+        }
+        waterSpriteRenderer.color = c;
     }
 
     private float Map(float a, float b, float x, float y, float value)
@@ -101,7 +114,7 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private void UpdateGears()
     {
-        if (!isGear2Frozen && !isGear4Frozen && usedTools)
+        if (!isGear2Frozen && !isGear4Frozen)
         {
             // No frozen gears => all move
 

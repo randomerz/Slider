@@ -13,8 +13,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public ElevatorAnimationManager animationManager;
     public bool isSending = false; //true when minecart being sent;
 
-    public List<SpriteSwapper> powerSwappers;
-
     public bool isInBreakingAnimation = false;
     public GameObject crystalchecker;
     public ElectricalNode powerBox;
@@ -47,7 +45,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
         isInBreakingAnimation = true;
         animationManager.Break(fromSave);
         powerBox.StartSignal(false);
-        TogglePowerSprites(false);
     }
 
     public void FixElevator()
@@ -65,7 +62,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
         animationManager.Repair();
         pylon.SetActive(false);
         powerBox.StartSignal(true);
-        TogglePowerSprites(true);
 
         if(!fromSave)
         {
@@ -77,7 +73,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public void SendMinecartDown(Minecart mc)
     {
         if(elevatorState == ElevatorState.BROKEN) return;
-        mc.StopMoving();
+        mc.StopMoving(elevator:true);
         animationManager.SendDown();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3, true));
     }
@@ -85,7 +81,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public void SendMinecartUp(Minecart mc)
     {
         if(elevatorState == ElevatorState.BROKEN) return;
-        mc.StopMoving();
+        mc.StopMoving(elevator:true);
         animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
         hasGoneUp = true;
@@ -103,17 +99,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
         yield return new WaitForSeconds(1.5f);
         mc.StartMoving();
         isSending = false;
-    }
-
-    public void TogglePowerSprites(bool val)
-    {
-        foreach(SpriteSwapper ss in powerSwappers)
-        {
-            if(val)
-                ss.TurnOn();
-            else
-                ss.TurnOff();
-        }
     }
 
     public bool CheckIfShouldBeOpen()
@@ -158,7 +143,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
                 BreakElevator(true);
                 break;
             case ElevatorState.INITIAL:
-                TogglePowerSprites(true);
                 break;
         }
     }

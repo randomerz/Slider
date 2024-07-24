@@ -12,7 +12,5 @@ public class ArtifactTBPluginHousingSprites : ArtifactTBPlugin
     {
         button.SetIslandSprite(housingSprite);
         button.SetCompletedSprite(housingCompletedSprite);
-
-        
     }
 }

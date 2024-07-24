@@ -45,7 +45,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
         UITrackerManager.AddNewTracker(
             alienCommander.gameObject, 
             UITrackerManager.DefaultSprites.exclamation, 
-            UITrackerManager.DefaultSprites.none,
+            UITrackerManager.DefaultSprites.exclamationWhite,
             blinkTime: 3
         );
 
@@ -76,7 +76,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
 
     private IEnumerator DoQueueAlienComplaints()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
 
         alienNPCs[0].TypeCurrentDialogue();
 

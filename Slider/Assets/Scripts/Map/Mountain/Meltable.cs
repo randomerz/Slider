@@ -36,6 +36,7 @@ public class Meltable : FlashWhiteSprite, ISavable
     [SerializeField] private bool refreezeFromBroken = false;
     [SerializeField] private bool fixBackToFrozen = false;
     [SerializeField] private float freezeTime = 5.0f;
+    public bool meltToBroken = false;
 
     public enum MeltableState
     {
@@ -52,6 +53,7 @@ public class Meltable : FlashWhiteSprite, ISavable
 
     private float currFreezeTime;
     private float blinkTime;
+    private bool hasPlayedRiser;
     private bool hasFixed = false;
 
     public List<Lava> lavasources = new();
@@ -67,6 +69,8 @@ public class Meltable : FlashWhiteSprite, ISavable
     }
 
     private void Start() {
+        if(breakToMelted && meltToBroken)
+            Debug.LogError("Break to melted and melt to broken cannot both be true!");
         if (blinkCurve.length > 0)
             blinkTime = blinkCurve[blinkCurve.length - 1].time;
     }
@@ -78,8 +82,15 @@ public class Meltable : FlashWhiteSprite, ISavable
             currFreezeTime -= Time.deltaTime;
             if(state != MeltableState.FROZEN && currFreezeTime < blinkTime && currFreezeTime > 0)
                 ToggleBlinkSprite(blinkTime - currFreezeTime);
-            if(currFreezeTime < 0)
+            if (currFreezeTime < 2f && !hasPlayedRiser && state != MeltableState.FROZEN)
+            {
+                hasPlayedRiser = true;
+                AudioManager.PickSound("Ice Freeze Riser").WithAttachmentToTransform(transform).AndPlay();
+            }
+            if (currFreezeTime < 0)
+            {
                 Freeze();
+            }
         }
     }
 
@@ -140,16 +151,27 @@ public class Meltable : FlashWhiteSprite, ISavable
             {
                 state = MeltableState.BROKEN;
                 numTimesBroken++;
-                if(spriteRenderer)
+                if (spriteRenderer)
+                {
                     spriteRenderer.sprite = anchorBrokenSprite;
+                }
                 onBreak?.Invoke();
                 currFreezeTime = freezeTime;
+                if (!fromLoad)
+                {
+                    AudioManager.PickSound("Ice Break").WithAttachmentToTransform(transform).WithPriorityOverDucking(true).AndPlay();
+                }
             }
         }
     }
 
     public void Melt(bool fromLoad = false)
     {
+        if(meltToBroken)
+        {
+            Break();
+            return;
+        }
         if(fromLoad || (state == MeltableState.FROZEN && numLavaSources > 0)) 
         {
             state = MeltableState.MELTED;
@@ -157,18 +179,23 @@ public class Meltable : FlashWhiteSprite, ISavable
                 spriteRenderer.sprite = meltedSprite;
             onMelt?.Invoke();
             currFreezeTime = freezeTime;
+            if(!fromLoad)
+                AudioManager.PickSound("Ice Melt").WithAttachmentToTransform(transform).AndPlay();
         }
     }
 
     public void Freeze(bool fromLoad = false)
     {
-        if(fromLoad || state != MeltableState.FROZEN)
+        hasPlayedRiser = false;
+        if (fromLoad || state != MeltableState.FROZEN)
         {
             state = MeltableState.FROZEN;
             if(spriteRenderer)
                 spriteRenderer.sprite = hasFixed && newFrozenSprite != null ? newFrozenSprite : frozenSprite;
             onFreeze?.Invoke();
             currFreezeTime = freezeTime;
+            if(!fromLoad)
+                AudioManager.PickSound("Ice Freeze").WithAttachmentToTransform(transform).AndPlay();
         }
     }
 

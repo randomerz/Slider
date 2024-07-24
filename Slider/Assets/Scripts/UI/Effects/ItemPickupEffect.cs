@@ -69,7 +69,7 @@ public class ItemPickupEffect : MonoBehaviour, IDialogueTableProvider
         {
             pickupArea = SGrid.Current.GetArea().ToString();
         }
-        AudioManager.PickSound($"{pickupArea} Pick Up").WithPriorityOverDucking(true).AndPlay();
+        AudioManager.PickSound($"{pickupArea} Pick Up").WithPriorityOverDucking(true).WithSingleInstanceKey("Pick Up").AndPlay();
 
         PauseManager.AddPauseRestriction(owner: gameObject);
         Player.SetCanMove(false);

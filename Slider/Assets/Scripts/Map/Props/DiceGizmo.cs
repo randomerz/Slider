@@ -8,7 +8,8 @@ public class DiceGizmo : MonoBehaviour, ISavable
     [HideInInspector] public STile myStile;
     [SerializeField] private string saveString;
     [SerializeField] private int diceIndex;
-    [SerializeField] private bool onlySoundInHouse;
+    public bool onlySoundInHouse;
+    public bool alsoSoundOutOfHouse;
     [SerializeField] private DiceGizmo otherDice;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private TextMeshProUGUI bgText;
@@ -21,15 +22,24 @@ public class DiceGizmo : MonoBehaviour, ISavable
     public Sprite[] bumpSprites;
 
     private Coroutine diceShakeCoroutine;
-    //public Animator animator; // this is only based on Tree animator controller rn
-    //Chen: Should the above be changed to the Dice animator controller or something?
-    private bool animationFinished = false;
+    private bool animationFinished = true;
+
+    private Transform nonHouseTransform;
 
     private void Awake()
     {
         if (myStile == null)
         {
             FindSTile();
+        }
+    }
+
+    private void Start()
+    {
+        if (transform.position.y < -75)
+        {
+            nonHouseTransform = new GameObject("Dice Non House Transform").transform;
+            nonHouseTransform.position = transform.position + SGrid.GetHousingOffset() * Vector3.up;
         }
     }
 
@@ -98,6 +108,17 @@ public class DiceGizmo : MonoBehaviour, ISavable
             AudioManager
                 .PickSound("Dice Shake")
                 .WithAttachmentToTransform(transform)
+                .WithPitch(pitch)
+                .WithPriorityOverDucking(true)
+                .AndPlay();
+        }
+        if (alsoSoundOutOfHouse)
+        {
+            float pitch = (value != 1) ? 1f : 0.75f;
+            AudioManager
+                .PickSound("Dice Shake")
+                .WithAttachmentToTransform(nonHouseTransform)
+                .WithVolume(1.25f)
                 .WithPitch(pitch)
                 .WithPriorityOverDucking(true)
                 .AndPlay();

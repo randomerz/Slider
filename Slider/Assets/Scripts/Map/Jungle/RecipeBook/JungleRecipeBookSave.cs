@@ -116,7 +116,7 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     public static void IncrementNumberCreated(Shape shape)
     {
-        if (shape == null)
+        if (shape == null || _instance == null)
         {
             return;
         }

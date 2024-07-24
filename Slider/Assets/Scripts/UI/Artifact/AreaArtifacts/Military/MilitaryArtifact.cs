@@ -6,6 +6,13 @@ public class MilitaryArtifact : UIArtifact
 {
     private Coroutine waitForFightsCoroutine;
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        
+        MilitaryUITrackerManager.ResetStatics();
+    }
+
     public override void ProcessQueue()
     {
         if (waitForFightsCoroutine == null && MGFight.numberOfActiveFights > 0)

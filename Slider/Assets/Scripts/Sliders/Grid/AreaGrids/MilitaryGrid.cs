@@ -14,6 +14,8 @@ public class MilitaryGrid : SGrid
     [SerializeField] private List<MilitaryUnspawnedAlly> unspawnedAllies; // dont reset one on #16
 
     [SerializeField] private MilitaryResetChecker militaryResetChecker; // init order makes me cry
+    
+    [SerializeField] private GameObject allSlidersCollectible;
 
     public override void Init()
     {
@@ -33,13 +35,23 @@ public class MilitaryGrid : SGrid
             Debug.LogWarning("Unspawned allies list should be 15 long.");
         }
         
+        // if (
+        //     !SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
+        //     PlayerInventory.Contains("Slider 1", Area.Military)
+        // )
+        if (!SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING))
+        {
+            // Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
+            DoRestartSimulation();
+        }
+        
         if (
-            !SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
-            PlayerInventory.Contains("Slider 1", Area.Military)
+            SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
+            !HasAllTiles()
         )
         {
-            Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
-            DoRestartSimulation();
+            Debug.LogWarning($"[Military] Joined area without collecting all tiles.");
+            allSlidersCollectible.SetActive(true);
         }
     }
 
@@ -88,6 +100,10 @@ public class MilitaryGrid : SGrid
         MilitaryMusicController.DoLoseTrigger();
         UIEffects.Pixelize(
             () => {
+
+                SaveSystem.Current.SetBool("militaryFailedOnce", true);
+                SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
+
                 DoRestartSimulation();
                 AudioManager.Play("TFT Bell");
                 MilitaryMusicController.SetMilitaryLevel(0);
@@ -105,9 +121,6 @@ public class MilitaryGrid : SGrid
         Debug.Log("[Military] Restart sim!");
         OnRestartMilitary?.Invoke(this, new System.EventArgs());
 
-        SaveSystem.Current.SetBool("militaryFailedOnce", true);
-        SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
-
         if (Player.GetInstance().GetSTileUnderneath() != null)
         {
             Player.SetPosition(playerRestartSpawnPosition.position);
@@ -120,9 +133,7 @@ public class MilitaryGrid : SGrid
         MilitaryCollectibleController.Reset();
         MilitaryWaveManager.Reset();
         MilitaryResetChecker.ResetCounters();
-
-        // In case they lost on the final wave!
-        SGrid.Current.CheckCompletion = false;
+        MilitaryTurnAnimator.Reset();
 
         SaveSystem.SaveGame("Finished Restarting Military Sim");
     }
@@ -131,12 +142,13 @@ public class MilitaryGrid : SGrid
     {
         foreach (STile s in grid)
         {
+            UIArtifact.SetButtonComplete(s.islandId, false);
+            gridTilesExplored.SetTileExplored(s.islandId, false);
             if (s.isTileActive)
             {
                 s.SetTileActive(false);
                 UIArtifact.GetInstance().RemoveButton(s);
             }
-            gridTilesExplored.SetTileExplored(s.islandId, false);
         }
 
         if (GetStileAt(0, 3).islandId != 1)
@@ -161,10 +173,21 @@ public class MilitaryGrid : SGrid
         }
     }
 
+    // In case you quit after you win
+    public void EnableAllSliders()
+    {
+        for (int i = 1; i <= 16; i++)
+        {
+            CollectSTile(i);
+        }
+    }
+
     // We want to end player turn after the units are moved
     public void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         // CoroutineUtils.ExecuteAfterEndOfFrame(() => MilitaryTurnManager.EndPlayerTurn(), this);
         MilitaryTurnManager.EndPlayerTurn();
     }
+
+    public void FailedMilitary4Times(Condition c) => c.SetSpec(SaveSystem.Current.GetInt("militaryAttempts") >= 4);
 }

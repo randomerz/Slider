@@ -5,6 +5,7 @@ using UnityEngine;
 public class MilitaryTurnManager : Singleton<MilitaryTurnManager>
 {
     public static System.EventHandler<System.EventArgs> OnPlayerEndTurn;
+    public static System.EventHandler<System.EventArgs> OnEnemyEndTurn;
 
     [SerializeField] private MilitaryUnitCommander enemyCommander;
 
@@ -21,5 +22,7 @@ public class MilitaryTurnManager : Singleton<MilitaryTurnManager>
         {
             _instance.enemyCommander.PerformTurn();
         }
+
+        OnEnemyEndTurn?.Invoke(_instance, new System.EventArgs());
     }
 }

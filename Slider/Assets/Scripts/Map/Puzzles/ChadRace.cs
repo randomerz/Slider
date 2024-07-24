@@ -59,7 +59,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
                 { State.TrackNotSetup, new[] { "Ready to race?" } },
                 { State.NotStarted, new[]
                 {
-                    "Race time! Set up the race track to the bell.",
+                    "Race time! Set up the race track following these cones to the bell.",
                     "GO!"
                 } },
                 { State.Started, new[] { "Hey, no changing the track before the race is done!"} },

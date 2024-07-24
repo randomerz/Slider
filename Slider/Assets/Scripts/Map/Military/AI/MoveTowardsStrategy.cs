@@ -9,13 +9,21 @@ using UnityEngine;
 /// </summary>
 public class MoveTowardsStrategy : ICommanderStrategy
 {
+    private bool log = false;
+
     public void PerformTurn(List<MilitaryUnit> unitsToCommand)
     {
-        unitsToCommand.ForEach(unit => PerformMoveForUnit(unit));
+        if (log) Debug.Log($"===== Starting turn =====");
+        unitsToCommand
+                .OrderBy(unit => ClosestUnitDistance(unit))
+                .ToList()
+                .ForEach(unit => PerformMoveForUnit(unit));
+        if (log) Debug.Log($"===== Ending turn =====");
     }
 
     private void PerformMoveForUnit(MilitaryUnit unit)
     {
+        if (log) Debug.Log($"- Turn for {unit.UnitType} at {unit.GridPosition}. Distance {ClosestUnitDistance(unit)}");
         if (unit.UnitStatus != MilitaryUnit.Status.Active)
         {
             return;
@@ -61,34 +69,64 @@ public class MoveTowardsStrategy : ICommanderStrategy
                                        .FirstOrDefault();
     }
 
+    private float ClosestUnitDistance(MilitaryUnit unit)
+    {
+        return MilitaryUnit.ActiveUnits.ToList()
+                                       .Where(otherUnit => otherUnit.UnitTeam != unit.UnitTeam)
+                                       .Select(otherUnit => Vector2.Distance(unit.GridPosition, otherUnit.GridPosition))
+                                       .DefaultIfEmpty()
+                                       .Min();
+    }
+
     private Vector2Int DirectionTowardsUnit(MilitaryUnit movingUnit, MilitaryUnit target)
     {
         int xDirection = Math.Sign(target.GridPosition.x - movingUnit.GridPosition.x);
         int yDirection = Math.Sign(target.GridPosition.y - movingUnit.GridPosition.y);
+
+        List<Vector2Int> directionPriorities;
 
         // If we could move in either direction, pick one at random
         if (xDirection != 0 && yDirection != 0)
         {
             if (UnityEngine.Random.Range(0, 2) == 1)
             {
-                xDirection = 0;
+                directionPriorities = new() {
+                    new(0, yDirection),
+                    new(xDirection, 0),
+                    new(0, -yDirection),
+                    new(-xDirection, 0),
+                };
             }
             else
             {
-                yDirection = 0;
+                directionPriorities = new() {
+                    new(xDirection, 0),
+                    new(0, yDirection),
+                    new(-xDirection, 0),
+                    new(0, -yDirection),
+                };
+            }
+        }
+        else // Otherwise they were strictly in one direction from us -- x or y == 0
+        {
+            directionPriorities = new() {
+                new(xDirection, yDirection),
+                new(yDirection, xDirection),
+                new(-xDirection, -yDirection),
+                new(-yDirection, -xDirection),
+            };
+        }
+
+        foreach (Vector2Int direction in directionPriorities)
+        {
+            if (PositionIsValid(movingUnit, movingUnit.GridPosition + direction))
+            {
+                return direction;
             }
         }
 
-        Vector2Int move = new(xDirection, yDirection);
-
-        if (!PositionIsValid(movingUnit, movingUnit.GridPosition + move))
-        {
-            Vector2Int pos = movingUnit.GridPosition + move;
-            Debug.Log($"Position Was Invalid: {pos.x}, {pos.y}");
-            return RandomDirection(movingUnit);
-        }
-
-        return new Vector2Int(xDirection, yDirection);
+        Debug.Log($"[MG] Unit at position {movingUnit.GridPosition.x}, {movingUnit.GridPosition.y} couldn't move anywhere.");
+        return RandomDirection(movingUnit);
     }
 
     private Vector2Int RandomDirection(MilitaryUnit unitToMove)

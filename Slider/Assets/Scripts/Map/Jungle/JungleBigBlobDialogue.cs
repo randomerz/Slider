@@ -7,6 +7,11 @@ using UnityEngine;
 public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
 {
     public const string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
+    private readonly List<string> BASIC_SHAPES = new() {
+        "Line",
+        "Semicircle",
+        "Triangle",
+    };
 
     public NPC npc;
     public RecipeList recipeList;
@@ -182,7 +187,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         "Plus" => "Disgusted",
         // "Popsicle" => "Idle",
         "Rail" => "Smug",
-        // "SemiCircle" => "Idle",
+        // "Semicircle" => "Idle",
         // "Ship" => "Idle",
         "Square" => "Idle",
         "Triangle" => "Smug",
@@ -208,6 +213,11 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
 
     private bool IsInRecipeList(string shapeName)
     {
+        if (BASIC_SHAPES.Contains(shapeName))
+        {
+            return true;
+        }
+
         foreach (Recipe recipe in recipeList.list)
         {
             if (recipe.result.shapeName == shapeName)

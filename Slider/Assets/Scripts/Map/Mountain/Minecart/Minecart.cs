@@ -42,6 +42,7 @@ public class Minecart : Item, ISavable
 
     public STile currentSTile;
     public DistanceBasedAmbience minecartAmbience;
+    private const string CRYSTAL_IN_CART_AMBIENCE_NAME = "AmbienceAreCrystalsInMinecart";
 
     private bool dropOnNextMove = false;
 
@@ -60,12 +61,18 @@ public class Minecart : Item, ISavable
     private bool tileSwitch = false; //set to true when halfway between tiles, used for updating animation
 
     [Header("UI")]
-    public Sprite trackerSpriteEmpty;
-    public Sprite trackerSpriteLava;
-    public Sprite trackerSpriteCrystal;
+    public GameObject mcTrackerPrefab;
+    // public Sprite trackerSpriteEmpty;
+    // public Sprite trackerSpriteLava;
+    // public Sprite trackerSpriteCrystal;
+    // public Sprite trackerSpriteEmptyWhite;
+    // public Sprite trackerSpriteLavaWhite;
+    // public Sprite trackerSpriteCrystalWhite;
 
     private bool nextTile = false;
     public LayerMask blocksSpawnMask;
+
+    public static Action OnMinecartStop;
 
 
 
@@ -93,13 +100,14 @@ public class Minecart : Item, ISavable
 
     private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        RemoveCrystals();
         if(currentSTile == null || e.stile == null) return;
         if(e.stile == currentSTile && isMoving) Derail();
     }
 
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
+        RemoveCrystals();
     }
 
     private void OnScrollRearrange(object sender, EventArgs e)
@@ -125,19 +133,27 @@ public class Minecart : Item, ISavable
 
         if (AllMovingConds())
         {
-            if(!minecartAmbience.IsEnabled)
+            if(minecartAmbience != null && !minecartAmbience.IsEnabled)
             {
                 minecartAmbience.SetParameterEnabled(true);
             }
             Move();
         }
         else
-        {
-            if(minecartAmbience.IsEnabled)
+        {   
+            if(minecartAmbience != null && minecartAmbience.IsEnabled)
             {
                 minecartAmbience.SetParameterEnabled(false);
             }
             animator.SetSpeed(0);
+        }
+    }
+
+    private void RemoveCrystals()
+    {
+        if(mcState == MinecartState.Crystal) 
+        {
+            UpdateState(MinecartState.Empty);
         }
     }
 
@@ -218,7 +234,7 @@ public class Minecart : Item, ISavable
         UITrackerManager.RemoveTracker(gameObject);
         animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
-            UpdateState(MinecartState.Empty, addTracker: false);
+            UpdateState(MinecartState.Empty);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -326,14 +342,14 @@ public class Minecart : Item, ISavable
 
     public void StartMoving() 
     {
-        if(isOnTrack && canStartMoving && !collisionPause)
+        if(isOnTrack && canStartMoving)
         {
             isMoving = true; 
             animator.SetSpeed(1);
         } 
     }
 
-    public void StopMoving(bool onTrack = false)
+    public void StopMoving(bool onTrack = false, bool elevator = false)
     {
         isMoving = false;
         if(!onTrack)
@@ -344,6 +360,8 @@ public class Minecart : Item, ISavable
         }
         collisionPause = false;
         collidingObjects.Clear();
+        if(!elevator)
+            OnMinecartStop?.Invoke();
     }
 
     public void ResetTiles()
@@ -361,8 +379,11 @@ public class Minecart : Item, ISavable
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
-        if(currentTile == null)
-            print("current tile null");
+        if(currentTile == null && direction == -1)
+        {
+            Debug.LogWarning("Cannot get default direction of null tile!");
+            return;
+        }
         currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
@@ -443,6 +464,8 @@ public class Minecart : Item, ISavable
 
     private bool TryGetNextTileDiffRM()
     {
+        if(SGrid.Current == null)
+            return false;
         List<STile> stileList = SGrid.Current.GetActiveTiles();
         List<RailManager> rmList = new List<RailManager>();
         Vector3Int targetLoc;
@@ -517,6 +540,8 @@ public class Minecart : Item, ISavable
 
     private STile CheckDropTileBelow()
     {
+        if(SGrid.Current == null)
+            return null;
         Vector3 checkloc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)) + GetTileOffsetVector(currentDirection);
         STile tile = null;
         var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.4f, 0);
@@ -615,10 +640,14 @@ public class Minecart : Item, ISavable
 
     #region State
 
-    public void UpdateState(MinecartState state, bool addTracker = true){
+    public void UpdateState(MinecartState state){
+        if(state == mcState) return;
+        if(mcState == MinecartState.Crystal)
+        {
+            AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 0);
+            AudioManager.Play("Gem Break");
+        }
         mcState = state;
-        if(addTracker)
-            UpdateIcon();
         UpdateContentsSprite();
     }
 
@@ -627,6 +656,7 @@ public class Minecart : Item, ISavable
         if(mcState != MinecartState.Crystal)
         {
             UpdateState(MinecartState.Crystal); 
+            AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 1);
             return true;
         }
         return false;
@@ -637,20 +667,14 @@ public class Minecart : Item, ISavable
 
     #region UI
 
-    private void UpdateIcon()
-    {
-        UITrackerManager.RemoveTracker(gameObject);
-        AddTracker();
-    }
 
     private void AddTracker()
     {
-        if(mcState == MinecartState.Lava)
-            UITrackerManager.AddNewTracker(gameObject, trackerSpriteLava);
-        else if(mcState == MinecartState.Crystal)
-            UITrackerManager.AddNewTracker(gameObject, trackerSpriteCrystal);
-        else if(mcState == MinecartState.Empty)
-            UITrackerManager.AddNewTracker(gameObject, trackerSpriteEmpty);
+        if(mcTrackerPrefab == null) return;
+        GameObject trackerObj = Instantiate(mcTrackerPrefab);
+        UITrackerMinecart tracker = trackerObj.GetComponent<UITrackerMinecart>();
+        tracker.minecart = this;
+        UITrackerManager.AddNewCustomTracker(tracker, gameObject);
     }
 
     #endregion
@@ -674,6 +698,7 @@ public class Minecart : Item, ISavable
         //magic number based on enum order
         int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
+        AudioManager.PickSound("Minecart Corner").WithAttachmentToTransform(transform).AndPlay();
     }
     
     private void PlayStraightAnimation()

@@ -23,6 +23,12 @@ public class UITracker : MonoBehaviour
     private float defaultTimeUntilBlinkRepeat = -1;
     private float timeUntilBlinkRepeat; // start countdown same time as blink starts
 
+    private void Start()
+    {
+        image.sprite = DetermineCurrentSprite(false);
+        image.SetNativeSize();
+    }
+
     private void Update() 
     {
         if (shouldBlink)

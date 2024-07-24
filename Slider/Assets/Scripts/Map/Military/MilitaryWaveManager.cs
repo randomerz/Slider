@@ -219,7 +219,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         AudioManager.Play("Puzzle Complete");
 
         UIArtifactWorldMap.SetAreaStatus(Area.Military, ArtifactWorldMapArea.AreaStatus.color);
-        UIArtifactMenus._instance.OpenArtifactAndShow(1, true);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
 
         SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
         GiveAchievements();
@@ -227,10 +227,11 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     private void GiveAchievements()
     {
-        AchievementManager.SetAchievementStat("completedMilitary", 1);
-        if (MilitaryResetChecker._instance.NumUnspawnedAlliesActive > 0)
+        AchievementManager.SetAchievementStat("completedMilitary", false, 1);
+        // todo check number spawned instead
+        if (MilitaryResetChecker.TOTAL_POSSIBLE_ALLIES - MilitaryResetChecker._instance.NumSpawnedAllies > 1)
         {
-            AchievementManager.SetAchievementStat("militaryExtraAlly", 1);
+            AchievementManager.SetAchievementStat("militaryExtraAlly", true, 1);
         }
     }
 }
