@@ -117,6 +117,30 @@ public partial class ChadChirp
                 priority = 2,
                 canBeRepeated = false,
             },
+            new() { 
+                id = "WalkNearGemReflectionPool", 
+                text = "This is... mystical...",
+                priority = 2,
+                canBeRepeated = false,
+            },
+            new() { 
+                id = "ReflectionPoolCutscene", 
+                text = "Woah!",
+                priority = 2,
+                canBeRepeated = false,
+            },
+            new() { 
+                id = "ArcheologistTalkedAfterReflectionPool", 
+                text = "We've got all the gems? Let's bring them back!",
+                priority = 2,
+                canBeRepeated = false,
+            },
+            new() { 
+                id = "WalkNearRocketFinal", 
+                text = "This is it, huh? The point of no return.",
+                priority = 2,
+                canBeRepeated = false,
+            },
             
             // Desert
             new() { 
