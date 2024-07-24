@@ -288,6 +288,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         switch (_uiState)
         {
             case States.None:
+                UINavigationManager.CurrentMenu = null;
                 break;
             case States.Main:
                 UINavigationManager.CurrentMenu = mainPanel;
@@ -307,6 +308,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
                 }
                 break;
             case States.Dialogue:
+                UINavigationManager.CurrentMenu = null;
                 break;
         }
     }
