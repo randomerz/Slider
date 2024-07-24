@@ -166,7 +166,7 @@ public class SaveProfile
     public void Save()
     {
         lastSaved = System.DateTime.Now;
-        SetBool("isDemoBuild", true);
+        // SetBool("isDemoBuild", true);
         SaveSavablesData();
         this.gameVersion = Application.version;
         AchievementData = AchievementManager.GetAchievementData();
