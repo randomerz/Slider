@@ -286,7 +286,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
        
        foreach (var locale in projectConfiguration.InitialLocales)
        {
-           LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale);
+           LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale, globalStrings);
            string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
            
            WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, tempDirectory), serializedConfigs);
