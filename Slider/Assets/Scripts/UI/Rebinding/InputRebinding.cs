@@ -35,7 +35,8 @@ public class InputRebinding
                       {
                           CompleteRebindingOperation(rebindingOperation);
                           RemoveDuplicateBindings(controlToRebind);
-                          WriteCurrentBindingsToPlayerPrefs();
+                          WriteCurrentBindingsToPlayerPrefs(); // should this be moved to the front of these few?
+                          OnRebindCompleted?.Invoke(); // so that if you copy another one it will properly update
                       })
                       .OnCancel((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
                       {
@@ -47,7 +48,7 @@ public class InputRebinding
     {
         Controls.Bindings.Enable();
         rebindingOperation.Dispose();
-        OnRebindCompleted?.Invoke();
+        // OnRebindCompleted?.Invoke();
         rebindIsInProgress = false;
     }
 

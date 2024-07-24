@@ -127,7 +127,7 @@ public class MountainGrid : SGrid
             StartCoroutine(ShowButtonAndMapCompletions());
             SaveSystem.Current.SetBool("completedMountain", true);
             AchievementManager.SetAchievementStat("completedMountain", false, 1);
-            if(minecart.NumPickups <= 2 && gemMachine.numGems >= 3)
+            if(minecart.NumPickups <= 1 && gemMachine.numGems >= 3)
             {
                 AchievementManager.SetAchievementStat("mountainMinMinecart", true, 1);
             }
@@ -142,7 +142,7 @@ public class MountainGrid : SGrid
         switch(minecart.mcState)
         {
             case MinecartState.Crystal:
-                minecart.UpdateState(MinecartState.Empty);
+                minecart.UpdateState(MinecartState.Empty, false);
                 SetCrystalDelivered();
                 break;
             case MinecartState.Lava:

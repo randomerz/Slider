@@ -156,7 +156,7 @@ public class GemMachine : MonoBehaviour, ISavable
     {
         if(numGems == 1) return;
         numGems = 1;
-        minecart.UpdateState(MinecartState.Empty);
+        minecart.UpdateState(MinecartState.Empty, false);
         animator.Play("part1");
         //TODO: Play absorb crystal sound
     }
@@ -167,7 +167,7 @@ public class GemMachine : MonoBehaviour, ISavable
             return; 
         numGems++;
         animator.Play("AbsorbGem");
-        minecart.UpdateState(MinecartState.Empty);
+        minecart.UpdateState(MinecartState.Empty, false);
         //TODO: Play absorb crystal sound
         if(numGems == 3)
         {
