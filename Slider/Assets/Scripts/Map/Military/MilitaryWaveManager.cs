@@ -44,12 +44,12 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     {
         nextWaveIndex = 0;
         nextSpawnIndex = 0;
-        lastSpawnedType = (MilitaryUnit.Type)Random.Range(0, 3);
+        lastSpawnedType = (MilitaryUnit.Type)SeededRandom.Range(0, 3);
 
         // Shuffle order
         for (int i = 0; i < spawnPositions.Length; i++)
         {
-            int r = Random.Range(i, spawnPositions.Length);
+            int r = SeededRandom.Range(i, spawnPositions.Length);
             (spawnPositions[i], spawnPositions[r]) = (spawnPositions[r], spawnPositions[i]);
         }
     }

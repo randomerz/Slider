@@ -34,7 +34,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
             return;
         }
 
-        SetUnitType((MilitaryUnit.Type)Random.Range(0, 3));
+        SetUnitType((MilitaryUnit.Type)SeededRandom.Range(0, 3));
 
         UITrackerManager.AddNewTracker(gameObject, sprite: UITrackerManager.DefaultSprites.pin);
     }

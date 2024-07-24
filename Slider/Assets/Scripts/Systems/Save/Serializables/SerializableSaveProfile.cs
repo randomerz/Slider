@@ -28,6 +28,8 @@ public class SerializableSaveProfile
     public string[] floats_Keys;
     public float[] floats_Values;
     public AchievementStatistic[] achievementData;
+    public Random.State randomState;
+    public bool randomStateInit;
 
     public static SerializableSaveProfile FromSaveProfile(SaveProfile saveProfile)
     {
@@ -57,6 +59,8 @@ public class SerializableSaveProfile
         ssp.floats_Values = saveProfile.GetFloatsDictionary().Values.ToArray();
 
         ssp.achievementData = saveProfile.AchievementData;
+        ssp.randomState = saveProfile.GetRandomState();
+        ssp.randomStateInit = saveProfile.GetRandomStateInit();
 
         return ssp;
     }
@@ -113,6 +117,8 @@ public class SerializableSaveProfile
         }
 
         sp.AchievementData = achievementData;
+        sp.SetRandomState(randomState);
+        sp.SetRandomStateInit(randomStateInit);
 
         return sp;
     }

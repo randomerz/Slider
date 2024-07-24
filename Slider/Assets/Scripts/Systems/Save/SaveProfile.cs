@@ -21,6 +21,8 @@ public class SaveProfile
     private Dictionary<string, int> ints = new Dictionary<string, int>();
     private Dictionary<string, float> floats = new Dictionary<string, float>();
     public AchievementStatistic[] AchievementData { get; set; }
+    private Random.State randomState;
+    private bool randomStateInit = false;
 
     // Cached stuff
     // nothing bc i dont know what to do bc scenes exist
@@ -90,6 +92,26 @@ public class SaveProfile
     public void SetLastSaved(System.DateTime value)
     {
         lastSaved = value;
+    }
+
+    public bool GetRandomStateInit()
+    {
+        return randomStateInit;
+    }
+
+    public void SetRandomStateInit(bool init)
+    {
+        randomStateInit = init;
+    }
+
+    public Random.State GetRandomState()
+    {
+        return randomState;
+    }
+
+    public void SetRandomState(Random.State state)
+    {
+        randomState = state;
     }
 
     public SerializablePlayer GetSerializablePlayer()
