@@ -88,7 +88,7 @@ public class MoveTowardsStrategy : ICommanderStrategy
         // If we could move in either direction, pick one at random
         if (xDirection != 0 && yDirection != 0)
         {
-            if (UnityEngine.Random.Range(0, 2) == 1)
+            if (SeededRandom.Range(0, 2) == 1)
             {
                 directionPriorities = new() {
                     new(0, yDirection),
@@ -137,7 +137,7 @@ public class MoveTowardsStrategy : ICommanderStrategy
             return new Vector2Int(0, 0);
         }
 
-        int randomIndex = UnityEngine.Random.Range(0, validDirections.Count() - 1);
+        int randomIndex = SeededRandom.Range(0, validDirections.Count() - 1);
         return validDirections.ToArray()[randomIndex];
     }
 
