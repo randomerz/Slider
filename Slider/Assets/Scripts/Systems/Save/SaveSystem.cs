@@ -246,6 +246,6 @@ public class SaveSystem
 
     public static string GetBackupFilePath(int index)
     {
-        return Application.persistentDataPath + string.Format("/slider{0}-backup.cat", index);
+        return Application.persistentDataPath + string.Format("/backup-slider{0}.cat", index);
     }
 }
