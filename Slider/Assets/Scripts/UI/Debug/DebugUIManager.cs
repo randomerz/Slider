@@ -146,8 +146,17 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
+    private void SetCheated()
+    {
+        if (SaveSystem.Current != null)
+        {
+            SaveSystem.Current.SetBool("UsedCheats", true);
+        }
+    }
+
     public void BroadcastMessageToAllObjects()
     {
+        SetCheated();
         string[] p = consoleText.text.Split(new char[]{' '}, 2);
 
         commandIndex = commandHistory.Count;
@@ -201,7 +210,8 @@ public class DebugUIManager : MonoBehaviour
         int[,] grid = new int[sgrid.Width, sgrid.Height];
 
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
-        if (target.Contains("*"))
+        // idk why the code below doesnt work for military
+        if (target.Contains("*") || sgrid is MilitaryGrid)
         {
             for (int j = 1; j <= sgrid.Width * sgrid.Height; j++)
             {
@@ -229,8 +239,12 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.SetGrid(grid);
     }
 
-    public void SpawnAnchor() => Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
-    
+    public void SpawnAnchor()
+    {
+        SetCheated();
+        Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
+    }
+
     public void GPTC(string collectibleName) => SGrid.Current.GivePlayerTheCollectible(collectibleName);
     
     public void Give(string collectibleName) => SGrid.Current.GivePlayerTheCollectible(collectibleName);
@@ -308,14 +322,20 @@ public class DebugUIManager : MonoBehaviour
 
     public void NoClip()
     {
+        SetCheated();
         Player p = GameObject.Find("Player").GetComponent<Player>();
         p.toggleCollision();
     }
 
-    public void EnableScroll() => PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+    public void EnableScroll()
+    {
+        SetCheated();
+        PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+    }
 
     public void GiveBoots()
     {
+        SetCheated();
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Boots", Area.Jungle));
         Player.GetInstance().UpdatePlayerSpeed();
     }

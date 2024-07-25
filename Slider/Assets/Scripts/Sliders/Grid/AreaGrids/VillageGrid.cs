@@ -25,21 +25,22 @@ public class VillageGrid : SGrid
 
     public CameraDolly introCameraDolly;
     public const string INTRO_CUTSCENE_SAVE_STRING = "villageIntroCutscene";
+    private const string VILLAGE_PENDING_COMPLETE = "villagePendingComplete";
 
     public override void Init()
     {
         InitArea(Area.Village);
         base.Init();
-
-        if (fishOn)
-        {
-            particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
-        }
     }
 
     protected override void Start()
     {
         base.Start();
+
+        if (fishOn)
+        {
+            particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
+        }
 
         AudioManager.PlayMusic("Village");
         
@@ -48,6 +49,12 @@ public class VillageGrid : SGrid
             UITrackerManager.AddNewTracker(slider2Collectible, sprite: UITrackerManager.DefaultSprites.circle3, blinkTime: 3);
         }
         CheckHole();
+
+        
+        if (SaveSystem.Current.GetBool(VILLAGE_PENDING_COMPLETE) && !PlayerInventory.Contains("Slider 9", Area.Village))
+        {
+            placeTile9Coroutine = StartCoroutine(PlaceTile9());
+        }
     }
 
     private void OnEnable()
@@ -63,11 +70,9 @@ public class VillageGrid : SGrid
     private void OnDisable()
     {
         introCameraDolly.OnRollercoasterEnd -= OnVillageCutsceneEnd;
-        if (checkCompletion)
-        {
-            SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
-            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
-        }
+
+        SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
     }
 
     public override void Save()
@@ -269,7 +274,7 @@ public class VillageGrid : SGrid
         gridAnimator.ChangeMovementDuration(0.5f);
 
         checkCompletion = true;
-        SaveSystem.Current.SetBool("forceAutoMove", true);
+        SaveSystem.Current.SetBool("forceAutoMoveVillage", true);
         SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
 
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
@@ -291,14 +296,15 @@ public class VillageGrid : SGrid
 
             // Disable artifact movement
             UIArtifact.DisableMovement(false);
-            SaveSystem.Current.SetBool("forceAutoMove", false);
+            SaveSystem.Current.SetBool("forceAutoMoveVillage", false);
+            SaveSystem.Current.SetBool(VILLAGE_PENDING_COMPLETE, true);
 
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
 
-            AchievementManager.SetAchievementStat("completedVillage", 1);
+            AchievementManager.SetAchievementStat("completedVillage", false, 1);
             if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
             {
-                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", true, 1);
             }
         }
     }

@@ -7,9 +7,9 @@ public class DinoLaser : MonoBehaviour
 
     public UILaserManager uILaserManager;
 
-    public void EnableSpriteRenderer(bool on)
+    public void SetSkullSpriteToBroken()
     {
-        spriteRenderer.enabled = on;
+        spriteRenderer.enabled = true;
     }
 
     public void SetSprite(Sprite sprite)

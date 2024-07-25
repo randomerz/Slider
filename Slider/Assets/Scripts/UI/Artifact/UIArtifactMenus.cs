@@ -18,6 +18,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public bool hasArtifact = true;
     private bool isArtifactOpen;
     private bool isClosing = false;
+    private bool keepArtifactOpen = false;
 
     private List<Button> selectibles;
     private Dictionary<Button, Navigation.Mode> navMode;
@@ -105,6 +106,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
         //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged += OnPauseStateChanged;
+        FactoryTimeGlitch.TimeGlitchPauseStateChanged += OnPauseStateChanged;
         Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
@@ -122,6 +124,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
         //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged -= OnPauseStateChanged;
+        FactoryTimeGlitch.TimeGlitchPauseStateChanged -= OnPauseStateChanged;
         Player.OnControlSchemeChanged -= ToggleNavigation;
     }
 
@@ -170,6 +173,12 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     public void CloseArtifact(bool canOpen = true)
     {
+        if (keepArtifactOpen)
+        {
+            AudioManager.PickSound("Hat Click").WithVolume(0.5f).WithPitch(0.7f).AndPlay();
+            return;
+        }
+
         if (isArtifactOpen)
         {
             isArtifactOpen = false;
@@ -180,6 +189,15 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
             artifactAnimator.SetBool("isVisible", false);
             isClosing = true;
+        }
+    }
+
+    public static void SetKeepArtifactOpen(bool value)
+    {
+        _instance.keepArtifactOpen = value;
+        if (!IsArtifactOpen())
+        {
+            _instance.OpenArtifact();
         }
     }
 

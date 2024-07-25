@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UITrackerManager : MonoBehaviour
 {
     protected static UITrackerManager _instance;
+    public static UITrackerManager Instance => _instance;
 
     public bool trackHousingAccurately = false;
     
@@ -67,6 +68,7 @@ public class UITrackerManager : MonoBehaviour
 
     private static List<UITrackerData> uiTrackerBuffer = new List<UITrackerData>();
     private static List<UITrackerEnumData> uiTrackerEnumBuffer = new List<UITrackerEnumData>();
+    private static List<UITracker> uiCustomTrackerBuffer = new List<UITracker>();
 
     private static List<GameObject> removeBuffer = new List<GameObject>();
 
@@ -76,8 +78,13 @@ public class UITrackerManager : MonoBehaviour
     public Sprite circle2;
     public Sprite circle3;
     public Sprite circleEmpty;
+    public Sprite circle1W;
+    public Sprite circle2W;
+    public Sprite circle3W;
+    public Sprite circleEmptyW;
     public Sprite pin;
     public Sprite exclamation;
+    public Sprite exclamationWhite;
     
     public Sprite playerBlackCircle;
     public Sprite playerBlackCircleEmpty;
@@ -96,8 +103,13 @@ public class UITrackerManager : MonoBehaviour
         circle2,
         circle3,
         circleEmpty,
+        circle1W,
+        circle2W,
+        circle3W,
+        circleEmptyW,
         pin,
         exclamation,
+        exclamationWhite,
         playerBlackCircle,
         playerBlackCircleEmpty,
         playerWhiteCircle,
@@ -123,6 +135,15 @@ public class UITrackerManager : MonoBehaviour
                 x--;
             }
         }
+        foreach (UITracker uiTracker in uiCustomTrackerBuffer)
+        {
+            uiTracker.transform.SetParent(transform);
+            uiTracker.transform.localScale = Vector3.one; // Canvas auto rescaling prefabs
+            
+            targets.Add(uiTracker);
+        }
+        uiCustomTrackerBuffer.Clear();
+        Player.GetInstance().AddTracker();
     }
 
     void LateUpdate()
@@ -133,6 +154,14 @@ public class UITrackerManager : MonoBehaviour
         foreach (UITracker tracker in targets) {
             UpdateTrackerPostion(tracker);
         }
+    }
+
+    public static void ResetStatics()
+    {
+        uiTrackerBuffer.Clear();
+        uiTrackerEnumBuffer.Clear();
+        uiCustomTrackerBuffer.Clear();
+        removeBuffer.Clear();
     }
 
     private void PruneDestroyedTrackers()
@@ -147,7 +176,7 @@ public class UITrackerManager : MonoBehaviour
         }
     }
 
-    private void UpdateTrackerPostion(UITracker tracker)
+    protected virtual void UpdateTrackerPostion(UITracker tracker)
     {
         int islandId;
         currentTile = tracker.GetSTile(out islandId);
@@ -233,8 +262,8 @@ public class UITrackerManager : MonoBehaviour
         GameObject target, 
         DefaultSprites sprite=DefaultSprites.circle1, 
         DefaultSprites blinkSprite=DefaultSprites.circleEmpty, 
-        DefaultSprites offMapSprite=DefaultSprites.none, 
-        DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
+        DefaultSprites offMapSprite=DefaultSprites.circle1W, 
+        DefaultSprites offMapBlinkSprite=DefaultSprites.circleEmptyW, 
         float blinkTime=-1,
         float timeUntilBlinkRepeat=-1
     ) {
@@ -269,7 +298,6 @@ public class UITrackerManager : MonoBehaviour
             uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime, timeUntilBlinkRepeat));
             return;
         }
-
         GameObject tracker = GameObject.Instantiate(_instance.uiTrackerPrefab, _instance.transform);
         UITracker uiTracker = tracker.GetComponent<UITracker>();
         uiTracker.target = target;
@@ -291,6 +319,12 @@ public class UITrackerManager : MonoBehaviour
     public static UITracker AddNewCustomTracker(UITracker tracker, GameObject target)
     {
         tracker.target = target;
+        if (_instance == null)
+        {
+            uiCustomTrackerBuffer.Add(tracker);
+            return tracker;
+        }
+
         tracker.transform.SetParent(_instance.transform);
         tracker.transform.localScale = Vector3.one; // Canvas auto rescaling prefabs
         
@@ -313,10 +347,20 @@ public class UITrackerManager : MonoBehaviour
                 return _instance.circle3;
             case DefaultSprites.circleEmpty:
                 return _instance.circleEmpty;
+            case DefaultSprites.circle1W:
+                return _instance.circle1W;
+            case DefaultSprites.circle2W:
+                return _instance.circle2W;
+            case DefaultSprites.circle3W:
+                return _instance.circle3W;
+            case DefaultSprites.circleEmptyW:
+                return _instance.circleEmptyW;
             case DefaultSprites.pin:
                 return _instance.pin;
             case DefaultSprites.exclamation:
                 return _instance.exclamation;
+            case DefaultSprites.exclamationWhite:
+                return _instance.exclamationWhite;
             case DefaultSprites.playerBlackCircle:
                 return _instance.playerBlackCircle;
             case DefaultSprites.playerBlackCircleEmpty:

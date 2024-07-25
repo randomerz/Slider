@@ -26,9 +26,13 @@ public class Portal : MonoBehaviour
     private bool isTeleporting;
     public Transform desyncItemFallbackSpawn;
 
+    private bool playerAllowedToUse = true;
+    public void SetPlayerAllowedToUse(bool allowed) { playerAllowedToUse = allowed; }
+
     public class OnTimeChangeArgs : System.EventArgs
     {
         public bool fromPast;
+        public bool betweenAreas;
     }
 
     [System.Serializable]
@@ -42,7 +46,7 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerEnter()
     {
-        if(playerInPortal || isTeleporting) return;
+        if(playerInPortal || isTeleporting || !playerAllowedToUse) return;
         
         playerInPortal = true;
         recentPortal = portalEnum;
@@ -54,22 +58,32 @@ public class Portal : MonoBehaviour
         }
         else
         {
-            AudioManager.Play("Portal");
-            sceneChanger.ChangeScenes();
+            if (sceneChanger != null)
+            {
+                AudioManager.Play("Portal");
+                sceneChanger.ChangeScenes();
+            }
+            else
+            {
+                Debug.LogError($"sceneChanger was null. Doing nothing");
+            }
         }
         
     }
 
     private void InitTeleport()
     {
-        UIEffects.FadeFromScreenshot(Teleport);
+        UIEffects.FadeFromScreenshot(screenshotCallback: Teleport, type: UIEffects.ScreenshotEffectType.PORTAL);
     }
 
     private void Teleport()
     {
         AudioManager.Play("Portal");
         Player.SetPosition(otherPortal.spawnPoint.position);
-        OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = portalEnum is PortalEnum.MAGITECH_PAST });
+        OnTimeChange?.Invoke(this, new OnTimeChangeArgs { 
+            fromPast = portalEnum == PortalEnum.MAGITECH_PAST,
+            betweenAreas = portalEnum == PortalEnum.MAGITECH_TO_DESERT || portalEnum == PortalEnum.DESERT_TO_MAGITECH
+        });
         isTeleporting = false;
         UIEffects.FadeFromBlack(alpha:0.5f);
     }

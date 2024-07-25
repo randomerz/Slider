@@ -78,6 +78,7 @@ public class PortalTease : MonoBehaviour
         {
             AudioManager.Play("MagicChimes2");
             AudioManager.Play("Rumble Decrease 2.5s");
+            AudioManager.Play("Portal Open");
 
             ParticleManager.SpawnParticle(
                 ParticleType.SmokePoof, realPortal.transform.position, realPortal.transform

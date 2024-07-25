@@ -88,6 +88,7 @@ public class SaveSystem
 
     public static void SetCurrentProfile(int index)
     {
+        Debug.Log($"[Saves] Setting current profile to {index}");
         currentIndex = index;
         Current = GetProfile(index);
     }
@@ -101,24 +102,24 @@ public class SaveSystem
         if (currentIndex == -1)
             return;
 
-        if (reason != "") Debug.Log($"[Saves] Saving game: {reason}");
+        if (reason != "") Debug.Log($"[Saves] [{System.DateTime.Now}] Saving game: {reason}");
 
         Current.Save();
         SetProfile(currentIndex, Current);
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(Current);
 
-        SaveToFile(profile, currentIndex);
+        string path = GetFilePath(currentIndex);
+        SaveToFile(profile, path);
     }
 
-    private static void SaveToFile(SerializableSaveProfile profile, int index)
+    private static void SaveToFile(SerializableSaveProfile profile, string path)
     {
         // Debug.Log($"[File IO] Saving data to file {index}.");
 
-        BinaryFormatter formatter = new BinaryFormatter();
+        BinaryFormatter formatter = new();
         formatter.Binder = AssemblyRemapBinder;
 
-        string path = GetFilePath(index);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         formatter.Serialize(stream, profile);
@@ -136,6 +137,38 @@ public class SaveSystem
         }
 
         stream.Close();
+    }
+
+    /// <summary>
+    /// Saves a backup of each profile, to be called when you quit the application.
+    /// </summary>
+    public static void SaveBackups()
+    {
+        Debug.Log($"[Saves] Creating backups of save profiles...");
+        for (int i = 0; i < 3; i++)
+        {
+            if (saveProfiles[i] != null)
+            {
+                try 
+                {
+                    string path = GetBackupFilePath(i);
+                    SerializableSaveProfile existingBackup = LoadFromFile(path);
+                    if (existingBackup != null && existingBackup.lastSaved == saveProfiles[i].GetLastSaved())
+                    {
+                        continue;
+                    }
+                    
+                    Debug.Log($"[Saves] Saving backup for profile {i}");
+                    SaveToFile(SerializableSaveProfile.FromSaveProfile(saveProfiles[i]), path);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"Error when saving backups: {e.Message}");
+                    Debug.Log(e.StackTrace);
+                }
+            }
+        }
+        Debug.Log($"[Saves] Done!");
     }
 
     public static void LoadSaveProfile(int index)
@@ -166,14 +199,14 @@ public class SaveSystem
 
     public static SerializableSaveProfile GetSerializableSaveProfile(int index)
     {
-        return LoadFromFile(index);
+        string path = GetFilePath(index);
+        return LoadFromFile(path);
     }
 
-    private static SerializableSaveProfile LoadFromFile(int index)
+    private static SerializableSaveProfile LoadFromFile(string path)
     {
         // Debug.Log($"[File IO] Loading data from file {index}.");
 
-        string path = GetFilePath(index);
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -209,5 +242,10 @@ public class SaveSystem
     public static string GetFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
+    }
+
+    public static string GetBackupFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/backup-slider{0}.cat", index);
     }
 }

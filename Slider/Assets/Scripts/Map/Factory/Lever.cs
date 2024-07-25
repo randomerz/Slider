@@ -27,7 +27,7 @@ public class Lever : ElectricalNode
 
     private void Start() 
     {
-        if (powerOnStart) 
+        if (powerOnStart && !shouldSaveLeverState) 
         {
             _targetVisualOn = true;     
             SetState(true);
@@ -35,11 +35,12 @@ public class Lever : ElectricalNode
 
         if (shouldSaveLeverState)
         {
-            if (SaveSystem.Current.GetBool(saveLeverString))
+            bool shouldBePowered = SaveSystem.Current.GetBool(saveLeverString, powerOnStart);
+            _targetVisualOn = shouldBePowered;
+            _animator.SetBool("isOn", shouldBePowered);
+            //_animator.SetTrigger("Switched");
+            if (shouldBePowered)
             {
-                _targetVisualOn = true;
-                _animator.SetBool("isOn", true);
-                //_animator.SetTrigger("Switched");
                 StartSignal(true);
             }
         }
@@ -82,6 +83,17 @@ public class Lever : ElectricalNode
         _pConds.DisableConditionals();
         _targetVisualOn = false;
         SetState(false);
+    }
+
+    public void TurnOffImmediate()
+    {
+        _targetVisualOn = false;
+        SetState(false);
+
+        if (shouldSaveLeverState) // stay powered
+        {
+            SaveSystem.Current.SetBool(saveLeverString, false);
+        }
     }
 
     private void HandleBlackoutEnded()
@@ -159,6 +171,11 @@ public class Lever : ElectricalNode
         });
 
         StartSignal(false);
+
+        if (shouldSaveLeverState) // stay powered
+        {
+            SaveSystem.Current.SetBool(saveLeverString, false);
+        }
         
         yield return new WaitUntil(() =>
         {

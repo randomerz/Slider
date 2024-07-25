@@ -16,12 +16,28 @@ public class Collectible : MonoBehaviour
             this.name = name;
             this.area = area;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not CollectibleData)
+                return false;
+
+            return (
+                this.name == (obj as CollectibleData).name && 
+                this.area == (obj as CollectibleData).area
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            return name.GetHashCode() + area.GetHashCode();
+        }
     }
 
     public UnityEvent onCollect;
 
     [SerializeField] private CollectibleData cData;
-    [SerializeField] private bool shouldDisableAtStart = false;
+    public bool shouldDisableAtStart = false;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleType particle = ParticleType.SmokePoof;
     
@@ -72,13 +88,15 @@ public class Collectible : MonoBehaviour
     {
         PlayerInventory.AddCollectible(this);
         onCollect.Invoke();
+        SaveSystem.SaveGame($"New Collectible: {GetName()}");
     }
 
-    public void SpawnCollectable()
+    public void SpawnCollectable(bool withAudio = true)
     {
         if(!gameObject.activeSelf)
         {
-            AudioManager.Play("Puzzle Complete");
+            if (withAudio)
+                AudioManager.Play("Puzzle Complete");
             ParticleManager.SpawnParticle(particle, transform.position, transform);
         }
         gameObject.SetActive(true);
@@ -107,7 +125,7 @@ public class Collectible : MonoBehaviour
     public void ActivateSTile(int stileId) 
     {
         SGrid.Current.CollectSTile(stileId);
-        AchievementManager.IncrementAchievementStat("slidersCollected");
+        AchievementManager.IncrementAchievementStat("slidersCollected", false);
     }
 
 

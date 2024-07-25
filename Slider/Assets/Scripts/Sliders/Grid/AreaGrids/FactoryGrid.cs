@@ -7,6 +7,7 @@ public class FactoryGrid : SGrid
     // [Header("FactoryGrid")]
     // [SerializeField] private PowerCrystal powerCrystal;
     public FactoryMusicController factoryMusicController;
+    [HideInInspector] public SceneSpawns DefaultSpawnFactoryPast;
 
     public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
     private bool _lastPlayerInPast = false;
@@ -23,11 +24,17 @@ public class FactoryGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Factory");
+        AudioManager.PlayAmbience("Conveyor Ambience");
 
         if (PlayerInPast)
         {
             Player.SetIsInHouse(true);
         }
+    }
+
+    private void OnDestroy()
+    {
+        AudioManager.StopAmbience("Conveyor Ambience");
     }
 
     private void Update()
@@ -62,7 +69,7 @@ public class FactoryGrid : SGrid
     public void CheckForFactoryCompletion() {
         if(CheckGrid.contains(GetGridString(), "851_769_243")) {
             StartCoroutine(ShowButtonAndMapCompletions());
-            AchievementManager.SetAchievementStat("completedFactory", 1);
+            AchievementManager.SetAchievementStat("completedFactory", false, 1);
         }
     }
 

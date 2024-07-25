@@ -543,6 +543,16 @@ MonoBehaviour:
       Path: event:/SFX/Desert/Croco Grab Sequence
     canPause: 1
     dopplerScale: 0
+  - name: Crocodile Grab Credits
+    fmodEvent:
+      Guid:
+        Data1: -587457833
+        Data2: 1260283301
+        Data3: -200842345
+        Data4: -1941101863
+      Path: event:/SFX/Desert/Croco Grab Credits
+    canPause: 1
+    dopplerScale: 1
   - name: Water Drop Water
     fmodEvent:
       Guid:
@@ -613,6 +623,26 @@ MonoBehaviour:
       Path: event:/SFX/Factory/Conveyor
     canPause: 1
     dopplerScale: 0
+  - name: New Electricity Connection
+    fmodEvent:
+      Guid:
+        Data1: 356693765
+        Data2: 1082072421
+        Data3: -1406706810
+        Data4: 1566924189
+      Path: event:/SFX/Factory/New Electricity Connection
+    canPause: 1
+    dopplerScale: 1
+  - name: Timed Gate Blip
+    fmodEvent:
+      Guid:
+        Data1: -1050060160
+        Data2: 1301476572
+        Data3: -229267575
+        Data4: -2034114845
+      Path: event:/SFX/Factory/Timed Gate Blip
+    canPause: 1
+    dopplerScale: 1
   - name: FactoryTimedGateProgress1
     fmodEvent:
       Guid:
@@ -673,6 +703,46 @@ MonoBehaviour:
       Path: event:/SFX/Factory/FactoryTimedGateProgress6
     canPause: 1
     dopplerScale: 0
+  - name: Door Close
+    fmodEvent:
+      Guid:
+        Data1: -1300320525
+        Data2: 1111566356
+        Data3: 1432835515
+        Data4: 656102306
+      Path: event:/SFX/Factory/Door Close
+    canPause: 1
+    dopplerScale: 1
+  - name: Door Open
+    fmodEvent:
+      Guid:
+        Data1: -2031074387
+        Data2: 1241479446
+        Data3: 1143661468
+        Data4: -683558658
+      Path: event:/SFX/Factory/Door Open
+    canPause: 1
+    dopplerScale: 1
+  - name: Gate Close
+    fmodEvent:
+      Guid:
+        Data1: 1133531243
+        Data2: 1260610556
+        Data3: -2030582887
+        Data4: 121544536
+      Path: event:/SFX/Magic/Gate Close
+    canPause: 1
+    dopplerScale: 1
+  - name: Gate Open
+    fmodEvent:
+      Guid:
+        Data1: -930386557
+        Data2: 1161988989
+        Data3: -615845453
+        Data4: -1854336289
+      Path: event:/SFX/Magic/Gate Open
+    canPause: 1
+    dopplerScale: 1
   - name: Portal
     fmodEvent:
       Guid:
@@ -683,14 +753,14 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Portal
     canPause: 1
     dopplerScale: 1
-  - name: Desync Tear Open
+  - name: Portal Open
     fmodEvent:
       Guid:
-        Data1: -597605736
-        Data2: 1252623518
-        Data3: 1345641131
-        Data4: 257574772
-      Path: event:/SFX/Magic/Desync Tear Open
+        Data1: 1361104093
+        Data2: 1221380617
+        Data3: -1018079580
+        Data4: -1086575032
+      Path: event:/SFX/Magic/Portal Open
     canPause: 1
     dopplerScale: 1
   - name: Desync Tear Close
@@ -703,6 +773,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 1
     dopplerScale: 1
+  - name: Desync Disappear
+    fmodEvent:
+      Guid:
+        Data1: -1590503866
+        Data2: 1107121218
+        Data3: 1978478499
+        Data4: -488886213
+      Path: event:/SFX/Magic/Desync Disappear
+    canPause: 1
+    dopplerScale: 1
   - name: Laser Start
     fmodEvent:
       Guid:
@@ -712,6 +792,16 @@ MonoBehaviour:
         Data4: 1519040509
       Path: event:/SFX/Magic/Laser Start
     canPause: 1
+    dopplerScale: 1
+  - name: MagiTech Blast Off
+    fmodEvent:
+      Guid:
+        Data1: 1220219775
+        Data2: 1123818392
+        Data3: 420059827
+        Data4: 1703775011
+      Path: event:/SFX/Music One Shots/MagiTech Blast Off
+    canPause: 0
     dopplerScale: 1
   - name: Footstep Concrete
     fmodEvent:
@@ -751,6 +841,236 @@ MonoBehaviour:
         Data3: -1389713231
         Data4: 305745240
       Path: event:/SFX/Footsteps/player_footstep_wood
+    canPause: 1
+    dopplerScale: 1
+  - name: Mountain Elevator
+    fmodEvent:
+      Guid:
+        Data1: -881019166
+        Data2: 1294186805
+        Data3: 1343572899
+        Data4: 330862246
+      Path: event:/SFX/Mountain/Elevator Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Gear Broken
+    fmodEvent:
+      Guid:
+        Data1: 1345957030
+        Data2: 1109695666
+        Data3: -791405156
+        Data4: 412299415
+      Path: event:/SFX/Mountain/Gear Broken
+    canPause: 1
+    dopplerScale: 1
+  - name: Gear Normal
+    fmodEvent:
+      Guid:
+        Data1: 1470445256
+        Data2: 1313843504
+        Data3: 221609628
+        Data4: 1362399444
+      Path: event:/SFX/Mountain/Gear Normal
+    canPause: 1
+    dopplerScale: 1
+  - name: Gem Dispenser
+    fmodEvent:
+      Guid:
+        Data1: 1249323241
+        Data2: 1269872161
+        Data3: 1701197442
+        Data4: -606097297
+      Path: event:/SFX/Mountain/Gem Dispenser
+    canPause: 1
+    dopplerScale: 1
+  - name: Gem Sucker
+    fmodEvent:
+      Guid:
+        Data1: 1791969112
+        Data2: 1326203270
+        Data3: 1052095145
+        Data4: -678476088
+      Path: event:/SFX/Mountain/Gem Sucker Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Waterwheel Click
+    fmodEvent:
+      Guid:
+        Data1: -1110061029
+        Data2: 1142005405
+        Data3: 2037914017
+        Data4: -123553937
+      Path: event:/SFX/Mountain/Ice Freeze Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Break
+    fmodEvent:
+      Guid:
+        Data1: 1372051354
+        Data2: 1144223496
+        Data3: 668972688
+        Data4: -932103813
+      Path: event:/SFX/Mountain/Ice Break
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Freeze
+    fmodEvent:
+      Guid:
+        Data1: -1110061029
+        Data2: 1142005405
+        Data3: 2037914017
+        Data4: -123553937
+      Path: event:/SFX/Mountain/Ice Freeze Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Freeze Riser
+    fmodEvent:
+      Guid:
+        Data1: 1318870318
+        Data2: 1201196550
+        Data3: 147842988
+        Data4: 43205369
+      Path: event:/SFX/Mountain/Ice Freeze Riser
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Melt
+    fmodEvent:
+      Guid:
+        Data1: -922968427
+        Data2: 1239088195
+        Data3: -798732869
+        Data4: 1223304254
+      Path: event:/SFX/Mountain/Ice Melt
+    canPause: 1
+    dopplerScale: 1
+  - name: Minecart Corner
+    fmodEvent:
+      Guid:
+        Data1: 1187539897
+        Data2: 1212163520
+        Data3: 1596107655
+        Data4: 1491869152
+      Path: event:/SFX/Mountain/Minecart Corner
+    canPause: 1
+    dopplerScale: 1
+  - name: Pipe Fill
+    fmodEvent:
+      Guid:
+        Data1: -305969014
+        Data2: 1166233899
+        Data3: -1941263966
+        Data4: 362449177
+      Path: event:/SFX/Mountain/Pipe Fill
+    canPause: 1
+    dopplerScale: 1
+  - name: Dog Bark 1
+    fmodEvent:
+      Guid:
+        Data1: 541813952
+        Data2: 1106627644
+        Data3: -2048116586
+        Data4: -2061847869
+      Path: event:/SFX/Mountain/Dog Bark 1
+    canPause: 1
+    dopplerScale: 1
+  - name: Dog Bark 2
+    fmodEvent:
+      Guid:
+        Data1: -1960056638
+        Data2: 1341876692
+        Data3: -1421887319
+        Data4: -1876793318
+      Path: event:/SFX/Mountain/Dog Bark 2
+    canPause: 1
+    dopplerScale: 1
+  - name: Create Save
+    fmodEvent:
+      Guid:
+        Data1: -1856851136
+        Data2: 1126459929
+        Data3: 1073995402
+        Data4: -1425913766
+      Path: event:/SFX/Misc/Create Save
+    canPause: 1
+    dopplerScale: 1
+  - name: Delete Save
+    fmodEvent:
+      Guid:
+        Data1: -1284638036
+        Data2: 1230321032
+        Data3: 1850472612
+        Data4: 1758497326
+      Path: event:/SFX/Misc/Delete Save
+    canPause: 1
+    dopplerScale: 1
+  - name: Tavern Riser
+    fmodEvent:
+      Guid:
+        Data1: -1271920401
+        Data2: 1301148058
+        Data3: -199264590
+        Data4: 1019113601
+      Path: event:/SFX/Ocean/Tavern Rise
+    canPause: 1
+    dopplerScale: 1
+  - name: Tavern Release
+    fmodEvent:
+      Guid:
+        Data1: -1072163900
+        Data2: 1119902337
+        Data3: 623612560
+        Data4: -906851318
+      Path: event:/SFX/Ocean/Tavern Release
+    canPause: 1
+    dopplerScale: 1
+  - name: Riser 4s
+    fmodEvent:
+      Guid:
+        Data1: 244967003
+        Data2: 1080178520
+        Data3: -1402608985
+        Data4: -1547189196
+      Path: event:/SFX/Misc/Riser 4s
+    canPause: 1
+    dopplerScale: 1
+  - name: Slime Footstep
+    fmodEvent:
+      Guid:
+        Data1: -271067349
+        Data2: 1246741567
+        Data3: 992163510
+        Data4: -2051836301
+      Path: event:/SFX/Footsteps/slime_footstep
+    canPause: 0
+    dopplerScale: 1
+  - name: Gem Break
+    fmodEvent:
+      Guid:
+        Data1: 713813467
+        Data2: 1286336347
+        Data3: 1016629426
+        Data4: 1564241696
+      Path: event:/SFX/Mountain/Gem Break
+    canPause: 1
+    dopplerScale: 1
+  - name: Glass Crash Before
+    fmodEvent:
+      Guid:
+        Data1: -1198057820
+        Data2: 1132763407
+        Data3: 783080626
+        Data4: -1603765405
+      Path: event:/SFX/Misc/Glass Crash Before
+    canPause: 1
+    dopplerScale: 1
+  - name: Glass Crash After
+    fmodEvent:
+      Guid:
+        Data1: -900397401
+        Data2: 1182935530
+        Data3: -1149190268
+        Data4: -578417515
+      Path: event:/SFX/Misc/Glass Crash After
     canPause: 1
     dopplerScale: 1
   music:
@@ -881,6 +1201,114 @@ MonoBehaviour:
       Path: event:/Music/MagiTech BGM
     emitter: {fileID: 0}
   ambience:
+  - name: Campfire
+    fmodEvent:
+      Guid:
+        Data1: -1389724339
+        Data2: 1096560050
+        Data3: 1150475672
+        Data4: 1755165757
+      Path: event:/Ambience/Campfire
+    emitter: {fileID: 0}
+  - name: Conveyor Ambience
+    fmodEvent:
+      Guid:
+        Data1: -1473993799
+        Data2: 1336296597
+        Data3: 1525560736
+        Data4: -2101295235
+      Path: event:/Ambience/Conveyor Ambience
+    emitter: {fileID: 0}
+  - name: Desync Tear Open
+    fmodEvent:
+      Guid:
+        Data1: -597605736
+        Data2: 1252623518
+        Data3: 1345641131
+        Data4: 257574772
+      Path: event:/Ambience/Desync Tear Open
+    emitter: {fileID: 0}
+  - name: Electricity Ambience
+    fmodEvent:
+      Guid:
+        Data1: -1021225431
+        Data2: 1283700488
+        Data3: -1207084662
+        Data4: -1894469130
+      Path: event:/Ambience/Electricity Ambience
+    emitter: {fileID: 0}
+  - name: Forest Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1355750639
+        Data2: 1190431554
+        Data3: -1960262746
+        Data4: 1288741103
+      Path: event:/Ambience/Forest Ambience
+    emitter: {fileID: 0}
+  - name: Gem Ambience
+    fmodEvent:
+      Guid:
+        Data1: -320554550
+        Data2: 1141466373
+        Data3: 1395523715
+        Data4: 981422767
+      Path: event:/Ambience/Mountain/Gem Ambience
+    emitter: {fileID: 0}
+  - name: Laser Ambience
+    fmodEvent:
+      Guid:
+        Data1: -268719974
+        Data2: 1210375164
+        Data3: 1937589907
+        Data4: -1284581935
+      Path: event:/Ambience/Laser Ambience
+    emitter: {fileID: 0}
+  - name: Lava Ambience
+    fmodEvent:
+      Guid:
+        Data1: 2002110272
+        Data2: 1087352959
+        Data3: 177102507
+        Data4: 865687615
+      Path: event:/Ambience/Mountain/Lava
+    emitter: {fileID: 0}
+  - name: Magnet Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1829374046
+        Data2: 1102029550
+        Data3: -246341494
+        Data4: 2069037299
+      Path: event:/Ambience/Magnet Ambience
+    emitter: {fileID: 0}
+  - name: Minecart Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1465748197
+        Data2: 1254049805
+        Data3: -301586019
+        Data4: -750450934
+      Path: event:/Ambience/Mountain/Minecart Ambience
+    emitter: {fileID: 0}
+  - name: Pipe Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1757817469
+        Data2: 1313016578
+        Data3: -1506555720
+        Data4: -407871025
+      Path: event:/Ambience/Pipe Ambience
+    emitter: {fileID: 0}
+  - name: Portal Ambience
+    fmodEvent:
+      Guid:
+        Data1: -268719974
+        Data2: 1210375164
+        Data3: 1937589907
+        Data4: -1284581935
+      Path: event:/Ambience/Laser Ambience
+    emitter: {fileID: 0}
   - name: Waterfall
     fmodEvent:
       Guid:
@@ -899,32 +1327,14 @@ MonoBehaviour:
         Data4: -410703076
       Path: event:/Ambience/Waterfall Caves
     emitter: {fileID: 0}
-  - name: Campfire
+  - name: Waterwheel Ambience
     fmodEvent:
       Guid:
-        Data1: -1389724339
-        Data2: 1096560050
-        Data3: 1150475672
-        Data4: 1755165757
-      Path: event:/Ambience/Campfire
-    emitter: {fileID: 0}
-  - name: Forest Ambience
-    fmodEvent:
-      Guid:
-        Data1: 1355750639
-        Data2: 1190431554
-        Data3: -1960262746
-        Data4: 1288741103
-      Path: event:/Ambience/Forest Ambience
-    emitter: {fileID: 0}
-  - name: Laser Ambience
-    fmodEvent:
-      Guid:
-        Data1: -268719974
-        Data2: 1210375164
-        Data3: 1937589907
-        Data4: -1284581935
-      Path: event:/Ambience/Laser Ambience
+        Data1: -189242726
+        Data2: 1227907376
+        Data3: -1523523706
+        Data4: -1247538484
+      Path: event:/Ambience/Mountain/Waterwheel Ambience
     emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2
@@ -969,3 +1379,5 @@ MonoBehaviour:
   duckingDbFactor: 0.5
   duckingThreshold: -14
   dialogueDuckingDbFactor: 0.75
+  duckingSmoothnessInverted: 6.42
+  maxConcurrentSpeakers: 2

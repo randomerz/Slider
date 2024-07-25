@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Localization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// <para>
@@ -18,12 +21,21 @@ using UnityEngine;
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
-    private static Dictionary<Settings, ISetting> settings = new();
+    private static readonly Dictionary<Settings, ISetting> settings = new();
+    public static readonly Dictionary<Settings, Action<object>> OnSettingChanged = new();
 
-    void Awake()
+    private void Awake()
+    {
+        if (settings.Count == 0)
+        {
+            Init();
+        }
+    }
+
+    private static void Init()
     {
         RegisterAndLoadSetting(Settings.MasterVolume,
-            defaultValue: 1f,
+            defaultValue: 0.5f,
             onValueChanged: value => AudioManager.SetMasterVolume(value)
         );
         RegisterAndLoadSetting(Settings.SFXVolume,
@@ -47,6 +59,9 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.HighContrastTextEnabled,
             defaultValue: false
         );
+        RegisterAndLoadSetting(Settings.PixelFontEnabled,
+            defaultValue: true
+        );
         RegisterAndLoadSetting(Settings.Colorblind,
             defaultValue: false
         );
@@ -57,43 +72,50 @@ public class SettingsManager : MonoBehaviour
             defaultValue: true
         );
         RegisterAndLoadSetting(Settings.MiniPlayerIcon,
-            defaultValue: false
-        );
-        RegisterAndLoadSetting(Settings.AutoMove,
             defaultValue: false,
-            onValueChanged: (value) => 
+            onValueChanged: (value) =>
             {
-                if (!value && !GameUI.instance.isMenuScene && SaveSystem.Current != null) 
-                    SaveSystem.Current.SetBool("forceAutoMove", false);
+                Player.AddTrackerOnSettingsChange();
             }
         );
-        RegisterAndLoadSetting(Settings.ScreenMode,
-            defaultValue: FullScreenMode.ExclusiveFullScreen,
-            onValueChanged: (value) => Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, value)
+        // This is not currently used, but may be put back into the UI later
+        RegisterAndLoadSetting(Settings.AutoMove,
+            defaultValue: false,
+            onValueChanged: (value) =>
+            {
+                /*if (!value && !GameUI.instance.isMenuScene && SaveSystem.Current != null) 
+                    SaveSystem.Current.SetBool("forceAutoMove", false);*/
+            }
         );
-        RegisterAndLoadSetting(Settings.Resolution,
-            defaultValue: new Resolution(1920, 1080),
-            onValueChanged: (value) => Screen.SetResolution(value.width, value.height, Screen.fullScreenMode)
+        RegisterAndLoadSetting(Settings.PlayAudioWhenUnfocused,
+            defaultValue: false,
+            onValueChanged: (value) => Application.runInBackground = value
         );
-        RegisterAndLoadSetting(Settings.Vsync,
-            defaultValue: 1, // Vsync enabled
-            onValueChanged: (value) => QualitySettings.vSyncCount = value
-        );
-        RegisterAndLoadSetting(Settings.TargetFrameRate,
-            defaultValue: -1, // Target frame rate disabled
-            onValueChanged: (value) => Application.targetFrameRate = value
-        );
+        
+        RegisterAndLoadSetting(Settings.Locale,
+            defaultValue: LocalizationFile.DefaultLocale,
+            onValueChanged: (locale) =>
+            {
+            });
+
+        RegisterAndLoadSetting(Settings.PixelFontEnabled,
+            defaultValue: true,
+            onValueChanged: (pixelFontEnabled) => { });
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)
     {
-        settings[setting] = new Setting<T>
+        Setting<T> newSetting = new Setting<T>
         (
             playerPrefsKey: setting.PlayerPrefsKey(),
-            defaultValue: defaultValue, 
+            defaultValue: defaultValue,
             onValueChanged: onValueChanged
         );
-        settings[setting].LoadFromPlayerPrefs();
+        settings[setting] = newSetting;
+
+        OnSettingChanged[setting] = new Action<object>((newSettingValue) => { });
+        newSetting.OnValueChanged += newSettingValue => OnSettingChanged[setting]?.Invoke(newSettingValue);
+        newSetting.LoadFromPlayerPrefs();
     }
 
     /// <summary>
@@ -104,6 +126,11 @@ public class SettingsManager : MonoBehaviour
     /// <returns></returns>
     public static Setting<T> Setting<T>(Settings setting)
     {
+        if (!settings.ContainsKey(setting))
+        {
+            Debug.LogWarning($"Could not find ${setting} in Settings. Likely was not able to initialize settings!");
+            Init();
+        }
         return (Setting<T>)settings[setting];
     }
 
@@ -117,22 +144,9 @@ public class SettingsManager : MonoBehaviour
     {
         return settings[setting];
     }
-}
 
-[System.Serializable]
-public class Resolution
-{
-    public int width;
-    public int height;
-
-    public Resolution(int width, int height)
+    public static void ResetAllSettingsToDefaults()
     {
-        this.width = width;
-        this.height = height;
-    }
-
-    public static Resolution FromUnityStruct(UnityEngine.Resolution unityStruct)
-    {
-        return new Resolution(unityStruct.width, unityStruct.height);
+        settings.Values.ToList().ForEach(setting => setting.ResetToDefaultValue());
     }
 }

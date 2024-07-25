@@ -20,6 +20,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
     // includes BGFrame colliders, stile colliders, collider tilemap, etc
     protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; 
 
+    [SerializeField] protected Direction defaultDirection = 0;
     [SerializeField] protected string saveString = "";
 
     [Header("References")]
@@ -27,6 +28,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
     [SerializeField] private SpriteRenderer debugSpriteRenderer;
     [SerializeField] private LayerMask raycastLayerMask;
     [SerializeField] protected JungleSignAnimator signAnimator;
+    [SerializeField] protected ParticleTrail particleTrail;
 
     protected virtual void Awake()
     {
@@ -118,7 +120,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
             return;
         }
 
-        direction = (Direction)profile.GetInt(saveString);
+        direction = (Direction)profile.GetInt(saveString, (int)defaultDirection);
     }
 
     /// <summary>
@@ -182,6 +184,11 @@ public abstract class JungleBox : MonoBehaviour, ISavable
         // Raycast to find new box
         JungleBox other = GetBoxInDirection(direction);
         targetBox = other;
+        if (other != null && particleTrail != null)
+        {
+            particleTrail.trailTarget = other.transform;
+            particleTrail.SpawnParticleTrail(shouldRepeat: false);
+        }
 
         TrySendAfterUpdateDirection(direction, targetBox, signAnimator);
 
@@ -306,7 +313,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
         }
         else
         {
-            pathController.DisableMarching(sendingDirection);
+            pathController?.DisableMarching(sendingDirection);
         }
     }
 

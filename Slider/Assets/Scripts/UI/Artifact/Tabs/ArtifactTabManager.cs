@@ -7,6 +7,7 @@ using System;
 public class ArtifactTabManager : MonoBehaviour 
 {
     public static System.EventHandler<System.EventArgs> AfterScrollRearrage;
+    public static System.EventHandler<System.EventArgs> OnUIArtifactExternallyUpdated; // To be invoked by other methods
 
     public List<ArtifactTab> tabs = new List<ArtifactTab>();
     protected ArtifactTab realignTab;
@@ -25,16 +26,25 @@ public class ArtifactTabManager : MonoBehaviour
     public Sprite saveEmptyTabSprite;
     public Sprite loadEmptyTabSprite;
 
+    public ScrollTextEffects saveEffect;
+    public ScrollTextEffects loadEffect;
+
     private int[,] originalGrid;
 
     public bool InPreview { get; private set; }
 
     private Coroutine hoverCoroutine = null;
     private Coroutine clickCoroutine = null;
+    private bool justClickedLoad;
 
     protected virtual void Awake()
     {
         InitTabs();
+
+        if (saveEffect == null || loadEffect == null)
+        {
+            Debug.LogError($"SaveEffect or LoadEffect was null. Probably because TabManager was overriden, please assign them in this scene!");
+        }
     }
 
     protected void InitTabs()
@@ -44,20 +54,35 @@ public class ArtifactTabManager : MonoBehaviour
         loadTab = tabs[2];
     }
 
+    protected virtual void OnEnable()
+    {
+        UIArtifact.MoveMadeOnArtifact += ButtonInteract;
+        SGrid.OnSTileCollected += OnSTileCollected;
+        OnUIArtifactExternallyUpdated += UIArtifactExternallyUpdated;
+    }
+
+    protected virtual void OnDisable()
+    {
+        UIArtifact.MoveMadeOnArtifact -= ButtonInteract;
+        SGrid.OnSTileCollected -= OnSTileCollected;
+        OnUIArtifactExternallyUpdated -= UIArtifactExternallyUpdated;
+        justClickedLoad = false;
+    }
+
     public virtual void SetCurrentScreen(int screenIndex)
     {
-        if(realignTab == null)
+        if (realignTab == null)
             InitTabs();
-        #region SaveLoadRealign Cases
+            
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {   
-            //Realign case
-            if (SGrid.Current.HasAllTiles() && !SGrid.Current.AllButtonsComplete()) {
+            // Realign case
+            if (SGrid.Current.HasAllTiles()) {
                 realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
                 saveTab.SetIsVisible(false);
                 loadTab.SetIsVisible(false);
             }
-            else //Save Load Case
+            else // Save Load Case
             {
                 realignTab.SetIsVisible(false);
                 saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
@@ -71,7 +96,17 @@ public class ArtifactTabManager : MonoBehaviour
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
         }
-        #endregion
+    }
+
+    private void ButtonInteract(object sender, System.EventArgs e)
+    {
+        justClickedLoad = false;
+    }
+
+    private void OnSTileCollected(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        SGrid.Current.ResetRealigningGrid();
+        SetSaveLoadTabSprites(false);
     }
 
 
@@ -81,9 +116,23 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void RearrangeOnClick()
     {
-        if (isRearranging)
+        if (SGrid.Current.AllButtonsComplete())
+        {
             return;
+        }
+
+        if (SGrid.Current.TargetGrid.Contains("*"))
+        {
+            AudioManager.Play("Artifact Error");
+            return;
+        }
+
+        if (isRearranging)
+        {
+            return;
+        }
         isRearranging = true;
+
         StartCoroutine(IRearrangeOnClick());
     }
 
@@ -100,14 +149,19 @@ public class ArtifactTabManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         AudioManager.Play("Rumble Decrease 5s");
 
-        UIEffects.FlashWhite(callbackMiddle: () => {
-            SGrid.Current.RearrangeGrid();
+        UIEffects.FlashWhite(
+            callbackMiddle: () => {
+                SGrid.Current.RearrangeGrid();
 
-            PauseManager.RemovePauseRestriction(owner: gameObject);
-            isRearranging = false;
+                PauseManager.RemovePauseRestriction(owner: gameObject);
 
-            AfterScrollRearrage?.Invoke(this, new System.EventArgs());
-        }, speed: 0.5f);
+                AfterScrollRearrage?.Invoke(this, new System.EventArgs());
+            }, 
+            callbackEnd: () => {
+                isRearranging = false;
+            },
+            speed: 0.5f
+        );
 
         yield return new WaitForSeconds(1.5f);
 
@@ -134,11 +188,11 @@ public class ArtifactTabManager : MonoBehaviour
         if (isRearranging)
             return;
         isRearranging = true;
-        if(hoverCoroutine != null)
+        if (hoverCoroutine != null)
         {
             StopCoroutine(hoverCoroutine);
         }
-        if(clickCoroutine == null)
+        if (clickCoroutine == null)
         {
             clickCoroutine = StartCoroutine(ISaveOnClick());  
         }
@@ -147,9 +201,14 @@ public class ArtifactTabManager : MonoBehaviour
     private IEnumerator ISaveOnClick()
     {
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
+
         SGrid.Current.SaveRealigningGrid();
+
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         SetSaveLoadTabSprites(true);
+        saveEffect.DoEffect();
+
+        justClickedLoad = false;
         isRearranging = false;
         clickCoroutine = null;
     }
@@ -163,11 +222,11 @@ public class ArtifactTabManager : MonoBehaviour
             if (isRearranging)
                 return;
             isRearranging = true;
-            if(hoverCoroutine != null)
+            if (hoverCoroutine != null)
             {
                 StopCoroutine(hoverCoroutine);
             }
-            if(clickCoroutine == null)
+            if (clickCoroutine == null)
             {
                 clickCoroutine = StartCoroutine(ILoadOnClick());  
             }
@@ -182,7 +241,10 @@ public class ArtifactTabManager : MonoBehaviour
     {
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
 
-        SGrid.Current.LoadRealigningGrid();
+        bool shouldResetGrid = justClickedLoad;
+        SGrid.Current.LoadRealigningGrid(shouldResetGrid);
+        UpdateOriginalGrid();
+
         foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
         {
             button.SetHighlighted(false);
@@ -194,7 +256,10 @@ public class ArtifactTabManager : MonoBehaviour
         CameraShake.Shake(1.5f, 0.75f);
         AudioManager.Play("Slide Explosion");
 
-        SetSaveLoadTabSprites(false);
+        SetSaveLoadTabSprites(!shouldResetGrid);
+        loadEffect.DoEffect();
+
+        justClickedLoad = true;
         isRearranging = false;
         clickCoroutine = null;
     }
@@ -212,13 +277,13 @@ public class ArtifactTabManager : MonoBehaviour
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
         InPreview = true;
         uiArtifactMenus.uiArtifact.DeselectSelectedButton();
-        originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
+
+        UpdateOriginalGrid();
+
         for (int x = 0; x < SGrid.Current.Width; x++)
         {
             for (int y = 0; y < SGrid.Current.Height; y++)
             {
-                int tid = SGrid.Current.GetGrid()[x, y].islandId;
-                originalGrid[x, y] = tid;
                 if(SGrid.Current.realigningGrid == null)
                 {
                     Debug.LogWarning("realign grid is null. There was an issue with scroll corotutine ecxecution order");
@@ -235,10 +300,28 @@ public class ArtifactTabManager : MonoBehaviour
         hoverCoroutine = null;
     }
 
-    public void LoadOnHoverExit()
+    private void UpdateOriginalGrid()
     {
-        if (SGrid.Current.realigningGrid != null && InPreview)
+        originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
+        for (int x = 0; x < SGrid.Current.Width; x++)
         {
+            for (int y = 0; y < SGrid.Current.Height; y++)
+            {
+                originalGrid[x, y] = UIArtifact.GetButton(x, y).islandId;
+            }
+        }
+    }
+
+    public void LoadOnHoverExit() => TryEndPreviewAndHover();
+    
+    private void UIArtifactExternallyUpdated(object sender, System.EventArgs e) => TryEndPreviewAndHover();
+
+    private void TryEndPreviewAndHover()
+    {
+        if (InPreview)
+        {
+            InPreview = false;
+
             for (int x = 0; x < SGrid.Current.Width; x++)
             {
                 for (int y = 0; y < SGrid.Current.Height; y++)
@@ -248,8 +331,9 @@ public class ArtifactTabManager : MonoBehaviour
                     uiArtifactMenus.uiArtifact.GetButton(tid).SetHighlighted(false);
                 }
             }
+            originalGrid = null;
         }
-        if(hoverCoroutine != null)
+        if (hoverCoroutine != null)
         {
             StopCoroutine(hoverCoroutine);
             hoverCoroutine = null;

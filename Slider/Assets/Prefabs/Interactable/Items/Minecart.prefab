@@ -88,7 +88,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 1
+  m_SpriteSortPoint: 0
 --- !u!95 &1505501552
 Animator:
   serializedVersion: 5
@@ -150,7 +150,7 @@ Transform:
   m_GameObject: {fileID: 1903346504744397774}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.001, z: 0}
+  m_LocalPosition: {x: 0, y: -0.0001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -207,7 +207,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 1
+  m_SpriteSortPoint: 0
 --- !u!95 &4355986575683878078
 Animator:
   serializedVersion: 5
@@ -264,6 +264,7 @@ Transform:
   m_Children:
   - {fileID: 816576571367500746}
   - {fileID: 5799218959290976801}
+  - {fileID: 5776491057494479150}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &-5991808453730892517
@@ -327,7 +328,12 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3852429895674959733}
   myCollider: {fileID: -5991808453730892517}
   canKeep: 0
+  shouldDisableAtStart: 0
+  doReflectionCalculations: 0
   itemRadius: 0.5
+  pickupOverrideLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -395,8 +401,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  isOnlyUsedByPlayer: 1
+  reflectionPivot: {fileID: 0}
   enableOnDrop:
   - {fileID: 7202587185286012758}
+  isQueuedForDestruction: 0
   OnPickUp:
     m_PersistentCalls:
       m_Calls: []
@@ -405,23 +414,22 @@ MonoBehaviour:
       m_Calls: []
   saveString: 
   speed: 8
-  cornerSpeed: 2
+  cornerSpeed: 4
   currentDirection: 0
   nextDirection: 0
   isOnTrack: 0
   offSet: {x: 0.5, y: 0.75, z: 0}
-  railManager: {fileID: 0}
-  savedRM: {fileID: 0}
   borderRM: {fileID: 0}
-  currentTile: {fileID: 0}
-  targetTile: {fileID: 0}
   currentTilePos: {x: 0, y: 0, z: 0}
   targetTilePos: {x: 0, y: 0, z: 0}
   prevWorldPos: {x: 0, y: 0, z: 0}
   targetWorldPos: {x: 0, y: 0, z: 0}
+  collidingMask:
+    serializedVersion: 2
+    m_Bits: 1
   currentSTile: {fileID: 0}
-  dropOnNextMove: 0
-  mcState: 3
+  minecartAmbience: {fileID: 8029971292083040799}
+  mcState: 0
   derailDuration: 1
   xDerailMotion:
     serializedVersion: 2
@@ -436,11 +444,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   animator: {fileID: 6881730585016648866}
-  tileSwitch: 0
   trackerSpriteEmpty: {fileID: 11777715, guid: 884d9b02a1a0da04598708b41a239635, type: 3}
-  trackerSpriteRepair: {fileID: 281016348, guid: 884d9b02a1a0da04598708b41a239635, type: 3}
   trackerSpriteLava: {fileID: 1433463257, guid: 884d9b02a1a0da04598708b41a239635, type: 3}
   trackerSpriteCrystal: {fileID: 1029334401, guid: 884d9b02a1a0da04598708b41a239635, type: 3}
+  blocksSpawnMask:
+    serializedVersion: 2
+    m_Bits: 58113
 --- !u!50 &-8482788907804060962
 Rigidbody2D:
   serializedVersion: 4
@@ -481,10 +490,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mcAnimator: {fileID: 1505501552}
-  crystalAnimator: {fileID: 0}
+  crystalAnimator: {fileID: 3733299196150140827}
   crystalSprite: {fileID: 5297063541347001184}
-  repairPartsAnimator: {fileID: 0}
-  repairPartsSprite: {fileID: 1903346504744397774}
   lavaAnimator: {fileID: 3080154664630373753}
   lavaSprite: {fileID: 6278022918730284254}
   currentState: 
@@ -563,7 +570,7 @@ SpriteRenderer:
   m_SortingLayerID: 529684183
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1956371326, guid: db708d8f07a4a9243bd6370f4e36ffc8, type: 3}
+  m_Sprite: {fileID: 405655065, guid: ba91ccdd43fb2f243a14fbb371f4274f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -582,7 +589,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5297063541347001184}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 22100000, guid: 79cd9fbdf09dccf4f97b07715eea0577, type: 2}
   m_CullingMode: 0
@@ -622,7 +629,7 @@ Transform:
   m_GameObject: {fileID: 6278022918730284254}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.0001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -778,3 +785,53 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.825}
   m_EdgeRadius: 0
+--- !u!1 &8195599718051228909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5776491057494479150}
+  - component: {fileID: 8029971292083040799}
+  m_Layer: 15
+  m_Name: Minecart Ambience
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5776491057494479150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8195599718051228909}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805245437082581397}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8029971292083040799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8195599718051228909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66583c0850c76494bb2bd00d1d3b27ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambienceName: Minecart Ambience
+  ambienceGlobalParameterName: AmbienceDistToMinecart
+  ambienceGlobalParameterDefaultValue: 15
+  distanceNodes:
+  - {fileID: 5776491057494479150}
+  isEnabled: 0

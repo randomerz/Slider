@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e70921991638cb4b98f3fbd4b051c30, type: 3}
+  m_Name: MilitarySpriteTable
+  m_EditorClassIdentifier: 
+  spriteData:
+  - team: 0
+    type: 0
+    sprite: {fileID: 4596944608854070586, guid: 8b93baac222166c41b4c68c440385f9b, type: 3}
+    uiIcon: {fileID: 1305714935, guid: b5c1ec077050ca347b72b0cc5d5a40d0, type: 3}
+    animatorController: {fileID: 22100000, guid: cb11ddc82853621418e151f6e3c2ada6, type: 2}
+  - team: 0
+    type: 1
+    sprite: {fileID: 1140713460856743981, guid: 4c954b56d2433c14abbc56fe6f07d030, type: 3}
+    uiIcon: {fileID: -541441262, guid: b5c1ec077050ca347b72b0cc5d5a40d0, type: 3}
+    animatorController: {fileID: 22100000, guid: 14a961b2322dc37409c1a220a4ed90a3, type: 2}
+  - team: 0
+    type: 2
+    sprite: {fileID: 2041538485768182431, guid: 431e67af2a0912c43aad7341ca228859, type: 3}
+    uiIcon: {fileID: 1413640160, guid: b5c1ec077050ca347b72b0cc5d5a40d0, type: 3}
+    animatorController: {fileID: 22100000, guid: 6155221e88f251f48b124d7469591789, type: 2}
+  - team: 1
+    type: 0
+    sprite: {fileID: 2009622930, guid: 18c5cdbdacd67814dbc24b2809b6f1df, type: 3}
+    uiIcon: {fileID: 1113365293, guid: b5c1ec077050ca347b72b0cc5d5a40d0, type: 3}
+    animatorController: {fileID: 22100000, guid: d83d8fa69caa75046aff4c65277d546c, type: 2}
+  - team: 1
+    type: 1
+    sprite: {fileID: -139658065, guid: 3f10ff2635b68b242b4a8cb220a7068c, type: 3}
+    uiIcon: {fileID: 1222382588, guid: b5c1ec077050ca347b72b0cc5d5a40d0, type: 3}
+    animatorController: {fileID: 22100000, guid: d8d4f356a0e651a4ca054bed1f1bdecd, type: 2}
+  - team: 1
+    type: 2
+    sprite: {fileID: 1544229536, guid: ac0c6e2bab16d08448b7a8019dfc92f1, type: 3}
+    uiIcon: {fileID: 710560900, guid: b5c1ec077050ca347b72b0cc5d5a40d0, type: 3}
+    animatorController: {fileID: 22100000, guid: 8d1fb4fd997056940985308ce53502ba, type: 2}
+  flags:
+  - {fileID: 2073880229, guid: 5fa4abdd30efb9f4ca357fdc3eeed8cb, type: 3}
+  - {fileID: -1907745298, guid: 5fa4abdd30efb9f4ca357fdc3eeed8cb, type: 3}
+  - {fileID: -1006008967, guid: 5fa4abdd30efb9f4ca357fdc3eeed8cb, type: 3}

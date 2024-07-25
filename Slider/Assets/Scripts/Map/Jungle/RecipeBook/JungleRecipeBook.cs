@@ -38,7 +38,7 @@ public class JungleRecipeBook : MonoBehaviour
             jungleRecipeBookHints.StartHintRoutine();
 
             // Add bindings
-            directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, 
+            directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, 
                 context => HandleDirectionalInput(context.ReadValue<Vector2>())
             );
             quitBindingBehaviorAction = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, 
@@ -81,8 +81,7 @@ public class JungleRecipeBook : MonoBehaviour
 
         if (JungleRecipeBookSave.AllRecipesCompleted())
         {
-            // idk if we need to check if it's been given already
-            Debug.Log("Give jungle achievement!");
+            AchievementManager.SetAchievementStat("completedAllJungleRecipes", true, 1);
         }
     }
 
@@ -96,6 +95,7 @@ public class JungleRecipeBook : MonoBehaviour
         }
 
         float angle = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
+        angle = (angle + 360) % 360;
 
         // Up
         if (45 <= angle && angle < 135)
@@ -105,6 +105,7 @@ public class JungleRecipeBook : MonoBehaviour
 
             lastDirectionalInput = Vector2.up;
             jungleRecipeBookUI.IncrementCurrentShape();
+            // jungleRecipeBookUI.IncrementRecipeDisplay();
         }
         // Left
         else if (135 <= angle && angle < 225)
@@ -122,7 +123,8 @@ public class JungleRecipeBook : MonoBehaviour
                 return;
 
             lastDirectionalInput = Vector2.down;
-            jungleRecipeBookUI.DecrementRecipeDisplay();
+            jungleRecipeBookUI.DecrementCurrentShape();
+            // jungleRecipeBookUI.DecrementRecipeDisplay();
         }
         // Right
         else 

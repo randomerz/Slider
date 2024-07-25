@@ -18,4 +18,12 @@ public class PlaySound : MonoBehaviour
 
         AudioManager.Play(s);
     }
+
+    public void PlayStringAttachedToMe(string s)
+    {
+        if (s == null)
+            return;
+
+        AudioManager.Play(s, transform);
+    }
 }

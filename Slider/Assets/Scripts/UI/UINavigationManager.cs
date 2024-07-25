@@ -36,6 +36,19 @@ public class UINavigationManager : Singleton<UINavigationManager>
     private GameObject _currentMenu;
 
     /// <summary>
+    /// This should be set when a UIDropDownController creates a list. This is so that we can consume the "esc" key to close the dropdown instead.
+    /// </summary>
+    public static UIDropDownController CurrentDropdownOpen
+    { 
+        get => _instance._currentDropdownOpen;
+        set
+        {
+            _instance._currentDropdownOpen = value;
+        }
+    }
+    private UIDropDownController _currentDropdownOpen;
+
+    /// <summary>
     /// Making a keyboard input switches to keyboard mode and clicking with the mouse switches to mouse mode. The key
     /// distinction is that buttons will not be put into the Selected state when we are in mouse mode.
     /// </summary>
@@ -64,7 +77,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void Awake()
     {
-        InitializeSingleton();
+        InitializeSingleton(this);
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
@@ -105,7 +118,11 @@ public class UINavigationManager : Singleton<UINavigationManager>
         );
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel, (_) =>
         {
-            if (CurrentMenu != null)
+            if (CurrentDropdownOpen != null)
+            {
+                _instance.eventSystem.SetSelectedGameObject(CurrentDropdownOpen.gameObject);
+            }
+            else if (CurrentMenu != null)
             {
                 UIMenu menu = CurrentMenu.GetComponent<UIMenu>();
                 if (menu != null)
@@ -234,10 +251,14 @@ public class UINavigationManager : Singleton<UINavigationManager>
             LogSelectableNotFoundError();
         }
 
-        allSelectables.AddRange(selectableSet.Selectables);
-        foreach (SelectableSet subSet in selectableSet.SubSelectableSets)
+        Queue<SelectableSet> selectableSetsToAdd = new();
+        selectableSetsToAdd.Enqueue(selectableSet);
+
+        while (selectableSetsToAdd.Count > 0)
         {
-            allSelectables.AddRange(subSet.Selectables);
+            SelectableSet current = selectableSetsToAdd.Dequeue();
+            allSelectables.AddRange(current.Selectables);
+            current.SubSelectableSets.ToList().ForEach(subSet => selectableSetsToAdd.Enqueue(subSet));
         }
 
         return allSelectables;

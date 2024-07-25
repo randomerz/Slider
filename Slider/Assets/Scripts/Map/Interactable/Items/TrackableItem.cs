@@ -9,22 +9,33 @@ public class TrackableItem : Item
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         base.PickUpItem(pickLocation, callback);
-        UITrackerManager.RemoveTracker(this.gameObject);
+        UITrackerManager.RemoveTracker(gameObject);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
-        if(trackerEnabled)
-            UITrackerManager.AddNewTracker(this.gameObject);
+        if (trackerEnabled)
+        {
+            AddTracker();
+        }
         return base.DropItem(dropLocation, callback);
     }
 
     public void SetTrackerEnabled(bool value) 
     {
         trackerEnabled = value;
-        if(!trackerEnabled)
-            UITrackerManager.RemoveTracker(this.gameObject);
-        if(trackerEnabled)
-            UITrackerManager.AddNewTracker(this.gameObject);
+        if (trackerEnabled)
+        {
+            AddTracker();
+        }
+        else
+        {
+            UITrackerManager.RemoveTracker(gameObject);
+        }
+    }
+
+    private void AddTracker()
+    {
+        UITrackerManager.AddNewTracker(gameObject);
     }
 }

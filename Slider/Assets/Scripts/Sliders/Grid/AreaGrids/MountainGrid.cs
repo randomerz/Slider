@@ -6,7 +6,6 @@ public class MountainGrid : SGrid
 {
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
-    [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
     [SerializeField] private SpriteSwapper crystalSpriteSwapper;
     public Minecart minecart;
@@ -31,7 +30,9 @@ public class MountainGrid : SGrid
     private bool crystalDelivered = false;
     private float musicValue = 0;
 
-    public override void Init() {
+
+    public override void Init() 
+    {
         InitArea(Area.Mountain);
         base.Init();
     }
@@ -39,10 +40,13 @@ public class MountainGrid : SGrid
     protected override void Start()
     {
         base.Start();
+
         playerOnBottom = Player._instance.transform.position.y < 63f;
         musicValue = playerOnBottom ? 1 : 0;
         AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
         AudioManager.PlayMusic("Mountain");
+
+        SaveSystem.Current.SetBool("caveDoor", true);
     }
     
     private void OnEnable()     
@@ -100,11 +104,15 @@ public class MountainGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        if(stile.islandId == 7)
-            SaveSystem.Current.SetBool("forceAutoMove", true);
-        base.EnableStile(stile, shouldFlicker);
-         if(stile.islandId == 8)
+        if(stile.islandId == 7 && !stile.isTileActive)
+            SaveSystem.Current.SetBool("forceAutoMoveMountain", true);
+        if(stile.islandId == 8 && !stile.isTileActive)
+        {
+            base.EnableStile(stile, shouldFlicker);
             CheckForMountainCompletion();
+            return;
+        }
+        base.EnableStile(stile, shouldFlicker);
     }
 
 
@@ -115,9 +123,14 @@ public class MountainGrid : SGrid
 
     public void CheckForMountainCompletion() {
         if(CheckGrid.contains(GetGridString(), "31_48_76_52")) {
-            SaveSystem.Current.SetBool("forceAutoMove", false);
+            SaveSystem.Current.SetBool("forceAutoMoveMountain", false);
             StartCoroutine(ShowButtonAndMapCompletions());
-            AchievementManager.SetAchievementStat("completedMountain", 1);
+            SaveSystem.Current.SetBool("completedMountain", true);
+            AchievementManager.SetAchievementStat("completedMountain", false, 1);
+            if(minecart.NumPickups <= 1 && gemMachine.numGems >= 3)
+            {
+                AchievementManager.SetAchievementStat("mountainMinMinecart", true, 1);
+            }
         }
     }
 
@@ -129,7 +142,7 @@ public class MountainGrid : SGrid
         switch(minecart.mcState)
         {
             case MinecartState.Crystal:
-                minecart.UpdateState("Empty");
+                minecart.UpdateState(MinecartState.Empty, false);
                 SetCrystalDelivered();
                 break;
             case MinecartState.Lava:
@@ -161,25 +174,13 @@ public class MountainGrid : SGrid
 
 
     #region Save/Load
-
-    //C: for some reason the meltables save on their own but don't load
-    public override void Save()
-    {
-        base.Save();
-        mountainCaveWall.Save();
-        gemMachine.Save();
-    }
+    
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        mountainCaveWall.Load(profile);
-        gemMachine.Load(profile);
         if(profile.GetBool("MountainCrystalDelivered"))
             SetCrystalDelivered(true);
-        Meltable[] meltables = FindObjectsOfType<Meltable>();
-        foreach(Meltable m in meltables)
-            m.Load(profile);
     }
 
     #endregion

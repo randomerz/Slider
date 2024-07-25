@@ -12,7 +12,7 @@ public class UIArtifact : Singleton<UIArtifact>
     [SerializeField] protected int maxMoveQueueSize = 3;
     [SerializeField] private GameObject lightning;
     [SerializeField] private GameObject lightningImage;
-    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when you're on controller and have nothing to select
+    [SerializeField] protected List<GameObject> fallbackButtonsToSelect; // For when you're on controller and have nothing to select
 
     protected ArtifactTileButton buttonSelected;
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
@@ -53,6 +53,7 @@ public class UIArtifact : Singleton<UIArtifact>
     protected virtual void OnDisable()
     {
         ClearQueues();
+        UITrackerManager.ResetStatics();
     }
 
     protected virtual void Start()
@@ -94,10 +95,13 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
 
-        HandleControllerCheck();
+        if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            HandleControllerCheck();
+        }
     }
 
-    private void HandleControllerCheck()
+    protected virtual void HandleControllerCheck()
     {
         if (!UIArtifactMenus.IsArtifactOpen())
         {
@@ -115,10 +119,12 @@ public class UIArtifact : Singleton<UIArtifact>
                     return;
                 }
             }
+            // This warning gets called every time you open the artifact because UIClick disabled the default selected button until the end of the frame
+            // Debug.LogWarning($"No buttons were valid for selection for controller.");
         }
     }
 
-    private bool IsButtonValidForSelection(GameObject g)
+    protected bool IsButtonValidForSelection(GameObject g)
     {
         // If selected object is null or deactivated
         if (g == null || !g.activeInHierarchy)
@@ -259,6 +265,18 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
+    public void RemoveButton(STile stile)
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            if (b.MyStile == stile)
+            {
+                b.UpdateTileActive();
+                break;
+            }
+        }
+    }
+
     //This is in case we have situations where the grid is modified without interacting with the artifact (Factory conveyors, Mountain anchor, MagiTech Desyncs)
     public void SetButtonPositionsToMatchGrid()
     {
@@ -328,7 +346,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ResetButtonsToEmptyIfInactive(moveOptions);
 
         ArtifactTileButton hoveredButton = GetButtonHovered(data);
-        if(dragged == hoveredButton && SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue)
+        if(dragged == hoveredButton)
         {
             SelectButton(dragged);
             return;
@@ -449,7 +467,8 @@ public class UIArtifact : Singleton<UIArtifact>
 
             SetSelectedButton(button);
 
-            bool autoMove = moveOptionButtons.Count == 1 && SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue && !isDragged;
+            bool autoMove = GetAutoMoveActive();
+            autoMove &= moveOptionButtons.Count == 1 && !isDragged;
             if (autoMove)
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
@@ -462,6 +481,20 @@ public class UIArtifact : Singleton<UIArtifact>
         }
 
         OnButtonInteract?.Invoke(this, null);
+    }
+
+    private bool GetAutoMoveActive()
+    {
+        switch (SGrid.Current.GetArea()) {
+            case Area.Village:
+                return SaveSystem.Current.GetBool("forceAutoMoveVillage");
+            case Area.Caves:
+                return SaveSystem.Current.GetBool("forceAutoMoveCaves");
+            case Area.Mountain:
+                return SaveSystem.Current.GetBool("forceAutoMoveMountain");
+            default:
+                return false;
+        }
     }
 
     public void DeselectSelectedButton()
@@ -672,16 +705,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //So this will select the tile you swap to after the move
         if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            if (!SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue)
-            {
-                EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
-            }
-            // but during the final part though when youre doing 8 puzzle and it auto moves, make cursor stay in place
-            else
-            {
-                EventSystem.current.SetSelectedGameObject(buttonEmpty.gameObject);
-                //buttonEmpty.SetControllerHoverHighlighted(true);
-            }
+            EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
         }
     }
 

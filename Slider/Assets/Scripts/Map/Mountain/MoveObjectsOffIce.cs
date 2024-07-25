@@ -9,11 +9,14 @@ public class MoveObjectsOffIce : MonoBehaviour
     public Transform playerRespawn;
     public LayerMask blocksSpawnMask;
     public Minecart minecart;
+    public Transform altRespawn;
 
     private Tilemap colliders;
     private Transform player;
     private List<GameObject> otherObjects = new List<GameObject>();
     private STile stile;
+
+    public Tilemap boxOfSadness;
 
     private void Start() 
     {
@@ -25,17 +28,18 @@ public class MoveObjectsOffIce : MonoBehaviour
     public void CheckPlayerOnIce()
     {
         if(player == null) return;
-        TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
-        Vector3 checkpos = player.position + new Vector3(0, -100, 0);
-        if(tile != null && colliders.ContainsTile(tile))
+        if(PlayerOnIce())
         {
+            Vector3 checkpos = player.position + new Vector3(0, -100, 0);
             if(SGrid.GetSTileUnderneath(checkpos) != null)
             {
                 if(!ItemPlacerSolver.TryPlaceItem(checkpos, player, 10, blocksSpawnMask, true))
                 {
                     player.position = playerRespawn.position;
+                    AudioManager.Play("Hurt");
+                    return;
                 }
-                AudioManager.Play("Hurt");
+                AudioManager.Play("Fall");
             }
             else
             {    
@@ -45,6 +49,12 @@ public class MoveObjectsOffIce : MonoBehaviour
             }
            
         }
+    }
+
+    private bool PlayerOnIce()
+    {
+        TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
+        return (tile != null && colliders.ContainsTile(tile));
     }
 
     public void CheckObjectsOnIce()
@@ -60,14 +70,19 @@ public class MoveObjectsOffIce : MonoBehaviour
                 {
                     bool moved = false;
                     Minecart mc = t.gameObject.GetComponent<Minecart>();
-                    if(mc != null && mc.isMoving)
-                    {
-                        moved = mc.TryDrop(true);
+                    if(mc != null)
+                    { 
+                        if(mc.isMoving)
+                            moved = mc.TryDrop(true);
+                        else if(mc.isOnTrack && SGrid.GetSTileUnderneath(checkpos).islandId == 1)
+                            SaveSystem.Current.SetBool("MountainDidIcePatchTech", true);
+
                     }
                     if(!moved)
                     {
                         if(ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
-                        {   
+                        {
+                            AudioManager.Play("Fall");       
                             Anchor a;
                             if(go.TryGetComponent<Anchor>(out a))
                             {
@@ -83,12 +98,27 @@ public class MoveObjectsOffIce : MonoBehaviour
                 }
                 else
                 {
-                    t.position = playerRespawn.position + objCount * Vector3.right;
+                    if(SGrid.Current.GetNumTilesCollected() == 1 && !PlayerOnIce() && PosInBoxOfSadness(player))
+                    {
+                        t.position = altRespawn.position;
+                    }
+                    else
+                    {
+                        t.position = playerRespawn.position + objCount * Vector3.right;
+                    }
                 }
                 objCount++;
             }
         }
         otherObjects.Clear();
+    }
+
+    private bool PosInBoxOfSadness(Transform t)
+    {
+        if(boxOfSadness == null)
+            return false;
+        TileBase tile = boxOfSadness.GetTile(boxOfSadness.WorldToCell(t.position));
+        return tile != null && colliders.ContainsTile(tile);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {

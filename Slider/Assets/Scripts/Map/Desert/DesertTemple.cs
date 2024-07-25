@@ -49,6 +49,7 @@ public class DesertTemple : MonoBehaviour, ISavable
         {
             ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
         }
+        templeMusic.SetIsInTemple(false);
     }
     
     public void SetIsInTemple(bool isInTemple)
@@ -61,7 +62,7 @@ public class DesertTemple : MonoBehaviour, ISavable
         }
         artifactHousingButtonsManager.SetSpritesToHousing(isInTemple);
         templeMusic.SetIsInTemple(isInTemple);
-        Player.GetInstance().SetTracker(!isInTemple);
+        Player.GetInstance().SetTrackerEnabled(!isInTemple);
         Player.GetInstance().SetDontUpdateSTileUnderneath(isInTemple);
     }
 
@@ -111,7 +112,7 @@ public class DesertTemple : MonoBehaviour, ISavable
 
     public void ActivateTrap()
     {
-        AchievementManager.SetAchievementStat("collectedScroll", 1);
+        AchievementManager.SetAchievementStat("collectedScroll", false, 1);
         SaveSystem.Current.SetBool("desertTempleTrapActivated", true);
         if (shuffleBuildUpCoroutine == null)
         {
@@ -163,6 +164,6 @@ public class DesertTemple : MonoBehaviour, ISavable
         templeTrapBlockingRoomCollider.SetActive(false);
         SaveSystem.Current.SetBool("desertTempleTrapCleared", true);
         ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
-        AchievementManager.SetAchievementStat("completedDesert", 1);
+        AchievementManager.SetAchievementStat("completedDesert", false, 1);
     }
 }

@@ -53,12 +53,14 @@ public class ChadRace : MonoBehaviour, ISavable
     {
         SGrid.OnGridMove += CheckChad;
         SGrid.OnSTileEnabled += CheckChad;
+        SGrid.OnGridSet += CheckChad;
     }
 
     private void OnDisable()
     {
         SGrid.OnGridMove -= CheckChad;
         SGrid.OnSTileEnabled -= CheckChad;
+        SGrid.OnGridSet -= CheckChad;
     }
 
     // Start is called before the first frame update
@@ -77,7 +79,7 @@ public class ChadRace : MonoBehaviour, ISavable
         }
         else
         {
-            DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+            DisplayAndTriggerDialogue("Race time! Set up the race track following these cones to the bell.");
             raceState = State.TrackNotSetup;
         }
         
@@ -102,7 +104,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.NotStarted:
                 if (!tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+                    DisplayAndTriggerDialogue("Race time! Set up the race track following these cones to the bell.");
                     raceState = State.TrackNotSetup;
                 }
                 ActivateSpeedLines(false);
@@ -289,7 +291,7 @@ public class ChadRace : MonoBehaviour, ISavable
             }
             else
             {
-                DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+                DisplayAndTriggerDialogue("Race time! Set up the race track following these cones to the bell.");
                 raceState = State.TrackNotSetup;
             }
         }
@@ -393,7 +395,14 @@ public class ChadRace : MonoBehaviour, ISavable
         transform.position += npcScript.speed * Time.deltaTime * targetDirection;
 
         // Assigns chad's current parent to the objects of the stile that he is currently over
-        transform.parent = SGrid.GetSTileUnderneath(gameObject).transform;
+        if (SGrid.GetSTileUnderneath(gameObject) != null)
+        {
+            transform.parent = SGrid.GetSTileUnderneath(gameObject).transform;
+        }
+        else
+        {
+            Debug.LogError($"Error! There was no tile under chad!");
+        }
     }
 
     private void ActivateSpeedLines(bool activate)

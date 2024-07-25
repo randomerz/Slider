@@ -98,7 +98,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     public override void Start()
     {
         base.Start();
-        display.SetMessagePing(!CurrDchainIsEmpty());
+        display.SetMessagePing(ShouldShowPing());
     }
 
     public override void Update()
@@ -138,6 +138,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
 
     public void OnDialogueTriggerExit()
     {
+        display.SetMessagePing(ShouldShowPing());
         playerInDialogueTrigger = false;
 
         TryDeactivateDialogueBox(true);
@@ -146,7 +147,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
 
     public void OnConditionalsChanged()
     {
-        display.SetMessagePing(!CurrDchainIsEmpty());
+        display.SetMessagePing(ShouldShowPing());
 
         StartDialogueIfPlayerInTrigger();
     }
@@ -171,7 +172,8 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
-            display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex), CurrDchain[CurrDchainIndex].emoteOnStart);
+            var (orig, translated) = context.CurrCond.GetDialogueString(CurrDchainIndex);
+            display.DisplaySentence(orig, translated, CurrDchain[CurrDchainIndex].emoteOnStart);
 
             isTypingDialogue = true;
             dialogueBoxIsActive = true;
@@ -296,6 +298,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         Debug.Log("[NPC] Forcing dialogue deactivation.");
 
+        SkipText();
         DeactivateDialogueBox();
     }
 
@@ -323,7 +326,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
         }
     }
 
-    private void SkipText()
+    public void SkipText()
     {
         display.textTyperText.TrySkipText();
         display.textTyperBG.TrySkipText();
@@ -441,5 +444,10 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     private bool CurrDchainIsEmpty()
     {
         return CurrDchain == null || CurrDchain.Count == 0;
+    }
+
+    private bool ShouldShowPing()
+    {
+        return !CurrDchainIsEmpty() && !context.CurrCond.isDialogueChainExhausted;
     }
 }

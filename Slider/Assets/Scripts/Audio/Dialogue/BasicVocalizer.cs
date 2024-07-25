@@ -12,6 +12,12 @@ namespace SliderVocalization
     {
         public StringBuilder characters;
         public bool IsEmpty => characters.Length == 0;
+
+        int IVocalizer.Count<V>()
+        {
+            return this is V ? 1 : 0;
+        }
+        
         public int Progress => _progress;
         protected int _progress = 0;
         public void ClearProgress() => _progress = 0;
@@ -165,12 +171,19 @@ namespace SliderVocalization
 
         public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
         {
-            duration = preset.duration * (context.isCurrentWordLow ? (1 - preset.energeticWordSpeedup) : (1 + preset.energeticWordSpeedup));
+            duration = preset.duration * (context.isCurrentWordLow ? 1 : (1 - preset.energeticWordSpeedup));
             totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
             initialPitch = context.lastWordFinalPitch;
             middlePitch = context.wordPitchIntonated * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
             finalPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
+
+            initialPitch = Mathf.Clamp(initialPitch, 0.5f, 2.0f);
+            middlePitch = Mathf.Clamp(middlePitch, 0.5f, 2.0f);
+            finalPitch = Mathf.Clamp(finalPitch, 0.5f, 2.0f);
+
+            // Debug.Log($"{initialPitch} -> {middlePitch}={context.wordPitchIntonated}*{wordIntonationMultiplier} -> {finalPitch}={context.wordPitchBase} * {wordIntonationMultiplier}");
+            
             context.lastWordFinalPitch = finalPitch;
             volumeAdjustmentDB = preset.volumeAdjustmentDb;
             return totalDuration;
@@ -213,6 +226,8 @@ namespace SliderVocalization
                     playingInstance.Tick(delegate (ref EventInstance inst)
                     {
                         float overallT = (totalT / totalDuration);
+                        // inst.setParameterByName("Pitch",
+                        //     Mathf.Lerp(initialPitch, finalPitch, overallT));
                         inst.setParameterByName("Pitch", 
                             overallT < 0.5f ? 
                                 Mathf.Lerp(initialPitch, middlePitch, overallT * 2) 

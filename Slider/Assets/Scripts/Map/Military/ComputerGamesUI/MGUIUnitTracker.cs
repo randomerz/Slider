@@ -26,7 +26,6 @@ public class MGUIUnitTracker : MonoBehaviour
         SetSquare(_ui.GetSquare(unit.CurrSpace));
 
         _image.sprite = jobIcons[(int)unit.Data.job];
-        //TODO: Change image based on the unit type (RPS)
         switch (unit.Data.side)
         {
 

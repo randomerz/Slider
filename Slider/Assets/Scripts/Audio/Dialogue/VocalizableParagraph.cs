@@ -18,7 +18,23 @@ namespace SliderVocalization
         private SentenceVocalizer _Current;
         private VocalizerCompositeState _state;
 
-        public static VocalizableParagraph SoloSpeaker => speakers.Count > 0 ? speakers[^1] : null;
+        public static bool SoloSpeaker(VocalizableParagraph target, int maxConcurrent)
+        {
+            if (speakers.Count <= maxConcurrent)
+            {
+                return true;
+            }
+
+            for (int i = speakers.Count - maxConcurrent; i < speakers.Count; i++)
+            {
+                if (speakers[i] == target)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         internal static List<VocalizableParagraph> speakers = new();
 
         internal void StartReadSentence_Debug(SentenceVocalizer voc, NPCEmotes.Emotes emote)
@@ -32,15 +48,16 @@ namespace SliderVocalization
 
         public void StartReadAll(NPCEmotes.Emotes emote)
         {
-            speakers.Add(this);
- 
             currentVocalizationContext = new(transform, this);
             
-            this.Stop();
+            this.Stop(); // AT: removes self from speakers! must call before adding back into speakers
             
             // Technically this is done within the coroutine, but I'm not sure if there is guarantee that the coroutine will evaluate on the first frame
             // Setting this to playing will *guarantee* no multi-start issues
             this.MarkAsStarted();
+            
+            // Debug.Log($"Speaker registered at {transform.parent.name}");
+            speakers.Add(this);
             
             StartCoroutine(
                 this.Vocalize(
@@ -54,10 +71,10 @@ namespace SliderVocalization
         /// </summary>
         /// <param name="text">Duration of that narration when played uninterrupted</param>
         /// <returns></returns>
-        public float SetText(string text, NPCEmotes.Emotes emote)
+        public float SetText(string text, NPCEmotes.Emotes emote, int maxPhonemes = int.MaxValue)
         {
             this.text = text;
-            sentences = SentenceVocalizer.Parse(this.text, preset) ?? new();
+            sentences = SentenceVocalizer.Parse(this.text, preset, maxPhonemes) ?? new();
             
             return (this as IVocalizer).RandomizeVocalization(
                 ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), new()

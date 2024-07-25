@@ -49,7 +49,7 @@ public class PastLargeCrystal : ElectricalNode
     }
 
     // this could be optimized a lot
-    private IEnumerator BTTFParticleAnimation(int numRecur)
+    public IEnumerator BTTFParticleAnimation(int numRecur)
     {
         if (numRecur == 0)
             yield break;
@@ -95,17 +95,22 @@ public class PastLargeCrystal : ElectricalNode
         
         SGrid.Current.ActivateSliderCollectible(9);
 
-        foreach (GameObject go in particles)
-        {
-            go.SetActive(false);
-        }
+        StopParticles();
 
         // if the bool is true that means we did kill him, so we want to give achievement if it is false
         if (!SaveSystem.Current.GetBool("ChadSrPuzzleComplete"))
         {
-            AchievementManager.SetAchievementStat("sparedChadSr", 1);
+            AchievementManager.SetAchievementStat("sparedChadSr", true, 1);
         }
 
         StopAllCoroutines();
+    }
+
+    public void StopParticles()
+    {
+        foreach (GameObject go in particles)
+        {
+            go.SetActive(false);
+        }
     }
 }

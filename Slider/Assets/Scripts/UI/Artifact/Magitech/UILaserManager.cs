@@ -45,6 +45,8 @@ public class UILaserManager : MonoBehaviour
     {
         if (sources == null) return;
         sources.Remove(data);
+        data.UpdateSprites();
+        UpdateSpritesFromSource();
     }
 
     public void UpdateSpritesFromSource()
@@ -286,6 +288,7 @@ public class LaserUIData
         islandId = original.islandId;
         centerObject = original.centerObject;
         sourceDir = original.sourceDir;
+        edgeblockers = original.edgeblockers;
         if (centerObject == LaserCenterObject.SOURCE)
         {
             uILaserManager.AddSource(this);
@@ -310,6 +313,7 @@ public class LaserUIData
     {
         centerObject = LaserCenterObject.NONE;
         islandId = originalIslandId;
+        edgeblockers = new bool[4];
         uILaserManager.RemoveSource(this);
         ResetImages();
         uILaserManager.UpdateSpritesFromSource();

@@ -31,7 +31,9 @@ public class RebindingButton : MonoBehaviour
 
     private void UpdateText()
     {
-        bindingText.text = GetBindingDisplayStringForControl(control);
+        string text = GetBindingDisplayStringForControl(control);
+        bindingText.text = text;
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => bindingText.text = text, this);
     }
 
     private string GetBindingDisplayStringForControl(Control control)

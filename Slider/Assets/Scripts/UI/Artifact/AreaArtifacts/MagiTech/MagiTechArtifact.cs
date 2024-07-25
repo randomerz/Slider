@@ -31,12 +31,14 @@ public class MagiTechArtifact : UIArtifact
     private bool isPreview = false;
     private bool isDesyncSoundPlaying = false;
 
-    private AudioManager.ManagedInstance desyncTearLoopSound;
+    // private AudioManager.ManagedInstance desyncTearLoopSound;
 
     public Image background;
     public Sprite presentBackgroundSprite;
     public Sprite pastBackgroundSprite;
     public Sprite emptyDesyncSprite;
+
+    private const string HAS_DONE_DESYNC_SAVE_STRING = "MagiTechHasDoneADesync";
 
 
     protected override void OnEnable()
@@ -90,12 +92,13 @@ public class MagiTechArtifact : UIArtifact
             // UpdateButtonPositions();
             if (desyncLocation.x != desyncedButton.x || desyncLocation.y != desyncedButton.y)
             {
+                SaveSystem.Current.SetBool(HAS_DONE_DESYNC_SAVE_STRING, true);
                 if (!isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = true;
                     if (isPreview)
                     {
-                        desyncTearLoopSound = AudioManager.Play("Desync Tear Open");
+                        AudioManager.PlayAmbience("Desync Tear Open");
                     }
                 }
                 ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : desyncedButton;
@@ -108,7 +111,8 @@ public class MagiTechArtifact : UIArtifact
                 {
                     // Likely not needed but its good to be safe?
                     isDesyncSoundPlaying = false;
-                    desyncTearLoopSound.HardStop();
+                    // desyncTearLoopSound?.HardStop();
+                    AudioManager.StopAmbience("Desync Tear Open");
                     if (isPreview)
                     {
                         AudioManager.Play("Desync Tear Close");
@@ -165,7 +169,8 @@ public class MagiTechArtifact : UIArtifact
                 if (isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = false;
-                    desyncTearLoopSound.SoftStop();
+                    AudioManager.StopAmbience("Desync Tear Open");
+                    // desyncTearLoopSound?.SoftStop();
                     AudioManager.Play("Desync Tear Close");
                     StartCoroutine(DelayedDesyncEndTileCrash());
                 }

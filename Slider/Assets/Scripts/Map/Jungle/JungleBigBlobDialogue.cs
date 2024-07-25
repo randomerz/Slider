@@ -5,6 +5,11 @@ using UnityEngine;
 public class JungleBigBlobDialogue : MonoBehaviour
 {
     public const string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
+    private readonly List<string> BASIC_SHAPES = new() {
+        "Line",
+        "Semicircle",
+        "Triangle",
+    };
 
     public NPC npc;
     public RecipeList recipeList;
@@ -42,7 +47,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
     private string ShapeNameToSpecialMessage(string shapeName) => shapeName switch
     {
         // "Bandage" => "",
-        // "Bread" => "",
+        "Bread" => "It's gluten free!",
         // "Camera" => "",
         // "Chest" => "",
         "Circle" => "OMG Circle!!! Just like me!!!!",
@@ -59,15 +64,15 @@ public class JungleBigBlobDialogue : MonoBehaviour
         "Line" => "Does Barron want more lines..?",
         // "Lolipop" => "",
         // "Male" => "",
-        // "Minecart" => "",
+        "Minecart" => "OMG do you think I can fit in it?",
         // "Mushroom" => "",
-        // "Pickaxe" => "",
-        // "Plus" => "",
+        "Pickaxe" => "Diggy diggy hole",
+        "Plus" => "Eww... is that... math?",
         // "Popsicle" => "",
-        // "Rail" => "",
-        // "SemiCircle" => "",
+        "Rail" => "I am going to 'Rail' you!",
+        // "Semicircle" => "",
         // "Ship" => "",
-        // "Square" => "",
+        "Square" => "Squares are okay... but I like circles more!",
         "Triangle" => "If you were a triangle you'd be acute one!",
         _ => null
     };
@@ -76,7 +81,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
     private string ShapeNameToSpecialAnimation(string shapeName) => shapeName switch
     {
         // "Bandage" => "Idle",
-        // "Bread" => "Idle",
+        "Bread" => "Idle",
         // "Camera" => "Idle",
         // "Chest" => "Idle",
         "Circle" => "Happy",
@@ -93,15 +98,15 @@ public class JungleBigBlobDialogue : MonoBehaviour
         "Line" => "Idle",
         // "Lolipop" => "Idle",
         // "Male" => "Idle",
-        // "Minecart" => "Idle",
+        "Minecart" => "Idle",
         // "Mushroom" => "Idle",
-        // "Pickaxe" => "Idle",
-        // "Plus" => "Idle",
+        "Pickaxe" => "Happy",
+        "Plus" => "Disgusted",
         // "Popsicle" => "Idle",
-        // "Rail" => "Idle",
-        // "SemiCircle" => "Idle",
+        "Rail" => "Smug",
+        // "Semicircle" => "Idle",
         // "Ship" => "Idle",
-        // "Square" => "Idle",
+        "Square" => "Idle",
         "Triangle" => "Smug",
         _ => "Idle"
     };
@@ -113,6 +118,11 @@ public class JungleBigBlobDialogue : MonoBehaviour
 
     private bool IsInRecipeList(string shapeName)
     {
+        if (BASIC_SHAPES.Contains(shapeName))
+        {
+            return true;
+        }
+
         foreach (Recipe recipe in recipeList.list)
         {
             if (recipe.result.shapeName == shapeName)

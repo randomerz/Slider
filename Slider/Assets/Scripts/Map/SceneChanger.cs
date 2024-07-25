@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using System;
 
 public class SceneChanger : MonoBehaviour
 {
@@ -11,24 +12,29 @@ public class SceneChanger : MonoBehaviour
 
     public bool isSpawnPosRelative;
 
-    void Start()
-    {
-        
-    }
+    public List<GameObject> deactivateOnTransition;
 
-    // void Update()
-    // {
-    //     Keyboard kb = InputSystem.GetDevice<Keyboard>();
-    //     if (kb.pKey.wasPressedThisFrame) 
-    //     { // temporary
-    //         ChangeScenes();
-    //     }
-    // }
+    // We need our loading op stored between both of our loading helper methods
+    private Coroutine coroutine;
+    private AsyncOperation sceneLoad;
+    private bool fadeToBlackAlmostDone;
+    private bool fadeToBlackDone;
+
+    private void OnDisable()
+    {
+        SceneManager.sceneUnloaded -= ResetProperties;
+    }
 
     public void ChangeScenes() 
     {
+        if (coroutine != null)
+        {
+            return;
+        }
+        
         SaveSystem.Current.Save();
         SceneSpawns.nextSpawn = sceneSpawnName;
+        SceneSpawns.lastArea = SGrid.Current.GetArea();
 
         if (isSpawnPosRelative)
             SceneSpawns.relativePos = Player.GetPosition() - transform.position;
@@ -38,48 +44,68 @@ public class SceneChanger : MonoBehaviour
         PauseManager.SetPauseState(false);
 
         // Start a fade to black and then load the scene once it finishes
-        UIEffects.FadeToBlack(() => { StartLoadingScene(); }, 2);
-    }
+        UIEffects.FadeToBlackExtra(
+            callbackNinety: () => { 
+                fadeToBlackAlmostDone = true; 
+            }, 
+            callbackEnd: () => { 
+                fadeToBlackDone = true; 
+                SceneTransitionOverlayManager.ShowOverlay();
+                foreach (GameObject go in deactivateOnTransition)
+                {
+                    go.SetActive(false);
+                }
+            }, 
+            speed: 2
+        );
 
-    // We need our loading op stored between both of our loading helper methods
-    AsyncOperation sceneLoad;
-
-    private void StartLoadingScene()
-    {
-        SceneTransitionOverlayManager.ShowOverlay();
-
-        // Stop people from opening UI!
-        
-      //  UIManager.InvokeCloseAllMenus(true); // In case someone had artifact open while transitioning
-
-        /* This loads our new scene in the background. There are two components to loading a new scene:
-         * 1. Actually loading it: We can do that in the background easily with LoadSceneAsync and make things smoother.
-         * 2. Initializing it: All of our Awake, Start, etc methods have to run now, which takes time. To hide this, we
-         *    want the screen to be fully black while this happens so the player can't see anything.
-         *    
-         * We do part 1 during the fade to black, then totally cover the screen (a separate overlay is needed because the first
-         * will get unloaded briefly before the new UIEffects Canvas is loaded), then do part 2. Once part 2 finishes, 
-         * SceneTransitionOverlayManager notices automatically and disables the overlay.
-         */
         try {
-            sceneLoad = SceneManager.LoadSceneAsync(sceneName);
-            sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
-            StartCoroutine(IChangeScene());
+            coroutine = StartCoroutine(StartLoadingScene());
         }
         catch (System.Exception e) {
             Debug.LogWarning("Scene could not be loaded! Is it properly named and added to build?");
             Debug.LogError(e);
             UIEffects.ClearScreen();
+            UIEffects.StopCurrentCoroutine();
             SceneTransitionOverlayManager.HideOverlay();
         }
     }
 
-    private IEnumerator IChangeScene()
+    private IEnumerator StartLoadingScene()
     {
-        while (sceneLoad.progress < 0.9f)
+
+        // As it turns out, Unity's LoadSceneAsync() is not actually async :(
+        // https://issuetracker.unity3d.com/issues/async-load-is-not-async
+
+        while (!fadeToBlackAlmostDone)
         {
             yield return null;
         }
+
+        sceneLoad = SceneManager.LoadSceneAsync(sceneName);
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+
+        while (!fadeToBlackDone)
+        {
+            yield return null;
+        }
+
+        SceneManager.sceneUnloaded += ResetProperties;
         sceneLoad.allowSceneActivation = true; // "Okay now do it and hurry up!!"
+    }
+
+    public void ShowOverlayIfNotBusy()
+    {
+        SceneTransitionOverlayManager.ShowOverlay();
+    }
+
+    private void ResetProperties(Scene scene)
+    {
+        sceneName = null;
+        coroutine = null;
+        sceneLoad = null;
+        fadeToBlackAlmostDone = false;
+        fadeToBlackDone = false;
+        SceneManager.sceneUnloaded -= ResetProperties;
     }
 }

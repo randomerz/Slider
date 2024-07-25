@@ -20,15 +20,39 @@ public class GameBuilder
 
         Debug.Log($"Build Root Path: {buildRootPath}");
 
-        BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename);
-        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
-        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
+        BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename, null);
+        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename, null);
+        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename, null);
+    }
+    
+    public static void BuildAllPlatformsDev()
+    {
+        string buildRootPath = GetArg("buildRootPath");
+        string filename = GetArg("filename");
+
+        Debug.Log($"Build Root Path: {buildRootPath}");
+
+        BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename, BuildOptions.Development);
+        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename, BuildOptions.Development);
+        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename, BuildOptions.Development);
     }
 
     // For use in Unity
-    [MenuItem("File/GameBuilder/Build Windows + Mac OSX + Linux")]
-    public static void UnityBuildAll()
+    [MenuItem("File/GameBuilder/Release Build Windows + Mac OSX + Linux")]
+    public static void BuildRelease()
     {
+        UnityBuildAll(true);
+    }
+
+    [MenuItem("File/GameBuilder/Dev Build Windows + Mac OSX + Linux")]
+    public static void BuildDev()
+    {
+        UnityBuildAll(false);
+    }
+    
+    private static void UnityBuildAll(bool isRelease)
+    {
+        
         string buildRootPath = EditorUtility.SaveFolderPanel(
             "Select the ROOT folder for your builds...",
             GetProjectFolderPath(),
@@ -38,16 +62,21 @@ public class GameBuilder
         {
             return;
         }
+        
+        var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
+        var Apply = LocalizationSkeletonGenerator.GenerateSkeleton(config, isDev: !isRelease);
 
         string filename = GetProjectName();
 
-        BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename);
-        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
-        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
+        BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
+        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
+        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
+
+        Apply();
     }
 
     // this is the main player builder function
-    private static void BuildPlayer(BuildTarget buildTarget, string buildRootPath, string filename)
+    private static void BuildPlayer(BuildTarget buildTarget, string buildRootPath, string filename, BuildOptions? buildOptions)
     {
         if (buildRootPath == null || buildRootPath.Length == 0)
         {
@@ -88,8 +117,13 @@ public class GameBuilder
         {
             scenes = GetScenePaths(),
             target = buildTarget,
-            locationPathName = finalPath,
+            locationPathName = finalPath
         };
+        if (buildOptions != null)
+        {
+            options.options = buildOptions.Value; // optional set instead of forced set, in case there is a non-0 default flag somewhere in Unity's code...
+        }
+
         Debug.Log($"[Builds] Building: {buildTarget.ToString()} ======");
 
         BuildReport report = BuildPipeline.BuildPlayer(options);

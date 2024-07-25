@@ -64,8 +64,11 @@ public class BottleManager : MonoBehaviour, ISavable
     {
         string reason = "The path is obstructed!";
         string gridString = SGrid.GetGridString();
-        
-        if (gridString[0] == '2' || gridString[0] == '8')
+        if(SGrid.Current.GetNumTilesCollected() < 4)
+        {
+            reason = "There are not enough tiles!";
+        }
+        else if (gridString[0] == '2' || gridString[0] == '8')
         {
             reason = "There is land in the way!";
         }
@@ -194,7 +197,12 @@ public class BottleManager : MonoBehaviour, ISavable
 
     public void InvalidTile(Condition c)
     {
-       if( CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
+        if(SGrid.Current.GetNumTilesCollected() < 4)
+        {
+            c.SetSpec(true);
+            return;
+        }
+        if( CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
         {
             c.SetSpec(false);
         }

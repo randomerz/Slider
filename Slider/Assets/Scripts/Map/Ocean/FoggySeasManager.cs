@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class FoggySeasManager : MonoBehaviour, ISavable
 {
@@ -27,6 +28,12 @@ public class FoggySeasManager : MonoBehaviour, ISavable
     [SerializeField] private Sprite emptyNote, fullNote;
     [SerializeField] private GameObject sparklePrefab;
 
+
+    private SpriteRenderer[] islandSprites;
+    private Tilemap[] islandTiles;
+    private Coroutine islandFadeCoroutine;
+    private float islandAlpha;
+
     public void Save()
     {
         SaveSystem.Current.SetBool("oceanFoggyIslandReached", foggyCompleted);
@@ -40,11 +47,18 @@ public class FoggySeasManager : MonoBehaviour, ISavable
 
     private void Start()
     {
+        InitIslandSprites();
         fogIsland.SetActive(false);
         foreach (SpriteRenderer note in progressNotes)
         {
             note.enabled = false;
         }
+    }
+
+    private void InitIslandSprites()
+    {
+        islandSprites = fogIsland.GetComponentsInChildren<SpriteRenderer>();
+        islandTiles = fogIsland.GetComponentsInChildren<Tilemap>();
     }
 
     private void Update()
@@ -90,7 +104,7 @@ public class FoggySeasManager : MonoBehaviour, ISavable
     {
         fogAnimationController6.SetIsVisible(true);
         fogAnimationController7.SetIsVisible(true);
-        fogIsland.SetActive(false);
+        DeactivateIsland();
 
         if (currentIslandId != 6 && currentIslandId != 7)
         {
@@ -138,13 +152,36 @@ public class FoggySeasManager : MonoBehaviour, ISavable
         STile playerStile = Player.GetInstance().GetSTileUnderneath();
         fogIsland.transform.position = playerStile.transform.position;
         fogIsland.transform.SetParent(playerStile.transform);
-        fogIsland.SetActive(true);
-        SetProgressRingActive(false);
 
         if (fogIslandId == 6)
             fogAnimationController6.SetIsVisible(false);
         else
             fogAnimationController7.SetIsVisible(false);
+
+        if(islandFadeCoroutine != null)
+        {
+            StopCoroutine(islandFadeCoroutine);
+        }
+        fogIsland.SetActive(true);
+        FadeIsland(0, 1, 2);
+    }
+
+    public void DeactivateIsland()
+    {
+        if(islandAlpha > 0)
+        {
+            if(islandFadeCoroutine != null)
+            {
+                StopCoroutine(islandFadeCoroutine);
+            }
+            FadeIsland(islandAlpha, 0, 2 * islandAlpha);
+        }
+        else
+        {
+            fogIsland.SetActive(false);
+        }
+        fogAnimationController6.SetIsVisible(true);
+        fogAnimationController7.SetIsVisible(true);
     }
 
     private void FoggySeasAudio()
@@ -158,6 +195,8 @@ public class FoggySeasManager : MonoBehaviour, ISavable
         if(playerIndex == correctPath.Length - 1 && !foggyCompleted && correctPath[playerIndex] == playerMovement)
         {
             playerIndex++;
+            FoggySeasAudio();
+            progressNotes[playerIndex - 1].sprite = fullNote;
             FoggyCompleted();
             return true; 
         }
@@ -184,7 +223,7 @@ public class FoggySeasManager : MonoBehaviour, ISavable
         }
 
         playerIndex = 0;
-        foggyCompleted = false; // DC: idk why we made it only completable once
+        foggyCompleted = false; 
         AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
         foreach (SpriteRenderer note in progressNotes)
         {
@@ -194,14 +233,13 @@ public class FoggySeasManager : MonoBehaviour, ISavable
             }
             note.sprite = emptyNote;
         }
+        DeactivateIsland();
     }
 
     private void FoggyCompleted()
     {
         foggyCompleted = true;
         fogIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
-        for(int i =0; i < correctPath.Length; i++)
-            progressNotes[i].sprite = emptyNote;
     }
 
     private void SetProgressRingActive(bool active)
@@ -211,8 +249,47 @@ public class FoggySeasManager : MonoBehaviour, ISavable
             note.enabled = active;
             if (!active)
             {
+                note.sprite = emptyNote;
                 Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
             }
+        }
+    }
+
+    private void FadeIsland(float start, float end, float duration)
+    {
+        SetIslandAlpha(start);
+        islandFadeCoroutine = CoroutineUtils.ExecuteEachFrame(
+            (x) => {
+                SetIslandAlpha(Mathf.Lerp(start, end, x));
+            },
+            () => {
+                        
+                SetIslandAlpha(end);
+                if(end == 0)
+                {
+                    fogIsland.SetActive(false);
+                }
+            },
+            this,
+            duration
+        );
+
+    }
+
+    private void SetIslandAlpha(float alpha)
+    {
+        islandAlpha = alpha;
+        foreach(SpriteRenderer sr in islandSprites)
+        {
+            Color c = sr.color;
+            c.a = alpha;
+            sr.color = c;
+        }
+        foreach(Tilemap tm in islandTiles)
+        {
+            Color c = tm.color;
+            c.a = alpha;
+            tm.color = c;
         }
     }
 }

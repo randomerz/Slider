@@ -57,7 +57,11 @@
 			<destination>{621a6f1a-1718-4519-b033-c62a33040a92}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{80fab17b-d1c2-4597-b34b-fc45f866ab50}" />
+	<object class="EventAutomatableProperties" id="{80fab17b-d1c2-4597-b34b-fc45f866ab50}">
+		<property name="maximumDistance">
+			<value>35</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{0f831919-c62f-4dfe-86fc-a2e51ffe587d}" />
 	<object class="GroupTrack" id="{8961720e-d3f2-45c3-9d20-dac33351c3a0}">
 		<relationship name="modules">
@@ -114,7 +118,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{a8fa2467-8d96-4184-a63d-3e0c5576f74b}">
 		<property name="volume">
-			<value>-4</value>
+			<value>4</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -131,7 +135,7 @@
 	</object>
 	<object class="SingleSound" id="{4f5df008-4219-48d5-b290-0a8fd03f8382}">
 		<property name="length">
-			<value>0.41999999999999998</value>
+			<value>0.73499999999999999</value>
 		</property>
 		<property name="timelockedOffset">
 			<value>2.8600000000000003</value>
@@ -141,6 +145,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{18412a4f-e4ae-44bf-9c17-bbcd5d7d12a0}">
+		<property name="volume">
+			<value>4</value>
+		</property>
 		<property name="name">
 			<value>Audio 2</value>
 		</property>
@@ -186,7 +193,11 @@
 	</object>
 	<object class="MixerBusPanner" id="{f04d5ccb-203b-4af5-808c-f92f99144fa8}" />
 	<object class="MixerBusFader" id="{6d0df45d-494a-4f5b-aea5-eb40d9171fd1}" />
-	<object class="SpatialiserEffect" id="{373ed078-8f02-40db-8f3b-5d49fd296b66}" />
+	<object class="SpatialiserEffect" id="{373ed078-8f02-40db-8f3b-5d49fd296b66}">
+		<property name="maximumDistance">
+			<value>35</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{0c3a2183-8c90-4ec9-b00b-3f985e5667d6}">
 		<property name="position">
 			<value>0.052310570626753879</value>

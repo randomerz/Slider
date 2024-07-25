@@ -50,9 +50,4 @@ public class AllOptionsMenu : MonoBehaviour
     {
         CoroutineUtils.ExecuteAfterEndOfFrame(() => GetComponent<SelectableSet>().Selectables[(int)currentSubMenu].Select(), this);
     }
-
-    public void ApplySetting(string settingKey, int value)
-    {
-
-    }
 }

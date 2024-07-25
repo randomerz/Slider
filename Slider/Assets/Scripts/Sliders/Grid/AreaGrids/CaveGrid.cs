@@ -40,15 +40,15 @@ public class CaveGrid : SGrid
         {
             checkCompletionsOnMoveFunc.Invoke(this, null);
             SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
+        } else
+        {
+            SGridAnimator.OnSTileMoveEnd -= checkCompletionsOnMoveFunc;
         }
     }
 
     private void OnDisable()
     {
-        if (checkCompletion)
-        {
-            SGridAnimator.OnSTileMoveEnd -= checkCompletionsOnMoveFunc;
-        }
+        SGridAnimator.OnSTileMoveEnd -= checkCompletionsOnMoveFunc;
     }
 
     public override void Save()
@@ -77,7 +77,7 @@ public class CaveGrid : SGrid
         base.EnableStile(stile, shouldFlicker);
         if(stile.islandId == 7)
         {
-            AchievementManager.SetAchievementStat("completedBigMoss", 1);
+            AchievementManager.SetAchievementStat("completedBigMoss", false, 1);
         }
     }
 
@@ -94,7 +94,7 @@ public class CaveGrid : SGrid
         gridAnimator.ChangeMovementDuration(0.5f);
 
         SaveSystem.Current.SetBool("cavesCompletion", checkCompletion);
-        SaveSystem.Current.SetBool("forceAutoMove", true);
+        SaveSystem.Current.SetBool("forceAutoMoveCaves", true);
 
         CheckLightingCompletions();
         lightSim.UpdateLightSim();
@@ -167,7 +167,7 @@ public class CaveGrid : SGrid
 
     private IEnumerator ICavesShake3()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
         CameraShake.Shake(1.5f, 2.5f);
         AudioManager.Play("Slide Explosion");
@@ -189,7 +189,7 @@ public class CaveGrid : SGrid
         GivePlayerTheCollectible("Slider 9");
 
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
-        SaveSystem.Current.SetBool("forceAutoMove", false);
+        SaveSystem.Current.SetBool("forceAutoMoveCaves", false);
 
         lightSim.UpdateLightSim();
         SetMagicRocks(false);
@@ -197,7 +197,7 @@ public class CaveGrid : SGrid
         UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
 
-        AchievementManager.SetAchievementStat("completedCaves", 1);
+        AchievementManager.SetAchievementStat("completedCaves", false, 1);
     }
 
     private void SetMagicRocks(bool value)

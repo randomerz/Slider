@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class OceanControllerSupportButton : MonoBehaviour
@@ -18,6 +19,15 @@ public class OceanControllerSupportButton : MonoBehaviour
     {
         originalImageColor= image.color;
         ColorButtonBasedOnIfSelected();
+    }
+
+    private void OnEnable()
+    {
+        // Can happen if you close artifact -> open some other menu and select a button -> reopen artifact
+        if (currentlySelected && EventSystem.current.currentSelectedGameObject != gameObject)
+        {
+            OnDeselect();
+        }
     }
 
     public void OnClick()

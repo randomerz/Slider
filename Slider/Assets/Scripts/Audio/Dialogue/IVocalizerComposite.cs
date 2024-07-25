@@ -17,6 +17,21 @@ namespace SliderVocalization
 
         bool IVocalizer.IsEmpty => Vocalizers.Count == 0;
 
+        int IVocalizer.Count<V>()
+        {
+            if (this is V)
+            {
+                return 1;
+            }
+            
+            int count = 0;
+            foreach (var voc in Vocalizers)
+            {
+                count += voc.Count<V>();
+            }
+            return count;
+        }
+
         internal void PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T upcoming);
         
         public VocalizerCompositeState GetVocalizationState();
@@ -92,10 +107,17 @@ namespace SliderVocalization
 
         void IVocalizer.Stop()
         {
+            if (Vocalizers == null)
+            {
+                StateTransition(VocalizerCompositeState.CanPlay);
+                return;
+            }
+
             foreach (var voc in Vocalizers)
             {
                 voc.Stop();
             }
+            
 
             ClearProgress();
             
@@ -124,6 +146,9 @@ namespace SliderVocalization
 }
 public static class VocalizerCompositeExtensions
 {
+    public static int GetCount<T, V>(this IVocalizerComposite<T> composite) where T : IVocalizer where V: IVocalizer
+        => composite.Count<V>();
+    
     public static bool GetIsEmpty<T>(this IVocalizerComposite<T> composite) where T : IVocalizer
         => composite.IsEmpty;
 
@@ -137,8 +162,16 @@ public static class VocalizerCompositeExtensions
         composite.Stop();
         if (composite is VocalizableParagraph paragraph)
         {
-            VocalizableParagraph.speakers.Remove(paragraph);
-            AudioManager.StopDampen(paragraph);
+            if (VocalizableParagraph.speakers.Contains(paragraph))
+            {
+                // Debug.Log($"Speaker unregistered at {paragraph.transform.parent.name}");
+                VocalizableParagraph.speakers.RemoveAll(p => p == paragraph);
+            }
+
+            if (VocalizableParagraph.speakers.Count == 0)
+            {
+                AudioManager.StopDampen<VocalizableParagraph>();
+            }
         }
     }
 

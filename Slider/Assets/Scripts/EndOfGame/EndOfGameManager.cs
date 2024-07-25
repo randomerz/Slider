@@ -22,16 +22,23 @@ public class EndOfGameManager : MonoBehaviour
     public Transform parallaxAnimationEnd;
     public AnimationCurve parallaxAnimationCurve;
 
-    public CanvasGroup canvasGroup;
+    public CanvasGroup canvasGroupReunited;
+    public CanvasGroup canvasGroupWith;
+    public CanvasGroup canvasGroupBoomo;
     public CanvasGroup timeCanvasGroup;
 
-    private const float MAXIMUM_SPEEDRUN_TIME_SECONDS = 7200;
+    private const float MAXIMUM_TIME_DISPLAY_SECONDS = 3600 * 3;
+    private const float MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600 * 2;
+    private const float MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600;
     private const float PARALLAX_ANIMATION_DURATION = 5;
     private const float FADE_ANIMATION_DURATION = 1;
-    private const string MAIN_MENU_SCENE = "MainMenu";
+    private const float FADE_INBETWEEN_DURATION = 0.75f;
+    private const string CREDITS_SCENE = "Credits";
 
     private System.IDisposable listener;
     private AsyncOperation sceneLoad;
+
+    private float time;
 
     private void OnDisable() 
     {
@@ -40,8 +47,22 @@ public class EndOfGameManager : MonoBehaviour
 
     public void Start()
     {
+        time = SaveSystem.Current.GetPlayTimeInSeconds();
         UpdateTexts();
         StartCoroutine(AnimateEndScene());
+    }
+
+    private void GiveAchievements()
+    {
+        AchievementManager.SetAchievementStat("savedCat", false, 1);
+        if (SaveSystem.Current != null && time < MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
+        {
+            AchievementManager.SetAchievementStat("completedGame2Hours", true, 1);
+        }
+        if (SaveSystem.Current != null && time < MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
+        {
+            AchievementManager.SetAchievementStat("completedGame1Hour", true, 1);
+        }
     }
 
     public void UpdateTexts()
@@ -53,7 +74,7 @@ public class EndOfGameManager : MonoBehaviour
         }
 
         nameText.SetText($"{SaveSystem.Current.GetProfileName()}!");
-        TimeSpan ts = TimeSpan.FromSeconds(SaveSystem.Current.GetPlayTimeInSeconds());
+        TimeSpan ts = TimeSpan.FromSeconds(time);
         timeText.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}:{3:D3}",
             ts.Hours,
@@ -62,7 +83,7 @@ public class EndOfGameManager : MonoBehaviour
             ts.Milliseconds
         ));
 
-        bool enableTimeText = SaveSystem.Current.GetPlayTimeInSeconds() <= MAXIMUM_SPEEDRUN_TIME_SECONDS;
+        bool enableTimeText = time <= MAXIMUM_TIME_DISPLAY_SECONDS;
         timeText.gameObject.SetActive(enableTimeText);
     }
 
@@ -71,21 +92,31 @@ public class EndOfGameManager : MonoBehaviour
     /// </summary>
     private IEnumerator AnimateEndScene()
     {
-        UIEffects.FadeFromBlack();
-        canvasGroup.alpha = 0;
+        UIEffects.FadeFromBlack(speed: 0.5f);
+        canvasGroupReunited.alpha = 0;
+        canvasGroupWith.alpha = 0;
+        canvasGroupBoomo.alpha = 0;
         timeCanvasGroup.alpha = 0;
 
         StartCoroutine(ParalaxAnimation());
 
-        yield return new WaitForSeconds(PARALLAX_ANIMATION_DURATION - 0.25f);
+        yield return new WaitForSeconds(PARALLAX_ANIMATION_DURATION - 0.25f - 1.5f);
 
-        StartCoroutine(FadeAnimation(canvasGroup));
+        StartCoroutine(FadeAnimation(canvasGroupReunited));
 
-        yield return new WaitForSeconds(FADE_ANIMATION_DURATION + 0.5f);
+        yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+
+        StartCoroutine(FadeAnimation(canvasGroupWith));
+
+        yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+
+        StartCoroutine(FadeAnimation(canvasGroupBoomo));
+
+        yield return new WaitForSeconds(2 * FADE_INBETWEEN_DURATION);
 
         StartCoroutine(FadeAnimation(timeCanvasGroup));
 
-        yield return new WaitForSeconds(FADE_ANIMATION_DURATION + 0.5f);
+        yield return new WaitForSeconds(2 * FADE_INBETWEEN_DURATION);
 
         EnableOnAnyButtonPress();
     }
@@ -154,14 +185,16 @@ public class EndOfGameManager : MonoBehaviour
     private void OnAnyButtonPress() 
     {
         listener.Dispose();
-        GoToMainMenu();
+        GoToCredits();
     }
 
-    private void GoToMainMenu()
+    private void GoToCredits()
     {
-        SaveSystem.SetCurrentProfile(-1); //We need the current profile to display values
-        sceneLoad = SceneManager.LoadSceneAsync(MAIN_MENU_SCENE);
-        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+        SaveSystem.SetCurrentProfile(-1); 
+        sceneLoad = SceneManager.LoadSceneAsync(CREDITS_SCENE);
+        sceneLoad.allowSceneActivation = false;
+
+        GiveAchievements();
 
         UIEffects.FadeToBlack(() => {
             sceneLoad.allowSceneActivation = true;

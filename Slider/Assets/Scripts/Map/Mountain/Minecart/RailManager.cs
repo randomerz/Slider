@@ -11,7 +11,8 @@ public class RailManager : MonoBehaviour
     public List<Vector3Int> railLocations = new List<Vector3Int>(); // a list of the locations of the rail tiles 
     public Minecart mc;
     public bool isBorderRM = false; //this is really jank but for now it works
-  
+    public RailManager otherRMOnTile;
+
     private void Start() 
     {
         foreach (Vector3Int position in railMap.cellBounds.allPositionsWithin) {

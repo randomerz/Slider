@@ -119,6 +119,7 @@ public class PlayerInventory : MonoBehaviour
             // do we need to check for the case that it is currently being picked up? probably not bc of timing
 
             AddItem(anchor);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, anchor.transform.position);
             anchor.RemoveFromTile();
             anchor.transform.SetParent(PlayerAction.Instance.GetPickedItemLocationTransform());
             anchor.AnimatePickUpEnd(PlayerAction.Instance.GetPickedItemLocationTransform().position);
@@ -133,6 +134,11 @@ public class PlayerInventory : MonoBehaviour
     {
         collectibles.Add(collectible.GetCollectibleData());
         OnPlayerGetCollectible?.Invoke(instance, new InventoryEvent {collectible = collectible});
+    }
+
+    public static void RemoveCollectible(Collectible.CollectibleData collectibleData) 
+    {
+        collectibles.Remove(collectibleData);
     }
 
     public static void AddItem(Item item)
@@ -160,6 +166,7 @@ public class PlayerInventory : MonoBehaviour
         {
             itemIterator = equipables.GetEnumerator();
         }
+        Item prev = currentItem;
         bool res = itemIterator.MoveNext();
 
         if (res)
@@ -168,11 +175,18 @@ public class PlayerInventory : MonoBehaviour
             currentItem.gameObject.SetActive(true);
             currentItem.OnEquip();
             currentItem.SetSortingOrder(itemSortingOrder);
+            AudioManager.PlayWithVolume("Create Save", 0.4f);
         }
         else
         {
             itemIterator.Reset();
             currentItem = null;
+
+            // no items
+            if (prev != null) 
+            {
+                AudioManager.PlayWithVolume("Delete Save", 0.4f);
+            }
         }
     }
 

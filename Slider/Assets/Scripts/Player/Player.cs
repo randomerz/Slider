@@ -51,9 +51,16 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
 
+    private int timesControlsChangedRecently;
+    private Coroutine timesControlsChangedCoroutine;
+    private bool controlsWarningEnabled;
+    private Coroutine controlsWarningCoroutine;
+
     private bool didInit;
 
-    private static float houseYThreshold = -75; // below this y value the player must be in a house
+    public static float houseYThreshold { get; private set; }= -75; // below this y value the player must be in a house
+
+    private bool trackerEnabled = true;
 
     protected void Awake()
     {
@@ -75,11 +82,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         UpdatePlayerSpeed();
     }
 
-    private void Start() 
-    {
-        SetTracker(true);
-    }
-
     private void OnDisable() 
     {
         foreach (Material m in ppMaterials)
@@ -90,6 +92,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     
     void Update()
     {
+        if(Time.timeScale == 0) return;
+        
         if (canAnimateMovement)
         {
             if (inputDir.x < 0)
@@ -186,9 +190,52 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     public void OnControlsChanged()
     {
         string newControlScheme = GetCurrentControlScheme();
-        //Debug.Log("Control Scheme changed to: " + newControlScheme);
+        HandleControllerWarnings();
+        Debug.Log("[Input] Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
         Controls.CurrentControlScheme = newControlScheme;
+    }
+
+    private void HandleControllerWarnings()
+    {
+        timesControlsChangedRecently += 1;
+        UIControllerWarning.SetWarningTextEnabled(controlsWarningEnabled);
+
+        if (timesControlsChangedCoroutine != null)
+        {
+            StopCoroutine(timesControlsChangedCoroutine);
+            timesControlsChangedCoroutine = null;
+        }
+        if (controlsWarningCoroutine != null)
+        {
+            StopCoroutine(controlsWarningCoroutine);
+            controlsWarningCoroutine = null;
+        }
+
+        timesControlsChangedCoroutine = CoroutineUtils.ExecuteAfterDelay(
+            () => {
+                timesControlsChangedRecently = 0;
+                timesControlsChangedCoroutine = null;
+            },
+            this,
+            2
+        );
+
+        if (timesControlsChangedRecently > 4)
+        {
+            controlsWarningEnabled = true;
+            UIControllerWarning.SetWarningTextEnabled(controlsWarningEnabled);
+
+            controlsWarningCoroutine = CoroutineUtils.ExecuteAfterDelay(
+                () => {
+                    controlsWarningEnabled = false;
+                    UIControllerWarning.SetWarningTextEnabled(controlsWarningEnabled);
+                    controlsWarningCoroutine = null;
+                },
+                this,
+                4
+            );
+        }
     }
 
     // Here is where we pay for all our Singleton Sins
@@ -299,7 +346,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetIsInHouse(sp.isInHouse);
 
         // Update position
-        if (SettingsManager.Setting<bool>(Settings.DevConsole).CurrentValue && DebugUIManager.justDidSetScene)
+        if (DebugUIManager.justDidSetScene)
         {
             // skip setting position if just did SetScene()
             DebugUIManager.justDidSetScene = false;
@@ -456,17 +503,50 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             moveSpeed += 2;
         }
 
+        if (PlayerInventory.Contains("Boots Upgrade"))
+        {
+            moveSpeed += 0.5f;
+        }
+
         if (isOnWater)
         {
             moveSpeed += 1;
         }
     }
 
-    public void SetTracker(bool value)
+    public void SetTrackerEnabled(bool value)
     {
-        if (value)
+        trackerEnabled = value;
+        if(trackerEnabled)
         {
-            if (SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue)
+            AddTracker();
+        }
+        else
+        {
+            UITrackerManager.RemoveTracker(gameObject);
+        }
+    }
+
+    public static void AddTrackerOnSettingsChange()
+    {
+        if(_instance == null) 
+            return;
+        _instance.AddTrackerOnSettingsChangeHelper();
+    }
+
+    public void AddTrackerOnSettingsChangeHelper()
+    {
+        if(trackerEnabled && UITrackerManager.Instance != null)
+        {
+            UITrackerManager.RemoveTracker(gameObject);
+            AddTracker();
+        }
+    }
+
+    public void AddTracker()
+    {
+        if(!trackerEnabled) return;
+        if (SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue)
             {
                 UITrackerManager.AddNewTracker(
                     gameObject,
@@ -490,11 +570,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
                     timeUntilBlinkRepeat: 10f
                 );
             }
-        }
-        else
-        {
-            UITrackerManager.RemoveTracker(gameObject);
-        }
     }
 
     // This is a dangerous operation! You should probably only use it when the grid is locked.
@@ -509,7 +584,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     public static bool GetIsInHouse()
     {
-        return _instance.isInHouse;
+        return _instance !=null && _instance.isInHouse;
     }
 
     public static void SetIsInHouse(bool isInHouse)

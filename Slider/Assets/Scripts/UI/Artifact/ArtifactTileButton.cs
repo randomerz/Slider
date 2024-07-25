@@ -70,10 +70,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected void OnDisable()
     {
-        if (MyStile != null && MyStile.isTileActive)
-        {
-            SetSpriteToIslandOrEmpty();
-        }
+        SetSpriteToIslandOrEmpty();
     }
 
     public void Init()
@@ -115,9 +112,21 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnSelect()
     {
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
         {
             SetControllerHoverHighlighted(true);
+        }
+        else
+        {
+            SetControllerHoverHighlighted(false);
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (Player.GetInstance().GetCurrentControlScheme() != Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            SetControllerHoverHighlighted(false);
         }
     }
 
@@ -255,6 +264,10 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetControllerHoverHighlighted(bool v)
     {
         buttonAnimator.SetControllerHoverHighlight(v);
+        //if (this.LinkButton != null && this.TileIsActive)
+        //{
+        //    this.LinkButton.buttonAnimator.SetControllerHoverHighlightComplement(v);
+        //}
     }
 
     public void SetHighlighted(bool v)

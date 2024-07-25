@@ -46,6 +46,7 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected STileTilemap worldGridTilemaps;
     [SerializeField] protected AudioModifierOverrides audioModifierOverrides;
     public SGridTilesExplored gridTilesExplored;
+    [HideInInspector] public SceneSpawns DefaultSpawn;
 
     //L: This is the end goal for the slider puzzle.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
@@ -85,7 +86,7 @@ public class SGrid : Singleton<SGrid>, ISavable
 
             
         }
-        checkCompletion = UIArtifactWorldMap.GetInstance().GetAreaStatus(MyArea) == ArtifactWorldMapArea.AreaStatus.color;
+        checkCompletion |= UIArtifactWorldMap.GetInstance().GetAreaStatus(MyArea) == ArtifactWorldMapArea.AreaStatus.color;
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
         
         if (checkCompletion)
@@ -96,6 +97,11 @@ public class SGrid : Singleton<SGrid>, ISavable
         if (gridTilesExplored == null)
         {
             Debug.LogError("SGridTilesExplored is null. Please add the script to the 8Puzzle Game Object and assign the reference.");
+        }
+
+        if (DefaultSpawn == null)
+        {
+            Debug.LogError("DefaultSpawn is null. Please add a Game Object with the SceneSpawns.cs script and SpawnName set to Default.");
         }
         
         UIEffects.FadeFromBlack(() => PauseManager.RemoveAllPauseRestrictions());
@@ -379,18 +385,35 @@ public void SetGrid(int[,] puzzle)
        return GetNumButtonCompletions() == GetTotalNumTiles();
     }
     
-    //C: Order of preference is transform, object, then position
+    /// <summary>
+    /// Prefered!
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="currentStileUnderneath"></param>
+    /// <param name="includeInactive"></param>
+    /// <returns></returns>
     public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
     {
         return GetSTileUnderneathHelper(entity.position, currentStileUnderneath, includeInactive);
     }
     
+    /// <summary>
+    /// Use Transform version if possible!
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="includeInactive"></param>
+    /// <returns></returns>
     public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)
     {
         return GetSTileUnderneathHelper(target.transform.position, target.GetComponentInParent<STile>(), includeInactive);
     }
 
-
+    /// <summary>
+    /// Use Transform version if possible!
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="includeInactive"></param>
+    /// <returns></returns>
     public static STile GetSTileUnderneath(Vector3 pos, bool includeInactive = false)
     {
         return GetSTileUnderneathHelper(pos, null, includeInactive);
@@ -495,9 +518,11 @@ public void SetGrid(int[,] puzzle)
 
     public void ActivateCollectible(string name)
     {
-        if (!PlayerInventory.Contains(name, myArea))
+        Collectible collectible = GetCollectible(name);
+        if (!PlayerInventory.Contains(name, myArea) && collectible != null)
         {
-            GetCollectible(name)?.SpawnCollectable();
+            collectible.shouldDisableAtStart = false;
+            collectible.SpawnCollectable();
         }
             
     }
@@ -510,15 +535,32 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
+    public void ActivateSliderCollectibleNoSound(int sliderId)
+    {
+        if (!PlayerInventory.Contains("Slider " + sliderId, myArea))
+        {
+            GetCollectible("Slider " + sliderId)?.SpawnCollectable(withAudio:false);
+        }
+    }
+
     public void GivePlayerTheCollectible(string name)
     {
-        if (GetCollectible(name) != null)
+        Collectible collectible = GetCollectible(name);
+        if (collectible != null)
         {
             ActivateCollectible(name);
-            GetCollectible(name).transform.position = Player.GetPosition();
-            GetCollectible(name).transform.parent = null;
+            collectible.transform.position = Player.GetPosition();
+            collectible.transform.parent = null;
+            if (collectible.GetComponent<Collider2D>() != null)
+            {
+                collectible.GetComponent<Collider2D>().enabled = true;
+            }
             //UIManager.CloseUI();
             PauseManager.SetPauseState(false);
+        }
+        else
+        {
+            Debug.LogWarning($"Couldn't find collectible with name: {name}");
         }
     }
 
@@ -664,7 +706,7 @@ public void SetGrid(int[,] puzzle)
         //Debug.Log(realigningGrid);
     }
 
-    public virtual void LoadRealigningGrid()
+    public virtual void LoadRealigningGrid(bool setRealigningGridToNull=true)
     {
         //Debug.Log("Loaded!");
         if (realigningGrid == null)
@@ -674,6 +716,15 @@ public void SetGrid(int[,] puzzle)
             return;
         }
         SetGrid(realigningGrid);
+
+        if (setRealigningGridToNull)
+        {
+            realigningGrid = null;
+        }
+    }
+
+    public void ResetRealigningGrid()
+    {
         realigningGrid = null;
     }
 

@@ -63,7 +63,10 @@ public class MagiTechGrid : SGrid
     private ContactFilter2D contactFilter;
 
     public List<GameObject> bridgeObjects;
+    public List<Transform> bridgeSmokeTransforms;
     public List<GameObject> bridgeFenceObjects;
+
+    [SerializeField] private GameObject archeologist;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
@@ -92,6 +95,12 @@ public class MagiTechGrid : SGrid
         base.Start();
         contactFilter = new ContactFilter2D();
         
+        // If they came from Factory Past
+        if (Player.GetIsInHouse())
+        {
+            Player.SetIsInHouse(false);
+        }
+        
         AudioManager.PlayMusic("MagiTech");
         AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", IsInPast(Player._instance.transform) ? 0 : 1);
     }
@@ -110,6 +119,14 @@ public class MagiTechGrid : SGrid
         Anchor.OnAnchorInteract -= OnAnchorInteract;
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+
+        // serialization coping
+        if (SaveSystem.Current.GetBool("magitechInitialPortalOpened") && !SaveSystem.Current.GetBool("magitechInitialPortalCutsceneFinished"))
+        {
+            Debug.LogWarning($"Disabled before finishing portal cutscene, setting some variables on!");
+            SaveSystem.Current.SetBool("magitechInitialPortalCutsceneFinished", true);
+            SaveSystem.Current.SetBool("chadFinishedRunningIntoPortal", true);
+        }
     }
 
     private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
@@ -131,6 +148,11 @@ public class MagiTechGrid : SGrid
             {
                 tabManager.EnableTab();
             }
+        }
+
+        if (islandId == 4)
+        {
+            archeologist.SetActive(true);
         }
     }
 
@@ -301,16 +323,16 @@ public class MagiTechGrid : SGrid
         return transform.position.x > 67;
     }
 
-    public override void LoadRealigningGrid()
+    public override void LoadRealigningGrid(bool setRealigningGridToNull=true)
     {
-        base.LoadRealigningGrid();
+        base.LoadRealigningGrid(setRealigningGridToNull);
 
         EndDesync();
     }
 
     public void TryEnableHint()
     {
-        if (GetNumTilesCollected() >= 1)
+        if (GetNumTilesCollected() >= 2)
         {
             hints.TriggerHint("altview");
         }
@@ -460,14 +482,27 @@ public class MagiTechGrid : SGrid
         {
             SaveSystem.Current.SetBool("magitechBridgeFixed", true);
             AudioManager.Play("Puzzle Complete");
+            AudioManager.Play("MagicChimes2");
+            foreach (Transform t in bridgeSmokeTransforms)
+            {
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, t.transform.position);
+            }
         }
-        foreach(GameObject g in bridgeObjects)
+        foreach (GameObject g in bridgeObjects)
         {
             g.SetActive(false);
         }
-        foreach(GameObject g in bridgeFenceObjects)
+        foreach (GameObject g in bridgeFenceObjects)
         {
             g.SetActive(true);
+        }
+    }
+
+    public void CheckGemAchievement()
+    {
+        if(GetNumTilesCollected() == 0)
+        {
+            AchievementManager.SetAchievementStat("magitechEarlyGem", true, 1);
         }
     }
 
