@@ -395,7 +395,14 @@ public class ChadRace : MonoBehaviour, ISavable
         transform.position += npcScript.speed * Time.deltaTime * targetDirection;
 
         // Assigns chad's current parent to the objects of the stile that he is currently over
-        transform.parent = SGrid.GetSTileUnderneath(gameObject).transform;
+        if (SGrid.GetSTileUnderneath(gameObject) != null)
+        {
+            transform.parent = SGrid.GetSTileUnderneath(gameObject).transform;
+        }
+        else
+        {
+            Debug.LogError($"Error! There was no tile under chad!");
+        }
     }
 
     private void ActivateSpeedLines(bool activate)
