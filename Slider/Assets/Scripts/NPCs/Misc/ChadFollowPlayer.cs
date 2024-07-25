@@ -33,7 +33,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
             {
                 return 0.75f;
             }
-            return 1.5f;
+            return 1.75f;
         }
     }
     private float FarFollowDist { // Start walking if this far
@@ -46,7 +46,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
             {
                 return 1.75f;
             }
-            return 2.5f;
+            return 2.75f;
         }
     }
     [SerializeField] private float closeSpeed = 6.25f;

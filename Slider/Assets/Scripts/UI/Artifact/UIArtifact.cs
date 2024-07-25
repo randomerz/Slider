@@ -119,7 +119,8 @@ public class UIArtifact : Singleton<UIArtifact>
                     return;
                 }
             }
-            Debug.LogWarning($"No buttons were valid for selection for controller.");
+            // This warning gets called every time you open the artifact because UIClick disabled the default selected button until the end of the frame
+            // Debug.LogWarning($"No buttons were valid for selection for controller.");
         }
     }
 
