@@ -51,6 +51,7 @@ public class MountainSoftlockChecker : MonoBehaviour
 
     private bool AnchorInBoxOfSadness()
     {
+        if(anchor == null) return false;
         return PosInBoxOfSadness(anchor.transform.position);
     }
 
