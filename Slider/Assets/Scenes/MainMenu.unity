@@ -635,66 +635,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_Navigation.m_Mode
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_Navigation.m_SelectOnUp
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1941482516}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 275966529}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Click
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: ResetSettings
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: Reopen
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIClick, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: ResetSettingsToDefaults, SliderScripts
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: UIMenu, SliderScripts
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578413, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 6182351309747880561, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: selectables.Array.size
       value: 4
@@ -4675,10 +4615,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.00625
+    y: 0.06736112
+    width: 0.125
+    height: 0.125
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -16906,17 +16846,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1941482516 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5185610708423370476, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-  m_PrefabInstance: {fileID: 41878716}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1943879159
