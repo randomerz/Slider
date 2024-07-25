@@ -53,12 +53,14 @@ public class ChadRace : MonoBehaviour, ISavable
     {
         SGrid.OnGridMove += CheckChad;
         SGrid.OnSTileEnabled += CheckChad;
+        SGrid.OnGridSet += CheckChad;
     }
 
     private void OnDisable()
     {
         SGrid.OnGridMove -= CheckChad;
         SGrid.OnSTileEnabled -= CheckChad;
+        SGrid.OnGridSet -= CheckChad;
     }
 
     // Start is called before the first frame update

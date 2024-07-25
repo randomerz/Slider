@@ -107,6 +107,7 @@ public class AchievementManager : Singleton<AchievementManager>
                 SteamUserStats.SetStat(key, achievementStats[key]);
             }
         }
+        SteamUserStats.StoreStats();
     }
 }
 
