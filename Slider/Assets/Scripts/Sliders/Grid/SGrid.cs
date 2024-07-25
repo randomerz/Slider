@@ -86,7 +86,7 @@ public class SGrid : Singleton<SGrid>, ISavable
 
             
         }
-        checkCompletion = UIArtifactWorldMap.GetInstance().GetAreaStatus(MyArea) == ArtifactWorldMapArea.AreaStatus.color;
+        checkCompletion |= UIArtifactWorldMap.GetInstance().GetAreaStatus(MyArea) == ArtifactWorldMapArea.AreaStatus.color;
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
         
         if (checkCompletion)

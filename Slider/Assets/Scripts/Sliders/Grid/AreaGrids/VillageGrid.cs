@@ -31,16 +31,16 @@ public class VillageGrid : SGrid
     {
         InitArea(Area.Village);
         base.Init();
-
-        if (fishOn)
-        {
-            particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
-        }
     }
 
     protected override void Start()
     {
         base.Start();
+
+        if (fishOn)
+        {
+            particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
+        }
 
         AudioManager.PlayMusic("Village");
         
@@ -70,11 +70,9 @@ public class VillageGrid : SGrid
     private void OnDisable()
     {
         introCameraDolly.OnRollercoasterEnd -= OnVillageCutsceneEnd;
-        if (checkCompletion)
-        {
-            SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
-            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
-        }
+
+        SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
     }
 
     public override void Save()
