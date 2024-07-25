@@ -10,7 +10,7 @@ public class OceanGrid : SGrid
     public NPCRotation npcRotation;
     public OceanArtifact oceanArtifact; 
     public GameObject treesToJungle;
-    private readonly List<int> landTiles = new() { 1, 2, 8 };    
+    private List<int> landTiles = new List<int> {1, 2, 8};    
     private int numAnchorUses;
     [SerializeField] private Volcano volcano;
 

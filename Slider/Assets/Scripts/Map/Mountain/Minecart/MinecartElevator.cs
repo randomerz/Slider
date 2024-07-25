@@ -60,12 +60,12 @@ public class MinecartElevator : MonoBehaviour, ISavable
         elevatorState = ElevatorState.FIXED;
         crystalchecker.SetActive(false);
         animationManager.Repair();
-        pylon.transform.position = new Vector3(-100, 0, 0); 
+        pylon.SetActive(false);
         powerBox.StartSignal(true);
 
         if(!fromSave)
         {
-            mainMc.UpdateState(MinecartState.Empty, false);
+            mainMc.UpdateState(MinecartState.Empty);
             AudioManager.Play("Puzzle Complete");
         }
     }

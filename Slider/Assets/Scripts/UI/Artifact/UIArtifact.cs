@@ -115,7 +115,14 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 if (IsButtonValidForSelection(g))
                 {
-                    EventSystem.current.SetSelectedGameObject(g);
+                    if (g.TryGetComponent<Button>(out Button b))
+                    {
+                        b.Select();
+                    }
+                    else
+                    {
+                        EventSystem.current.SetSelectedGameObject(g);
+                    }
                     return;
                 }
             }

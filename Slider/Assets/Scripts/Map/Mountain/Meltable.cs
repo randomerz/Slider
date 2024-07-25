@@ -285,8 +285,4 @@ public class Meltable : FlashWhiteSprite, ISavable
     public void HasBeenBrokenMultipleTimes(Condition c){
         c.SetSpec(numTimesBroken > 1);
     }
-
-    public bool IsBrokenOrMelted() {
-        return(state != MeltableState.MELTED);
-    }
 }

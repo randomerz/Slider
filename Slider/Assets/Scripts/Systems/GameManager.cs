@@ -37,11 +37,6 @@ public class GameManager : MonoBehaviour
         return saveSystem;
     }
 
-    private void OnApplicationQuit()
-    {
-        SaveSystem.SaveBackups();
-    }
-
 
     // temporary -- only to expose to Unity/Slider debugger
     public void SaveGame()

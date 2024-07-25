@@ -640,9 +640,9 @@ public class Minecart : Item, ISavable
 
     #region State
 
-    public void UpdateState(MinecartState state, bool playSound = true){
+    public void UpdateState(MinecartState state){
         if(state == mcState) return;
-        if(playSound && mcState == MinecartState.Crystal)
+        if(mcState == MinecartState.Crystal)
         {
             AudioManager.SetGlobalParameter(CRYSTAL_IN_CART_AMBIENCE_NAME, 0);
             AudioManager.Play("Gem Break");

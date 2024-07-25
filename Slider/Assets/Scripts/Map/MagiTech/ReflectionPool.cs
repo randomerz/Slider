@@ -13,8 +13,6 @@ public class ReflectionPool : MonoBehaviour
     public GameObject npc;
     public List<GameObject> cutsceneParticles;
 
-    private const string CUTSCENE_SAVE_STRING = "MagiTechReflectionTurnInCutscene";
-
     private void OnEnable()
     {
         SGrid.OnSTileEnabled += Check; 
@@ -87,9 +85,6 @@ public class ReflectionPool : MonoBehaviour
 
     private IEnumerator TurnInArtifactCutscene()
     {
-        SaveSystem.Current.SetBool(CUTSCENE_SAVE_STRING, true);
-        ChadChirp.OnTryChirp?.Invoke(this, new ChadChirp.ChadChirpArgs { id = "ReflectionPoolCutscene" });
-
         foreach(GameObject go in cutsceneParticles)
             go.SetActive(true);
         AudioManager.Play("Slide Rumble");

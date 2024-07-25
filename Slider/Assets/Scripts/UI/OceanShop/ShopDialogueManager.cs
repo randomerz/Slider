@@ -454,7 +454,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         // shrink the font to 1/3 of original size due to a "Tiny" font being used for English
         if (dialogue.textTranslated != null)
         {
-            toVocalize = currentTyperText.ParseTextPure(dialogue.text);
+            toVocalize = currentTyperText.ReplaceAndStripRichText(dialogue.text, true);
             
             // AT: not sure if do the same replacement here...
             // localizedMessage = localizedMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
@@ -473,7 +473,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
             // Instead in FMOD Bob's voice has the spatializer turned off
             // vocalizer.transform.position = currentTyperText.transform.position;
 
-            int maxPhonemes = 5;
+            int maxPhonemes = 10;
             
             float totalDuration = vocalizer.SetText(toVocalize, NPCEmotes.Emotes.None, maxPhonemes);
         

@@ -119,7 +119,6 @@ public class PlayerInventory : MonoBehaviour
             // do we need to check for the case that it is currently being picked up? probably not bc of timing
 
             AddItem(anchor);
-            ParticleManager.SpawnParticle(ParticleType.SmokePoof, anchor.transform.position);
             anchor.RemoveFromTile();
             anchor.transform.SetParent(PlayerAction.Instance.GetPickedItemLocationTransform());
             anchor.AnimatePickUpEnd(PlayerAction.Instance.GetPickedItemLocationTransform().position);
