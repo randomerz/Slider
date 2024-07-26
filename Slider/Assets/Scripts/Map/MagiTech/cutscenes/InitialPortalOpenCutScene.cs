@@ -7,6 +7,7 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
     private NPC fezziwig;
 
     public GameObject portalGunGO;
+    public MagiTechInitialPortalTease initialPortalTease;
 
     protected override void Start()
     {
@@ -51,5 +52,10 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         base.OnCutSceneFinish();
 
         portalGunGO.SetActive(false);
+        // In case someone quits before fezziwig opens the portal
+        if (!SaveSystem.Current.GetBool("magitechInitialPortalOpened"))
+        {
+            initialPortalTease.EnableRealPortal(true);
+        }
     }
 }

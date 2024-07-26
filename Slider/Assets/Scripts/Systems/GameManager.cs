@@ -12,9 +12,9 @@ public class GameManager : MonoBehaviour
     public GameSaver gameAutoSaver;
 
     private void Awake() {
-        Debug.Log($"[Start] Starting game on version {Application.version}. Running on {SystemInfo.operatingSystem}. Time is {System.DateTime.Now}.");
-
         if (instance == null) {
+            Debug.Log($"[Start] Starting game on version {Application.version}. Running on {SystemInfo.operatingSystem}. Time is {System.DateTime.Now}.");
+
             instance = this;
             DontDestroyOnLoad(gameObject);
             saveSystem = new SaveSystem();
