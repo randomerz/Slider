@@ -28,6 +28,15 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
 
     protected virtual void Start()
     {
+        if (!string.IsNullOrEmpty(cutsceneStartedFlag) || !string.IsNullOrEmpty(cutsceneFinishedFlag))
+        {
+            Debug.LogWarning($"Cutscene Started or Finished flag was not set!");
+        }
+        
+        if (!string.IsNullOrEmpty(cutsceneStartedFlag) && SaveSystem.Current.GetBool(cutsceneStartedFlag))
+        {
+            cutsceneStarted = true;
+        }
         if (!string.IsNullOrEmpty(cutsceneFinishedFlag) && SaveSystem.Current.GetBool(cutsceneFinishedFlag))
         {
             OnCutSceneFinish();
@@ -210,7 +219,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
     // This way we can call this when you load in from a save.
     protected virtual void OnCutSceneFinish()
     {
-
+        cutsceneFinished = true;
     }
    
     protected IEnumerator SayNextDialogue(NPC character, bool skippable = true, float timeWaitAfterFinishedTyping = DEFAULT_TIME_BETWEEN_DIALOGUE_LINES)
