@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameSaver gameAutoSaver;
 
     private void Awake() {
+        Debug.Log($"Starting game on version ${Application.version} on {SystemInfo.operatingSystem}.");
+
         if (instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
