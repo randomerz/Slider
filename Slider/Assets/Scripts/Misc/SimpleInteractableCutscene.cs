@@ -177,8 +177,8 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         {
             SaveSystem.Current.SetBool(cutsceneFinishedFlag, true);
         }
-        //we want a bit of a gap after cutscene is done before you can start talking to them like normal, otherwise it's weird
-        yield return new WaitForSeconds(1.5f);
+        // //we want a bit of a gap after cutscene is done before you can start talking to them like normal, otherwise it's weird
+        // yield return new WaitForSeconds(1.5f);
 
         EnableAllNormalCharacterDialogueTriggers(true);
     }

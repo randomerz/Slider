@@ -37,9 +37,9 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         yield return SayNextDialogue(fezziwig);
         //Fezziwig casts the spell here
         yield return SayNextDialogue(fezziwig, false);
-        yield return SayNextDialogue(portalOperator, false, 0.3f );
+        yield return SayNextDialogue(portalOperator, true, 0.3f);
         //fezziwig gets cut off mid sentence here
-        yield return SayNextDialogue(fezziwig, false, 0);
+        yield return SayNextDialogue(fezziwig, true, 0.01f);
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(portalOperator);
 
