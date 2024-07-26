@@ -16,6 +16,13 @@ public class MountainSoftlockChecker : MonoBehaviour
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
 
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveEndLate -= OnSTileMoveEnd;
+        Anchor.OnAnchorInteract -= OnAnchorInteract;
+    }
+
+
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
         anchor = sender as Anchor;
@@ -46,6 +53,7 @@ public class MountainSoftlockChecker : MonoBehaviour
 
     private bool PlayerInBoxOfSadness()
     {
+        if(Player.GetInstance() == null) return false;
         return PosInBoxOfSadness(Player.GetPosition());
     }
 
