@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public GameSaver gameAutoSaver;
 
     private void Awake() {
-        Debug.Log($"Starting game on version ${Application.version} on {SystemInfo.operatingSystem}.");
+        Debug.Log($"[Start] Starting game on version {Application.version}. Running on {SystemInfo.operatingSystem}. Time is {System.DateTime.Now}.");
 
         if (instance == null) {
             instance = this;
