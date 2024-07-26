@@ -56,7 +56,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     {
         if(elevatorState != ElevatorState.BROKEN && !fromSave)
         {
-            Debug.LogWarning("Fixed elevator when not in broken state");
+            Debug.LogError("Tried to fix elevator when not in broken state! Aborting.");
             return;
         }
         if(isInBreakingAnimation)
