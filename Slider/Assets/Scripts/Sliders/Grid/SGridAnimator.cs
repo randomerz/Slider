@@ -116,20 +116,25 @@ public class SGridAnimator : MonoBehaviour
     {
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
                                 Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
+        
+        if (isPlayerOnStile)
+        {
+            stile.SetBorderColliders(true); // This method uses a counter -- true must be paired with a false!
+        }
 
         Vector2 moveDir = GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc);
         if (move is not SMoveConveyor)
         {
             stile.SetMovingDirection(moveDir);
         }
-        
-        if (isPlayerOnStile)
-        {
-            stile.SetBorderColliders(true);
-        }
 
         float currMoveDuration = movementDurationMultiplier * move.duration;
         currMoveDuration = Mathf.Min(currMoveDuration, MAX_POSSIBLE_MOVE_DURATION);
+
+        if (currMoveDuration <= 0)
+        {
+            Debug.LogError($"Move was queued to animate with duration less than 0!");
+        }
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
