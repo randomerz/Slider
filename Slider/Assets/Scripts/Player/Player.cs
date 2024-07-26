@@ -294,6 +294,12 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         Vector3 pos = transform.position;
         Vector3 localPos = transform.localPosition;
 
+        if (SGrid.Current.GetArea() == Area.Desert && isInHouse)
+        {
+            // The desert temple is considered "outside map" so we have to care for it
+            return pos;
+        }
+
         // STile postitions
         STile stile = GetSTileUnderneath();
         if (stile == null)
@@ -358,6 +364,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             transform.SetParent(null);
             transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
+            // Debug.Log($"Just set players position to {transform.position}");
             UpdateSTileUnderneath();
         }
 

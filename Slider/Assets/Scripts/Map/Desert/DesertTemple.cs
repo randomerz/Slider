@@ -39,16 +39,13 @@ public class DesertTemple : MonoBehaviour, ISavable
         if (SaveSystem.Current.GetBool("desertTempleActivatedTrap") &&
             !SaveSystem.Current.GetBool("desertTempleTrapCleared"))
         {
-            ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
+            FinishTrapActivation();
         }
     }
 
     private void OnDisable() 
     {
-        if (SaveSystem.Current.GetBool("desertTempleActivatedTrap"))
-        {
-            ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
-        }
+        ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
         templeMusic.SetIsInTemple(false);
     }
     
@@ -145,17 +142,22 @@ public class DesertTemple : MonoBehaviour, ISavable
 
         yield return new WaitForSeconds(0.25f);
 
-        UIEffects.FlashWhite();
-        SGrid.Current.SetGrid(SGrid.GridStringToSetGridFormat("815493672"));
-        templeTrapBlockingRoom.SetActive(true);
-        SaveSystem.Current.SetBool("desertTempleActivatedTrap", true);
-
-        ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
+        FinishTrapActivation();
 
         yield return new WaitForSeconds(0.75f);
 
         CameraShake.Shake(2, 0.9f);
         shuffleBuildUpCoroutine = null;
+    }
+
+    private void FinishTrapActivation()
+    {
+        UIEffects.FlashWhite();
+        SGrid.Current.SetGrid(SGrid.GridStringToSetGridFormat("815493672"));
+        templeTrapBlockingRoomCollider.SetActive(true);
+        templeTrapBlockingRoom.SetActive(true);
+        SaveSystem.Current.SetBool("desertTempleActivatedTrap", true);
+        ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
     }
 
     private void OnScrollRearrage(object sender, System.EventArgs e)
