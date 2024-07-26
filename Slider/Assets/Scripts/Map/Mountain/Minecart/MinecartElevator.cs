@@ -55,8 +55,15 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public void FixElevator(bool fromSave = false)
     {
         if(elevatorState != ElevatorState.BROKEN && !fromSave)
-            Debug.LogWarning("Fixed elevator when not in broken state");
-        
+        {
+            Debug.LogError("Tried to fix elevator when not in broken state! Aborting.");
+            return;
+        }
+        if(isInBreakingAnimation)
+        {
+            animationManager.StopAllCoroutines();
+            isInBreakingAnimation = false;
+        }
         elevatorState = ElevatorState.FIXED;
         crystalchecker.SetActive(false);
         animationManager.Repair();
