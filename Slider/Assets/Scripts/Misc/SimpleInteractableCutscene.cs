@@ -185,7 +185,21 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
             }
         }
 
+        yield return null; // Give time for conditionals to update
+
+        foreach (NPC character in cutsceneCharacters)
+        {
+            character.PollForNewConditional();
+        }
+
         yield return CutScene();
+        
+        yield return null; // Give time for conditionals to update
+
+        foreach (NPC character in cutsceneCharacters)
+        {
+            character.PollForNewConditional();
+        }
 
         if (playerInTrigger)
         {

@@ -243,7 +243,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     }
     #endregion
 
-    private void PollForNewConditional()
+    public void PollForNewConditional()
     {
         int maxPrioIndex = GetCondIndexWithMaxPriority();
         if (maxPrioIndex == -1)

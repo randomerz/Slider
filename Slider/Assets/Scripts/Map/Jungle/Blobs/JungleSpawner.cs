@@ -80,9 +80,14 @@ public class JungleSpawner : JungleBox
             return false;
         }
 
+        if (targetBox is JungleSpawner)
+        {
+            // Checking targetBox.IsValidInput() didn't work for me for some reason
+            return false;
+        }
+
         // Update next box
-        Direction invDirection = DirectionUtil.Inv(direction);
-        if (ProducedShape != null && targetBox != null && targetBox.IsValidInput(targetBox, invDirection))
+        if (ProducedShape != null && targetBox != null)
         {
             targetBox.UpdateBox(depth + 1);
         }

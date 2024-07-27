@@ -16,13 +16,11 @@ public class JungleIntroCutscene : SimpleInteractableCutscene
 
     protected override bool ShouldCutsceneBeSkipped()
     {
-        return PlayerInventory.Contains("Slider 2 & 3", Area.Jungle);
+        return PlayerInventory.Contains("Slider 4", Area.Jungle);
     }
 
     protected override IEnumerator CutScene()
     {
-        // JungleBarronIntro1 is no longer used
-
         // Justin! How's the R&D on shape production?
         yield return SayNextDialogue(barron);
 
@@ -36,5 +34,12 @@ public class JungleIntroCutscene : SimpleInteractableCutscene
         yield return SayNextDialogue(justin);
 
         OnCutSceneFinish();
+    }
+
+    protected override void OnCutSceneFinish()
+    {
+        base.OnCutSceneFinish();
+        
+        SaveSystem.Current.SetBool("JungleJustinWalkingToTV", true);
     }
 }

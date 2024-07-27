@@ -24,7 +24,6 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
 
     protected override void OnCutsceneNotFinished()
     {
-        Debug.Log($"called oncutscene not finished");
         base.OnCutsceneNotFinished();
 
         SaveSystem.Current.SetBool("chadFinishedRunningIntoPortal", true);
