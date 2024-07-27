@@ -23,12 +23,12 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
         // Shuffle order
         for (int i = 0; i < _instance.oddTileOrder.Length; i += 1)
         {
-            int r = Random.Range(i, _instance.oddTileOrder.Length);
+            int r = SeededRandom.Range(i, _instance.oddTileOrder.Length);
             (_instance.oddTileOrder[i], _instance.oddTileOrder[r]) = (_instance.oddTileOrder[r], _instance.oddTileOrder[i]);
         }
         for (int i = 0; i < _instance.evenTileOrder.Length; i += 1)
         {
-            int r = Random.Range(i, _instance.evenTileOrder.Length);
+            int r = SeededRandom.Range(i, _instance.evenTileOrder.Length);
             (_instance.evenTileOrder[i], _instance.evenTileOrder[r]) = (_instance.evenTileOrder[r], _instance.evenTileOrder[i]);
         }
         _instance.numSpawned = 1;
