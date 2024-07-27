@@ -12,12 +12,24 @@ public class MagitechMoveOffMoss : MonoBehaviour
 
     private void Awake()
     {
+       Init();
+    }
+
+    private void Init()
+    {
         _mossColliders = GetComponent<Tilemap>();
         _player = FindObjectOfType<Player>();
     }
 
+    private void Start()
+    {
+        CheckPlayerCollidingWithMoss();
+    }
+
     public void CheckPlayerCollidingWithMoss()
     {
+        if(_player == null)
+            Init();
         Vector3Int playerCellCoords = _mossColliders.WorldToCell(_player.transform.position);
         foreach(Vector3Int pos in _mossColliders.cellBounds.allPositionsWithin)
         {
