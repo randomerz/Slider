@@ -74,8 +74,15 @@ public class JungleSpawner : JungleBox
 
     public override bool UpdateBox(int depth = 0)
     {
+        if (depth >= DEPTH_LIMIT)
+        {
+            Debug.LogError("Jungle Box depth limit exceeded!");
+            return false;
+        }
+
         // Update next box
-        if (ProducedShape != null && targetBox != null)
+        Direction invDirection = DirectionUtil.Inv(direction);
+        if (ProducedShape != null && targetBox != null && targetBox.IsValidInput(targetBox, invDirection))
         {
             targetBox.UpdateBox(depth + 1);
         }

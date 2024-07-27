@@ -177,19 +177,24 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
     {
         foreach (Recipe r in _instance.recipeList.list)
         {
-            Shape shape = r.result;
-            foreach (Recipe.Shapes shapes in r.combinations)
+            if (!AnyCombosCreated(r.combinations))
             {
-                if (shapes.isSecondaryRecipe)
-                    continue;
-                
-                if (shapes.numberOfTimesCreated == 0)
-                {
-                    return false;
-                }
+                return false;
             }
         }
         
         return true;
+    }
+    
+    private static bool AnyCombosCreated(List<Recipe.Shapes> combinations)
+    {
+        foreach (Recipe.Shapes shapes in combinations)
+        {
+            if (shapes.numberOfTimesCreated > 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
