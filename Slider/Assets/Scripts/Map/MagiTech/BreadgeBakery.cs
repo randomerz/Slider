@@ -100,7 +100,12 @@ public class BreadgeBakery : MonoBehaviour
         }
         else if (breadgeAmount == 8)
         {
-            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, $"You're only missing the one from {missingAreas}!");
+            if (missingAreas.Count == 0)
+            {
+                SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, $"You should only be missing one but I'm not sure where -- something went wrong tell the devs!");
+                return;
+            }
+            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, $"You're only missing the one from {missingAreas[0]}!");
         }
         else
         {
