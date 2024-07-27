@@ -993,7 +993,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmpCasted.font = LocalizationLoader.LocalizationFont;
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
-            tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded
+            // tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded
             
             if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
             {
@@ -1043,7 +1043,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
                     {
                         txt.fontSize *= scale;
-                        txt.fontWeight = FontWeight.SemiBold;
+                        // txt.fontWeight = FontWeight.SemiBold;
                     }
                 }
                 
@@ -1086,7 +1086,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             if (file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
-                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true, FontWeight.SemiBold);
+                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true);
             }
         }
 
