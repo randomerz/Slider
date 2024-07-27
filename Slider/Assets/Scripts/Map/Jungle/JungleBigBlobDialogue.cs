@@ -99,7 +99,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
         "Lollipop" => "Idle",
         // "Male" => "Idle",
         "Minecart" => "Idle",
-        "Mushroom" => " badger",
+        "Mushroom" => " Shocked",
         "Pickaxe" => "Happy",
         "Plus" => "Disgusted",
         // "Popsicle" => "Idle",
