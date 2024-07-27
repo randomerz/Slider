@@ -24,6 +24,7 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
 
     protected override void OnCutsceneNotFinished()
     {
+        Debug.Log($"called oncutscene not finished");
         base.OnCutsceneNotFinished();
 
         SaveSystem.Current.SetBool("chadFinishedRunningIntoPortal", true);
@@ -31,6 +32,7 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
 
     protected override IEnumerator CutScene()
     {
+        Debug.Log($"Starting Portal Cutscene");
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(fezziwig);
         yield return SayNextDialogue(portalOperator);
