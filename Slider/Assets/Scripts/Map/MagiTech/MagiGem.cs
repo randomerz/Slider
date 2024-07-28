@@ -10,15 +10,19 @@ public class MagiGem : MonoBehaviour, ISavable
     protected bool isTransporting;
     public GameObject particles;
 
+    private void Start()
+    {
+        if (!gemItem.shouldDisableAtStart)
+        {
+            EnableGem(); //if gem active by default, disable if already collected
+        }
+    }
+
     public void Load(SaveProfile profile) {
         if (gemItem == null)
         {
             Debug.LogError("gem null on " + gameObject.name);
             return;
-        }
-        if (!gemItem.shouldDisableAtStart)
-        {
-            EnableGem(); //if gem active by default, disable if already collected
         }
     }
 

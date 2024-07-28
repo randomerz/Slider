@@ -46,6 +46,14 @@ public class GemManager : MonoBehaviour, ISavable
         }
     }
 
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    private void Update()
+    {
+        Debug.Log($"magitech {SaveSystem.Current.GetBool("magiTechMagiTech")} {gems.GetValueOrDefault(Area.MagiTech, false)}");
+    }
+
     public void Save()
     {
         SaveSystem.Current.SetBool("magiTechOcean", gems.GetValueOrDefault(Area.Ocean));
@@ -58,7 +66,7 @@ public class GemManager : MonoBehaviour, ISavable
 
         SaveSystem.Current.SetBool("magiTechDesert", gems.GetValueOrDefault(Area.Desert));
         SaveSystem.Current.SetBool("magiTechJungle", gems.GetValueOrDefault(Area.Jungle));
-        SaveSystem.Current.SetBool("magiTechMagitech", gems.GetValueOrDefault(Area.MagiTech));
+        SaveSystem.Current.SetBool("magiTechMagiTech", gems.GetValueOrDefault(Area.MagiTech));
 
         SaveSystem.Current.SetBool("MagitechHasGemTransporter", hasGemTransporter);
         SaveSystem.Current.SetBool("MagitechGFuelFilling", pipeLiquid.isFilling);
