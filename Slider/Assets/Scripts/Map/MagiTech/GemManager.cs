@@ -46,14 +46,6 @@ public class GemManager : MonoBehaviour, ISavable
         }
     }
 
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    private void Update()
-    {
-        Debug.Log($"magitech {SaveSystem.Current.GetBool("magiTechMagiTech")} {gems.GetValueOrDefault(Area.MagiTech, false)}");
-    }
-
     public void Save()
     {
         SaveSystem.Current.SetBool("magiTechOcean", gems.GetValueOrDefault(Area.Ocean));

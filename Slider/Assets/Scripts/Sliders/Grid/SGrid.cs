@@ -603,6 +603,29 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
+    // Experimental! only callable from debug console
+    public void DisableSlider(string islandIdString)
+    {
+        try {
+            int islandId = int.Parse(islandIdString);
+            if (PlayerInventory.Contains("Slider " + islandId, myArea))
+            {
+                foreach (STile s in grid)
+                {
+                    if (s.islandId == islandId)
+                    {
+                        DisableStile(s);
+                        return;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Exception when calling DisableSlider(): {ex.Message}. {ex.StackTrace}");
+        }
+    }
+
     public virtual void CollectSTile(int islandId)
     {
         foreach (STile s in grid)
@@ -621,6 +644,18 @@ public void SetGrid(int[,] puzzle)
         stile.isTileCollected = true;
         UIArtifact.GetInstance().AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
+    }
+
+    // Experimental!
+    public virtual void DisableStile(STile stile)
+    {
+        AudioManager.Play("Hat Click");
+        stile.SetTileActive(false);
+        stile.isTileCollected = false;
+        UIArtifact.SetButtonComplete(stile.islandId, false);
+        gridTilesExplored.SetTileExplored(stile.islandId, false);
+        UIArtifact.GetInstance().RemoveButton(stile);
+        PlayerInventory.RemoveCollectible(new Collectible.CollectibleData("Slider " + stile.islandId, myArea));
     }
 
     public virtual void CollectStile(STile stile)
