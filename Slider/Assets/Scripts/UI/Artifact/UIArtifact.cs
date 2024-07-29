@@ -136,7 +136,12 @@ public class UIArtifact : Singleton<UIArtifact>
         Button b = g.GetComponent<Button>();
         if (b != null && !b.enabled)
         {
-            return false;
+            // UIClick disables for 1 frame in order to prevent player interaction from hitting both.
+            UIClick uiClick = g.GetComponent<UIClick>();
+            if (uiClick != null && !uiClick.IsTemporarilyDisabled)
+            {
+                return false;
+            }
         }
 
         return true;

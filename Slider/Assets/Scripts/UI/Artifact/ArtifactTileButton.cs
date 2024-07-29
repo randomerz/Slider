@@ -112,7 +112,6 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnSelect()
     {
-        // Debug.Log($"on select");
         if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
         {
             SetControllerHoverHighlighted(true);
