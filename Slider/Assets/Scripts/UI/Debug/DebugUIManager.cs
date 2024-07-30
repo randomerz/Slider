@@ -339,6 +339,43 @@ public class DebugUIManager : MonoBehaviour
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Boots", Area.Jungle));
         Player.GetInstance().UpdatePlayerSpeed();
     }
+
+    public void DoRespawnPlayer()
+    {
+        Debug.Log($"[Cheats] Called Respawn player");
+
+        SetCheated();
+
+        if (SceneSpawns.lastSpawn != SceneSpawns.SpawnLocation.Default)
+        {
+            // Try spawning player at that spawn
+            SceneSpawns[] spawns = FindObjectsOfType<SceneSpawns>(includeInactive: true);
+            foreach (SceneSpawns spawn in spawns)
+            {
+                if (spawn.spawnName == SceneSpawns.lastSpawn)
+                {
+                    spawn.TeleportPlayerToSpawn();
+                    return;
+                }
+            }
+        }
+
+        if (SGrid.Current.DefaultSpawn != null)
+        {
+            if (SGrid.Current is FactoryGrid factoryGrid && FactoryGrid.PlayerInPast)
+            {
+                factoryGrid.DefaultSpawnFactoryPast.TeleportPlayerToSpawn();
+                return;
+            }
+
+            SGrid.Current.DefaultSpawn.TeleportPlayerToSpawn();
+            return;
+        }
+        else
+        {
+            Debug.LogError($"SGrid did not have a DefaultSpawn!");
+        }
+    }
     
     public void GoToFactoryPast()
     {

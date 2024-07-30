@@ -22,6 +22,8 @@ public class AchievementManager : Singleton<AchievementManager>
     /// </summary>
     public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value)
     {
+        Debug.Log($"[AchievementManager] Called update {statName} to {value}.");
+
         if (dontGiveIfCheated)
         {
             if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
