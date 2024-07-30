@@ -65,7 +65,14 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    private void CheckAchievementsOnStart()
+    public static int GetNumBreadge()
+    {
+        if(Instance != null)
+            return Instance.GetNumBreadgeHelper();
+        return 0;
+    }
+
+    public int GetNumBreadgeHelper()
     {
         int numBreadge = 0;
 
@@ -74,8 +81,12 @@ public class PlayerInventory : MonoBehaviour
             if (Contains("Breadge", (Area)i))
                 numBreadge += 1;
         }
+        return numBreadge;
+    }
 
-        AchievementManager.SetAchievementStat("collectedBreadge", false, numBreadge);
+    private void CheckAchievementsOnStart()
+    {
+        AchievementManager.SetAchievementStat("collectedBreadge", false, GetNumBreadgeHelper());
     }
 
     public void Reset()
