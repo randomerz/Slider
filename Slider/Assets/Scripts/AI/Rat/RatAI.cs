@@ -168,16 +168,20 @@ public class RatAI : MonoBehaviour, ISavable
         // updating childing
         currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
 
-        if (currentStileUnderneath != null && !visitedTiles.Contains(currentStileUnderneath.islandId))
+        if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
-            visitedTiles.Add(currentStileUnderneath.islandId);
-            if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
-                foreach(int i in visitedTiles) {
-                    print(i);
+            
+            if (!visitedTiles.Contains(currentStileUnderneath.islandId))
+            {
+                visitedTiles.Add(currentStileUnderneath.islandId);
+                if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
+                    foreach(int i in visitedTiles) {
+                        print(i);
+                    }
+                    AchievementManager.SetAchievementStat("completedRatRaceV2", true, 1);
+                    hasAchievement = true;
                 }
-                AchievementManager.SetAchievementStat("completedRatRaceV2", true, 1);
-                hasAchievement = true;
             }
         }
 

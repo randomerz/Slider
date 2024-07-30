@@ -35,23 +35,9 @@ public class AchievementManager : Singleton<AchievementManager>
 
         if (_instance != null)
         {
-            int statData;
-            if(SteamUserStats.GetStat(statName, out statData))
-            {
-                if(value < statData)
-                {
-                    Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because steam stat is greater {statData}.");
-                    return;
-                }
-            }
-
             _instance.achievementStats[statName] = value;
             Debug.Log($"[AchievementManager] Updating {statName} to {value}.");
             _instance.SendAchievementStatsToSteam();
-            if(SteamUserStats.GetStat(statName, out statData))
-            {
-                print("value set in steam" + statData);
-            }
         }
         
     }
@@ -118,8 +104,18 @@ public class AchievementManager : Singleton<AchievementManager>
     {
         if (SteamManager.Initialized && SteamUser.BLoggedOn())
         {
+            // SteamUserStats.RequestCurrentStats(); // this is an async call it probably doesnt do anything here
             foreach (string key in achievementStats.Keys)
             {
+                if (SteamUserStats.GetStat(key, out int statData))
+                {
+                    if (achievementStats[key] <= statData)
+                    {
+                        Debug.Log($"[AchievementManager] Skipped updating {key} to {achievementStats[key]} because steam stat is greater: {statData}.");
+                        continue;
+                    }
+                }
+
                 SteamUserStats.SetStat(key, achievementStats[key]);
             }
             SteamUserStats.StoreStats();

@@ -544,6 +544,7 @@ GameObject:
   - component: {fileID: 3512278234758974931}
   - component: {fileID: 3315645012634170180}
   - component: {fileID: 5205933783250344951}
+  - component: {fileID: 2762822750399539242}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -626,10 +627,6 @@ MonoBehaviour:
   noDropItemsLayerMask:
     serializedVersion: 2
     m_Bits: 33554432
-  minimumDropDistance: 0.35
-  maximumDropDistance: 1
-  dropBoxcastWidth: 1
-  dropBoxcastHeight: 0.75
   actionAvailableIndicator: {fileID: 862667734}
 --- !u!114 &3255215873672854460
 MonoBehaviour:
@@ -844,6 +841,18 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2762822750399539242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380634037254267600}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13fcd02bddb55f44087f1604a3ec01d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &380634037666542966
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,7 +917,7 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.025000002
+    x: 0.041145835
     y: 0.35462964
     width: 0.16666667
     height: 0.16666666
