@@ -26,6 +26,7 @@ public enum Settings
     PlayAudioWhenUnfocused,
     Locale,
     PixelFontEnabled,
+    KeyboardOnly,
 }
 
 static class SettingsMethods
@@ -51,6 +52,7 @@ static class SettingsMethods
         Settings.PlayAudioWhenUnfocused => "playAudioWhenUnfocused",
         Settings.Locale => "locale",
         Settings.PixelFontEnabled => "pixelFontEnabled",
+        Settings.KeyboardOnly => "keyboardOnly",
         _ => ""
     };
 }

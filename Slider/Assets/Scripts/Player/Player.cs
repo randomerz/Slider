@@ -62,6 +62,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private bool trackerEnabled = true;
 
+    public bool keyboardOnly = false;
+
     protected void Awake()
     {
         if (!didInit)
@@ -80,6 +82,10 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         UpdatePlayerSpeed();
+
+        SettingsManager.RegisterAndLoadSetting(Settings.KeyboardOnly,
+            defaultValue: false,
+            onValueChanged: (keyboardOnly) => { this.keyboardOnly = keyboardOnly; });
     }
 
     private void OnDisable() 
@@ -195,6 +201,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
     public string GetCurrentControlScheme()
     {
+        if (keyboardOnly)
+        {
+            return Controls.CONTROL_SCHEME_CONTROLLER;
+        }
+
         return playerInput.currentControlScheme;
     }
 

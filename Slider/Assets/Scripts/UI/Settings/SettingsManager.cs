@@ -101,6 +101,10 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.PixelFontEnabled,
             defaultValue: true,
             onValueChanged: (pixelFontEnabled) => { });
+
+        RegisterAndLoadSetting(Settings.KeyboardOnly,
+            defaultValue: false
+        );
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)
