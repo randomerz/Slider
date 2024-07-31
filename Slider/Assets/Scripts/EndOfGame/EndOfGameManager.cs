@@ -191,11 +191,11 @@ public class EndOfGameManager : MonoBehaviour
 
     private void GoToCredits()
     {
+        GiveAchievements();
+
         SaveSystem.SetCurrentProfile(-1); 
         sceneLoad = SceneManager.LoadSceneAsync(CREDITS_SCENE);
         sceneLoad.allowSceneActivation = false;
-
-        GiveAchievements();
 
         UIEffects.FadeToBlack(() => {
             sceneLoad.allowSceneActivation = true;
