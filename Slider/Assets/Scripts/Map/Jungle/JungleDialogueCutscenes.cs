@@ -50,6 +50,7 @@ public class JungleDialogueCutscenes : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     public void DoBarronIntroCutscene()
     {
         if (currentCoroutine == null)
@@ -58,6 +59,7 @@ public class JungleDialogueCutscenes : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     private IEnumerator BarronIntroCutscene()
     {
         Log("- Justin! How's the R&D on production?");
@@ -108,6 +110,7 @@ public class JungleDialogueCutscenes : MonoBehaviour
         currentCoroutine = null;
     }
 
+    [System.Obsolete]
     public void DoStandUpCutscene()
     {
         if (currentCoroutine == null)
@@ -116,6 +119,7 @@ public class JungleDialogueCutscenes : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     private IEnumerator StandUpCutscene()
     {
         SaveSystem.Current.SetBool("JungleStandUp1", true);

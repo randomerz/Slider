@@ -27,6 +27,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private NPCDialogueContext dialogueCtx;
     private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
+    private bool finishedStart;
 
     // For editor
     [HideInInspector] public bool autoSetWaitUntilPlayerAction = true;
@@ -64,6 +65,8 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         {
             ChangeCurrentConditional(0);
         }
+
+        finishedStart = true;
     }
 
     private new void OnEnable()
@@ -104,6 +107,15 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     #region Dialogue
     public void OnDialogueTriggerEnter()
     {
+        if (!finishedStart)
+        {
+            // In case the player loads into a game in a cutscene, give a frame for the misc conditions to update
+            CoroutineUtils.ExecuteAfterFrames(() => {
+                PollForNewConditional();
+                OnDialogueTriggerEnter();
+            }, this, 1);
+            return;
+        }
         dialogueCtx.OnDialogueTriggerEnter();
     }
 
@@ -231,7 +243,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     }
     #endregion
 
-    private void PollForNewConditional()
+    public void PollForNewConditional()
     {
         int maxPrioIndex = GetCondIndexWithMaxPriority();
         if (maxPrioIndex == -1)

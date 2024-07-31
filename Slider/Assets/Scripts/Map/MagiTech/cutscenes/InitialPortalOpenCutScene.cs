@@ -7,6 +7,7 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
     private NPC fezziwig;
 
     public GameObject portalGunGO;
+    public MagiTechInitialPortalTease initialPortalTease;
 
     protected override void Start()
     {
@@ -30,6 +31,7 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
 
     protected override IEnumerator CutScene()
     {
+        Debug.Log($"Starting Portal Cutscene");
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(fezziwig);
         yield return SayNextDialogue(portalOperator);
@@ -37,9 +39,9 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         yield return SayNextDialogue(fezziwig);
         //Fezziwig casts the spell here
         yield return SayNextDialogue(fezziwig, false);
-        yield return SayNextDialogue(portalOperator, false, 0.3f );
+        yield return SayNextDialogue(portalOperator, true, 0.3f);
         //fezziwig gets cut off mid sentence here
-        yield return SayNextDialogue(fezziwig, false, 0);
+        yield return SayNextDialogue(fezziwig, true, 0.01f);
         yield return SayNextDialogue(portalOperator);
         yield return SayNextDialogue(portalOperator);
 
@@ -51,5 +53,10 @@ public class InitialPortalOpenCutScene : SimpleInteractableCutscene
         base.OnCutSceneFinish();
 
         portalGunGO.SetActive(false);
+        // In case someone quits before fezziwig opens the portal
+        if (!SaveSystem.Current.GetBool("magitechInitialPortalOpened"))
+        {
+            initialPortalTease.EnableRealPortal(true);
+        }
     }
 }

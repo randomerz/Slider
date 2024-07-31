@@ -27,6 +27,7 @@ public class JungleRecipeBookHints : MonoBehaviour
     private void Awake() 
     {
         hasGeneralHintBeenUsed = new bool[HINTS_GENERAL.Length];
+        DisplayAndTriggerDialogue(HINTS_GENERAL[0]); 
     }
 
     private void OnEnable() 

@@ -74,6 +74,18 @@ public class JungleSpawner : JungleBox
 
     public override bool UpdateBox(int depth = 0)
     {
+        if (depth >= DEPTH_LIMIT)
+        {
+            Debug.LogError("Jungle Box depth limit exceeded!");
+            return false;
+        }
+
+        if (targetBox is JungleSpawner)
+        {
+            // Checking targetBox.IsValidInput() didn't work for me for some reason
+            return false;
+        }
+
         // Update next box
         if (ProducedShape != null && targetBox != null)
         {
