@@ -58,7 +58,7 @@ public class DesertGrid : SGrid
 
     private void GiveTilesIfFromMagitech()
     {
-        if (SaveSystem.Current.GetBool("magitechDesertPortal"))
+        if (SaveSystem.Current.GetBool("magitechDesertPortal") && !PlayerInventory.Contains("Slider 9", Area.Desert))
         {
             for (int i = 1; i <= 9; i++)
             {

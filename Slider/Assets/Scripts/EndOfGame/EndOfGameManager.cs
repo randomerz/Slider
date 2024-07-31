@@ -27,7 +27,7 @@ public class EndOfGameManager : MonoBehaviour
     public CanvasGroup canvasGroupBoomo;
     public CanvasGroup timeCanvasGroup;
 
-    private const float MAXIMUM_TIME_DISPLAY_SECONDS = 3600 * 3;
+    // private const float MAXIMUM_TIME_DISPLAY_SECONDS = 3600 * 3;
     private const float MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600 * 2;
     private const float MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600;
     private const float PARALLAX_ANIMATION_DURATION = 5;
@@ -83,7 +83,8 @@ public class EndOfGameManager : MonoBehaviour
             ts.Milliseconds
         ));
 
-        bool enableTimeText = time <= MAXIMUM_TIME_DISPLAY_SECONDS;
+        // bool enableTimeText = time <= MAXIMUM_TIME_DISPLAY_SECONDS;
+        bool enableTimeText = true;
         timeText.gameObject.SetActive(enableTimeText);
     }
 

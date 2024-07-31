@@ -37,6 +37,7 @@ public class PlayerInventory : MonoBehaviour
     {
         // Happens if you load a scene for the first time (i.e. Load() isn't called)
         Init();
+        CheckAchievementsOnStart();
     }
 
     // Called by Player.Init() too
@@ -62,6 +63,30 @@ public class PlayerInventory : MonoBehaviour
             equipables.Add(anchor.GetComponent<Item>());
             anchor.GetComponent<Item>().SetCollider(false);
         }
+    }
+
+    public static int GetNumBreadge()
+    {
+        if(Instance != null)
+            return Instance.GetNumBreadgeHelper();
+        return 0;
+    }
+
+    public int GetNumBreadgeHelper()
+    {
+        int numBreadge = 0;
+
+        for (int i = 1; i <= 9; i++)
+        {
+            if (Contains("Breadge", (Area)i))
+                numBreadge += 1;
+        }
+        return numBreadge;
+    }
+
+    private void CheckAchievementsOnStart()
+    {
+        AchievementManager.SetAchievementStat("collectedBreadge", false, GetNumBreadgeHelper());
     }
 
     public void Reset()

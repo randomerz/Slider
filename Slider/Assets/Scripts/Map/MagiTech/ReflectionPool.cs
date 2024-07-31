@@ -8,12 +8,25 @@ public class ReflectionPool : MonoBehaviour
     public List<Animator> obeliskAnimators;
     public List<GameObject> toggleOn;
     public ConditionChecker conditionChecker;
+    public GemManager gemManager;
     public GameObject artifact;
     public GameObject gem;
     public GameObject npc;
     public List<GameObject> cutsceneParticles;
 
     private const string CUTSCENE_SAVE_STRING = "MagiTechReflectionTurnInCutscene";
+
+    private void Start()
+    {
+        if (SaveSystem.Current.GetBool(CUTSCENE_SAVE_STRING))
+        {
+            TurnInHelper();
+        }
+        else
+        {
+            gem.SetActive(false);
+        }
+    }
 
     private void OnEnable()
     {
@@ -99,17 +112,24 @@ public class ReflectionPool : MonoBehaviour
         npc.SetActive(false);
         CameraShake.ShakeIncrease(4, 0.5f);
         yield return new WaitForSeconds(3.5f);
-        UIEffects.FlashWhite(TurnInHelper, EndTurnIn);
+        UIEffects.FlashWhite(
+            () => {
+                AudioManager.Play("Puzzle Complete");
+                TurnInHelper(); 
+            }, 
+            () => {
+                EndTurnIn();
+            }
+        );
     }
 
     private void TurnInHelper()
     {
-        AudioManager.Play("Puzzle Complete");
         SaveSystem.Current.SetBool("magitechTurnedInArtifact", true);
         UIArtifactWorldMap.SetAreaStatus(Area.MagiTech, ArtifactWorldMapArea.AreaStatus.color);
         AchievementManager.SetAchievementStat("completedMagitech", false, 1);
         artifact.SetActive(true);
-        gem.SetActive(true);
+        gem.SetActive(!gemManager.HasAreaGem(Area.MagiTech));
     }
 
     private void EndTurnIn()

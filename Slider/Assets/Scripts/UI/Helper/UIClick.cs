@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class UIClick : MonoBehaviour, IPointerEnterHandler
 {
     Button button;
+    public bool IsTemporarilyDisabled { get; private set; }
 
     [Tooltip("Set this true to make this the default button selected when the menu opens")]
     [SerializeField] private bool isSelectedOnMenuOpen;
@@ -43,6 +44,7 @@ public class UIClick : MonoBehaviour, IPointerEnterHandler
         if (button != null)
         {
             button.enabled = false;
+            IsTemporarilyDisabled = true;
 
             yield return new WaitForEndOfFrame();
 
@@ -52,6 +54,7 @@ public class UIClick : MonoBehaviour, IPointerEnterHandler
             }
 
             button.enabled = true;
+            IsTemporarilyDisabled = false;
         }
     }
 

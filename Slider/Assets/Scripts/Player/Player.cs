@@ -171,6 +171,20 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
+    private void UpdateMove(Vector2 moveDir) 
+    {
+        inputDir = new Vector3(moveDir.x, moveDir.y);
+        if (moveDir.magnitude != 0) 
+        {
+            lastMoveDir = inputDir;
+        }
+    }
+
+    public static Vector3 GetLastMoveDirection()
+    {
+        return _instance.lastMoveDir;
+    }
+
     private void LateUpdate()
     {
         foreach(Material m in ppMaterials)
@@ -389,20 +403,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         STile stileUnderneath = GetSTileUnderneath();
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-    }
-
-    private void UpdateMove(Vector2 moveDir) 
-    {
-        inputDir = new Vector3(moveDir.x, moveDir.y);
-        if (moveDir.magnitude != 0) 
-        {
-            lastMoveDir = inputDir;
-        }
-    }
-
-    public static Vector3 GetLastMoveDirection()
-    {
-        return _instance.lastMoveDir;
     }
 
     public static void SetCanMove(bool canMove, bool canAnimateMovement=true) 

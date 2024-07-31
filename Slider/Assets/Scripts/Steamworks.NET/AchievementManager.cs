@@ -22,6 +22,8 @@ public class AchievementManager : Singleton<AchievementManager>
     /// </summary>
     public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value)
     {
+        Debug.Log($"[AchievementManager] Called update {statName} to {value}.");
+
         if (dontGiveIfCheated)
         {
             if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
@@ -102,8 +104,18 @@ public class AchievementManager : Singleton<AchievementManager>
     {
         if (SteamManager.Initialized && SteamUser.BLoggedOn())
         {
+            // SteamUserStats.RequestCurrentStats(); // this is an async call it probably doesnt do anything here
             foreach (string key in achievementStats.Keys)
             {
+                if (SteamUserStats.GetStat(key, out int statData))
+                {
+                    if (achievementStats[key] <= statData)
+                    {
+                        Debug.Log($"[AchievementManager] Skipped updating {key} to {achievementStats[key]} because steam stat is greater: {statData}.");
+                        continue;
+                    }
+                }
+
                 SteamUserStats.SetStat(key, achievementStats[key]);
             }
             SteamUserStats.StoreStats();
