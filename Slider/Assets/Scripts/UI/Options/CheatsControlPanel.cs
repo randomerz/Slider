@@ -68,7 +68,6 @@ public class CheatsControlPanel : MonoBehaviour
     {
         if (areaToTeleportTo != Area.None)
         {
-            SetCheated();
             sceneChanger.ShowOverlayIfNotBusy();
             DoSetScene(areaToTeleportTo.ToString());
             areaToTeleportTo = Area.None;
@@ -222,12 +221,19 @@ public class CheatsControlPanel : MonoBehaviour
         }
     }
 
-
     private void SetCheated()
     {
         if (SaveSystem.Current != null)
         {
             SaveSystem.Current.SetBool("UsedCheats", true);
+        }
+    }
+
+    private void SetTeleported()
+    {
+        if (SaveSystem.Current != null)
+        {
+            SaveSystem.Current.SetBool("UsedTeleport", true);
         }
     }
 
@@ -269,6 +275,7 @@ public class CheatsControlPanel : MonoBehaviour
     private void DoSetScene(string sceneName)
     {
         Debug.Log($"[Cheats] Set Scene to {sceneName}");
+        SetTeleported();
         DebugUIManager.justDidSetScene = true;
         sceneChanger.sceneName = sceneName.Trim();
 
