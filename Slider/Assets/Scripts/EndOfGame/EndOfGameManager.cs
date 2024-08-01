@@ -57,11 +57,11 @@ public class EndOfGameManager : MonoBehaviour
         AchievementManager.SetAchievementStat("savedCat", false, 1);
         if (SaveSystem.Current != null && time < MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
         {
-            AchievementManager.SetAchievementStat("completedGame2Hours", true, 1);
+            AchievementManager.SetAchievementStat("completedGame2Hours", true, 1, true);
         }
         if (SaveSystem.Current != null && time < MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
         {
-            AchievementManager.SetAchievementStat("completedGame1Hour", true, 1);
+            AchievementManager.SetAchievementStat("completedGame1Hour", true, 1, true);
         }
     }
 
