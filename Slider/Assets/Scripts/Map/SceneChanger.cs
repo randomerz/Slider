@@ -41,6 +41,7 @@ public class SceneChanger : MonoBehaviour
 
         //We want to disable menus before made to black 
         //UIManager.InvokeCloseAllMenus(true); 
+        PauseManager.AddPauseRestriction(gameObject);
         PauseManager.SetPauseState(false);
 
         // Start a fade to black and then load the scene once it finishes
@@ -90,6 +91,7 @@ public class SceneChanger : MonoBehaviour
             yield return null;
         }
 
+        PauseManager.RemovePauseRestriction(gameObject);
         SceneManager.sceneUnloaded += ResetProperties;
         sceneLoad.allowSceneActivation = true; // "Okay now do it and hurry up!!"
     }

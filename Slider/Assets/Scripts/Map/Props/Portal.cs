@@ -46,7 +46,7 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerEnter()
     {
-        if(playerInPortal || isTeleporting || !playerAllowedToUse) return;
+        if (playerInPortal || isTeleporting || !playerAllowedToUse) return;
         
         playerInPortal = true;
         recentPortal = portalEnum;
@@ -78,20 +78,32 @@ public class Portal : MonoBehaviour
 
     private void Teleport()
     {
+        // If you quit during teleport
+        if (this == null)
+        {
+            ResetStatics();
+            return;
+        }
+
+        isTeleporting = false;
         AudioManager.Play("Portal");
         Player.SetPosition(otherPortal.spawnPoint.position);
         OnTimeChange?.Invoke(this, new OnTimeChangeArgs { 
             fromPast = portalEnum == PortalEnum.MAGITECH_PAST,
             betweenAreas = portalEnum == PortalEnum.MAGITECH_TO_DESERT || portalEnum == PortalEnum.DESERT_TO_MAGITECH
         });
-        isTeleporting = false;
         UIEffects.FadeFromBlack(alpha:0.5f);
     }
     
 
     public void OnPlayerExit()
     {
-        if(isTeleporting || recentPortal == portalEnum) return;
+        if (isTeleporting || recentPortal == portalEnum) return;
+        ResetStatics();
+    }
+
+    private void ResetStatics()
+    {
         playerInPortal = false;
         recentPortal = PortalEnum.NONE;
         recentPortalObj = null;
