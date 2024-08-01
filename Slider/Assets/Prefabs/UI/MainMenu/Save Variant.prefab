@@ -548,6 +548,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -10
       objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541328, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -161256529261007864, guid: a8a6ff4047bab39488c481c16631445e, type: 3}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -633,6 +637,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SpriteState.m_PressedSprite
+      value: 
+      objectReference: {fileID: 5325387788926593336, guid: a8a6ff4047bab39488c481c16631445e, type: 3}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SpriteState.m_SelectedSprite
+      value: 
+      objectReference: {fileID: 6641034709832212186, guid: a8a6ff4047bab39488c481c16631445e, type: 3}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1959899098469952525}
@@ -692,6 +704,9 @@ MonoBehaviour:
   catSticker: {fileID: 8971869277420901850}
   breadge: {fileID: 241011490912777187}
   profileIndex: -1
+  buttonBackgroundImage: {fileID: 0}
+  lightGrayBackgroundSprite: {fileID: -313926302, guid: a9f583b3f5eb0214380b68dbd4344603, type: 3}
+  darkGrayBackgroundSprite: {fileID: -717014505, guid: a9f583b3f5eb0214380b68dbd4344603, type: 3}
 --- !u!224 &4878303943723569545 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
