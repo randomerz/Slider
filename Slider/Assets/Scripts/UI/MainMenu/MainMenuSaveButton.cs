@@ -28,6 +28,7 @@ public class MainMenuSaveButton : MonoBehaviour
 
     private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
     private const string DID_CHEAT = "UsedCheats";
+    private const string DID_TELEPORT = "UsedTeleport";
 
 
     private void OnEnable() 
@@ -73,7 +74,8 @@ public class MainMenuSaveButton : MonoBehaviour
             timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
             catSticker.gameObject.SetActive(profile.GetCompletionStatus());
             breadge.SetActive(profile.GetBool(RAINBOW_BREADGE_ACQUIRED));
-            buttonBackgroundImage.sprite = profile.GetBool(DID_CHEAT) ? darkGrayBackgroundSprite : lightGrayBackgroundSprite;
+            bool didCheatOrTeleport = profile.GetBool(DID_CHEAT) || profile.GetBool(DID_TELEPORT);
+            buttonBackgroundImage.sprite = didCheatOrTeleport ? darkGrayBackgroundSprite : lightGrayBackgroundSprite;
         }
         else
         {
