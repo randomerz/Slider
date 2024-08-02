@@ -116,7 +116,8 @@ public class HintData
 
     private string CheckConvertToControllerHintText(string message)
     {
-        if (!controllerHintText.Equals("") && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        Player player = Player.GetInstance();
+        if (!controllerHintText.Equals("") && !player.keyboardOnly && player.GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER )
             return controllerHintText;
         else
             return message;

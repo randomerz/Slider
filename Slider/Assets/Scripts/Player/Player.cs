@@ -62,7 +62,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private bool trackerEnabled = true;
 
-    public bool keyboardOnly = false;
+    public bool keyboardOnly { get; private set; } = false;
 
     protected void Awake()
     {
