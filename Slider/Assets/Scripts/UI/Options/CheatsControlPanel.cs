@@ -25,10 +25,13 @@ public class CheatsControlPanel : MonoBehaviour
     private AsyncOperation sceneLoad;
 
     private bool isNoClipOn;
+    private bool didSpawnAnchor;
 
     private const string GIVE_STRING = "Give";
     private const string TELEPORT_STRING = "Teleport";
     private const string UNDO_STRING = "Undo";
+    private const string SPAWN_ANCHOR = "Spawn Anchor";
+    private const string RECALL_ANCHOR = "Recall Anchor";
     private const string NO_CLIP_OFF = "NoClip-Off";
     private const string NO_CLIP_ON = "NoClip-On";
 
@@ -36,6 +39,7 @@ public class CheatsControlPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI collectibleButtonText;
     [SerializeField] private TextMeshProUGUI areaLabelText;
     [SerializeField] private TextMeshProUGUI areaButtonText;
+    [SerializeField] private TextMeshProUGUI anchorText;
     [SerializeField] private TextMeshProUGUI noClipText;
     [SerializeField] private GameObject anchorPrefab;
     [SerializeField] private SceneChanger sceneChanger; // needs to stay active for coroutine
@@ -62,13 +66,15 @@ public class CheatsControlPanel : MonoBehaviour
         SetAreaIndex(0);
 
         noClipText.text = isNoClipOn ? NO_CLIP_ON : NO_CLIP_OFF;
+        bool playerHasAnchor = PlayerInventory.Instance != null && PlayerInventory.Instance.GetHasCollectedAnchor();
+        didSpawnAnchor = playerHasAnchor;
+        anchorText.text = playerHasAnchor ? RECALL_ANCHOR : SPAWN_ANCHOR;
     }
 
     public void CheckCheatsOnPauseClosed()
     {
         if (areaToTeleportTo != Area.None)
         {
-            SetCheated();
             sceneChanger.ShowOverlayIfNotBusy();
             DoSetScene(areaToTeleportTo.ToString());
             areaToTeleportTo = Area.None;
@@ -156,16 +162,30 @@ public class CheatsControlPanel : MonoBehaviour
 
     public void DoSpawnAnchor()
     {
-        Debug.Log($"[Cheats] Spawned Anchor");
-        SetCheated();
+        SetSpeedrunRestricted();
 
-        Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
+        bool playerHasAnchor = PlayerInventory.Instance != null && PlayerInventory.Instance.GetHasCollectedAnchor();
+        if (!didSpawnAnchor && !playerHasAnchor)
+        {
+            Debug.Log($"[Cheats] Spawned Anchor");
+
+            didSpawnAnchor = true;
+            anchorText.text = RECALL_ANCHOR;
+            Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
+            PlayerInventory.Instance.SetHasCollectedAnchor(true);
+        }
+        else
+        {
+            Debug.Log($"[Cheats] Recalled Anchor");
+
+            PlayerInventory.ReturnAnchorFromMap();
+        }
     }
 
     public void DoGiveScrollAndBoots()
     {
         Debug.Log($"[Cheats] Gave Scroll and Boots");
-        SetCheated();
+        SetSpeedrunRestricted();
 
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
 
@@ -222,12 +242,19 @@ public class CheatsControlPanel : MonoBehaviour
         }
     }
 
-
     private void SetCheated()
     {
         if (SaveSystem.Current != null)
         {
             SaveSystem.Current.SetBool("UsedCheats", true);
+        }
+    }
+
+    private void SetSpeedrunRestricted()
+    {
+        if (SaveSystem.Current != null)
+        {
+            SaveSystem.Current.SetBool("UsedTeleport", true);
         }
     }
 
@@ -269,6 +296,7 @@ public class CheatsControlPanel : MonoBehaviour
     private void DoSetScene(string sceneName)
     {
         Debug.Log($"[Cheats] Set Scene to {sceneName}");
+        SetSpeedrunRestricted();
         DebugUIManager.justDidSetScene = true;
         sceneChanger.sceneName = sceneName.Trim();
 

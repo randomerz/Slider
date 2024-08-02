@@ -18,11 +18,17 @@ public class MainMenuSaveButton : MonoBehaviour
     [SerializeField] private int profileIndex = -1;
     private SaveProfile profile;
 
+    [SerializeField] private Image buttonBackgroundImage;
+    [SerializeField] private Sprite lightGrayBackgroundSprite;
+    [SerializeField] private Sprite darkGrayBackgroundSprite;
+
     private static bool deleteMode;
 
     private static Action onDeleteModeChanged;
 
     private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
+    private const string DID_CHEAT = "UsedCheats";
+    private const string DID_TELEPORT = "UsedTeleport";
 
 
     private void OnEnable() 
@@ -36,6 +42,7 @@ public class MainMenuSaveButton : MonoBehaviour
     private void OnDisable()
     {
         onDeleteModeChanged -= UpdateButton;
+        SetDeleteMode(false);
     }
 
     public static void SetDeleteMode(bool value)
@@ -67,6 +74,8 @@ public class MainMenuSaveButton : MonoBehaviour
             timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
             catSticker.gameObject.SetActive(profile.GetCompletionStatus());
             breadge.SetActive(profile.GetBool(RAINBOW_BREADGE_ACQUIRED));
+            bool didCheatOrTeleport = profile.GetBool(DID_CHEAT) || profile.GetBool(DID_TELEPORT);
+            buttonBackgroundImage.sprite = didCheatOrTeleport ? darkGrayBackgroundSprite : lightGrayBackgroundSprite;
         }
         else
         {

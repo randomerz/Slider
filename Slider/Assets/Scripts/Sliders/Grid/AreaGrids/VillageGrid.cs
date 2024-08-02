@@ -304,7 +304,7 @@ public class VillageGrid : SGrid
             AchievementManager.SetAchievementStat("completedVillage", false, 1);
             if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
             {
-                AchievementManager.SetAchievementStat("completedVillageSpeedrun", true, 1);
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", true, 1, true);
             }
         }
     }

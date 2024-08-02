@@ -20,7 +20,7 @@ public class AchievementManager : Singleton<AchievementManager>
     /// <summary>
     /// Set a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
     /// </summary>
-    public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value)
+    public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value, bool dontGiveIfTeleported = false)
     {
         Debug.Log($"[AchievementManager] Called update {statName} to {value}.");
 
@@ -29,6 +29,15 @@ public class AchievementManager : Singleton<AchievementManager>
             if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
             {
                 Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because this profile used cheats.");
+                return;
+            }
+        }
+
+        if (dontGiveIfTeleported)
+        {
+            if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedTeleport"))
+            {
+                Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because this profile used teleport cheats.");
                 return;
             }
         }
