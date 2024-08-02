@@ -60,7 +60,6 @@ public class Controls : Singleton<Controls>
         {
             SetCurrentControlScheme(CONTROL_SCHEME_KEYBOARD_MOUSE);
         }
-        Debug.Log("Setting Keyboard Only to [" + keyboardOnlySettingTurnedOn + "] from onValueChanged func");
     }
 
     private static void SetCurrentControlScheme(string newControlScheme)
