@@ -112,7 +112,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnSelect()
     {
-        if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             SetControllerHoverHighlighted(true);
         }
@@ -124,7 +124,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Player.GetInstance().GetCurrentControlScheme() != Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             SetControllerHoverHighlighted(false);
         }

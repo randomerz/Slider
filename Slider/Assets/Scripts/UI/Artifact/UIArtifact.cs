@@ -95,7 +95,7 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
 
-        if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             HandleControllerCheck();
         }
@@ -708,7 +708,7 @@ public class UIArtifact : Singleton<UIArtifact>
         
         //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
         //So this will select the tile you swap to after the move
-        if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        if (setCurrentAsSelected && Controls.UsingControllerOrKeyboardOnly())
         {
             EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
         }

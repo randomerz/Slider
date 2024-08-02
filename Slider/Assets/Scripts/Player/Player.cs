@@ -4,11 +4,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
-    public static event Action<string> OnControlSchemeChanged;
-
     public class HousingChangeArgs : System.EventArgs
     {
         public bool newIsInHouse;
@@ -62,8 +61,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private bool trackerEnabled = true;
 
-    public bool keyboardOnly { get; private set; } = false;
-
     protected void Awake()
     {
         if (!didInit)
@@ -82,10 +79,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         UpdatePlayerSpeed();
-
-        SettingsManager.RegisterAndLoadSetting(Settings.KeyboardOnly,
-            defaultValue: false,
-            onValueChanged: (keyboardOnly) => { this.keyboardOnly = keyboardOnly; });
     }
 
     private void OnDisable() 
@@ -198,27 +191,15 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
         }
     }
-    //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
-    public string GetCurrentControlScheme()
-    {
-        if (keyboardOnly)
-        {
-            return Controls.CONTROL_SCHEME_CONTROLLER;
-        }
-
-        return playerInput.currentControlScheme;
-    }
 
     /// <summary>
-    /// Called when control scheme changes (between "Controller" or "Keyboard Mouse")
+    /// Called when Unity detects a different input device from the current control scheme (either "Controller" or "Keyboard Mouse")
     /// </summary>
     public void OnControlsChanged()
     {
-        string newControlScheme = GetCurrentControlScheme();
+        Controls.OnLastInputDeviceChanged(playerInput.currentControlScheme);
+
         HandleControllerWarnings();
-        Debug.Log("[Input] Control Scheme changed to: " + newControlScheme);
-        OnControlSchemeChanged?.Invoke(newControlScheme);
-        Controls.CurrentControlScheme = newControlScheme;
     }
 
     private void HandleControllerWarnings()

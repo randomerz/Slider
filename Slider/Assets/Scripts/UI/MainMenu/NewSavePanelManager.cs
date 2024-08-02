@@ -19,18 +19,18 @@ public class NewSavePanelManager : MonoBehaviour
     private void OnEnable()
     {
         DisableUINavigationToAllowTypingIntoNameField();
-        MainMenuPlayer.OnControlSchemeChanged += disableUiNavigation;
+        Controls.OnControlSchemeChanged += disableUiNavigation;
     }
 
     private void OnDisable()
     {
         Controls.Bindings.UI.Navigate.Enable();
-        MainMenuPlayer.OnControlSchemeChanged -= disableUiNavigation;
+        Controls.OnControlSchemeChanged -= disableUiNavigation;
     }
 
     private static void DisableUINavigationToAllowTypingIntoNameField()
     {
-        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
+        if (Controls.UsingKeyboardMouseOrKeyboardOnly())
         {
             Controls.Bindings.UI.Navigate.Disable();
             Controls.Bindings.UI.Back.Disable();
@@ -52,7 +52,7 @@ public class NewSavePanelManager : MonoBehaviour
         this.saveProfileIndex = saveProfileIndex;
         gameObject.SetActive(true);
 
-        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
+        if (Controls.UsingKeyboardMouse())
         {
             Controls.Bindings.UI.Navigate.Disable();
             profileNameTextField.Select();

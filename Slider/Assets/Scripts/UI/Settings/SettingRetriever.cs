@@ -9,6 +9,7 @@ public class SettingRetriever : AbstractSettingRetriever
 
     public override void WriteSettingValue(object value)
     {
+        Debug.Log("writing setting value for setting [" + setting + "] to val [" + value + "]");
         SettingsManager.Setting(setting).SetCurrentValue(value);
     }
 

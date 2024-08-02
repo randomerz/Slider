@@ -89,7 +89,7 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
 
     public void Start()
     {
-        ToggleNavigation(Controls.CurrentControlScheme);
+        ToggleNavigation();
     }
 
     // this is bc we refactored this to be a singleton
@@ -147,26 +147,26 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
 
     private void OnEnable()
     {
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             leftArrowButton.Select();
         }
-        Player.OnControlSchemeChanged += ToggleNavigation;
+        Controls.OnControlSchemeChanged += ToggleNavigation;
     }
 
     private void OnDisable()
     {
-        Player.OnControlSchemeChanged -= ToggleNavigation;
+        Controls.OnControlSchemeChanged -= ToggleNavigation;
     }
 
-    private void ToggleNavigation(string s)
+    private void ToggleNavigation()
     {
-        if(s == Controls.CONTROL_SCHEME_CONTROLLER)
+        if(Controls.UsingControllerOrKeyboardOnly())
         {
             foreach(ArtifactWorldMapArea a in mapAreas)
             {
                 a.ToggleControllerSelect(true);
-                a.SelectCurrentArea(s);
+                a.SelectCurrentArea();
             }
         }
         else

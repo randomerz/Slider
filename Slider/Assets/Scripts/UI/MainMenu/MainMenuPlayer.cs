@@ -10,22 +10,19 @@ public class MainMenuPlayer : MonoBehaviour
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private TMP_InputField newSaveNameInputField;
 
-    public static Action OnControlSchemeChanged;
-
     private int timesControlsChangedRecently;
     private Coroutine timesControlsChangedCoroutine;
     private bool controlsWarningEnabled;
     private Coroutine controlsWarningCoroutine;
 
+    /// <summary>
+    /// Called when Unity detects a different input device from the current control scheme (either "Controller" or "Keyboard Mouse")
+    /// </summary>
     public void OnControlsChanged()
     {
-        //string newControlScheme = GetCurrentControlScheme();
-        string newControlScheme = playerInput.currentControlScheme;
-        HandleControllerWarnings();
-        Debug.Log("[Input] Control Scheme changed to: " + newControlScheme);
-        Controls.CurrentControlScheme = newControlScheme;
+        Controls.OnLastInputDeviceChanged(playerInput.currentControlScheme);
 
-        OnControlSchemeChanged?.Invoke();
+        HandleControllerWarnings();
     }
 
     private void HandleControllerWarnings()

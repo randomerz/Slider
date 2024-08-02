@@ -103,7 +103,8 @@ public class SettingsManager : MonoBehaviour
             onValueChanged: (pixelFontEnabled) => { });
 
         RegisterAndLoadSetting(Settings.KeyboardOnly,
-            defaultValue: false
+            defaultValue: false,
+            onValueChanged: (keyboardOnly) => { Controls.OnKeyboardOnlyMenuSettingChanged(keyboardOnly); }
         );
     }
 

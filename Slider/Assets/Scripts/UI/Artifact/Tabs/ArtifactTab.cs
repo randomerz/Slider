@@ -38,7 +38,7 @@ public class ArtifactTab : MonoBehaviour
 
     private void OnControlSchemeChanged()
     {
-        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
+        if(Controls.UsingKeyboardMouse())
         {
             Deselect();
         }
@@ -98,7 +98,7 @@ public class ArtifactTab : MonoBehaviour
 
     public void Select()
     {
-        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        if(Controls.UsingControllerOrKeyboardOnly())
         {
             print("selected");
             controllerSelectedImage.enabled = true;
