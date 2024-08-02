@@ -70,6 +70,8 @@ public class UIArtifact : Singleton<UIArtifact>
 
         EnableMovement();
         EnableQueueing();
+
+        UIArtifactMenus.OnArtifactOpened += HandleControllerCheck;
     }
 
     protected virtual void Update()
@@ -94,34 +96,38 @@ public class UIArtifact : Singleton<UIArtifact>
                 moveCounter = 0;
             }
         }
-
+        /*
         if (Controls.UsingControllerOrKeyboardOnly())
         {
             HandleControllerCheck();
         }
+        */
     }
 
-    protected virtual void HandleControllerCheck()
+    protected virtual void HandleControllerCheck(object sender, System.EventArgs e)
     {
+        /*
         if (!UIArtifactMenus.IsArtifactOpen())
         {
             return;
         }
-
+        */
+        GameObject buttonToSelect = EventSystem.current.currentSelectedGameObject;
         // Controller check if nothing is selected, then select the tile 1 or left arrow or right arrow
-        if (!IsButtonValidForSelection(EventSystem.current.currentSelectedGameObject))
+        if (!IsButtonValidForSelection(buttonToSelect))
         {
-            foreach (GameObject g in fallbackButtonsToSelect)
+            foreach (GameObject button in fallbackButtonsToSelect)
             {
-                if (IsButtonValidForSelection(g))
+                if (IsButtonValidForSelection(button))
                 {
-                    EventSystem.current.SetSelectedGameObject(g);
-                    return;
+                    buttonToSelect = button;
+                    break;
                 }
             }
-            // This warning gets called every time you open the artifact because UIClick disabled the default selected button until the end of the frame
-            // Debug.LogWarning($"No buttons were valid for selection for controller.");
         }
+        EventSystem.current.SetSelectedGameObject(null);
+
+        EventSystem.current.SetSelectedGameObject(buttonToSelect);
     }
 
     protected bool IsButtonValidForSelection(GameObject g)
