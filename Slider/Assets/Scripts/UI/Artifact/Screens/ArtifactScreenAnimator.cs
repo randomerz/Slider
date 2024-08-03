@@ -121,8 +121,8 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
 
         yield return new WaitForSeconds(duration);
-        
-        OnScreenChanged(target, currentScreenIndex);
+
+        int prevScreenIndex = currentScreenIndex;
 
         currentScreenIndex = target;
 
@@ -131,10 +131,10 @@ public class ArtifactScreenAnimator : MonoBehaviour
         animators[currentScreenIndex].SetBool("isVisible", true);
         switchCouroutine = null;
 
-
-
         if (targetScreenIndex != currentScreenIndex)
             SwitchScreens(targetScreenIndex);
+
+        OnScreenChanged(target, prevScreenIndex);
     }
 
     private void SetScreensActive(bool value)

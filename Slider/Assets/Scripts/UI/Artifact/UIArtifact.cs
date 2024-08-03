@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using static ArtifactScreenAnimator;
+using System;
 
 public class UIArtifact : Singleton<UIArtifact>
 {
@@ -72,6 +74,15 @@ public class UIArtifact : Singleton<UIArtifact>
         EnableQueueing();
 
         UIArtifactMenus.OnArtifactOpened += HandleControllerCheck;
+        ArtifactScreenAnimator.OnScreenChange += OnArtifactScreenChanged;
+    }
+
+    private void OnArtifactScreenChanged(object sender, ScreenChangeEventArgs e)
+    {
+        if (e.currentIndex == 0)
+        {
+            HandleControllerCheck(null, null);
+        }
     }
 
     protected virtual void Update()
@@ -96,12 +107,6 @@ public class UIArtifact : Singleton<UIArtifact>
                 moveCounter = 0;
             }
         }
-        /*
-        if (Controls.UsingControllerOrKeyboardOnly())
-        {
-            HandleControllerCheck();
-        }
-        */
     }
 
     protected virtual void HandleControllerCheck(object sender, System.EventArgs e)
@@ -128,6 +133,8 @@ public class UIArtifact : Singleton<UIArtifact>
         EventSystem.current.SetSelectedGameObject(null);
 
         EventSystem.current.SetSelectedGameObject(buttonToSelect);
+
+        Debug.Log("Resselected");
     }
 
     protected bool IsButtonValidForSelection(GameObject g)
