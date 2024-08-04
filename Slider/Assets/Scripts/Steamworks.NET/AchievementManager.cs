@@ -120,7 +120,7 @@ public class AchievementManager : Singleton<AchievementManager>
                 {
                     if (achievementStats[key] <= statData)
                     {
-                        Debug.Log($"[AchievementManager] Skipped updating {key} to {achievementStats[key]} because steam stat is greater: {statData}.");
+                        // Debug.Log($"[AchievementManager] Skipped updating {key} to {achievementStats[key]} because steam stat is greater: {statData}.");
                         continue;
                     }
                 }

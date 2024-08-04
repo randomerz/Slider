@@ -20,11 +20,13 @@ public class VarManager : MonoBehaviour
 
     public void SetBoolOn(string name)
     {
+        Debug.Log($"[VarManager] Set '{name}' true.");
         SaveSystem.Current.SetBool(name, true);
     }
 
     public void SetBoolOff(string name)
     {
+        Debug.Log($"[VarManager] Set '{name}' false.");
         SaveSystem.Current.SetBool(name, false);
     }
 }

@@ -118,6 +118,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         );
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel, (_) =>
         {
+            Debug.Log($"esc");
             if (CurrentDropdownOpen != null)
             {
                 _instance.eventSystem.SetSelectedGameObject(CurrentDropdownOpen.gameObject);
@@ -125,8 +126,10 @@ public class UINavigationManager : Singleton<UINavigationManager>
             else if (CurrentMenu != null)
             {
                 UIMenu menu = CurrentMenu.GetComponent<UIMenu>();
+                Debug.Log($"menu {menu}");
                 if (menu != null)
                 {
+                    Debug.Log($"move to parent menu");
                     menu.MoveToParentMenu();
                 }
             }

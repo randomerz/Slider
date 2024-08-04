@@ -8,6 +8,9 @@ using System;
 public class MainMenuSaveButton : MonoBehaviour
 {
     [SerializeField] private SavePanelManager savePanelManager;
+    [SerializeField] private Image buttonBackgroundImage;
+    [SerializeField] private Sprite lightGrayBackgroundSprite;
+    [SerializeField] private Sprite darkGrayBackgroundSprite;
 
     public TextMeshProUGUI profileNameText;
     public TextMeshProUGUI completionText;
@@ -19,12 +22,9 @@ public class MainMenuSaveButton : MonoBehaviour
     private SaveProfile profile;
     private SaveProfile profileBackup;
 
-    [SerializeField] private Image buttonBackgroundImage;
-    [SerializeField] private Sprite lightGrayBackgroundSprite;
-    [SerializeField] private Sprite darkGrayBackgroundSprite;
+    private bool forceHidingDescriptions;
     
     private const string PROFILE_EMPTY_STRING = "[ Empty ]";
-    private const string PROFILE_DELETE_STRING = "Delete?";
 
     private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
     private const string DID_CHEAT = "UsedCheats";
@@ -64,16 +64,24 @@ public class MainMenuSaveButton : MonoBehaviour
         }
     }
 
+    public void SetForceHideDescriptions(bool value)
+    {
+        forceHidingDescriptions = value;
+        UpdateButton(this, new SavePanelManager.SaveModeArgs { mode = savePanelManager.CurrentMode });
+    }
+
     private void SetButtonDescriptions(SaveProfile prof)
     {
-        bool isNull = prof == null;
+        bool isNullOrForceHide = prof == null || forceHidingDescriptions;
 
-        completionText.gameObject.SetActive(!isNull);
-        timeText.gameObject.SetActive(!isNull);
-        catSticker.gameObject.SetActive(!isNull);
-        breadge.gameObject.SetActive(!isNull);
+        profileNameText.gameObject.SetActive(!forceHidingDescriptions);
 
-        if (isNull)
+        completionText.gameObject.SetActive(!isNullOrForceHide);
+        timeText.gameObject.SetActive(!isNullOrForceHide);
+        catSticker.gameObject.SetActive(!isNullOrForceHide);
+        breadge.gameObject.SetActive(!isNullOrForceHide);
+
+        if (isNullOrForceHide)
         {
             return;
         }
@@ -151,7 +159,6 @@ public class MainMenuSaveButton : MonoBehaviour
 
     public void OnClick()
     {
-
         switch (savePanelManager.CurrentMode)
         {
             case SavePanelManager.SaveMode.Normal:
@@ -165,8 +172,36 @@ public class MainMenuSaveButton : MonoBehaviour
                 break;
 
             case SavePanelManager.SaveMode.Backup:
+                savePanelManager.SetButtonToConfirm(this);
+                break;
+
+            case SavePanelManager.SaveMode.Delete:
+                if (profile == null)
+                {
+                    savePanelManager.OpenNewSave(profileIndex);
+                    return;
+                }
+
+                savePanelManager.SetButtonToConfirm(this);
+                break;
+
+            default:
+                Debug.LogError($"Save mode was not recognized.");
+                break;
+        }
+    }
+
+    public void OnClickConfirm()
+    {
+        switch (savePanelManager.CurrentMode)
+        {
+            case SavePanelManager.SaveMode.Normal:
+                break;
+
+            case SavePanelManager.SaveMode.Backup:
 
                 RestoreBackupProfile();
+                savePanelManager.ClearButtonToConfirm();
                 break;
 
             case SavePanelManager.SaveMode.Delete:
@@ -177,6 +212,7 @@ public class MainMenuSaveButton : MonoBehaviour
                 }
 
                 DeleteThisProfile();
+                savePanelManager.ClearButtonToConfirm();
                 break;
 
             default:

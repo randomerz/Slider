@@ -27,10 +27,16 @@ public class SavePanelManager : MonoBehaviour
     [SerializeField] private UIMenu savePanel;
     [SerializeField] private UIMenu newSavePanel;
     [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private GameObject confirmButtonGameObject;
 
     // We skip save picking if there are no saves and go straight to the new save menu. When we hit escape, we want
     // to come back here and not immediately go *back* to the new save menu.
     private bool hasAlreadySkippedSavePicking = false;
+
+    private MainMenuSaveButton buttonToConfirm;
+    private float timeUntilSwap;
+    private const float BASE_TIME_UNTIL_SWAP = 0.5f;
+    private bool isHidingDescriptions;
 
     public SaveMode CurrentMode { get; private set; } = SaveMode.Normal;
 
@@ -49,6 +55,21 @@ public class SavePanelManager : MonoBehaviour
     private void OnDisable()
     {
         hasAlreadySkippedSavePicking = false;
+        ClearButtonToConfirm();
+    }
+    
+    private void Update()
+    {
+        if (buttonToConfirm != null)
+        {
+            timeUntilSwap -= Time.deltaTime;
+            if (timeUntilSwap <= 0)
+            {
+                isHidingDescriptions = !isHidingDescriptions;
+                buttonToConfirm.SetForceHideDescriptions(isHidingDescriptions);
+                timeUntilSwap = BASE_TIME_UNTIL_SWAP;
+            }
+        }
     }
 
     public void ToggleDeleteMode()
@@ -63,6 +84,8 @@ public class SavePanelManager : MonoBehaviour
 
     public void SetMode(SaveMode mode)
     {
+        ClearButtonToConfirm();
+
         switch (mode)
         {
             case SaveMode.Normal:
@@ -80,9 +103,41 @@ public class SavePanelManager : MonoBehaviour
         OnSaveModeChanged?.Invoke(this, new SaveModeArgs { mode = CurrentMode });
     }
 
+    public void SetButtonToConfirm(MainMenuSaveButton button)
+    {
+        buttonToConfirm = button;
+        timeUntilSwap = BASE_TIME_UNTIL_SWAP;
+        confirmButtonGameObject.SetActive(button != null);
+    }
+
+    public void ClearButtonToConfirm()
+    {
+        if (buttonToConfirm != null)
+        {
+            buttonToConfirm.SetForceHideDescriptions(false);
+        }
+        buttonToConfirm = null;
+        isHidingDescriptions = false;
+        confirmButtonGameObject.SetActive(false);
+    }
+
+    public void OnClickConfirm()
+    {
+        if (buttonToConfirm == null)
+        {
+            Debug.LogError($"Clicked confirm but there was no button to confirm.");
+            return;
+        }
+
+        buttonToConfirm.OnClickConfirm();
+        ClearButtonToConfirm();
+    }
+
     public void OpenNewSave(int profileIndex)
     {
-        savePanel.MoveToMenu(newSavePanel);
+        // savePanel.MoveToMenu(newSavePanel);
+        savePanel.Close();
+        newSavePanel.Open(savePanel);
         newSavePanelManager.OpenNewSave(profileIndex);
     }
 
