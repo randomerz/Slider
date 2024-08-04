@@ -203,6 +203,12 @@ public class SaveSystem
         return LoadFromFile(path);
     }
 
+    public static SerializableSaveProfile GetBackupSerializableSaveProfile(int index)
+    {
+        string path = GetBackupFilePath(index);
+        return LoadFromFile(path);
+    }
+
     private static SerializableSaveProfile LoadFromFile(string path)
     {
         // Debug.Log($"[File IO] Loading data from file {index}.");
@@ -230,13 +236,39 @@ public class SaveSystem
     {
         Debug.Log($"[File IO] Deleting Save profile #{index}!");
 
-        saveProfiles[index] = null;
+        SetProfile(index, null);
 
         string path = GetFilePath(index);
         if (File.Exists(path))
         {
             File.Delete(path);
         }
+    }
+
+    public static void RestoreBackupProfile(int index)
+    {
+        Debug.Log($"[File IO] Restoring Backup profile #{index}!");
+        
+        string pathBackup = GetBackupFilePath(index);
+        if (!File.Exists(pathBackup))
+        {
+            Debug.LogError($"[File IO] Aborting: File was not found at path {pathBackup}");
+            return;
+        }
+
+        string path = GetFilePath(index);
+        if (File.Exists(path))
+        {
+            string pathReplaced = GetBackupReplacedFilePath(index);
+            if (File.Exists(pathReplaced))
+            {
+                File.Delete(pathReplaced);
+            }
+            File.Move(path, GetBackupReplacedFilePath(index));
+        }
+        
+        File.Move(pathBackup, path);
+        SetProfile(index, GetSerializableSaveProfile(index)?.ToSaveProfile());
     }
 
     public static string GetFilePath(int index)
@@ -247,5 +279,10 @@ public class SaveSystem
     public static string GetBackupFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/backup-slider{0}.cat", index);
+    }
+
+    public static string GetBackupReplacedFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/replaced-slider{0}.cat", index);
     }
 }

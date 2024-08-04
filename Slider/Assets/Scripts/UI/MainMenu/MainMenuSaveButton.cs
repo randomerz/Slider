@@ -13,18 +13,18 @@ public class MainMenuSaveButton : MonoBehaviour
     public TextMeshProUGUI completionText;
     public TextMeshProUGUI timeText;
     public Image catSticker;
-    public GameObject breadge;
+    public Image breadge;
 
     [SerializeField] private int profileIndex = -1;
     private SaveProfile profile;
+    private SaveProfile profileBackup;
 
     [SerializeField] private Image buttonBackgroundImage;
     [SerializeField] private Sprite lightGrayBackgroundSprite;
     [SerializeField] private Sprite darkGrayBackgroundSprite;
-
-    private static bool deleteMode;
-
-    private static Action onDeleteModeChanged;
+    
+    private const string PROFILE_EMPTY_STRING = "[ Empty ]";
+    private const string PROFILE_DELETE_STRING = "Delete?";
 
     private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
     private const string DID_CHEAT = "UsedCheats";
@@ -34,57 +34,80 @@ public class MainMenuSaveButton : MonoBehaviour
     private void OnEnable() 
     {
         ReadProfileFromSave();
-        UpdateButton();
-
-        onDeleteModeChanged += UpdateButton;
+        SavePanelManager.OnSaveModeChanged += UpdateButton;
     }
 
     private void OnDisable()
     {
-        onDeleteModeChanged -= UpdateButton;
-        SetDeleteMode(false);
+        SavePanelManager.OnSaveModeChanged -= UpdateButton;
     }
 
-    public static void SetDeleteMode(bool value)
+    public void UpdateButton(object sender, SavePanelManager.SaveModeArgs e)
     {
-        deleteMode = value;
-        onDeleteModeChanged?.Invoke();
-    }
+        profileNameText.text = GetDisplayName(e.mode);
+        SetTextColorGray(e.mode != SavePanelManager.SaveMode.Normal);
 
-    public static void ToggleDeleteMode()
-    {
-        SetDeleteMode(!deleteMode);
-    }
-
-    public void UpdateButton()
-    {
-        if (profile != null)
+        switch (savePanelManager.CurrentMode)
         {
-            completionText.gameObject.SetActive(true);
-            timeText.gameObject.SetActive(true);
+            case SavePanelManager.SaveMode.Normal:
+            case SavePanelManager.SaveMode.Delete:
+                SetButtonDescriptions(profile);
+                break;
 
-            // name based on delete mode
-            if (!deleteMode)
-                profileNameText.text = profile.GetProfileName();
-            else
-                profileNameText.text = "Delete?";
-            completionText.text = string.Format("{0}/9", GetNumAreasCompleted(profile));
-            float seconds = profile.GetPlayTimeInSeconds();
-            int minutes = (int)seconds / 60;
-            timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
-            catSticker.gameObject.SetActive(profile.GetCompletionStatus());
-            breadge.SetActive(profile.GetBool(RAINBOW_BREADGE_ACQUIRED));
-            bool didCheatOrTeleport = profile.GetBool(DID_CHEAT) || profile.GetBool(DID_TELEPORT);
-            buttonBackgroundImage.sprite = didCheatOrTeleport ? darkGrayBackgroundSprite : lightGrayBackgroundSprite;
+            case SavePanelManager.SaveMode.Backup:
+                SetButtonDescriptions(profileBackup);
+                break;
+
+            default:
+                Debug.LogError($"Save mode was not recognized.");
+                break;
         }
-        else
+    }
+
+    private void SetButtonDescriptions(SaveProfile prof)
+    {
+        bool isNull = prof == null;
+
+        completionText.gameObject.SetActive(!isNull);
+        timeText.gameObject.SetActive(!isNull);
+        catSticker.gameObject.SetActive(!isNull);
+        breadge.gameObject.SetActive(!isNull);
+
+        if (isNull)
         {
-            profileNameText.text = "[ Empty ]";
-            completionText.gameObject.SetActive(false);
-            timeText.gameObject.SetActive(false);
-            catSticker.gameObject.SetActive(false);
-            breadge.SetActive(false);
+            return;
         }
+
+        float seconds = prof.GetPlayTimeInSeconds();
+        int minutes = (int)seconds / 60;
+        bool didCheatOrTeleport = prof.GetBool(DID_CHEAT) || prof.GetBool(DID_TELEPORT);
+
+        completionText.text = string.Format("{0}/9", GetNumAreasCompleted(prof));
+        timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
+
+        catSticker.gameObject.SetActive(prof.GetCompletionStatus());
+        breadge.gameObject.SetActive(prof.GetBool(RAINBOW_BREADGE_ACQUIRED));
+
+        buttonBackgroundImage.sprite = didCheatOrTeleport ? darkGrayBackgroundSprite : lightGrayBackgroundSprite;
+    }
+
+    private string GetDisplayName(SavePanelManager.SaveMode mode)
+    {
+        return mode switch
+        {
+            SavePanelManager.SaveMode.Normal => profile != null ? profile.GetProfileName() : PROFILE_EMPTY_STRING,
+            SavePanelManager.SaveMode.Delete => profile != null ? $"{profile.GetProfileName()}?" : PROFILE_EMPTY_STRING,
+            SavePanelManager.SaveMode.Backup => profileBackup != null ? $"{profileBackup.GetProfileName()}?" : PROFILE_EMPTY_STRING,
+            _ => PROFILE_EMPTY_STRING,
+        };
+    }
+
+    private void SetTextColorGray(bool shouldBeGray)
+    {
+        Color c = shouldBeGray ? GameSettings.darkGray : GameSettings.black;
+        profileNameText.color = c;
+        completionText.color = c;
+        timeText.color = c;
     }
 
     private int GetNumAreasCompleted(SaveProfile profile)
@@ -108,7 +131,7 @@ public class MainMenuSaveButton : MonoBehaviour
         }
         return count;
     }
-    
+
     public void ReadProfileFromSave()
     {
         SerializableSaveProfile ssp = SaveSystem.GetSerializableSaveProfile(profileIndex);
@@ -116,27 +139,49 @@ public class MainMenuSaveButton : MonoBehaviour
             profile = ssp.ToSaveProfile();
         else
             profile = null;
+
+        SerializableSaveProfile sspBackup = SaveSystem.GetBackupSerializableSaveProfile(profileIndex);
+        if (sspBackup != null)
+            profileBackup = sspBackup.ToSaveProfile();
+        else
+            profileBackup = null;
+
         SaveSystem.SetProfile(profileIndex, profile);
     }
 
     public void OnClick()
     {
-        if (profile == null)
+
+        switch (savePanelManager.CurrentMode)
         {
-            // create new profile
-            savePanelManager.OpenNewSave(profileIndex);
-        }
-        else
-        {
-            if (deleteMode)
-            {
-                DeleteThisProfile();
-            }
-            else
-            {
-                // load my profile
+            case SavePanelManager.SaveMode.Normal:
+                if (profile == null)
+                {
+                    savePanelManager.OpenNewSave(profileIndex);
+                    return;
+                }
+
                 LoadThisProfile();
-            }
+                break;
+
+            case SavePanelManager.SaveMode.Backup:
+
+                RestoreBackupProfile();
+                break;
+
+            case SavePanelManager.SaveMode.Delete:
+                if (profile == null)
+                {
+                    savePanelManager.OpenNewSave(profileIndex);
+                    return;
+                }
+
+                DeleteThisProfile();
+                break;
+
+            default:
+                Debug.LogError($"Save mode was not recognized.");
+                break;
         }
     }
 
@@ -153,8 +198,17 @@ public class MainMenuSaveButton : MonoBehaviour
             // TODO: seek confirmation
             SaveSystem.DeleteSaveProfile(profileIndex);
             profile = null;
-            SaveSystem.SetProfile(profileIndex, profile);
-            UpdateButton();
+            UpdateButton(this, new SavePanelManager.SaveModeArgs { mode = savePanelManager.CurrentMode });
+        }
+    }
+
+    public void RestoreBackupProfile()
+    {
+        if (profileBackup != null)
+        {
+            SaveSystem.RestoreBackupProfile(profileIndex);
+            ReadProfileFromSave();
+            savePanelManager.SetMode(SavePanelManager.SaveMode.Normal);
         }
     }
 }
