@@ -133,8 +133,6 @@ public class UIArtifact : Singleton<UIArtifact>
         EventSystem.current.SetSelectedGameObject(null);
 
         EventSystem.current.SetSelectedGameObject(buttonToSelect);
-
-        Debug.Log("Resselected");
     }
 
     protected bool IsButtonValidForSelection(GameObject g)

@@ -83,7 +83,7 @@ public class Controls : Singleton<Controls>
 
     private static void UpdateCurrentControlScheme(string lastInputDevice)
     {
-        bool keyboardOnlySettingIsOn = (bool)SettingsManager.Setting(Settings.KeyboardOnly).GetCurrentValue();
+        bool keyboardOnlySettingIsOn = SettingsManager.Setting<bool>(Settings.KeyboardOnly).CurrentValue;
 
         switch (lastInputDevice)
         {
@@ -264,6 +264,12 @@ public class Controls : Singleton<Controls>
         else
         {
             string controlScheme = forSpecificScheme ?? CurrentControlScheme;
+            // There is no 'Keyboard only' defined in controls since we just fake controller
+            if (controlScheme == CONTROL_SCHEME_KEYBOARD_ONLY)
+            {
+                controlScheme = CONTROL_SCHEME_KEYBOARD_MOUSE;
+            }
+            
             return inputActionForControl?.GetBindingDisplayString(group: controlScheme);
         }
     }

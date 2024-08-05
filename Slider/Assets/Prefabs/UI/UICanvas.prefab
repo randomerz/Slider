@@ -1050,6 +1050,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -26
       objectReference: {fileID: 0}
+    - target: {fileID: 5371286116634502193, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
+      propertyPath: selectables.Array.size
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5791115633290521764, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
