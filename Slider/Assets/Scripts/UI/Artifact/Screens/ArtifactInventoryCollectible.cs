@@ -29,18 +29,18 @@ public class ArtifactInventoryCollectible : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.OnControlSchemeChanged += ToggleNavigation;
-        ToggleNavigation(Controls.CurrentControlScheme);
+        Controls.OnControlSchemeChanged += ToggleNavigation;
+        ToggleNavigation();
     }
 
     private void OnDisable()
     {
-        Player.OnControlSchemeChanged -= ToggleNavigation;
+        Controls.OnControlSchemeChanged -= ToggleNavigation;
     }
 
-    private void ToggleNavigation(string s)
+    private void ToggleNavigation()
     {
-        if (s == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             EnableNavigation();
         } 

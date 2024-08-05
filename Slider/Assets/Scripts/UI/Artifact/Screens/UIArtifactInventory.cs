@@ -30,7 +30,7 @@ public class UIArtifactInventory : MonoBehaviour
     private void OnEnable() 
     {
         UpdateIcons();
-        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             if (!TrySelectLeftmostSelectible())
                 UpdateText("Collection");

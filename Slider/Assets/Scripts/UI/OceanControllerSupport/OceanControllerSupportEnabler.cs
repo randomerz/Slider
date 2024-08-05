@@ -13,7 +13,7 @@ public class OceanControllerSupportEnabler : MonoBehaviour
         //wonkin' my willy rn
         if (oceanControllerSupportButtonsHolder != null)
         {
-            if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+            if (Controls.UsingControllerOrKeyboardOnly())
             {
                 oceanControllerSupportButtonsHolder.gameObject.SetActive(true);
                 //topLeftControllerButton.Select();

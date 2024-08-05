@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using static ArtifactScreenAnimator;
+using System;
 
 public class UIArtifact : Singleton<UIArtifact>
 {
@@ -70,6 +72,17 @@ public class UIArtifact : Singleton<UIArtifact>
 
         EnableMovement();
         EnableQueueing();
+
+        UIArtifactMenus.OnArtifactOpened += HandleControllerCheck;
+        ArtifactScreenAnimator.OnScreenChange += OnArtifactScreenChanged;
+    }
+
+    private void OnArtifactScreenChanged(object sender, ScreenChangeEventArgs e)
+    {
+        if (e.currentIndex == 0)
+        {
+            HandleControllerCheck(null, null);
+        }
     }
 
     protected virtual void Update()
@@ -94,34 +107,34 @@ public class UIArtifact : Singleton<UIArtifact>
                 moveCounter = 0;
             }
         }
-
-        if (Player.GetInstance().GetCurrentControlScheme() == Controls.CONTROL_SCHEME_CONTROLLER)
-        {
-            HandleControllerCheck();
-        }
     }
 
-    protected virtual void HandleControllerCheck()
+    protected virtual void HandleControllerCheck(object sender, System.EventArgs e)
     {
+        /*
         if (!UIArtifactMenus.IsArtifactOpen())
         {
             return;
         }
-
+        */
+        GameObject buttonToSelect = EventSystem.current.currentSelectedGameObject;
         // Controller check if nothing is selected, then select the tile 1 or left arrow or right arrow
-        if (!IsButtonValidForSelection(EventSystem.current.currentSelectedGameObject))
+        if (!IsButtonValidForSelection(buttonToSelect))
         {
-            foreach (GameObject g in fallbackButtonsToSelect)
+            foreach (GameObject button in fallbackButtonsToSelect)
             {
-                if (IsButtonValidForSelection(g))
+                if (IsButtonValidForSelection(button))
                 {
-                    EventSystem.current.SetSelectedGameObject(g);
-                    return;
+                    buttonToSelect = button;
+                    break;
                 }
             }
-            // This warning gets called every time you open the artifact because UIClick disabled the default selected button until the end of the frame
-            // Debug.LogWarning($"No buttons were valid for selection for controller.");
         }
+        EventSystem.current.SetSelectedGameObject(null);
+
+        EventSystem.current.SetSelectedGameObject(buttonToSelect);
+
+        Debug.Log("Resselected");
     }
 
     protected bool IsButtonValidForSelection(GameObject g)
@@ -708,7 +721,7 @@ public class UIArtifact : Singleton<UIArtifact>
         
         //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
         //So this will select the tile you swap to after the move
-        if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        if (setCurrentAsSelected && Controls.UsingControllerOrKeyboardOnly())
         {
             EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
         }
