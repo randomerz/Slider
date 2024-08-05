@@ -52,6 +52,13 @@ public class SaveSystem
         SetProfile(0, GetSerializableSaveProfile(0)?.ToSaveProfile());
         SetProfile(1, GetSerializableSaveProfile(1)?.ToSaveProfile());
         SetProfile(2, GetSerializableSaveProfile(2)?.ToSaveProfile());
+
+        if (Application.platform == RuntimePlatform.LinuxPlayer)
+        {
+            CreateLinuxSpecificBackups(0);
+            CreateLinuxSpecificBackups(1);
+            CreateLinuxSpecificBackups(2);
+        }
     }
 
     public static SaveProfile GetProfile(int index)
@@ -232,6 +239,18 @@ public class SaveSystem
         }
     }
 
+    // Create linux specific backups in case Steam cloud deleted saves
+    private static void CreateLinuxSpecificBackups(int index)
+    {
+        string path = GetBackupFilePath(index);
+        string linuxPath = GetBackupLinuxSpecificBackupFilePath(index);
+
+        if (File.Exists(path) && !File.Exists(linuxPath))
+        {
+            File.Copy(path, linuxPath);
+        }
+    }
+
     public static void DeleteSaveProfile(int index)
     {
         Debug.Log($"[File IO] Deleting Save profile #{index}!");
@@ -284,5 +303,10 @@ public class SaveSystem
     public static string GetBackupReplacedFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/replaced-slider{0}.cat", index);
+    }
+
+    public static string GetBackupLinuxSpecificBackupFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/backup-LINUX-slider{0}.cat", index);
     }
 }
