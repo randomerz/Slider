@@ -135,9 +135,7 @@ public class SavePanelManager : MonoBehaviour
 
     public void OpenNewSave(int profileIndex)
     {
-        // savePanel.MoveToMenu(newSavePanel);
-        savePanel.Close();
-        newSavePanel.Open(savePanel);
+        savePanel.MoveToMenu(newSavePanel);
         newSavePanelManager.OpenNewSave(profileIndex);
     }
 

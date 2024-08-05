@@ -15,6 +15,7 @@ public class NewSavePanelManager : MonoBehaviour
     private static readonly Action disableUiNavigation = DisableUINavigationToAllowTypingIntoNameField;
 
     private int saveProfileIndex;
+    private BindingBehavior submitBindingBehavior;
 
     private void OnEnable()
     {
@@ -26,6 +27,7 @@ public class NewSavePanelManager : MonoBehaviour
     {
         Controls.Bindings.UI.Navigate.Enable();
         Controls.OnControlSchemeChanged -= disableUiNavigation;
+        Controls.UnregisterBindingBehavior(submitBindingBehavior);
     }
 
     private static void DisableUINavigationToAllowTypingIntoNameField()
@@ -50,7 +52,7 @@ public class NewSavePanelManager : MonoBehaviour
     public void OpenNewSave(int saveProfileIndex)
     {
         this.saveProfileIndex = saveProfileIndex;
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
 
         if (Controls.UsingKeyboardMouse())
         {
@@ -60,7 +62,7 @@ public class NewSavePanelManager : MonoBehaviour
         profileNameTextField.text = "";
         MainMenuManager.KeyboardEnabled = true;
 
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.SubmitOnly, (_) =>
+        submitBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.SubmitOnly, (_) =>
         {
             if (!WasPressedUsingController())
             {
