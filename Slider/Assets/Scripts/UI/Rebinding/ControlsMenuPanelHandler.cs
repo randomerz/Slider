@@ -29,7 +29,7 @@ public class ControlsMenuPanelHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        bool currentControlSchemeIsController = Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER;
+        bool currentControlSchemeIsController = Controls.UsingController();
         currentPanel = currentControlSchemeIsController ? CONTROLLER_PANEL : KEYBOARD_PANEL;
 
         SetCurrentPanel(currentPanel);

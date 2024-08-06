@@ -274,7 +274,7 @@ public class Minecart : Item, ISavable
     {
         if(count > 2)
         {
-            Debug.LogError("infinite recursion in minecart drop. This should never happen!");
+            Debug.LogError("[Minecart] Infinite recursion in minecart drop. This should never happen!");
             StartCoroutine(AnimateDrop(dropLocation, callback));
             return;
         }
@@ -381,7 +381,7 @@ public class Minecart : Item, ISavable
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
         if(currentTile == null && direction == -1)
         {
-            Debug.LogWarning("Cannot get default direction of null tile!");
+            Debug.LogWarning("[Minecart] Cannot get default direction of null tile!");
             return;
         }
         currentDirection = direction == -1? currentTile.defaultDir: direction;
@@ -423,7 +423,8 @@ public class Minecart : Item, ISavable
             }
             else
             {
-                Debug.LogWarning("minecart can no longer drop. this prob shouldn't happen");
+                Debug.LogWarning("[Minecart] minecart can no longer drop. This probably shouldn't happen");
+                dropOnNextMove = false;
                 StopMoving();
                 return;
             }

@@ -303,7 +303,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         {
             STile realSTile = DesertGrid.Current.GetStile(mirageIsland);
             Vector3 relativePos = Player._instance.transform.position - mirageSTiles[mirageIsland - 1].transform.position;
-            realSTile.SetBorderColliders(true);
+            realSTile.SetBorderColliders(false);
             Player.SetParent(realSTile.transform);
             Player.SetPosition(realSTile.transform.position + relativePos);
             

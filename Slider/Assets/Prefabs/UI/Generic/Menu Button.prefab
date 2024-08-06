@@ -339,6 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7403e8fd7b2096247bd852aa371433a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textMeshPro: {fileID: 0}
   target: {fileID: 6285492530584628491}
   amount: 2
 --- !u!114 &6060830020627463826
@@ -355,4 +356,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSelectedOnMenuOpen: 0
   selectOnPointerEnter: 0
-  deselectOnClick: 0
+  deselectOnClick: 1

@@ -143,9 +143,9 @@ public partial class ChadChirp
             },
             new() { 
                 id = "WalkNearLaser", 
-                text = "Woah, who's this guy?",
+                text = "Heh, I'm sure I can turn on the laser if we really need to.",
                 priority = 1,
-                canBeRepeated = false,
+                canBeRepeated = true,
             },
             new() { 
                 id = "WalkNearRocket", 

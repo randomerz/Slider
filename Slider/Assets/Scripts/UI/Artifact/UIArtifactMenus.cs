@@ -51,12 +51,12 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     private void Start()
     {
-        ToggleNavigation(Controls.CurrentControlScheme);
+        ToggleNavigation();
     }
 
-    private void ToggleNavigation(string s)
+    private void ToggleNavigation()
     {
-        if (s == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             EnableNavigation();
         } 
@@ -74,7 +74,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             navMode.Add(s, s.navigation.mode);
         }
-        ToggleNavigation(Controls.CurrentControlScheme);
+        ToggleNavigation();
     }
 
 
@@ -107,7 +107,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged += OnPauseStateChanged;
         FactoryTimeGlitch.TimeGlitchPauseStateChanged += OnPauseStateChanged;
-        Player.OnControlSchemeChanged += ToggleNavigation;
+        Controls.OnControlSchemeChanged += ToggleNavigation;
     }
 
     private void OnPauseStateChanged(bool newPausedState)
@@ -125,7 +125,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged -= OnPauseStateChanged;
         FactoryTimeGlitch.TimeGlitchPauseStateChanged -= OnPauseStateChanged;
-        Player.OnControlSchemeChanged -= ToggleNavigation;
+        Controls.OnControlSchemeChanged -= ToggleNavigation;
     }
 
     public static bool IsArtifactOpen()

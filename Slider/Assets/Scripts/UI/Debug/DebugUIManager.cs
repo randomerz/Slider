@@ -154,6 +154,16 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
+    #if UNITY_EDITOR
+    private void UnsetCheated()
+    {
+        if (SaveSystem.Current != null)
+        {
+            SaveSystem.Current.SetBool("UsedCheats", false);
+        }
+    }
+    #endif
+
     public void BroadcastMessageToAllObjects()
     {
         SetCheated();
@@ -278,6 +288,18 @@ public class DebugUIManager : MonoBehaviour
 
     //C: Gives all collectables for that area, excluding Sliders
     public void ACES() => ActivateAllCollectibles(true);
+
+    // Experimental! only callable from debug console
+    public void DisableCollectible(string name)
+    {
+        try {
+            PlayerInventory.RemoveCollectible(new Collectible.CollectibleData(name, SGrid.Current.GetArea()));
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Exception when calling DisableCollectible(): {ex.Message}. {ex.StackTrace}");
+        }
+    }
     
 
     public void ToggleConveyers() => disableConveyers = !disableConveyers;
@@ -307,6 +329,7 @@ public class DebugUIManager : MonoBehaviour
     }
 
     public void SetBoolTrue(string boolName) => SaveSystem.Current.SetBool(boolName, true);
+    public void SetBoolFalse(string boolName) => SaveSystem.Current.SetBool(boolName, false);
 
 
     public void DebugPrintBools()
@@ -338,6 +361,43 @@ public class DebugUIManager : MonoBehaviour
         SetCheated();
         PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Boots", Area.Jungle));
         Player.GetInstance().UpdatePlayerSpeed();
+    }
+
+    public void DoRespawnPlayer()
+    {
+        Debug.Log($"[Cheats] Called Respawn player");
+
+        SetCheated();
+
+        if (SceneSpawns.lastSpawn != SceneSpawns.SpawnLocation.Default)
+        {
+            // Try spawning player at that spawn
+            SceneSpawns[] spawns = FindObjectsOfType<SceneSpawns>(includeInactive: true);
+            foreach (SceneSpawns spawn in spawns)
+            {
+                if (spawn.spawnName == SceneSpawns.lastSpawn)
+                {
+                    spawn.TeleportPlayerToSpawn();
+                    return;
+                }
+            }
+        }
+
+        if (SGrid.Current.DefaultSpawn != null)
+        {
+            if (SGrid.Current is FactoryGrid factoryGrid && FactoryGrid.PlayerInPast)
+            {
+                factoryGrid.DefaultSpawnFactoryPast.TeleportPlayerToSpawn();
+                return;
+            }
+
+            SGrid.Current.DefaultSpawn.TeleportPlayerToSpawn();
+            return;
+        }
+        else
+        {
+            Debug.LogError($"SGrid did not have a DefaultSpawn!");
+        }
     }
     
     public void GoToFactoryPast()

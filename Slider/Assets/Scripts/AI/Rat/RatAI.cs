@@ -172,10 +172,17 @@ public class RatAI : MonoBehaviour, ISavable
         if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
-            visitedTiles.Add(currentStileUnderneath.islandId);
-            if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
-                AchievementManager.SetAchievementStat("completedRatRace", true, 1);
-                hasAchievement = true;
+            
+            if (!visitedTiles.Contains(currentStileUnderneath.islandId))
+            {
+                visitedTiles.Add(currentStileUnderneath.islandId);
+                if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
+                    foreach(int i in visitedTiles) {
+                        print(i);
+                    }
+                    AchievementManager.SetAchievementStat("completedRatRaceV2", true, 1);
+                    hasAchievement = true;
+                }
             }
         }
 
@@ -281,8 +288,11 @@ public class RatAI : MonoBehaviour, ISavable
     private HashSet<int> StringToSet(string nums)
     {
         HashSet<int> set = new HashSet<int>();
+        if(nums == null) return set;
+
         for(int i = 0; i < nums.Length; i++) {
-            set.Add(nums[i] - '0');
+            int num = nums[i] - '0';
+            set.Add(num);
         }
         return set;
     }
@@ -294,6 +304,6 @@ public class RatAI : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        visitedTiles = StringToSet(profile.GetString("cavesRatTiles"));
+        visitedTiles = StringToSet(profile.GetString("cavesRatTiles", ""));
     }
 }

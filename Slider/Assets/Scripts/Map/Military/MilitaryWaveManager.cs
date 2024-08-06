@@ -229,7 +229,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     {
         AchievementManager.SetAchievementStat("completedMilitary", false, 1);
         // todo check number spawned instead
-        if (MilitaryResetChecker.TOTAL_POSSIBLE_ALLIES - MilitaryResetChecker._instance.NumSpawnedAllies > 1)
+        if (MilitaryResetChecker.TOTAL_POSSIBLE_ALLIES - MilitaryResetChecker._instance.NumSpawnedAllies >= 1)
         {
             AchievementManager.SetAchievementStat("militaryExtraAlly", true, 1);
         }

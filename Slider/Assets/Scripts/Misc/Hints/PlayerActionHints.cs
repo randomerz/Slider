@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class PlayerActionHints : MonoBehaviour, ISavable
 {
@@ -103,7 +104,9 @@ public class HintData
 {
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
-    public string controllerHintText;
+    [FormerlySerializedAs("controllerHintText")]
+    public string controllerHintTextOverride;
+    public string keyboardOnlyHintTextOverride;
     public List<Control> controlBinds; //list of control binds to replace in order
 
 
@@ -116,8 +119,10 @@ public class HintData
 
     private string CheckConvertToControllerHintText(string message)
     {
-        if (!controllerHintText.Equals("") && Player.GetInstance().GetCurrentControlScheme() == "Controller")
-            return controllerHintText;
+        if (!string.IsNullOrEmpty(controllerHintTextOverride) && Controls.UsingController())
+            return controllerHintTextOverride;
+        if (!string.IsNullOrEmpty(keyboardOnlyHintTextOverride) && Controls.UsingKeyboardOnly())
+            return keyboardOnlyHintTextOverride;
         else
             return message;
     }

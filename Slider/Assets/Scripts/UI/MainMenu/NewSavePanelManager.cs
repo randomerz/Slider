@@ -15,22 +15,24 @@ public class NewSavePanelManager : MonoBehaviour
     private static readonly Action disableUiNavigation = DisableUINavigationToAllowTypingIntoNameField;
 
     private int saveProfileIndex;
+    private BindingBehavior submitBindingBehavior;
 
     private void OnEnable()
     {
         DisableUINavigationToAllowTypingIntoNameField();
-        MainMenuPlayer.OnControlSchemeChanged += disableUiNavigation;
+        Controls.OnControlSchemeChanged += disableUiNavigation;
     }
 
     private void OnDisable()
     {
         Controls.Bindings.UI.Navigate.Enable();
-        MainMenuPlayer.OnControlSchemeChanged -= disableUiNavigation;
+        Controls.OnControlSchemeChanged -= disableUiNavigation;
+        Controls.UnregisterBindingBehavior(submitBindingBehavior);
     }
 
     private static void DisableUINavigationToAllowTypingIntoNameField()
     {
-        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
+        if (Controls.UsingKeyboardMouseOrKeyboardOnly())
         {
             Controls.Bindings.UI.Navigate.Disable();
             Controls.Bindings.UI.Back.Disable();
@@ -50,9 +52,9 @@ public class NewSavePanelManager : MonoBehaviour
     public void OpenNewSave(int saveProfileIndex)
     {
         this.saveProfileIndex = saveProfileIndex;
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
 
-        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
+        if (Controls.UsingKeyboardMouse())
         {
             Controls.Bindings.UI.Navigate.Disable();
             profileNameTextField.Select();
@@ -60,7 +62,7 @@ public class NewSavePanelManager : MonoBehaviour
         profileNameTextField.text = "";
         MainMenuManager.KeyboardEnabled = true;
 
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.SubmitOnly, (_) =>
+        submitBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.SubmitOnly, (_) =>
         {
             if (!WasPressedUsingController())
             {

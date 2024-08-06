@@ -52,6 +52,13 @@ public class SaveSystem
         SetProfile(0, GetSerializableSaveProfile(0)?.ToSaveProfile());
         SetProfile(1, GetSerializableSaveProfile(1)?.ToSaveProfile());
         SetProfile(2, GetSerializableSaveProfile(2)?.ToSaveProfile());
+
+        if (Application.platform == RuntimePlatform.LinuxPlayer)
+        {
+            CreateLinuxSpecificBackups(0);
+            CreateLinuxSpecificBackups(1);
+            CreateLinuxSpecificBackups(2);
+        }
     }
 
     public static SaveProfile GetProfile(int index)
@@ -170,7 +177,13 @@ public class SaveSystem
         return LoadFromFile(index);
     }
 
-    private static SerializableSaveProfile LoadFromFile(int index)
+    public static SerializableSaveProfile GetBackupSerializableSaveProfile(int index)
+    {
+        string path = GetBackupFilePath(index);
+        return LoadFromFile(path);
+    }
+
+    private static SerializableSaveProfile LoadFromFile(string path)
     {
         // Debug.Log($"[File IO] Loading data from file {index}.");
 
@@ -194,11 +207,23 @@ public class SaveSystem
         }
     }
 
+    // Create linux specific backups in case Steam cloud deleted saves
+    private static void CreateLinuxSpecificBackups(int index)
+    {
+        string path = GetBackupFilePath(index);
+        string linuxPath = GetBackupLinuxSpecificBackupFilePath(index);
+
+        if (File.Exists(path) && !File.Exists(linuxPath))
+        {
+            File.Copy(path, linuxPath);
+        }
+    }
+
     public static void DeleteSaveProfile(int index)
     {
         Debug.Log($"[File IO] Deleting Save profile #{index}!");
 
-        saveProfiles[index] = null;
+        SetProfile(index, null);
 
         string path = GetFilePath(index);
         if (File.Exists(path))
@@ -207,8 +232,49 @@ public class SaveSystem
         }
     }
 
+    public static void RestoreBackupProfile(int index)
+    {
+        Debug.Log($"[File IO] Restoring Backup profile #{index}!");
+        
+        string pathBackup = GetBackupFilePath(index);
+        if (!File.Exists(pathBackup))
+        {
+            Debug.LogError($"[File IO] Aborting: File was not found at path {pathBackup}");
+            return;
+        }
+
+        string path = GetFilePath(index);
+        if (File.Exists(path))
+        {
+            string pathReplaced = GetBackupReplacedFilePath(index);
+            if (File.Exists(pathReplaced))
+            {
+                File.Delete(pathReplaced);
+            }
+            File.Move(path, GetBackupReplacedFilePath(index));
+        }
+        
+        File.Move(pathBackup, path);
+        SetProfile(index, GetSerializableSaveProfile(index)?.ToSaveProfile());
+    }
+
     public static string GetFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
+    }
+
+    public static string GetBackupFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/backup-slider{0}.cat", index);
+    }
+
+    public static string GetBackupReplacedFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/replaced-slider{0}.cat", index);
+    }
+
+    public static string GetBackupLinuxSpecificBackupFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/backup-LINUX-slider{0}.cat", index);
     }
 }

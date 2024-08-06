@@ -54,7 +54,7 @@ public class JungleRecipeBookStatNumber : MonoBehaviour
                     numberImages[i].sprite = emptySprite;
                     continue;
                 }
-                if (charArray[i] == '.')
+                if (i < charArray.Length && charArray[i] == '.')
                 {
                     numberImages[i].sprite = decimalSprite;
                     continue;

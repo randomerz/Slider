@@ -50,9 +50,4 @@ public class ArcheologistChadCutscene : SimpleInteractableCutscene
 
         OnCutSceneFinish();
     }
-
-    protected override void OnCutSceneFinish()
-    {
-        base.OnCutSceneFinish();
-    }
 }

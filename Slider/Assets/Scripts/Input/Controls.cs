@@ -28,12 +28,83 @@ public class Controls : Singleton<Controls>
     private static InputSettings _bindings;
 
     public static Action OnControlSchemeChanged;
-    public static string CurrentControlScheme { get; set; } = CONTROL_SCHEME_KEYBOARD_MOUSE;
+    public static string CurrentControlScheme { get; private set; } = CONTROL_SCHEME_KEYBOARD_MOUSE;
 
 
     public const string CONTROL_SCHEME_KEYBOARD_MOUSE = "Keyboard Mouse";
-
+    public const string CONTROL_SCHEME_KEYBOARD_ONLY = "Keyboard Only";
     public const string CONTROL_SCHEME_CONTROLLER = "Controller";
+
+
+    public static bool UsingController() { return CurrentControlScheme == CONTROL_SCHEME_CONTROLLER; }
+    public static bool UsingKeyboardMouse() { return CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_MOUSE; }
+    public static bool UsingKeyboardOnly() { return CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_ONLY; }
+
+    public static bool UsingControllerOrKeyboardOnly()
+    {
+        return CurrentControlScheme == CONTROL_SCHEME_CONTROLLER || CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_ONLY;
+    }
+
+    public static bool UsingKeyboardMouseOrKeyboardOnly()
+    {
+        return CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_MOUSE || CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_ONLY;
+    }
+
+    public static void OnKeyboardOnlyMenuSettingChanged(bool keyboardOnlySettingTurnedOn)
+    {
+        if (keyboardOnlySettingTurnedOn)
+        {
+            SetCurrentControlScheme(CONTROL_SCHEME_KEYBOARD_ONLY);
+        }
+        else
+        {
+            SetCurrentControlScheme(CONTROL_SCHEME_KEYBOARD_MOUSE);
+        }
+    }
+
+    private static void SetCurrentControlScheme(string newControlScheme)
+    {
+        if (CurrentControlScheme == newControlScheme)
+        {
+            return;
+        }
+
+        Debug.Log("[Input] Control Scheme changed [FROM: " + CurrentControlScheme + "] [TO: " + newControlScheme + "]");
+
+        CurrentControlScheme = newControlScheme;
+
+        OnControlSchemeChanged?.Invoke();
+    }
+
+    public static void OnLastInputDeviceChanged(string lastInputDevice)
+    {
+        UpdateCurrentControlScheme(lastInputDevice);
+    }
+
+    private static void UpdateCurrentControlScheme(string lastInputDevice)
+    {
+        bool keyboardOnlySettingIsOn = SettingsManager.Setting<bool>(Settings.KeyboardOnly).CurrentValue;
+
+        switch (lastInputDevice)
+        {
+            case "Keyboard Mouse":
+                if (keyboardOnlySettingIsOn)
+                {
+                    SetCurrentControlScheme(CONTROL_SCHEME_KEYBOARD_ONLY);
+                }
+                else
+                {
+                    SetCurrentControlScheme(CONTROL_SCHEME_KEYBOARD_MOUSE);
+                }
+                break;
+            case "Controller":
+                SetCurrentControlScheme(CONTROL_SCHEME_CONTROLLER);
+                break;
+            default:
+                Debug.LogWarning("Last Input Device is unknown control scheme " + lastInputDevice);
+                break;
+        }
+    }
 
     /// <summary>
     /// The key used to store binding overrides in PlayerPrefs.
@@ -193,6 +264,12 @@ public class Controls : Singleton<Controls>
         else
         {
             string controlScheme = forSpecificScheme ?? CurrentControlScheme;
+            // There is no 'Keyboard only' defined in controls since we just fake controller
+            if (controlScheme == CONTROL_SCHEME_KEYBOARD_ONLY)
+            {
+                controlScheme = CONTROL_SCHEME_KEYBOARD_MOUSE;
+            }
+            
             return inputActionForControl?.GetBindingDisplayString(group: controlScheme);
         }
     }

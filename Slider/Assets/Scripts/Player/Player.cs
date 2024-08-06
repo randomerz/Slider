@@ -7,8 +7,6 @@ using UnityEngine.Tilemaps;
 
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
-    public static event Action<string> OnControlSchemeChanged;
-
     public class HousingChangeArgs : System.EventArgs
     {
         public bool newIsInHouse;
@@ -171,6 +169,20 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
+    private void UpdateMove(Vector2 moveDir) 
+    {
+        inputDir = new Vector3(moveDir.x, moveDir.y);
+        if (moveDir.magnitude != 0) 
+        {
+            lastMoveDir = inputDir;
+        }
+    }
+
+    public static Vector3 GetLastMoveDirection()
+    {
+        return _instance.lastMoveDir;
+    }
+
     private void LateUpdate()
     {
         foreach(Material m in ppMaterials)
@@ -178,22 +190,15 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
         }
     }
-    //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
-    public string GetCurrentControlScheme()
-    {
-        return playerInput.currentControlScheme;
-    }
 
     /// <summary>
-    /// Called when control scheme changes (between "Controller" or "Keyboard Mouse")
+    /// Called when Unity detects a different input device from the current control scheme (either "Controller" or "Keyboard Mouse")
     /// </summary>
     public void OnControlsChanged()
     {
-        string newControlScheme = GetCurrentControlScheme();
+        Controls.OnLastInputDeviceChanged(playerInput.currentControlScheme);
+
         HandleControllerWarnings();
-        Debug.Log("[Input] Control Scheme changed to: " + newControlScheme);
-        OnControlSchemeChanged?.Invoke(newControlScheme);
-        Controls.CurrentControlScheme = newControlScheme;
     }
 
     private void HandleControllerWarnings()
@@ -294,6 +299,12 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         Vector3 pos = transform.position;
         Vector3 localPos = transform.localPosition;
 
+        if (SGrid.Current.GetArea() == Area.Desert && isInHouse)
+        {
+            // The desert temple is considered "outside map" so we have to care for it
+            return pos;
+        }
+
         // STile postitions
         STile stile = GetSTileUnderneath();
         if (stile == null)
@@ -358,6 +369,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             transform.SetParent(null);
             transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
+            // Debug.Log($"Just set players position to {transform.position}");
             UpdateSTileUnderneath();
         }
 
@@ -382,20 +394,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         STile stileUnderneath = GetSTileUnderneath();
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-    }
-
-    private void UpdateMove(Vector2 moveDir) 
-    {
-        inputDir = new Vector3(moveDir.x, moveDir.y);
-        if (moveDir.magnitude != 0) 
-        {
-            lastMoveDir = inputDir;
-        }
-    }
-
-    public static Vector3 GetLastMoveDirection()
-    {
-        return _instance.lastMoveDir;
     }
 
     public static void SetCanMove(bool canMove, bool canAnimateMovement=true) 

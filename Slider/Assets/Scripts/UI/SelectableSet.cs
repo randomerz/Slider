@@ -17,9 +17,11 @@ public class SelectableSet : MonoBehaviour
     [SerializeField] private List<SelectableSet> subSelectableSets;
     public SelectableSet[] SubSelectableSets { get => subSelectableSets.ToArray(); }
 
+    [SerializeField] private bool supressLength0Warning;
+
     private void Awake()
     {
-        if (selectables.Length == 0)
+        if (selectables.Length == 0 && !supressLength0Warning)
         {
             Debug.LogWarning($"A SelectableSet on {gameObject.name} ({gameObject.GetInstanceID()}) contained no selectables. This likely indicates an error.");
         }
@@ -33,5 +35,10 @@ public class SelectableSet : MonoBehaviour
     public void RemoveSubSelectableSet(SelectableSet selectableSet)
     {
         subSelectableSets.Remove(selectableSet);
+    }
+
+    public void SetSelectebles(Selectable[] selectables)
+    {
+        this.selectables = selectables;
     }
 }

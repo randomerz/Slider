@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MagiTechArtifact : UIArtifact
@@ -78,6 +79,8 @@ public class MagiTechArtifact : UIArtifact
     protected override void Update()
     {
         base.Update();
+
+        // Debug.Log($"EventSystem.current.currentSelectedGameObject {EventSystem.current.currentSelectedGameObject}");
 
         if (isInPast != PlayerIsInPast)
         {
@@ -336,6 +339,19 @@ public class MagiTechArtifact : UIArtifact
 
     public void SetButtonsAndBackground(bool past)
     {
+        Vector2Int currentControllerPos = GetCurrentControllerPos();
+        if (currentControllerPos != new Vector2Int(-1, -1))
+        {
+            if (past && currentControllerPos.x < 3)
+            {
+                currentControllerPos = FindAltCoords(currentControllerPos.x, currentControllerPos.y);
+            }
+            else if (!past && currentControllerPos.x >= 3)
+            {
+                currentControllerPos = FindAltCoords(currentControllerPos.x, currentControllerPos.y);
+            }
+        }
+
         foreach (ArtifactTileButton b in buttons)
         {
             b.SetSelected(false);
@@ -343,14 +359,44 @@ public class MagiTechArtifact : UIArtifact
             b.SetSpriteToIslandOrEmpty();
             if (b.islandId > 9 && past || b.islandId <= 9 && !past)
             {
-                b.gameObject.SetActive(true);             
+                b.gameObject.SetActive(true);
             }
             else
             {
                 b.gameObject.SetActive(false);
+                b.SetControllerHoverHighlighted(false);
             }
         }
+
         background.sprite = past ? pastBackgroundSprite : presentBackgroundSprite;
+
+        if (currentControllerPos != new Vector2Int(-1, -1))
+        {
+            ArtifactTileButton artifactButton = GetButton(currentControllerPos.x, currentControllerPos.y);
+            
+            EventSystem.current.SetSelectedGameObject(artifactButton.gameObject);
+            artifactButton.SetControllerHoverHighlighted(true);
+        }
+    }
+
+    private Vector2Int GetCurrentControllerPos()
+    {
+        GameObject currentSelectedGO = EventSystem.current.currentSelectedGameObject;
+        if (currentSelectedGO == null)
+        {
+            return new Vector2Int(-1, -1);
+        }
+
+        ArtifactTileButton currentSelectedButton = currentSelectedGO.GetComponent<ArtifactTileButton>();
+
+        if (currentSelectedButton != null)
+        {
+            return new Vector2Int(currentSelectedButton.x, currentSelectedButton.y);
+        }
+        else
+        {
+            return new Vector2Int(-1, -1);
+        }
     }
 
     public void SetPreview(bool enable)

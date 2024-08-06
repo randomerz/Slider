@@ -27,7 +27,7 @@ public class EndOfGameManager : MonoBehaviour
     public CanvasGroup canvasGroupBoomo;
     public CanvasGroup timeCanvasGroup;
 
-    private const float MAXIMUM_TIME_DISPLAY_SECONDS = 3600 * 3;
+    // private const float MAXIMUM_TIME_DISPLAY_SECONDS = 3600 * 3;
     private const float MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600 * 2;
     private const float MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600;
     private const float PARALLAX_ANIMATION_DURATION = 5;
@@ -57,11 +57,11 @@ public class EndOfGameManager : MonoBehaviour
         AchievementManager.SetAchievementStat("savedCat", false, 1);
         if (SaveSystem.Current != null && time < MAXIMUM_SLOW_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
         {
-            AchievementManager.SetAchievementStat("completedGame2Hours", true, 1);
+            AchievementManager.SetAchievementStat("completedGame2Hours", true, 1, true);
         }
         if (SaveSystem.Current != null && time < MAXIMUM_FAST_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
         {
-            AchievementManager.SetAchievementStat("completedGame1Hour", true, 1);
+            AchievementManager.SetAchievementStat("completedGame1Hour", true, 1, true);
         }
     }
 
@@ -83,7 +83,8 @@ public class EndOfGameManager : MonoBehaviour
             ts.Milliseconds
         ));
 
-        bool enableTimeText = time <= MAXIMUM_TIME_DISPLAY_SECONDS;
+        // bool enableTimeText = time <= MAXIMUM_TIME_DISPLAY_SECONDS;
+        bool enableTimeText = true;
         timeText.gameObject.SetActive(enableTimeText);
     }
 
@@ -190,11 +191,11 @@ public class EndOfGameManager : MonoBehaviour
 
     private void GoToCredits()
     {
+        GiveAchievements();
+
         SaveSystem.SetCurrentProfile(-1); 
         sceneLoad = SceneManager.LoadSceneAsync(CREDITS_SCENE);
         sceneLoad.allowSceneActivation = false;
-
-        GiveAchievements();
 
         UIEffects.FadeToBlack(() => {
             sceneLoad.allowSceneActivation = true;

@@ -31,6 +31,29 @@ public class CoroutineUtils
     /// </summary>
     /// <param name="actionToExecute">The action to execute after the end of the current frame</param>
     /// <param name="coroutineOwner">We need a MonoBehaviour to start the coroutine on</param>
+    public static Coroutine ExecuteAfterFrames(Action actionToExecute, MonoBehaviour coroutineOwner, int frames)
+    {
+        if (coroutineOwner != null && coroutineOwner.isActiveAndEnabled)
+        {
+            return coroutineOwner.StartCoroutine(IExecuteAfterFrames(actionToExecute, frames));
+        }
+        return null;
+    }
+
+    private static IEnumerator IExecuteAfterFrames(Action actionToExecute, int frames)
+    {
+        for (int i = 0; i < frames; i++)
+        {
+            yield return null;
+        }
+        actionToExecute?.Invoke();
+    }
+
+    /// <summary>
+    /// Wait for the end of the current frame, then invoke the passed in action.
+    /// </summary>
+    /// <param name="actionToExecute">The action to execute after the end of the current frame</param>
+    /// <param name="coroutineOwner">We need a MonoBehaviour to start the coroutine on</param>
     public static Coroutine ExecuteAfterEndOfFrame(Action actionToExecute, MonoBehaviour coroutineOwner)
     {
         if (coroutineOwner != null && coroutineOwner.isActiveAndEnabled)

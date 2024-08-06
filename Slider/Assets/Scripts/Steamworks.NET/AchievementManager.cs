@@ -20,13 +20,24 @@ public class AchievementManager : Singleton<AchievementManager>
     /// <summary>
     /// Set a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
     /// </summary>
-    public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value)
+    public static void SetAchievementStat(string statName, bool dontGiveIfCheated, int value, bool dontGiveIfTeleported = false)
     {
+        Debug.Log($"[AchievementManager] Called update {statName} to {value}.");
+
         if (dontGiveIfCheated)
         {
             if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedCheats"))
             {
                 Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because this profile used cheats.");
+                return;
+            }
+        }
+
+        if (dontGiveIfTeleported)
+        {
+            if (SaveSystem.Current != null && SaveSystem.Current.GetBool("UsedTeleport"))
+            {
+                Debug.Log($"[AchievementManager] Skipped updating {statName} to {value} because this profile used teleport cheats.");
                 return;
             }
         }
@@ -102,10 +113,21 @@ public class AchievementManager : Singleton<AchievementManager>
     {
         if (SteamManager.Initialized && SteamUser.BLoggedOn())
         {
+            // SteamUserStats.RequestCurrentStats(); // this is an async call it probably doesnt do anything here
             foreach (string key in achievementStats.Keys)
             {
+                if (SteamUserStats.GetStat(key, out int statData))
+                {
+                    if (achievementStats[key] <= statData)
+                    {
+                        // Debug.Log($"[AchievementManager] Skipped updating {key} to {achievementStats[key]} because steam stat is greater: {statData}.");
+                        continue;
+                    }
+                }
+
                 SteamUserStats.SetStat(key, achievementStats[key]);
             }
+            SteamUserStats.StoreStats();
         }
     }
 }

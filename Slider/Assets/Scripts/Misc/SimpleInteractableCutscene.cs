@@ -22,35 +22,43 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
     private bool skipWaitingAfterTyped = false;
     private bool currentDialogueAllowedToSkip = false;
     private bool playerInTrigger = false;
+    private bool hasInitialized;
 
     public bool cutsceneStarted { get; private set; } = false;
     public bool cutsceneFinished { get; private set; } = false;
 
     protected virtual void Start()
     {
+        hasInitialized = true;
+
+        if (string.IsNullOrEmpty(cutsceneStartedFlag) || string.IsNullOrEmpty(cutsceneFinishedFlag))
+        {
+            Debug.LogWarning($"Cutscene Started or Finished flag was not set for {name}.");
+        }
+
+        if (!string.IsNullOrEmpty(cutsceneStartedFlag) && SaveSystem.Current.GetBool(cutsceneStartedFlag))
+        {
+            cutsceneStarted = true;
+        }
         if (!string.IsNullOrEmpty(cutsceneFinishedFlag) && SaveSystem.Current.GetBool(cutsceneFinishedFlag))
         {
             OnCutSceneFinish();
         }
         else
         {
+            if (stillResolveCutsceneIfNotFinished && cutsceneStarted)
+            {
+                OnCutsceneNotFinished();
+                OnCutSceneFinish();
+            }
             if (ShouldCutsceneBeSkipped())
             {
                 OnCutSceneFinish();
-                return;
             }
         }
     }
 
-    private void OnDisable()
-    {
-        if (stillResolveCutsceneIfNotFinished && cutsceneStarted && !cutsceneFinished)
-        {
-            Debug.Log($"Cutscene didn't finish, trying to resolve...");
-            OnCutsceneNotFinished();
-        }
-    }
-
+    // Called the next time in Start if cutscene was not finished
     protected virtual void OnCutsceneNotFinished()
     {
         if (!string.IsNullOrEmpty(cutsceneFinishedFlag))
@@ -72,6 +80,19 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
             return;
         }
 
+        // In case the player spawns in the cutscene trigger
+        if (!hasInitialized)
+        {
+            CoroutineUtils.ExecuteAfterEndOfFrame(() => CheckOnTriggerEnter(), this);
+        }
+        else
+        {
+            CheckOnTriggerEnter();
+        }
+    }
+
+    private void CheckOnTriggerEnter()
+    {
         if (ShouldCutsceneBeSkipped())
         {
             OnCutSceneFinish();
@@ -164,7 +185,21 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
             }
         }
 
+        yield return null; // Give time for conditionals to update
+
+        foreach (NPC character in cutsceneCharacters)
+        {
+            character.PollForNewConditional();
+        }
+
         yield return CutScene();
+        
+        yield return null; // Give time for conditionals to update
+
+        foreach (NPC character in cutsceneCharacters)
+        {
+            character.PollForNewConditional();
+        }
 
         if (playerInTrigger)
         {
@@ -177,8 +212,8 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
         {
             SaveSystem.Current.SetBool(cutsceneFinishedFlag, true);
         }
-        //we want a bit of a gap after cutscene is done before you can start talking to them like normal, otherwise it's weird
-        yield return new WaitForSeconds(1.5f);
+        // //we want a bit of a gap after cutscene is done before you can start talking to them like normal, otherwise it's weird
+        yield return new WaitForSeconds(0.1f);
 
         EnableAllNormalCharacterDialogueTriggers(true);
     }
@@ -210,7 +245,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
     // This way we can call this when you load in from a save.
     protected virtual void OnCutSceneFinish()
     {
-
+        cutsceneFinished = true;
     }
    
     protected IEnumerator SayNextDialogue(NPC character, bool skippable = true, float timeWaitAfterFinishedTyping = DEFAULT_TIME_BETWEEN_DIALOGUE_LINES)

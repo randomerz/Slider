@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class ArtifactScreenAnimator : MonoBehaviour
 {
     // one day we will replace the function with an event
-    // public class ScreenChangeEvent : System.EventArgs {
-    //     int screenIndex;
-    // }
+    public class ScreenChangeEventArgs : System.EventArgs {
+        public int prevIndex;
+        public int currentIndex;
+    }
 
-    // public static System.EventHandler<ScreenChangeEvent> OnScreenChange;
+    public static System.EventHandler<ScreenChangeEventArgs> OnScreenChange;
 
     private int currentScreenIndex;
     private int targetScreenIndex;
@@ -120,8 +121,8 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
 
         yield return new WaitForSeconds(duration);
-        
-        OnScreenChange(target, currentScreenIndex);
+
+        int prevScreenIndex = currentScreenIndex;
 
         currentScreenIndex = target;
 
@@ -132,6 +133,8 @@ public class ArtifactScreenAnimator : MonoBehaviour
 
         if (targetScreenIndex != currentScreenIndex)
             SwitchScreens(targetScreenIndex);
+
+        OnScreenChanged(target, prevScreenIndex);
     }
 
     private void SetScreensActive(bool value)
@@ -143,7 +146,7 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
     }
 
-    private void OnScreenChange(int index, int prevIndex)
+    private void OnScreenChanged(int index, int prevIndex)
     {
         //inventory
         if(index == 1)
@@ -165,5 +168,7 @@ public class ArtifactScreenAnimator : MonoBehaviour
         {
             UIArtifactWorldMap.GetInstance().UpdateAreaStatuses();
         }
+
+        OnScreenChange?.Invoke(this, new ScreenChangeEventArgs { prevIndex = prevIndex, currentIndex = index });
     }
 }

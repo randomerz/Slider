@@ -19,7 +19,7 @@ public class OceanArtifact : UIArtifact
     {
         base.Awake();
 
-        Player.OnControlSchemeChanged += OnPlayerControlSchemeChanged;
+        Controls.OnControlSchemeChanged += OnPlayerControlSchemeChanged;
     }
 
     protected override void OnEnable()
@@ -37,7 +37,7 @@ public class OceanArtifact : UIArtifact
         OnButtonInteract -= UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened -= UpdateHighlights;
 
-        Player.OnControlSchemeChanged -= OnPlayerControlSchemeChanged;
+        Controls.OnControlSchemeChanged -= OnPlayerControlSchemeChanged;
     }
 
     public override void ButtonDragged(BaseEventData eventData) 
@@ -229,9 +229,9 @@ public class OceanArtifact : UIArtifact
         canRotate = value;
     }
 
-    private void OnPlayerControlSchemeChanged(string newControlScheme)
+    private void OnPlayerControlSchemeChanged()
     {
-        if (newControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
             oceanControllerSupportButtonsHolder.gameObject.SetActive(true);
             topLeftControllerButton.Select();

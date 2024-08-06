@@ -15,19 +15,29 @@ public class Volcano : MonoBehaviour
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
 
+    private Coroutine explosionCoroutine;
+
     private void Awake() 
     {
         if (rockCollectible.GetComponent<Collider2D>() == null)
             Debug.LogError("Rock Collectible couldn't find collider.");
     }
 
+    private void Start()
+    {
+        CheckRockFromSave();
+    }
+
     public void Erupt()
     {
         if (SaveSystem.Current.GetBool("oceanVolcanoErupted"))
+        {
+            CheckRockFromSave();
             return;
+        }
 
         SaveSystem.Current.SetBool("oceanVolcanoErupted", true);
-        StartCoroutine(StartEruption());
+        explosionCoroutine = StartCoroutine(StartEruption());
     }
 
     private IEnumerator StartEruption()
@@ -61,6 +71,7 @@ public class Volcano : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         
         smokeExplosions[1].Play();
+        explosionCoroutine = null;
     }
 
     private IEnumerator ItemDrop()
@@ -87,5 +98,24 @@ public class Volcano : MonoBehaviour
         rockCollectible.GetComponent<Collider2D>().enabled = true;
 
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, rockTarget.transform.position, rockTarget);
+    }
+
+    private void CheckRockFromSave()
+    {
+        if (!SaveSystem.Current.GetBool("oceanVolcanoErupted"))
+        {
+            return;
+        }
+
+        if (explosionCoroutine != null)
+        {
+            return;
+        }
+
+        if (!PlayerInventory.Contains("Rock", Area.Ocean))
+        {
+            rockCollectible.transform.position = rockTarget.transform.position;
+            rockCollectible.GetComponent<Collider2D>().enabled = true;
+        }
     }
 }
