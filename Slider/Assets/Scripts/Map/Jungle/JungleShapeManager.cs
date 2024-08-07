@@ -40,9 +40,6 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
         }
 
         // check if correct shape
-        // AT: force shape equality for testing purposes...
-        // if (true)
-        
         if (held.itemName.Equals(wanted.shapeName))
         {
             PlayerInventory.RemoveAndDestroyItem();

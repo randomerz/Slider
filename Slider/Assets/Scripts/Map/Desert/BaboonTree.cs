@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class BaboonTree : MonoBehaviour
+public class BaboonTree : MonoBehaviour, IDialogueTableProvider
 {
     private enum BaboonState
     {
@@ -34,6 +35,23 @@ public class BaboonTree : MonoBehaviour
     private int numShakesAfterWalk;
 
     private bool checkedOnStileMoveThisFrame;
+    
+    #region Localization
+
+    enum BaboonStrings
+    {
+        Vertical,
+        Horizontal
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<BaboonStrings, string>
+            {
+                { BaboonStrings.Vertical, "vertically" },
+                { BaboonStrings.Horizontal, "horizontally" },
+            });
+    #endregion
 
     private void Start() {
         if (SaveSystem.Current.GetBool("desertBaboonFinishedWalk") &&
@@ -146,8 +164,8 @@ public class BaboonTree : MonoBehaviour
             didVertical = true;
         }
 
-        SaveSystem.Current.SetString("desertRemainingShakeDirection",
-            didHorizontal ? "vertically" : "horizontally"
+        SaveSystem.Current.SetLocalizedString("desertRemainingShakeDirection",
+            didHorizontal ? this.GetLocalized(BaboonStrings.Vertical) : this.GetLocalized(BaboonStrings.Horizontal)
         );
 
         if (isWalking && !isFalling)

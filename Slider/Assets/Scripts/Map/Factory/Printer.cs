@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class Printer : MonoBehaviour
+public class Printer : MonoBehaviour, IDialogueTableProvider
 {
     public GameObject wallObject;
     public GameObject floorObject;
@@ -24,6 +25,37 @@ public class Printer : MonoBehaviour
     private bool walls = false;
     private bool floor = false;
     private bool wires = false;
+    
+    #region Localization
+
+    enum OperatorText
+    {
+        First,
+        BaseHint,
+        WallHint,
+        WireHint,
+        BaseMsg,
+        WallMsg,
+        WireMsg,
+        ListMaterialMsgBeginning,
+        ListMaterialMsgPunctuation
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<OperatorText, string>
+        {
+            { OperatorText.First, "I'll just need these materials: the base, the walls, and the wires!!!" },
+            { OperatorText.BaseHint, "The base is right here to my left, but you'll probably need that Conductive Bob somehow!!!!" },
+            { OperatorText.WallHint, "The walls are up behind that giant door!!!!" },
+            { OperatorText.WireHint, "The wires are in the bottom-right of the Factory!!!!" },
+            { OperatorText.BaseMsg, " the base" },
+            { OperatorText.WallMsg, " the walls" },
+            { OperatorText.WireMsg, " the wires" },
+            { OperatorText.ListMaterialMsgBeginning, "It still needs" },
+            { OperatorText.ListMaterialMsgPunctuation, "!!!" },
+        });
+
+    #endregion
 
     private void OnEnable()
     {
@@ -116,8 +148,18 @@ public class Printer : MonoBehaviour
 
     public void CheckParts()
     {
-        string operatorMessage = "";
-        string operatorHint = "";
+        LocalizationPair operatorMessage = new LocalizationPair
+        {
+            original = "",
+            translated = ""
+        };
+        
+        LocalizationPair operatorHint = new LocalizationPair
+        {
+            original = "",
+            translated = ""
+        };
+        
         walls = PlayerInventory.Contains("Slider Walls");
         floor = PlayerInventory.Contains("Slider Base");
         wires = PlayerInventory.Contains("Slider Wires");
@@ -125,7 +167,7 @@ public class Printer : MonoBehaviour
         if (!floor && !walls && !wires)
         {
             // first message
-            operatorMessage = "I'll just need these materials: the base, the walls, and the wires!!!";
+            operatorMessage = this.GetLocalized(OperatorText.First);
         }
         else if (floor && walls && wires)
         {
@@ -134,26 +176,30 @@ public class Printer : MonoBehaviour
         }
         else
         {
-            List<string> mlist = new List<string>();
+            List<LocalizationPair> mlist = new ();
             if (!floor)
             {
-                mlist.Add(" the base");
-                operatorHint = "The base is right here to my left, but you'll probably need that Conductive Bob somehow!!!!";
+                mlist.Add(this.GetLocalized(OperatorText.BaseMsg));
+                operatorHint = this.GetLocalized(OperatorText.BaseHint);
             }
             if (!walls)
             {
-                mlist.Add(" the walls");
-                operatorHint = "The walls are up behind that giant door!!!!";
+                mlist.Add(this.GetLocalized(OperatorText.WallMsg));
+                operatorHint = this.GetLocalized(OperatorText.WallHint);
             }
             if (!wires)
             {
-                mlist.Add(" the wires");
-                operatorHint = "The wires are in the bottom-right of the Factory!!!!";
+                mlist.Add(this.GetLocalized(OperatorText.WireMsg));
+                operatorHint = this.GetLocalized(OperatorText.WireHint);
             }
-            operatorMessage = $"It still needs{string.Join(',', mlist)}!!!";
+            operatorMessage = 
+                this.GetLocalized(OperatorText.ListMaterialMsgBeginning) 
+                + LocalizationPair.Join(',', mlist) 
+                + this.GetLocalized(OperatorText.ListMaterialMsgPunctuation);
         }
-        SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
-        SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);
+        
+        SaveSystem.Current.SetLocalizedString("FactoryPrinterParts", operatorMessage);
+        SaveSystem.Current.SetLocalizedString("FactoryPrinterPartsHint", operatorHint);
 
         // if only one left
         if ((!floor && walls && wires) ||

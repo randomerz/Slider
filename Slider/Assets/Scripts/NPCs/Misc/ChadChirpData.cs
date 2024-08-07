@@ -1,7 +1,52 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Localization;
 
 public partial class ChadChirp
 {
+    #region Localization
+
+    enum ChadChirpStrings
+    {
+        Onwards,
+        CameFromJungle,
+        CameFromMilitary,
+        ArrivedInDesert,
+        ArrivedInFactoryPresent,
+        ArrivedInMagiTechPresent,
+        UsedAnchor,
+        WentThroughPortalPast,
+        WentThroughPortalPresent,
+        LeftGreedyWizard,
+        WalkNearLaser,
+        WalkNearRocket,
+        WalkNearCastle,
+        EnteredMuseum,
+        WalkNearGemFuelMachine,
+        WalkNearCasinoTable,
+        WalkNearCasinoExplosives,
+        EnteredDesertTemple,
+        EnteredDesertTempleSnail,
+        WalkedInDinoMouth,
+        WalkNearChadSr,
+        WalkNearPresentMegaCrystal,
+        WalkNearPastMegaCrystal,
+        RandomSmallTalk1,
+        RandomSmallTalk2,
+        RandomSmallTalk3,
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        ChadChirpData.chirpDataList.ToDictionary(
+            cData => Enum.Parse<ChadChirpStrings>(cData.id),
+            cData => cData.text
+            )
+        );
+
+    #endregion
+
+    // TODO: refactor to array of RandomSmallTalk strings in the table, then just use the table entry length
     private const int NUMBER_OF_SMALL_TALKS = 3;
     
     public class ChadChirpData
@@ -11,6 +56,15 @@ public partial class ChadChirp
         public int priority; // 2 for "CanChirps", 1 for "WantChirps"
         public bool canBeRepeated; // If can be repeated, then priority also goes from 2 -> 1
         public bool hasBeenUsed;
+
+        public LocalizationPair GetLocalized(ChadChirp context)
+        {
+            if (!Enum.TryParse<ChadChirpStrings>(id, out var key))
+            {
+                return (LocalizationPair) text;
+            }
+            return context.GetLocalized(key);
+        }
 
         public static string GetChirpUsedSaveString(ChadChirpData data) => $"MiscChadChirpUsed_{data.id}";
 
@@ -114,30 +168,6 @@ public partial class ChadChirp
             new() { 
                 id = "WalkNearGemFuelMachine", 
                 text = "Woah woah woah, why are there so many colors here?",
-                priority = 2,
-                canBeRepeated = false,
-            },
-            new() { 
-                id = "WalkNearGemReflectionPool", 
-                text = "This is... mystical...",
-                priority = 2,
-                canBeRepeated = false,
-            },
-            new() { 
-                id = "ReflectionPoolCutscene", 
-                text = "Woah!",
-                priority = 2,
-                canBeRepeated = false,
-            },
-            new() { 
-                id = "ArcheologistTalkedAfterReflectionPool", 
-                text = "We've got all the gems? Let's bring them back!",
-                priority = 2,
-                canBeRepeated = false,
-            },
-            new() { 
-                id = "WalkNearRocketFinal", 
-                text = "This is it, huh? The point of no return.",
                 priority = 2,
                 canBeRepeated = false,
             },

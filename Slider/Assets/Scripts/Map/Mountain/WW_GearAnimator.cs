@@ -19,7 +19,6 @@ public class WW_GearAnimator : MonoBehaviour
     public WW_GearAnimator nextGear;
 
     public State state;
-    public bool shouldEmitSound;
 
     void Start()
     {
@@ -33,7 +32,6 @@ public class WW_GearAnimator : MonoBehaviour
         if (nextGear != null && nextGear.state == State.NotMoving)
         {
             nextGear.SetCurrentState(State.Clicking);
-            nextGear.PlayAnimationFromStart("Click");
         }
     }
 
@@ -63,12 +61,6 @@ public class WW_GearAnimator : MonoBehaviour
         }
     }
 
-    public void PlayAnimationFromStart(string animationName)
-    {
-        animator.Play("NotMoving");
-        animator.Play(animationName, -1, 0);
-    }
-
     public void SetSpeed(float speed)
     {
         animator.SetFloat("Speed", speed);
@@ -82,29 +74,5 @@ public class WW_GearAnimator : MonoBehaviour
         {
             ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
         }
-    }
-
-    // I only attached it to big gear for now
-    public void OnGearStart()
-    {
-        if (shouldEmitSound)
-        {
-            HandleSound();
-        }
-    }
-    
-    private void HandleSound()
-    {
-        bool anyClicking = state == State.Clicking;
-
-        WW_GearAnimator current = nextGear;
-        while (current != null) {
-            anyClicking |= current.state == State.Clicking;
-            current = current.nextGear;
-        }
-
-        AudioManager.PickSound(anyClicking ? "Gear Broken" : "Gear Normal")
-                    .WithAttachmentToTransform(transform)
-                    .AndPlay();
     }
 }

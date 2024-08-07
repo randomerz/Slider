@@ -283,14 +283,10 @@ public class TMPTextTyper : MonoBehaviour
         charIndex = 0;
         startingCharacterIndex = 0; // also temp but maybe these arent as bad
         if (fadeTextIn)
-        {
             coroutine = StartCoroutine(TypeStringFadeIn());
-        }
         else
-        {
             coroutine = StartCoroutine(TypeString());
-        }
-
+        
     }
 
     public void SetFont(TMP_FontAsset font, float scale = 1.0f, FontWeight? weight = null)
@@ -313,9 +309,9 @@ public class TMPTextTyper : MonoBehaviour
         TextMeshPro.color = new Color(TextMeshPro.color.r, TextMeshPro.color.g, TextMeshPro.color.b, alpha);
     }
 
-    public string ParseTextPure(string text)
+    public string ReplaceAndStripRichText(string text, bool forceEnglishText)
     {
-        return m_tmpSpecialText.ParseTextPure(text);
+        return m_tmpSpecialText.ReplaceAndStripRichText(text, forceEnglishText);
     }
     
     /// <summary>
@@ -324,12 +320,9 @@ public class TMPTextTyper : MonoBehaviour
     /// <param name="text"></param>
     public string StartTyping(string text)
     {
-        if (coroutine != null)
-        {
-            StopCoroutine(coroutine);
-        }
+        if (coroutine != null) StopCoroutine(coroutine);
         TextMeshPro.text = text;
-        m_tmpSpecialText.ParseTextAndRefreshTyper();
+        m_tmpSpecialText.ParseText();
         StartTyping();
         return TextMeshPro.text;
     }

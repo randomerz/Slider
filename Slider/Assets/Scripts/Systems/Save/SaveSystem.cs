@@ -116,17 +116,17 @@ public class SaveSystem
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(Current);
 
-        string path = GetFilePath(currentIndex);
-        SaveToFile(profile, path);
+        SaveToFile(profile, currentIndex);
     }
 
-    private static void SaveToFile(SerializableSaveProfile profile, string path)
+    private static void SaveToFile(SerializableSaveProfile profile, int index)
     {
         // Debug.Log($"[File IO] Saving data to file {index}.");
 
-        BinaryFormatter formatter = new();
+        BinaryFormatter formatter = new BinaryFormatter();
         formatter.Binder = AssemblyRemapBinder;
 
+        string path = GetFilePath(index);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         formatter.Serialize(stream, profile);
@@ -144,38 +144,6 @@ public class SaveSystem
         }
 
         stream.Close();
-    }
-
-    /// <summary>
-    /// Saves a backup of each profile, to be called when you quit the application.
-    /// </summary>
-    public static void SaveBackups()
-    {
-        Debug.Log($"[Saves] Creating backups of save profiles...");
-        for (int i = 0; i < 3; i++)
-        {
-            if (saveProfiles[i] != null)
-            {
-                try 
-                {
-                    string path = GetBackupFilePath(i);
-                    SerializableSaveProfile existingBackup = LoadFromFile(path);
-                    if (existingBackup != null && existingBackup.lastSaved == saveProfiles[i].GetLastSaved())
-                    {
-                        continue;
-                    }
-                    
-                    Debug.Log($"[Saves] Saving backup for profile {i}");
-                    SaveToFile(SerializableSaveProfile.FromSaveProfile(saveProfiles[i]), path);
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogError($"Error when saving backups: {e.Message}");
-                    Debug.Log(e.StackTrace);
-                }
-            }
-        }
-        Debug.Log($"[Saves] Done!");
     }
 
     public static void LoadSaveProfile(int index)
@@ -206,8 +174,7 @@ public class SaveSystem
 
     public static SerializableSaveProfile GetSerializableSaveProfile(int index)
     {
-        string path = GetFilePath(index);
-        return LoadFromFile(path);
+        return LoadFromFile(index);
     }
 
     public static SerializableSaveProfile GetBackupSerializableSaveProfile(int index)
@@ -220,6 +187,7 @@ public class SaveSystem
     {
         // Debug.Log($"[File IO] Loading data from file {index}.");
 
+        string path = GetFilePath(index);
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();

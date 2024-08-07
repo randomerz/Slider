@@ -192,10 +192,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
     - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
-      propertyPath: m_lineSpacing
-      value: -45
-      objectReference: {fileID: 0}
-    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_fontSizeBase
       value: 14
       objectReference: {fileID: 0}
@@ -310,10 +306,6 @@ PrefabInstance:
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
-      propertyPath: deselectOnClick
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

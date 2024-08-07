@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class BottleManager : MonoBehaviour, ISavable
+public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
 {
     private const string validTiles = "1367"; //these tiles have a water path for the bottle
     
@@ -28,6 +29,32 @@ public class BottleManager : MonoBehaviour, ISavable
         new Vector3(0,0), 
         new Vector3(4.5f,-7.5f)
     };
+    
+    #region Localization
+
+    enum RomeoReason
+    {
+        Default,
+        NotEnoughTiles,
+        Land,
+        Shipwreck,
+        Island,
+        Volcano,
+        SpaceEmpty
+    }
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<RomeoReason, string>
+            {
+                { RomeoReason.Default, "The path is obstructed!"},
+                { RomeoReason.NotEnoughTiles, "There are not enough tiles!"},
+                { RomeoReason.Land, "There is land in the way!"},
+                { RomeoReason.Shipwreck, "The shipwreck is in the way!"},
+                { RomeoReason.Island, "The island is in the way!"},
+                { RomeoReason.Volcano, "The volcano is in the way!"},
+                { RomeoReason.SpaceEmpty, "The space in front of me is empty!"},
+            });
+    #endregion
 
     
     private void Awake() 
@@ -62,34 +89,34 @@ public class BottleManager : MonoBehaviour, ISavable
 
     private void UpdateRomeoReason()
     {
-        string reason = "The path is obstructed!";
+        var reason = this.GetLocalized(RomeoReason.Default);
         string gridString = SGrid.GetGridString();
         if(SGrid.Current.GetNumTilesCollected() < 4)
         {
-            reason = "There are not enough tiles!";
+            reason = this.GetLocalized(RomeoReason.NotEnoughTiles);
         }
         else if (gridString[0] == '2' || gridString[0] == '8')
         {
-            reason = "There is land in the way!";
+            reason = this.GetLocalized(RomeoReason.Land);
         }
         else if (gridString[0] == '4')
         {
-            reason = "The shipwreck is in the way!";
+            reason = this.GetLocalized(RomeoReason.Shipwreck);
         }
         else if (gridString[0] == '5')
         {
-            reason = "The island is in the way!";
+            reason = this.GetLocalized(RomeoReason.Island);
         }
         else if (gridString[0] == '9')
         {
-            reason = "The volcano is in the way!";
+            reason = this.GetLocalized(RomeoReason.Volcano);
         }
         else if (gridString[0] == '.')
         {
-            reason = "The space in front of me is empty!";
+            reason = this.GetLocalized(RomeoReason.SpaceEmpty);
         }
 
-        SaveSystem.Current.SetString("oceanRomeoReason", reason);
+        SaveSystem.Current.SetLocalizedString("oceanRomeoReason", reason);
     }
 
     private IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)

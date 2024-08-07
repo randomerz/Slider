@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using TMPro;
@@ -49,17 +48,7 @@ public class TMPSpecialText : MonoBehaviour
     public bool ignoreColor;
 
     private List<Coroutine> effectCoroutines;
-    
-    /// <summary>
-    /// Every instance of "add effect coroutine" will be matched to one timestamp, *ex.* t=1
-    /// Every time stop effect coroutines is called, this timestamp increases by 1
-    /// If "add effect coroutine" is called after "stop effect coroutines", and with a timestamp less than the current
-    /// timestamp (i.e., it is the effect of a previous call that should be executed before stop coroutines), then
-    /// that addition will be ignored.
-    /// This aims to fix the 1 frame dialogue switch (such as jungle shape turn-in), that causes previous effects
-    /// to linger in the switched dialogue
-    /// </summary>
-    private uint stopEffectCoroutineTimestamp = 0;
+
 
     private struct CommandArg
     {
@@ -105,28 +94,25 @@ public class TMPSpecialText : MonoBehaviour
     // moved to start so SGrid can initialize, for SaveSystem
     private void Start() 
     {
-        ParseTextAndRefreshTyper();
+        ParseText();
     }
 
 
     /// <summary>
     /// Calls to parse special tags in the text! This takes a frame to update
     /// </summary>
-    public string ParseTextAndRefreshTyper()
+    public void ParseText()
     {
-        var (cleaned, cmdArgs) = ParseTextFirstFrame(m_TextMeshPro.text);
-        m_TextMeshPro.text = cleaned;
-        StartCoroutine(IParseText(cleaned, cmdArgs));
-        return cleaned;
+        StartCoroutine(IParseText(ParseTextFirstFrame(m_TextMeshPro.text, false)));
     }
     
-    public string ParseTextPure(string text)
+    public string ReplaceAndStripRichText(string text, bool forceEnglishText)
     {
-        var (str, _) = ParseTextFirstFrame(text);
+        var (str, _) = ParseTextFirstFrame(text, forceEnglishText);
         return str;
     }
 
-    private (string cleaned, List<CommandArg> cmdArgs) ParseTextFirstFrame(string text)
+    private (string cleaned, List<CommandArg> cmdArgs) ParseTextFirstFrame(string text, bool forceEnglishText)
     {
         string cleaned = text;
         List<CommandArg> commandArgs = new();
@@ -167,7 +153,7 @@ public class TMPSpecialText : MonoBehaviour
                 }
 
                 string originalText = text.Substring(i + command.Length + 2, closing_tag - (i + command.Length + 2));
-                originalText = ParseCommandReplaceText(commandHash, originalText);
+                originalText = ParseCommandReplaceText(commandHash, originalText, forceEnglishText);
 
                 // remove tags
                 text = text.Substring(0, i) + 
@@ -255,13 +241,10 @@ public class TMPSpecialText : MonoBehaviour
                 // m_TextMeshPro.text = text;
                 cleaned = text;
 
-                int start = i - offset;
-                int end = i + originalText.Length - offset - 1;
-
                 //Debug.Log(command + " " + i + " - " + (closing_tag - command.Length - 2));
                 //Debug.Log($"Hash {commandHash}");
                 //ParseCommand(commandHash, i - offset, closing_tag - command.Length - 3 - offset);
-                commandArgs.Add(new CommandArg(command, commandHash, start, end));// closing_tag - command.Length - 3 - offset));
+                commandArgs.Add(new CommandArg(command, commandHash, i - offset, i + originalText.Length - offset - 1));// closing_tag - command.Length - 3 - offset));
             }
 
             i++;
@@ -270,13 +253,15 @@ public class TMPSpecialText : MonoBehaviour
         return (cleaned, commandArgs);
     }
 
-    private IEnumerator IParseText(string cleaned, List<CommandArg> cmdArgs)
+    private IEnumerator IParseText((string cleaned, List<CommandArg> cmdArgs) parseResult)
     {
-        uint t = stopEffectCoroutineTimestamp;
+        m_TextMeshPro.text = parseResult.cleaned;
+
         yield return null;
-        foreach (var c in cmdArgs)
+
+        foreach (CommandArg c in parseResult.cmdArgs)
         {
-            ParseCommand(c.hash, c.start, c.end, t);
+            ParseCommand(c.hash, c.start, c.end);
         }
     }
 
@@ -323,15 +308,9 @@ public class TMPSpecialText : MonoBehaviour
     /// <param name="commandHash">The hash of the string of the command</param>
     /// <param name="start">The start index in the original string, tags removed</param>
     /// <param name="end">The end index in the original string, tags removed</param>
-    /// <param name="timestamp">The "stop effect coroutine timestamp" at the time this function is scheduled (not called!)</param>
     /// <returns>True if a coroutine was started, else false</returns>
-    private bool ParseCommand(int commandHash, int start, int end, uint timestamp)
+    private bool ParseCommand(int commandHash, int start, int end)
     {
-        if (timestamp < stopEffectCoroutineTimestamp)
-        {
-            return false;
-        }
-        
         //Debug.Log($"Hash of Type: {"type".GetHashCode()}");
         switch (commandHash)
         {
@@ -363,7 +342,7 @@ public class TMPSpecialText : MonoBehaviour
         return true;
     }
 
-    private string ParseCommandReplaceText(int commandHash, string originalText)
+    private string ParseCommandReplaceText(int commandHash, string originalText, bool forceEnglishText)
     {
         switch (commandHash)
         {
@@ -371,7 +350,7 @@ public class TMPSpecialText : MonoBehaviour
             case 696029845:
             // string
             case -983953243:
-                return GetString(originalText);
+                return GetString(originalText, forceEnglishText);
         }
 
         return originalText;
@@ -379,8 +358,6 @@ public class TMPSpecialText : MonoBehaviour
 
     public void StopEffects()
     {
-        stopEffectCoroutineTimestamp++; // AT: just hope nobody goes in and out the same npc trigger for like a billion times
-        
         foreach(var effect in effectCoroutines)
         {
             StopCoroutine(effect);
@@ -677,9 +654,10 @@ public class TMPSpecialText : MonoBehaviour
 
     #region var-string
 
-    private string GetString(string stringName)
+    private string GetString(string stringName, bool forceEnglishText)
     {
-        return SaveSystem.Current.GetString(stringName);
+        var pair = SaveSystem.Current.GetLocalizedString(stringName);
+        return forceEnglishText ? pair.original : pair.TranslatedFallbackToOriginal;
     }
 
     #endregion

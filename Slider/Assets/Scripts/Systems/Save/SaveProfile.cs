@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Localization;
 
 public class SaveProfile
 {
@@ -21,8 +22,9 @@ public class SaveProfile
     private Dictionary<string, int> ints = new Dictionary<string, int>();
     private Dictionary<string, float> floats = new Dictionary<string, float>();
     public AchievementStatistic[] AchievementData { get; set; }
-    private Random.State randomState;
 
+    public static string LocalizedStringPostfix => "_" + LocalizationLoader.CurrentLocale;
+    
     // Cached stuff
     // nothing bc i dont know what to do bc scenes exist
 
@@ -33,8 +35,6 @@ public class SaveProfile
         strings["CatUpper"] = profileName.ToUpper();
         this.gameVersion = Application.version;
         lastArea = Area.Village;
-        Random.InitState(profileName.GetHashCode());            
-        randomState = Random.state;
 
         foreach (Area area in Area.GetValues(typeof(Area)))
         {
@@ -93,16 +93,6 @@ public class SaveProfile
     public void SetLastSaved(System.DateTime value)
     {
         lastSaved = value;
-    }
-
-    public Random.State GetRandomState()
-    {
-        return randomState;
-    }
-
-    public void SetRandomState(Random.State state)
-    {
-        randomState = state;
     }
 
     public SerializablePlayer GetSerializablePlayer()
@@ -179,7 +169,7 @@ public class SaveProfile
     public void Save()
     {
         lastSaved = System.DateTime.Now;
-        // SetBool("isDemoBuild", true);
+        SetBool("isDemoBuild", true);
         SaveSavablesData();
         this.gameVersion = Application.version;
         AchievementData = AchievementManager.GetAchievementData();
@@ -302,15 +292,39 @@ public class SaveProfile
     /// Returns "name" if strings dictionary doesn't contain "name" in keys.
     /// </summary>
     /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
+    /// <param name="defaultValue"></param>
+    /// <returns></returns>
+    public LocalizationPair GetLocalizedString(string name, string defaultValue = null)
+    {
+        var orig = strings.GetValueOrDefault(name, defaultValue ?? name);
+        var translated = strings.GetValueOrDefault(name + LocalizedStringPostfix, orig);
+        return new LocalizationPair
+        {
+            original = orig,
+            translated = translated
+        };
+    }
+
+    /// <summary>
+    /// Returns "name" if strings dictionary doesn't contain "name" in keys.
+    /// </summary>
+    /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
+    /// <param name="defaultValue"></param>
     /// <returns></returns>
     public string GetString(string name, string defaultValue = null)
-    {
-        return strings.GetValueOrDefault(name, defaultValue == null ? name : defaultValue);
-    }
+        => strings.GetValueOrDefault(name, defaultValue ?? name);
 
     public void SetString(string name, string value)
     {
         strings[name] = value;
+    }
+    
+    public void SetLocalizedString(string name, LocalizationPair pair) => SetLocalizedString(name, pair.original, pair.TranslatedFallbackToOriginal);
+
+    public void SetLocalizedString(string name, string value, string localized)
+    {
+        strings[name] = value;
+        strings[name + LocalizedStringPostfix] = localized;
     }
 
     public int GetInt(string name, int defaultValue = 0)
