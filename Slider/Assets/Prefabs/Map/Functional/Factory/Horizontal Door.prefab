@@ -65,7 +65,10 @@ MonoBehaviour:
       m_Calls: []
   animator: {fileID: 700469962639666219}
   shouldSaveDoorState: 0
+  spriteRenderer: {fileID: 1299310475434406675}
+  myCollider: {fileID: 0}
   saveDoorString: 
+  shouldUpdateSpriteOrder: 1
   forceOpen: 0
 --- !u!95 &700469962639666219
 Animator:

@@ -537,6 +537,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1260201685670444484, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
+      propertyPath: shouldUpdateSpriteOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1260201685670444484, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: OnPowered.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
