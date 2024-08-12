@@ -9,6 +9,79 @@ using UnityEngine.SceneManagement;
 
 namespace Localization
 {
+    public static class SpecificTypeHelpers
+    {
+        public static string JungleShapeToPath(string shapeName) => $"__JungleShapes/{shapeName}";
+        public static string CollectibleToPath(string collectible, Area area) => $"__Collectibles/{area.ToString()}/{collectible}";
+
+        public static string AreaToDiscordNamePath(Area area) => $"__DiscordMessages/{area.ToString()}";
+
+        public static string AreaToDisplayNamePath(Area area) => $"__AreaDisplayName/{area.ToString()}";
+    }
+    
+    public struct LocalizationPair
+    {
+        public static explicit operator LocalizationPair(string input)
+        {
+            return new LocalizationPair
+            {
+                original = input,
+                translated = input
+            };
+        }
+        
+        //
+        // public static implicit operator LocalizationPair((string, string) input)
+        // {
+        //     return new LocalizationPair
+        //     {
+        //         original = input.Item1,
+        //         translated = input.Item2
+        //     };
+        // }
+
+        public static implicit operator (string, string)(LocalizationPair self)
+        {
+            return (self.original, self.translated);
+        }
+
+        public string original;
+        public string translated;
+
+        public string TranslatedFallbackToOriginal => translated ?? original;
+
+        public static LocalizationPair operator +(LocalizationPair a, LocalizationPair b)
+            => new LocalizationPair
+            {
+                original = a.original + b.original,
+                translated = a.translated + b.translated
+            };
+
+        public static bool operator ==(LocalizationPair a, LocalizationPair b) => a.original == b.original;
+
+        public static bool operator !=(LocalizationPair a, LocalizationPair b) => !(a == b);
+
+        public static LocalizationPair Join(string separator, IEnumerable<LocalizationPair> pairs)
+        {
+            var localizationPairs = pairs as LocalizationPair[] ?? pairs.ToArray();
+            return new LocalizationPair
+            {
+                original = string.Join(separator, localizationPairs.Select(pair => pair.original)),
+                translated = string.Join(separator, localizationPairs.Select(pair => pair.translated))
+            };
+        }
+        
+        public static LocalizationPair Join(char separator, IEnumerable<LocalizationPair> pairs)
+        {
+            var localizationPairs = pairs as LocalizationPair[] ?? pairs.ToArray();
+            return new LocalizationPair
+            {
+                original = string.Join(separator, localizationPairs.Select(pair => pair.original)),
+                translated = string.Join(separator, localizationPairs.Select(pair => pair.translated))
+            };
+        }
+    }
+    
     internal abstract class Localizable
     {
         private string[] componentPath;
@@ -82,12 +155,12 @@ namespace Localization
     {
         // Immediate component that this localizable tracks, several of them can track the same component
         // in the case of different indices (different dialogue numbers of the same NPC, for example)
-        public T GetAnchor<T>() where T: Component => (anchor as T);
-        private Component anchor;
+        public T GetAnchor<T>() where T: class => (_anchor as T);
+        private readonly Component _anchor;
 
         private TrackedLocalizable(Component c) : base(GetComponentPath(c))
         {
-            anchor = c;
+            _anchor = c;
         }
 
         public TrackedLocalizable(TMP_Text tmp) : this(tmp as Component)
@@ -126,9 +199,14 @@ namespace Localization
             index = idx.ToString();
         }
 
-        public TrackedLocalizable(ShopDialogueManager shopDialogueManager, string code, int idx) : this(shopDialogueManager as Component)
+        public TrackedLocalizable(IDialogueTableProvider dialogueTableProvider, string code) : this(dialogueTableProvider as Component)
         {
-            index = code + Localizable.indexSeparatorSecondary + idx;
+            index = code;
+        }
+        
+        public TrackedLocalizable(ArtifactInventoryCollectible collectibleUI) : this(collectibleUI as Component)
+        {
+            index = null;
         }
     }
 
@@ -221,6 +299,7 @@ namespace Localization
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
         
         public static string DefaultLocale => "English";
+        public static string GoofyAhLanguage => "Piratese";
         
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
@@ -313,6 +392,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         internal SortedDictionary<Config, LocalizationConfig> configs;
         internal SortedDictionary<string, ParsedLocalizable> records;
 
+        public string LocaleName => locale;
         private string locale;
         public bool IsDefaultLocale => locale.Equals(DefaultLocale);
         public static bool SupportsPixelFont(string locale) => locale.Equals(DefaultLocale); // TODO: change when pixel font adds Spanish supports or something...
@@ -674,6 +754,8 @@ be corrupted, these rules may be helpful for debugging purposes...
     {
         private HashSet<Type> excludedTypes = new(); // currently only used by prefab localization to prevent infinite loops
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
+        private Dictionary<string, string> AdditionalStrings = new();
+        public Dictionary<string, string> AdditionalExportedStrings = new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
 
         private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
 
@@ -684,12 +766,19 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
             }
+            
+            ////////////////////// STRING EXPORT FUNCTIONS /////////////////////////////////////////////////////////////
+            SelectorFunctionMap.Add(typeof(Collectible), c => ExportCollectibleString(c as Collectible));
+            
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
 
         // Initializes a null localizable scene for global configuration purposes
         // TODO: add variable substitution support here by passing a list of <var_name>:<var_orig> values here
-        private LocalizableContext(LocaleConfiguration localeConfiguration) : this()
+        private LocalizableContext(LocaleConfiguration localeConfiguration, Dictionary<string, string> globalStrings) : this()
         {
+            AdditionalStrings = globalStrings;
+            
             foreach (var option in localeConfiguration.options)
             {
                 if (configs.ContainsKey(option.name))
@@ -718,8 +807,8 @@ be corrupted, these rules may be helpful for debugging purposes...
         }
         
         /* Following factory methods are just for clearer naming, instead of all uses of this context class being created from same named constructor */
-        public static LocalizableContext ForSingleLocale(LocaleConfiguration localeConfiguration) =>
-            new(localeConfiguration);
+        public static LocalizableContext ForSingleLocale(LocaleConfiguration localeConfiguration, Dictionary<string, string> globalStrings) =>
+            new(localeConfiguration, globalStrings);
 
         public static LocalizableContext ForSingleScene(Scene scene) => new(scene);
 
@@ -727,7 +816,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         /////////////////////////// Localizable Instance Selection  ////////////////////////////////////////////////////
         
-        private static readonly Dictionary<Type, Func<Component, IEnumerable<TrackedLocalizable>>> SelectorFunctionMap = new()
+        private Dictionary<Type, Func<Component, IEnumerable<TrackedLocalizable>>> SelectorFunctionMap = new()
         {
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
@@ -735,7 +824,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
             { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }},
             { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) },
-            { typeof(ShopDialogueManager), component => SelectLocalizablesFromShop(component as ShopDialogueManager) },
+            { typeof(IDialogueTableProvider), component => SelectLocalizablesFromTableProvider(component as IDialogueTableProvider) },
+            { typeof(ArtifactInventoryCollectible), component => new List<TrackedLocalizable>{ new (component as ArtifactInventoryCollectible) }},
         };
         
         private void PopulateLocalizableInstances(Scene scene)
@@ -750,6 +840,11 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private void PopulateLocalizableInstances(GameObject rootGameObject)
         {
+            if (rootGameObject.GetComponent<ExcludeFromLocalization>() != null)
+            {
+                return;
+            }
+            
             foreach (Type type in SelectorFunctionMap.Keys)
             {
                 if (excludedTypes.Contains(type))
@@ -764,7 +859,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
 
                 localizables[type]
-                    .AddRange(query.SelectMany(component => SelectorFunctionMap[type](component)));
+                    .AddRange(query
+                        .SelectMany(component => SelectorFunctionMap[type](component)));
             }
         }
 
@@ -799,14 +895,27 @@ be corrupted, these rules may be helpful for debugging purposes...
             return hints.hintsList.Select((_, idx) => new TrackedLocalizable(hints, idx));
         }
 
-        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromShop(ShopDialogueManager shop)
+        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromTableProvider(IDialogueTableProvider tableProvider)
         {
-            return shop
-                .dialogueTable.SelectMany((kv) =>
-                {
-                    return kv.Value.Select((str, idx) => new TrackedLocalizable(shop,
-                        Enum.GetName(typeof(ShopDialogueManager.ShopDialogueCode), kv.Key), idx));
-                });
+            var selected = tableProvider
+                .TranslationTable.Select((kv) =>
+                    new TrackedLocalizable(tableProvider, kv.Key)
+                );
+
+            return selected;
+        }
+
+        private IEnumerable<TrackedLocalizable> ExportCollectibleString(Collectible collectible)
+        {
+            if (!AdditionalExportedStrings.TryAdd(
+                    SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name,
+                        collectible.GetCollectibleData().area),
+                    collectible.GetCollectibleData().name))
+            {
+               Debug.LogWarning($"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}"); 
+            }
+
+            return new TrackedLocalizable[] { };
         }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -827,7 +936,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(DialogueDisplay), LocalizeDialogueDisplay },
             { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
             { typeof(PlayerActionHints), LocalizePlayerActionHints },
-            { typeof(ShopDialogueManager), LocalizeShop },
+            { typeof(IDialogueTableProvider), LocalizeTableProvider },
+            { typeof(ArtifactInventoryCollectible), LocalizeCollectibleUI },
         };
 
         /// <summary>
@@ -853,9 +963,9 @@ be corrupted, these rules may be helpful for debugging purposes...
             
             foreach (var (type, instances) in localizables)
             {
-                foreach (TrackedLocalizable trackedLocalizable in instances)
+                if (LocalizationFunctionMap.TryGetValue(type, out var localizationFuncion))
                 {
-                    if (LocalizationFunctionMap.TryGetValue(type, out var localizationFuncion))
+                    foreach (var trackedLocalizable in instances)
                     {
                         localizationFuncion(trackedLocalizable, file, strategy);
                     }
@@ -883,7 +993,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmpCasted.font = LocalizationLoader.LocalizationFont;
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
-            tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded
+            // tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded
             
             if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
             {
@@ -933,7 +1043,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
                     {
                         txt.fontSize *= scale;
-                        txt.fontWeight = FontWeight.SemiBold;
+                        // txt.fontWeight = FontWeight.SemiBold;
                     }
                 }
                 
@@ -976,7 +1086,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             if (file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
-                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true, FontWeight.SemiBold);
+                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true);
             }
         }
 
@@ -1007,43 +1117,43 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeShop(TrackedLocalizable shop, LocalizationFile file, LocalizationStrategy strategy)
+        private static void LocalizeTableProvider(TrackedLocalizable tableProviderEntry, LocalizationFile file, LocalizationStrategy strategy)
         {
             if (strategy == LocalizationStrategy.ChangeStyleOnly)
             {
                 return;
             }
             
-            var path = shop.FullPath;
+            var path = tableProviderEntry.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
-                try
-                {
-                    var s = shop.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
-                    var code = s[0];
-                    var idx = int.Parse(s[1]);
-
-                    try
-                    {
-                        shop.GetAnchor<ShopDialogueManager>()
-                            .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item2 = entry.Translated;
-                    } catch (FormatException)
-                    {
-                        Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code not recognized");
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code or index out of bounds");
-                    }
-                }
-                catch (FormatException)
-                {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
-                }
+                // AT: cursed Unity editor crashing bug if I call any interface function,
+                // so instead just rewrite the function here...
+                // For some reason running during play mode is fine, but non-play mode won't
+                // allow it. Probably some Unity Mono issue...
+                var table = tableProviderEntry.GetAnchor<IDialogueTableProvider>().TranslationTable;
+                table[tableProviderEntry.IndexInComponent] = new LocalizationPair() {
+                    original = table[tableProviderEntry.IndexInComponent].original,
+                    translated = entry.Translated
+                };
+            }
+            else
+            {
+                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
+            }
+        }
+        
+        private static void LocalizeCollectibleUI(TrackedLocalizable collectible, LocalizationFile file, LocalizationStrategy strategy)
+        {
+            if (strategy == LocalizationStrategy.ChangeStyleOnly)
+            {
+                return;
+            }
+            
+            var path = collectible.FullPath;
+            if (file.records.TryGetValue(path, out var entry))
+            {
+                collectible.GetAnchor<ArtifactInventoryCollectible>().displayName = entry.Translated;
             }
             else
             {
@@ -1058,10 +1168,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Dropdown), SerializeDropdownOption },
             { typeof(NPC), SerializeNpc },
             { typeof(PlayerActionHints), SerializePlayerActionHints },
-            { typeof(ShopDialogueManager), SerializeShop },
+            { typeof(IDialogueTableProvider), SerializeTableProvider },
         };
         
-        public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile)
+        public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile, Func<string> autoPadTranslated = null)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -1097,6 +1207,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             builder.Append($"\"Path\"{sep}\"Orig\"{sep}\"Translation\"{sep}\r\n");
 
             SortedDictionary<string, string> data = SerializeTrackedLocalizables();
+
+            foreach (var kv in AdditionalStrings)
+            {
+                data.Add(kv.Key, kv.Value);
+            }
             
             foreach (var (_path, _orig) in data)
             {
@@ -1106,7 +1221,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 string orig = _orig.Replace("\"", "\"\"");
 
                 string translated = orig;
-
+                
                 if (referenceFile != null)
                 {
                     if (referenceFile.records.TryGetValue(_path, out var referenceTranslation))
@@ -1115,8 +1230,14 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
                     else
                     {
-                        Debug.LogWarning($"[Localization] No existsing translation at {_path}");
+                        Debug.LogWarning($"[Localization] No existing translation at {_path}");
                     }
+                }
+
+                if (autoPadTranslated != null)
+                {
+                    string pad = autoPadTranslated();
+                    translated = pad + translated + pad;
                 }
                 
                 builder.Append($"\"{path}\"{sep}\"{orig}\"{sep}\"{translated}\"{sep}\r\n"); // for skeleton file, just use original as the translation
@@ -1149,9 +1270,9 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             foreach (var (type, instances) in localizables)
             {
-                foreach (TrackedLocalizable localizable in instances)
+                if (serializationMappingAdaptor.TryGetValue(type, out var serializationFunction))
                 {
-                    if (serializationMappingAdaptor.TryGetValue(type, out var serializationFunction))
+                    foreach (TrackedLocalizable localizable in instances)
                     {
                         serializationFunction(localizable);
                     }
@@ -1228,37 +1349,13 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static string SerializeShop(TrackedLocalizable shop)
+        private static string SerializeTableProvider(TrackedLocalizable tableProvider)
         {
-            try
-            {
-                var s = shop.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
-                var code = s[0];
-                var idx = int.Parse(s[1]);
-
-                try
-                {
-                    return shop.GetAnchor<ShopDialogueManager>()
-                        .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item1;
-                } catch (FormatException)
-                {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code not recognized");
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code or index out of bounds");
-                }
-            }
-            catch (FormatException)
-            {
-                Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
-            }
-
-            return null;
+            // AT: cursed Unity editor crashing bug if I call any interface function,
+            // so instead just rewrite the function here...
+            // For some reason running during play mode is fine, but non-play mode won't
+            // allow it. Probably some Unity Mono issue...
+            return tableProvider.GetAnchor<IDialogueTableProvider>().TranslationTable[tableProvider.IndexInComponent].original;
         }
     }
 }
