@@ -100,7 +100,7 @@ public class ArtifactTab : MonoBehaviour
     {
         if(Controls.UsingControllerOrKeyboardOnly())
         {
-            print("selected");
+            // print("selected");
             controllerSelectedImage.enabled = true;
             selected = true;
             OnHoverEnter?.Invoke();

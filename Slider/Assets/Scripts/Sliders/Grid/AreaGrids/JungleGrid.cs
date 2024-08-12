@@ -84,8 +84,8 @@ public class JungleGrid : SGrid
 
     private void HandleSTile3Placement(STile stile)
     {
-        string s = GetGridString(true).Replace("_", "");
-        int location2 = s.IndexOf("2");
+        string s = GetGridString(true);
+        int location2 = s.Replace("_", "").IndexOf("2");
         int x2 = location2 % 3;
         int y2 = 2 - (location2 / 3);
         STile two = grid[x2, y2];
