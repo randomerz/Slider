@@ -52,14 +52,14 @@ public class JungleRecipeBookStatNumber : MonoBehaviour
                 if (i < offset)
                 {
                     numberImages[i].sprite = emptySprite;
-                    continue;
+                    continue;   
                 }
                 if (i < charArray.Length && charArray[i] == '.')
                 {
                     numberImages[i].sprite = decimalSprite;
                     continue;
                 }
-                else
+                else if ('0' <= charArray[i] && charArray[i] <= '9')
                 {
                     numberImages[i].sprite = numberSprites[charArray[i] - '0'];
                 }

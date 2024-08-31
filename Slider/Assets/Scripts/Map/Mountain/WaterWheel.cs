@@ -73,6 +73,12 @@ public class WaterWheel : MonoBehaviour, ISavable
         bigIce.AddLava(heaterLava);
         cog1.SetRefreezeOnTop(false);
         cog2.SetRefreezeOnTop(false);
+
+        // This probably isn't the best way to do this...
+        cog1.Save();
+        cog2.Save();
+        bigIce.Save();
+
         SaveSystem.Current.SetBool("MountainHeaterFull", true);
     }
 
@@ -83,9 +89,15 @@ public class WaterWheel : MonoBehaviour, ISavable
         lavaCount++;
         mc.UpdateState(MinecartState.Empty);
         lavaExtractorAnimator.Play("Fill");
-        if(lavaCount == 2)
+        if (lavaCount == 2)
         {
             AudioManager.Play("Puzzle Complete");
+        }
+        if (lavaCount > 2)
+        {
+            Debug.LogError($"lavaCount was more than 2! Calling OnFillHeaterEnd()");
+            lavaCount = 2;
+            OnFillHeaterEnd();
         }
     }
 
@@ -197,6 +209,12 @@ public class WaterWheel : MonoBehaviour, ISavable
         if (lavaCount == 2) 
         {
             lavaPipe.Fill(new(0, 1f));
+            OnFillHeaterEnd();
+        }
+        else if (PlayerInventory.Contains("Slider 7", Area.Mountain))
+        {
+            Debug.LogError($"Player has Slider 7 Mountain, but the lava heater wasn't filled.");
+            lavaCount = 2;
             OnFillHeaterEnd();
         }
     }

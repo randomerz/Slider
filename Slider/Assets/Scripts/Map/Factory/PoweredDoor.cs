@@ -8,7 +8,10 @@ public class PoweredDoor : ElectricalNode
 
     [SerializeField] private Animator animator;
     [SerializeField] private bool shouldSaveDoorState; // also stay powered no matter what
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private BoxCollider2D myCollider;
     public string saveDoorString;
+    public bool shouldUpdateSpriteOrder;
     public bool forceOpen;
 
     private new void Awake()
@@ -17,6 +20,14 @@ public class PoweredDoor : ElectricalNode
         nodeType = NodeType.OUTPUT;
 
         animator ??= GetComponent<Animator>();
+
+        if (myCollider == null)
+        {
+            if (!TryGetComponent<BoxCollider2D>(out myCollider))
+            {
+                Debug.LogError($"Couldn't find collider on door {name}!");
+            }
+        }
 
         if (shouldSaveDoorState)
         {
@@ -57,4 +68,26 @@ public class PoweredDoor : ElectricalNode
             animator.SetBool("Powered", false);
         }
     }
+
+    // Handled by animator
+    public void SetCollider(bool value)
+    {
+        if (myCollider == null)
+        {
+            myCollider = GetComponent<BoxCollider2D>();
+        }
+
+        if (myCollider != null)
+        {
+            myCollider.enabled = value;
+            
+            if (shouldUpdateSpriteOrder)
+            {
+                // Entity to -1
+                spriteRenderer.sortingOrder = value ? 0 : -1;
+            }
+        }
+    }
+    public void SetColliderOn() => SetCollider(true);
+    public void SetColliderOff() => SetCollider(false);
 }

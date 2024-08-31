@@ -237,7 +237,6 @@ public class SGridAnimator : MonoBehaviour
         {
             if (Player.GetInstance().GetSTileUnderneath() != null && Player.GetInstance().GetSTileUnderneath().islandId != grid[p.x, p.y].islandId)
             {
-                // Debug.Log("disabling" +  p.x + " " + p.y);
                 grid[p.x, p.y].SetSliderCollider(false);
                 disabledColliders.Add(grid[p.x, p.y]);
             }

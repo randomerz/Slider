@@ -20,7 +20,7 @@ public class STileEditor : Editor
         base.OnInspectorGUI();
 
         autoUpdatePostition = EditorGUILayout.Toggle("Auto-Update position", autoUpdatePostition);
-        if (autoUpdatePostition)
+        if (autoUpdatePostition && !Application.isPlaying)
         {
             _target.transform.position = new Vector3(_target.x, _target.y) * _target.STILE_WIDTH;
         }
