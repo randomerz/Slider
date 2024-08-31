@@ -171,6 +171,8 @@ public void SetGrid(int[,] puzzle)
         //STile playerSTile = Player.GetInstance().GetSTileUnderneath();
         //Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
+        UIArtifact._instance.DeselectSelectedButton();
+
         for (int x = 0; x < Width; x++)
         {
             for (int y = 0; y < Height; y++)

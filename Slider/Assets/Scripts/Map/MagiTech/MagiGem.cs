@@ -38,6 +38,9 @@ public class MagiGem : MonoBehaviour, ISavable
 
     public virtual void EnableGem()
     {
+        // Load order different between editor/build
+        gemItem.shouldDisableAtStart = false;
+
         if (Enum.TryParse(gemItem.itemName, out Area itemNameAsEnum))
         {
             gemItem.gameObject.SetActive(!gemMachine.HasAreaGem(itemNameAsEnum));

@@ -66,7 +66,7 @@ public class STile : MonoBehaviour
         Vector3 defaultPos = calculatePosition(x,y);
         transform.position = defaultPos;
         SetTileMapPositions(defaultPos);
-        sliderColliderDisableCount = 0;
+        // sliderColliderDisableCount = 0;
     }
 
     // Unused?
