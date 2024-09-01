@@ -305,7 +305,7 @@ public class DesyncItem : Item
             transform.position = Player.GetPosition();
         }
         transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
-        SetLayer(LayerMask.NameToLayer("Item"));
+        // SetLayer(LayerMask.NameToLayer("Item"));
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
         AudioManager.Play("Desync Disappear", transform);
         ResetSortingOrder();

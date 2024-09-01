@@ -237,7 +237,7 @@ public class PlayerAction : Singleton<PlayerAction>
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
             itemDropIndicator.SetActive(false);
-            pickedItem.SetLayer(LayerMask.NameToLayer("Item"));
+            // pickedItem.SetLayer(LayerMask.NameToLayer("Item"));
             AudioManager.PlayWithPitch("UI Click", 0.8f);
 
             return true;
@@ -253,7 +253,7 @@ public class PlayerAction : Singleton<PlayerAction>
         if (pickedItem != null && !pickedItem.isQueuedForDestruction)
         {
             pickedItem.transform.SetParent(pickedItemLocation);
-            pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
+            // pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
         }
     }
 

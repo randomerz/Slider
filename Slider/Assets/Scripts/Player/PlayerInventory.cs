@@ -226,7 +226,7 @@ public class PlayerInventory : MonoBehaviour
         if (currentItem != null)
         {
             equipables.Remove(currentItem);
-            currentItem.SetLayer(LayerMask.NameToLayer("Item"));
+            // currentItem.SetLayer(LayerMask.NameToLayer("Item"));
         }
         Item temp = currentItem;
         currentItem = null;
@@ -239,7 +239,7 @@ public class PlayerInventory : MonoBehaviour
         if (currentItem != null)
         {
             equipables.Remove(currentItem);
-            currentItem.SetLayer(LayerMask.NameToLayer("Item"));
+            // currentItem.SetLayer(LayerMask.NameToLayer("Item"));
             Destroy(currentItem.gameObject);
         }
         currentItem = null;
