@@ -980,8 +980,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                 : LocalizationStrategy.TranslateTextAndChangeStyle;
 
             string ctxDisplayName = subcontextAnchor == null
-                ? "Scene-" + (sceneContext.HasValue ? sceneContext.Value.name : "???")
-                : "Prefab-" + subcontextAnchor.name;
+                ? "Scene-" + (sceneContext.HasValue ? sceneContext.Value.name + sceneContext.Value.GetHashCode() : "???")
+                : "Prefab-" + subcontextAnchor.name + subcontextAnchor.GetHashCode();
             Debug.Log($"[Localization] Localize {ctxDisplayName} with strategy: { Enum.GetName(typeof(LocalizationStrategy), strategy) }");
             
             foreach (var (type, instances) in localizables)
