@@ -101,8 +101,14 @@ public class LocalizationSkeletonGenerator : EditorWindow
        if (GUILayout.Button("Generate localization INSIDE project"))
        {
            // Remove this if you don't want to close the window when starting a build
-           var Apply = GenerateSkeleton(configuration, referenceRoot: referenceLocalizationPath);
-           Apply();
+           
+           if (EditorUtility.DisplayDialog("Confirm",
+                   $"Generate localization skeletons within the project?\nThis may overwrite existing content!",
+                   "Yes", "No"))
+           {
+               var apply = GenerateSkeleton(configuration, referenceRoot: referenceLocalizationPath, isDev: true);
+               apply();
+           }
        }
        GUILayout.Label("^ generates a relevant CSV files to the StreamingAssets folder, following configurations set in the localization project configuration object. Such files will be directly copied into the build!");
        
@@ -113,10 +119,15 @@ public class LocalizationSkeletonGenerator : EditorWindow
                "Save localizations at", 
                EditorPrefs.GetString(saveLocalizationOutsidePathPreference), 
                null);
-           
-           EditorPrefs.SetString(saveLocalizationOutsidePathPreference, saveLocalizationDir);
-           var Apply = GenerateSkeleton(configuration, root: saveLocalizationDir, referenceRoot: referenceLocalizationPath);
-           Apply();
+
+           if (EditorUtility.DisplayDialog("Confirm",
+                   $"Generate localization skeletons at {saveLocalizationDir}?\nThis may overwrite existing content!",
+                   "Yes", "No"))
+           {
+               EditorPrefs.SetString(saveLocalizationOutsidePathPreference, saveLocalizationDir);
+               var apply = GenerateSkeleton(configuration, root: saveLocalizationDir, referenceRoot: referenceLocalizationPath, isDev: true);
+               apply();
+           }
        }
        GUILayout.Label("^ generates a relevant CSV files to any selected folder, following configurations set in the localization project configuration object");
        

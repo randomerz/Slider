@@ -991,6 +991,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
             
             tmpCasted.font = LocalizationLoader.LocalizationFont;
+            tmpCasted.enableWordWrapping = false;
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
             // tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded

@@ -39,10 +39,21 @@ public class UINavigationManager : Singleton<UINavigationManager>
     /// This should be set when a UIDropDownController creates a list. This is so that we can consume the "esc" key to close the dropdown instead.
     /// </summary>
     public static UIDropDownController CurrentDropdownOpen
-    { 
-        get => _instance._currentDropdownOpen;
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                return null;
+            }
+            return _instance._currentDropdownOpen;
+        }
         set
         {
+            if (_instance == null)
+            {
+                return;
+            }
             _instance._currentDropdownOpen = value;
         }
     }
