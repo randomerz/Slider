@@ -991,15 +991,24 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
             
             tmpCasted.font = LocalizationLoader.LocalizationFont;
-            tmpCasted.enableWordWrapping = false;
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
             // tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded
-            
-            if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
+
+            if (tmpCasted.GetComponent<TMPTextTyper>())
             {
-                tmpCasted.fontSize *= scale;
+                // is dialogue
             }
+            else
+            {
+                // is not dialogue
+                tmpCasted.enableWordWrapping = false;
+                if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
+                {
+                    tmpCasted.fontSize *= scale;
+                }
+            }
+            
         }
         
         private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, LocalizationStrategy strategy)
@@ -1044,6 +1053,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
                     {
                         txt.fontSize *= scale;
+                        txt.enableWordWrapping = false;
                         // txt.fontWeight = FontWeight.SemiBold;
                     }
                 }
