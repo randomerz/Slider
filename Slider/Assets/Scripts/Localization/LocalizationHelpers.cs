@@ -752,7 +752,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
     public class LocalizableContext
     {
-        private HashSet<Type> excludedTypes = new(); // currently only used by prefab localization to prevent infinite loops
+        private Scene? sceneContext = null;
+        private GameObject subcontextAnchor = null;
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
         private Dictionary<string, string> AdditionalStrings = new();
         public Dictionary<string, string> AdditionalExportedStrings = new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
@@ -797,12 +798,13 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         private LocalizableContext(Scene scene) : this()
         {
+            sceneContext = scene;
             PopulateLocalizableInstances(scene);
         }
 
         private LocalizableContext(GameObject prefab) : this()
         {
-            excludedTypes.Add(typeof(LocalizationInjector));
+            subcontextAnchor = prefab;
             PopulateLocalizableInstances(prefab);
         }
         
@@ -818,11 +820,12 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         private Dictionary<Type, Func<Component, IEnumerable<TrackedLocalizable>>> SelectorFunctionMap = new()
         {
+            // See special handling of LocalizationInjector type in PopulateLocalizableInstances!
+            // The type is not included here due the need to call a non-static function, and also in a specific order...
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
             { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
-            { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }},
             { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) },
             { typeof(IDialogueTableProvider), component => SelectLocalizablesFromTableProvider(component as IDialogueTableProvider) },
             { typeof(ArtifactInventoryCollectible), component => new List<TrackedLocalizable>{ new (component as ArtifactInventoryCollectible) }},
@@ -844,22 +847,37 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 return;
             }
+
+            localizables.TryAdd(typeof(LocalizationInjector), new());
+            // Recursively include subcontexts (prefabs) if the current context is not already specifically for that subcontext
+            // The current implmentation does not consider nested subcontexts. Currently there's no usage of that in the game in general.
+            if (subcontextAnchor == null){
+                var query = rootGameObject.GetComponentsInChildren(typeof(LocalizationInjector), includeInactive: true);
+                
+                foreach (var injector in query)
+                {
+                    localizables[typeof(LocalizationInjector)].Add(new TrackedLocalizable(injector as LocalizationInjector));
+                }
+            }
             
-            foreach (Type type in SelectorFunctionMap.Keys)
+            foreach (var type in SelectorFunctionMap.Keys)
             {
-                if (excludedTypes.Contains(type))
-                {
-                    continue;
-                }
-
                 var query = rootGameObject
+                        
                     .GetComponentsInChildren(type, includeInactive: true)
-                    .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null);
-                if (!localizables.ContainsKey(type))
-                {
-                    localizables.Add(type, new());
-                }
-
+                    
+                    .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null)
+                    
+                    // Do not re-select something that is in a localization injector (i.e. a prefab)
+                    // this is done because those objects will be selected when localizing that prefab itself
+                    .Where(c => 
+                        !localizables[typeof(LocalizationInjector)]
+                            .Any(
+                                injectorWrapper => c.transform.IsChildOf(injectorWrapper.GetAnchor<Component>().transform)
+                                )
+                        );
+                
+                localizables.TryAdd(type, new());
                 localizables[type]
                     .AddRange(query
                         .SelectMany(component => SelectorFunctionMap[type](component)));
@@ -960,8 +978,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             var strategy = isEnglish
                 ? LocalizationStrategy.ChangeStyleOnly
                 : LocalizationStrategy.TranslateTextAndChangeStyle;
-            
-            Debug.Log($"[Localization] Localization strategy: { Enum.GetName(typeof(LocalizationStrategy), strategy) }");
+
+            string ctxDisplayName = subcontextAnchor == null
+                ? "Scene-" + (sceneContext.HasValue ? sceneContext.Value.name : "???")
+                : "Prefab-" + subcontextAnchor.name;
+            Debug.Log($"[Localization] Localize {ctxDisplayName} with strategy: { Enum.GetName(typeof(LocalizationStrategy), strategy) }");
             
             foreach (var (type, instances) in localizables)
             {

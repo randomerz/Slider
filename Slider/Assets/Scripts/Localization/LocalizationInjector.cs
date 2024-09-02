@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class LocalizationInjector : MonoBehaviour
 {
+    // AT: no longer used, Refresh should only be called through LocalizationLoader
     void Start()
     {
-        Refresh();
+        // Refresh();
     }
 
     public void Refresh()

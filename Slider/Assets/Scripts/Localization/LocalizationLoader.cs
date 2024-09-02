@@ -116,9 +116,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     
     private void RefreshLocalization(Scene scene)
     {
-        // Debug.LogError("Test msg for dev build");
         var locale = CurrentLocale;
-
         var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene), localeGlobalFile);
 
         localeGlobalFile = loadedAsset.global;

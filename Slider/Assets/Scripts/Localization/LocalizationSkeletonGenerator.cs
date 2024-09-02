@@ -338,7 +338,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
            {
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
-                   referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot))
+                   referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot)),
+                   autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => "_ho_"  : null
                );
 
                WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, prefab, tempDirectory), serializedSkeleton);
