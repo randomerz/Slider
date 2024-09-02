@@ -241,6 +241,8 @@ namespace Localization
                 var localeNames = Directory.GetDirectories(LocalizationFolderPath(root))
                     .Select(path => new FileInfo(path).Name)
                     // very expensive check, makes sure that only the legit locales are selected
+                    #if DEVELOPMENT_BUILD || UNITY_EDITOR
+                    #else
                     .Where(localeName =>
                     {
                         var filePath = LocaleGlobalFilePath(localeName, root);
@@ -253,6 +255,7 @@ namespace Localization
                             return false;
                         }
                     })
+                    #endif
                     .ToList();
                     
                     localeNames.Sort(
@@ -442,7 +445,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             using var file = File.OpenRead(filePath);
             LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
             
-            #if !UNITY_EDITOR
+            #if DEVELOPMENT_BUILD || UNITY_EDITOR
+            #else
             if (!parsed.TryParseConfigValue(Config.IsValid, out int isValidFlag) || isValidFlag != 1)
             {
                 return (null, ParserError.ExplicitlyDisabled);

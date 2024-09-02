@@ -146,27 +146,30 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
    static Dictionary<string, bool> GetLocaleValidityMap(LocalizationProjectConfiguration projectConfiguration)
    {
-        Dictionary<string, bool> localeIsValid = new();
-        foreach (var locale in projectConfiguration.InitialLocales)
-        {
-               bool isValid = true;
-               foreach (var option in locale.options)
+       Dictionary<string, bool> localeIsValid = new();
+       foreach (var locale in projectConfiguration.InitialLocales)
+       {
+           bool isValid = true;
+           foreach (var option in locale.options)
+           {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#else
+               if (option.name == LocalizationFile.Config.IsValid)
                {
-                   if (option.name == LocalizationFile.Config.IsValid)
+                   if (!int.TryParse(option.value, out int isValidFlag) || isValidFlag != 1)
                    {
-                       if (!int.TryParse(option.value, out int isValidFlag) || isValidFlag != 1)
-                       {
-                           isValid = false;
-                           break;
-                       }
+                       isValid = false;
+                       break;
                    }
                }
+#endif
+           }
 
-               localeIsValid[locale.name] = isValid;
-               // Debug.Log(localeIsValid);
-        }
+           localeIsValid[locale.name] = isValid;
+           // Debug.Log(localeIsValid);
+       }
 
-        return localeIsValid;
+       return localeIsValid;
    }
    
    // https://learn.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories
