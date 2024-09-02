@@ -313,9 +313,9 @@ public class TMPTextTyper : MonoBehaviour
         TextMeshPro.color = new Color(TextMeshPro.color.r, TextMeshPro.color.g, TextMeshPro.color.b, alpha);
     }
 
-    public string ParseTextPure(string text)
+    public string ParseTextPure(string text, bool forceEnglishText)
     {
-        return m_tmpSpecialText.ParseTextPure(text);
+        return m_tmpSpecialText.ParseTextPure(text, forceEnglishText);
     }
     
     /// <summary>

@@ -49,7 +49,7 @@ public class DialogueDisplay : MonoBehaviour
         // shrink the font to 1/3 of original size due to a "Tiny" font being used for English
         if (localizedMessage != null)
         {
-            toVocalize = textTyperText.ParseTextPure(originalMessage);
+            toVocalize = textTyperText.ParseTextPure(originalMessage, true);
             
             localizedMessage = localizedMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
             

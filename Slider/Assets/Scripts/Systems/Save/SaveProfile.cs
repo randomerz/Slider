@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Localization;
 
 public class SaveProfile
 {
@@ -22,6 +23,7 @@ public class SaveProfile
     private Dictionary<string, float> floats = new Dictionary<string, float>();
     public AchievementStatistic[] AchievementData { get; set; }
     private Random.State randomState;
+    public static string LocalizedStringPostfix => "_" + LocalizationLoader.CurrentLocale;
 
     // Cached stuff
     // nothing bc i dont know what to do bc scenes exist
@@ -307,10 +309,28 @@ public class SaveProfile
     {
         return strings.GetValueOrDefault(name, defaultValue == null ? name : defaultValue);
     }
+    
+    public LocalizationPair GetLocalizedStringPair(string name, string defaultValue = null)
+    {
+        var orig = GetString(name, defaultValue ?? name);
+        var translated = GetString(name + LocalizedStringPostfix, orig);
+        return new LocalizationPair
+        {
+            original = orig,
+            translated = translated
+        };
+    }
 
     public void SetString(string name, string value)
     {
         strings[name] = value;
+    }
+
+    // TODO(loc)
+    public void SetLocalizedstring(string name, string value, string localized)
+    {
+        SetString(name, value);
+        SetString(name + LocalizedStringPostfix, localized);
     }
 
     public int GetInt(string name, int defaultValue = 0)
