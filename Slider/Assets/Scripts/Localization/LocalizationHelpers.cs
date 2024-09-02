@@ -851,8 +851,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                 {
                     continue;
                 }
-                
-                Component[] query = rootGameObject.GetComponentsInChildren(type, includeInactive: true);
+
+                var query = rootGameObject
+                    .GetComponentsInChildren(type, includeInactive: true)
+                    .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null);
                 if (!localizables.ContainsKey(type))
                 {
                     localizables.Add(type, new());
