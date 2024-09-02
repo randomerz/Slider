@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class WaterLandColliderManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class WaterLandColliderManager : MonoBehaviour
 
     // for the player to go under the bridges in the jungle/desert
     public List<SpriteRenderer> bridgeSpriteRenderers = new List<SpriteRenderer>();
+    public UnityEvent OnSetWater;
 
     private bool hasStartHappened;
 
@@ -34,6 +36,10 @@ public class WaterLandColliderManager : MonoBehaviour
         }
         player.SetIsOnWater(isOnWater);
         UpdateColliders();
+        if (isOnWater)
+        {
+            OnSetWater?.Invoke();
+        }
     }
 
     public void UpdateColliders()

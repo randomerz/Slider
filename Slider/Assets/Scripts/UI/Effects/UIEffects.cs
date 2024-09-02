@@ -27,6 +27,8 @@ public class UIEffects : Singleton<UIEffects>
 
     // Holds the last flashing/black fade coroutine called so we can end it when starting a new one
     private static Coroutine previousCoroutine;
+    private static System.Action previousCallback;
+    private static System.Action previousMidCallback;
     private Texture2D screenshot;
 
     public enum ScreenshotEffectType
@@ -61,47 +63,67 @@ public class UIEffects : Singleton<UIEffects>
 
     public static void FadeFromBlack(System.Action callback=null, float speed=1, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, alpha, 0, callback, speed));
+        StartEffectCoroutine(
+            _instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, alpha, 0, callback, speed), callback
+        );
     }
 
     public static void FadeToBlack(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd));
+        StartEffectCoroutine(
+            _instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd), callback
+        );
     }
 
     public static void FadeToBlackExtra(System.Action callbackHalf=null, System.Action callbackNinety=null, System.Action callbackEnd=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeMoreCallbacksCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callbackHalf, callbackNinety, callbackEnd, speed, disableAtEnd));
+        StartEffectCoroutine(
+            _instance.FadeMoreCallbacksCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callbackHalf, callbackNinety, callbackEnd, speed, disableAtEnd), callbackEnd
+        );
     }
 
     public static void FadeFromWhite(System.Action callback=null, float speed=1)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed));
+        StartEffectCoroutine(
+            _instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed), callback: callback
+        );
     }
 
     public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1, bool useUnscaledTime = false)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd, useUnscaledTime));
+        StartEffectCoroutine(
+            _instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd, useUnscaledTime), callback: callback
+        );
     }
 
     public static void FadeToWhiteExtra(System.Action callbackHalf=null, System.Action callbackThreeFourth=null, System.Action callbackEnd=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeMoreCallbacksCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callbackHalf, callbackThreeFourth, callbackEnd, speed, disableAtEnd));
+        StartEffectCoroutine(
+            _instance.FadeMoreCallbacksCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callbackHalf, callbackThreeFourth, callbackEnd, speed, disableAtEnd),
+            midCallback: callbackHalf, 
+            callback: callbackEnd
+        );
     }
 
     public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
     {
-        StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed, useUnscaledTime));
+        StartEffectCoroutine(
+            _instance.FlashCoroutine(callbackMiddle, callbackEnd, speed, useUnscaledTime), midCallback: callbackMiddle, callback: callbackEnd
+        );
     }
 
     public static void FadeFromScreenshot(ScreenshotEffectType type, System.Action screenshotCallback = null, System.Action callbackEnd = null, float speed = 1)
     {
-        StartEffectCoroutine(_instance.ScreenshotCoroutine(type, screenshotCallback, callbackEnd, speed), false);
+        StartEffectCoroutine(
+            _instance.ScreenshotCoroutine(type, screenshotCallback, callbackEnd, speed), midCallback: screenshotCallback, callback: callbackEnd, false
+        );
     }
 
     public static void Pixelize(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
     {
-        StartEffectCoroutine(_instance.PixelizeCoroutine(callbackMiddle, callbackEnd, speed));
+        StartEffectCoroutine(
+            _instance.PixelizeCoroutine(callbackMiddle, callbackEnd, speed)
+        );
     }
 
     public static void ClearScreen()
@@ -120,18 +142,27 @@ public class UIEffects : Singleton<UIEffects>
         if (previousCoroutine != null)
         {
             _instance.StopCoroutine(previousCoroutine);
+            Debug.Log($"[UIEffects] Called StopCurrentCoroutine when something was running - invoking previous callback.");
+            previousMidCallback?.Invoke();
+            previousCallback?.Invoke();
         }
     }
 
-    private static void StartEffectCoroutine(IEnumerator coroutine, bool stopable = true)
+    private static void StartEffectCoroutine(IEnumerator coroutine, System.Action midCallback=null, System.Action callback=null, bool stopable=true)
     {
         if (previousCoroutine != null)
         {
             _instance.StopCoroutine(previousCoroutine);
             ClearScreen();
         }
-        var c = _instance.StartCoroutine(coroutine);
-        previousCoroutine = stopable ? c : null;
+
+        Coroutine c = _instance.StartCoroutine(coroutine);
+        if (!stopable)
+        {
+            previousCoroutine = c;
+            previousCallback = callback;
+            previousMidCallback = midCallback;
+        }
     }
 
 
@@ -154,6 +185,8 @@ public class UIEffects : Singleton<UIEffects>
             gameObject.SetActive(false);
 
         callback?.Invoke();
+        previousCoroutine = null;
+        previousCallback = null;
     }
 
     private IEnumerator FadeMoreCallbacksCoroutine(
@@ -182,6 +215,7 @@ public class UIEffects : Singleton<UIEffects>
             {
                 calledHalf = true;
                 callbackHalf?.Invoke();
+                previousMidCallback = null;
             }
 
             if (t >= fadeDuration * 0.9f && !calledNinety)
@@ -199,6 +233,8 @@ public class UIEffects : Singleton<UIEffects>
             gameObject.SetActive(false);
 
         callbackEnd?.Invoke();
+        previousCoroutine = null;
+        previousCallback = null;
     }
 
     private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
@@ -216,6 +252,7 @@ public class UIEffects : Singleton<UIEffects>
         }
 
         callbackMiddle?.Invoke();
+        previousMidCallback = null;
 
         while (t >= 0)
         {
@@ -229,6 +266,8 @@ public class UIEffects : Singleton<UIEffects>
         whitePanel.SetActive(false);
         
         callbackEnd?.Invoke();
+        previousCoroutine = null;
+        previousCallback = null;
     }
 
     public static void TakeScreenshot()
@@ -248,6 +287,7 @@ public class UIEffects : Singleton<UIEffects>
         screenshotPanel.transform.localScale = Vector3.one;
         screenshotPanel.transform.localRotation = Quaternion.identity;
         screenshotCallback?.Invoke();
+        previousMidCallback = null;
 
         float t = 0;
         while (t < fadeDuration)
@@ -269,7 +309,10 @@ public class UIEffects : Singleton<UIEffects>
         }
         screenshotPanel.SetActive(false);
         screenshot = null;
+
         callbackEnd?.Invoke();
+        previousCoroutine = null;
+        previousCallback = null;
     }
 
     private IEnumerator PixelizeCoroutine(System.Action callbackMiddle = null, System.Action callbackEnd = null, float speed = 1)
@@ -289,6 +332,7 @@ public class UIEffects : Singleton<UIEffects>
         }
 
         callbackMiddle?.Invoke();
+        previousMidCallback = null;
 
         while (t >= 0)
         {
@@ -298,7 +342,10 @@ public class UIEffects : Singleton<UIEffects>
             t -= (Time.deltaTime * speed);
         }
         pixelizeFeature.settings.enabled = false;
+
         callbackEnd?.Invoke();
+        previousCoroutine = null;
+        previousCallback = null;
     }
 
     public static void DisablePixel()

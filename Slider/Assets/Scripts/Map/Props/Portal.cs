@@ -53,6 +53,7 @@ public class Portal : MonoBehaviour
         recentPortalObj = this;
         if(portalEnum is PortalEnum.MAGITECH_PRESENT || portalEnum is PortalEnum.MAGITECH_PAST)
         {
+            Debug.Log($"start fade to black");
             UIEffects.FadeToBlack(callback: InitTeleport, speed: 2, alpha:0.5f, disableAtEnd: false);
             isTeleporting = true;
         }
