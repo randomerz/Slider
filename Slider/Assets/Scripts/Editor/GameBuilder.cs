@@ -64,7 +64,7 @@ public class GameBuilder
         }
         
         var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
-        var Apply = LocalizationSkeletonGenerator.GenerateSkeleton(config, isDev: !isRelease);
+        var apply = LocalizationSkeletonGenerator.GenerateSkeleton(config, isDev: !isRelease);
 
         string filename = GetProjectName();
 
@@ -72,7 +72,7 @@ public class GameBuilder
         BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
         BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
 
-        Apply();
+        apply();
     }
 
     // this is the main player builder function

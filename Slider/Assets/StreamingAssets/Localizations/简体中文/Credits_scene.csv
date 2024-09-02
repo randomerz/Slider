@@ -36,7 +36,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 "IsValid"," ","NonDialogueFontScale"," ","DialogueFontScale"," ",
 "Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size."," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
 "Path","Orig","Translation",
-"BG Text/Text/Text","A Game by 
+"BG Text Daniel and VGDev/Text/Text","A Game by 
 
 Daniel Carr 
 
@@ -49,7 +49,7 @@ Daniel Carr
 and 
 
 VGDev",
-"BG Text/Text/Text Outline (1)","A Game by 
+"BG Text Daniel and VGDev/Text/Text Outline (1)","A Game by 
 
 Daniel Carr 
 
@@ -62,7 +62,7 @@ Daniel Carr
 and 
 
 VGDev",
-"BG Text/Text/Text Outline (2)","A Game by 
+"BG Text Daniel and VGDev/Text/Text Outline (2)","A Game by 
 
 Daniel Carr 
 
@@ -75,7 +75,7 @@ Daniel Carr
 and 
 
 VGDev",
-"BG Text/Text/Text Outline (3)","A Game by 
+"BG Text Daniel and VGDev/Text/Text Outline (3)","A Game by 
 
 Daniel Carr 
 
@@ -88,7 +88,7 @@ Daniel Carr
 and 
 
 VGDev",
-"BG Text/Text/Text Outline (4)","A Game by 
+"BG Text Daniel and VGDev/Text/Text Outline (4)","A Game by 
 
 Daniel Carr 
 
@@ -101,6 +101,32 @@ Daniel Carr
 and 
 
 VGDev",
+"BG Text Thank you/Text/Text","Thank you
+
+for playing!","Thank you
+
+for playing!",
+"BG Text Thank you/Text/Text Outline (1)","Thank you
+
+for playing!","Thank you
+
+for playing!",
+"BG Text Thank you/Text/Text Outline (2)","Thank you
+
+for playing!","Thank you
+
+for playing!",
+"BG Text Thank you/Text/Text Outline (3)","Thank you
+
+for playing!","Thank you
+
+for playing!",
+"BG Text Thank you/Text/Text Outline (4)","Thank you
+
+for playing!","Thank you
+
+for playing!",
+"Credits Manager@Default:0","Skip","Skip",
 "CreditsCanvas/Skip Prompt/Skip Prompt Text","Skip","Skip",
 "Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
@@ -156,80 +182,92 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-","Nathaniel Koehler
+Nia Bellamy","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-",
+Nia Bellamy",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (1)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-","Nathaniel Koehler
+Nia Bellamy","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-",
+Nia Bellamy",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (2)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-","Nathaniel Koehler
+Nia Bellamy","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-",
+Nia Bellamy",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (3)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-","Nathaniel Koehler
+Nia Bellamy","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-",
+Nia Bellamy",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (4)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-","Nathaniel Koehler
+Nia Bellamy","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy
-",
+Nia Bellamy",
 "Map/Tiles/Art TIle/WorldCanvas/Text/Text","Additional Art","Additional Art",
 "Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (1)","Additional Art","Additional Art",
 "Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (2)","Additional Art","Additional Art",
 "Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (3)","Additional Art","Additional Art",
 "Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (4)","Additional Art","Additional Art",
+"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (1)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (2)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (3)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (4)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR",
+"Map/Tiles/Audio tile/WorldCanvas/Text/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (1)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (2)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (3)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (4)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
 "Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text","Project Lead","Project Lead",
 "Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (1)","Project Lead","Project Lead",
 "Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (2)","Project Lead","Project Lead",
@@ -326,8 +364,10 @@ Art",
 "Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice/Dice Sprite/Canvas/Dialogue","2","2",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice/Dice Sprite/Canvas/Dialogue BG Font","2","2",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue","2","2",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font","2","2",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue","4","4",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font","4","4",
 "Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
@@ -372,23 +412,6 @@ Aristanto",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (4)","Ethan 
 Aristanto","Ethan 
 Aristanto",
-"Map/Tiles/FMOD tile/Objects/Chad Sr/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
-"Map/Tiles/FMOD tile/Objects/Chad Sr/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
-"Map/Tiles/FMOD tile/WorldCanvas/Text/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-",
-"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (1)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-",
-"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (2)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-",
-"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (3)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-",
-"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (4)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-",
 "Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
 "Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
@@ -629,56 +652,56 @@ Muskaan Gupta",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (1)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (2)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (3)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (4)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia","Reinart Realina
 Thomas Dayton
 Nicolas Cai
-Tristian Ziegler
+Tristan Ziegler
 Zhenyu Wu
 Steven Jia",
 "Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",

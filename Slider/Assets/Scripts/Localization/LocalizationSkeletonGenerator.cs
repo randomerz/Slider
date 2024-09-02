@@ -152,7 +152,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                }
 
                localeIsValid[locale.name] = isValid;
-               Debug.Log(localeIsValid);
+               // Debug.Log(localeIsValid);
         }
 
         return localeIsValid;

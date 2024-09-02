@@ -47,6 +47,13 @@ Press any key to cancel.",
 ","Play
 ",
 "UICanvas/MM Panel/MainMenu Panel/Quit Button/Text","Quit","Quit",
+"UICanvas/MM Panel/OtherElements/Locale Selector/Dropdown@0","1280 x 720","1280 x 720",
+"UICanvas/MM Panel/OtherElements/Locale Selector/Dropdown@1","1280 x 800","1280 x 800",
+"UICanvas/MM Panel/OtherElements/Locale Selector/Dropdown@2","1366 x 768","1366 x 768",
+"UICanvas/MM Panel/OtherElements/Locale Selector/Dropdown@3","1920 x 1080","1920 x 1080",
+"UICanvas/MM Panel/OtherElements/Locale Selector/Dropdown@4","2560 x 1440","2560 x 1440",
+"UICanvas/MM Panel/OtherElements/Locale Selector/Dropdown@5","3840 x 2160","3840 x 2160",
+"UICanvas/MM Panel/OtherElements/Press any Key","v0.0.00","v0.0.00",
 "UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Caps Button/Text","Caps","Caps",
 "UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Delete Button/Text","Del","Del",
 "UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Done Button/Text","Done","Done",
@@ -112,6 +119,7 @@ Feel free to use these if you get stuck.",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Control Label","Alt View","Alt View",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Binding/Text","Control","Control",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Control Label","Cycle","Cycle",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Keyboard Only/Label","Keyboard Only","Keyboard Only",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Binding/Text","Control","Control",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Control Label","Down","Down",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Binding/Text","Control","Control",
@@ -152,6 +160,7 @@ Feel free to use these if you get stuck.",
 "UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Pixel Font/Label","Pixel Font","Pixel Font",
 "UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Screen Shake Slider/Label","Screen Shake","Screen Shake",
 "UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/Options Text","Options","Options",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/FeedbackButtonHolder/Feedback Button/Text","Give Feedback (web)","Give Feedback (web)",
 "UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Auto Move/Label","Auto Move
 ","Auto Move
 ",
@@ -175,19 +184,21 @@ Unfocused",
 ","Options
 ",
 "UICanvas/OptionsMenu/SideNav/Sound Button/Text","Sound","Sound",
-"UICanvas/SavesPanel/Left Save Button/Text","[ Empty ]","[ Empty ]",
-"UICanvas/SavesPanel/Left Save Button/Text/ProgressText","1/9","1/9",
-"UICanvas/SavesPanel/Left Save Button/Text/TimeText","0h32
+"UICanvas/SavesPanel/Confirm Button Variant/Text","Confirm","Confirm",
+"UICanvas/SavesPanel/LeftSaveBackground/Left Save Button/Text","[ Empty ]","[ Empty ]",
+"UICanvas/SavesPanel/LeftSaveBackground/Left Save Button/Text/ProgressText","1/9","1/9",
+"UICanvas/SavesPanel/LeftSaveBackground/Left Save Button/Text/TimeText","0h32
 ","0h32
 ",
-"UICanvas/SavesPanel/Middle Save Button/Text","Cat Name","Cat Name",
-"UICanvas/SavesPanel/Middle Save Button/Text/ProgressText","1/9","1/9",
-"UICanvas/SavesPanel/Middle Save Button/Text/TimeText","0h32
+"UICanvas/SavesPanel/MiddleSaveBackground/Middle Save Button/Text","Cat Name","Cat Name",
+"UICanvas/SavesPanel/MiddleSaveBackground/Middle Save Button/Text/ProgressText","1/9","1/9",
+"UICanvas/SavesPanel/MiddleSaveBackground/Middle Save Button/Text/TimeText","0h32
 ","0h32
 ",
-"UICanvas/SavesPanel/Right Save Button/Text","[ Empty ]","[ Empty ]",
-"UICanvas/SavesPanel/Right Save Button/Text/ProgressText","1/9","1/9",
-"UICanvas/SavesPanel/Right Save Button/Text/TimeText","0h32
+"UICanvas/SavesPanel/ProgressText","Select Save","Select Save",
+"UICanvas/SavesPanel/RightSaveBackground/Right Save Button/Text","[ Empty ]","[ Empty ]",
+"UICanvas/SavesPanel/RightSaveBackground/Right Save Button/Text/ProgressText","1/9","1/9",
+"UICanvas/SavesPanel/RightSaveBackground/Right Save Button/Text/TimeText","0h32
 ","0h32
 ",
 "WorldCanvas/Press any Key","[press any key to begin]","[press any key to begin]",
