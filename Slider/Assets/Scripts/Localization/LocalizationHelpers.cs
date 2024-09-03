@@ -1207,6 +1207,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(NPC), SerializeNpc },
             { typeof(PlayerActionHints), SerializePlayerActionHints },
             { typeof(IDialogueTableProvider), SerializeTableProvider },
+            { typeof(ArtifactInventoryCollectible), SerializeCollectibleUI },
         };
         
         public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile, Func<string> autoPadTranslated = null)
@@ -1394,6 +1395,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             // For some reason running during play mode is fine, but non-play mode won't
             // allow it. Probably some Unity Mono issue...
             return tableProvider.GetAnchor<IDialogueTableProvider>().TranslationTable[tableProvider.IndexInComponent].original;
+        }
+        
+        private static string SerializeCollectibleUI(TrackedLocalizable collectible)
+        {
+            return collectible.GetAnchor<ArtifactInventoryCollectible>().displayName;
         }
     }
 }
