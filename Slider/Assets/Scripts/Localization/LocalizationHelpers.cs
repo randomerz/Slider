@@ -1098,25 +1098,26 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
             
             string path = npc.FullPath;
-            if (file.records.TryGetValue(path, out var entry))
+            try
             {
-                try
+                var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+                int idxCond = int.Parse(idx[0]);
+                int idxDiag = int.Parse(idx[1]);
+                var npcCasted = npc.GetAnchor<NPC>();
+                
+                if (file.records.TryGetValue(path, out var entry))
                 {
-                    var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
-                    int idxCond = int.Parse(idx[0]);
-                    int idxDiag = int.Parse(idx[1]);
-
-                    NPC npcCasted = npc.GetAnchor<NPC>();
                     npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
                 }
-                catch (IndexOutOfRangeException)
+                else if (!string.IsNullOrWhiteSpace(npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue)) 
                 {
-                    Debug.LogError($"[Localization] {path}: NPC dialogue out of bounds");
+                    Debug.LogWarning($"[Localization] {path}: NOT FOUND");
                 }
+
             }
-            else
+            catch (IndexOutOfRangeException)
             {
-                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
+                Debug.LogError($"[Localization] {path}: NPC dialogue out of bounds");
             }
         }
 
