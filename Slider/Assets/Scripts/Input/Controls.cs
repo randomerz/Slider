@@ -280,6 +280,17 @@ public class Controls : Singleton<Controls>
         return Bindings.FindAction(controlActionSearchString);
     }
 
+    public static InputAction AlternateInputActionForControl(Control control)
+    {
+
+        string controlActionSearchString = InputActionSearchString(control);
+        if (controlActionSearchString == "Move")
+        {
+            return Bindings.FindAction("Navigate");
+        }
+        return null;
+    }
+
     private static string InputActionSearchString(Control control)
     {
         string controlAsString = control.ToString();

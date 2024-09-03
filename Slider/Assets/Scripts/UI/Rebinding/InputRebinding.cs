@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 public class InputRebinding
 {
@@ -26,22 +27,41 @@ public class InputRebinding
 
         InputAction actionToRebind = Controls.InputActionForControl(controlToRebind);
         actionToRebind.PerformInteractiveRebinding()
-                      .WithTargetBinding(Controls.BindingIndex(controlToRebind))
-                      .WithTimeout(5f)
-                      .WithControlsExcluding("Mouse")
-                      .OnMatchWaitForAnother(0.1f)
-                      .Start()
-                      .OnComplete((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
-                      {
-                          CompleteRebindingOperation(rebindingOperation);
-                          RemoveDuplicateBindings(controlToRebind);
-                          WriteCurrentBindingsToPlayerPrefs(); // should this be moved to the front of these few?
-                          OnRebindCompleted?.Invoke(); // so that if you copy another one it will properly update
-                      })
-                      .OnCancel((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
-                      {
-                          CompleteRebindingOperation(rebindingOperation);
-                      });
+                    .WithTargetBinding(Controls.BindingIndex(controlToRebind))
+                    .WithTimeout(5f)
+                    .WithControlsExcluding("Mouse")
+                    .OnMatchWaitForAnother(0.1f)
+                    .Start()
+                    .OnComplete((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
+                    {
+                        CompleteRebindingOperation(rebindingOperation);
+                        RemoveDuplicateBindings(controlToRebind);
+                        
+                        // This doesn't work -- for some reason the InputSystemUIInputModule.cs 
+                        // doesn't register when you rebind the InputSettings. Even if you change
+                        // it to use Player/Move instead of UI/Navigate I couldn't get it to work.
+
+                        // // Also rebind the navigate WASD options if move is rebound
+                        // if (controlToRebind.ToString().Contains("Move"))
+                        // {
+                        //     Controls.Bindings.Disable();
+
+                        //     InputAction alternateActionToRebind = Controls.AlternateInputActionForControl(controlToRebind);
+                        //     alternateActionToRebind.ApplyBindingOverride(
+                        //         Controls.BindingIndex(controlToRebind),
+                        //         actionToRebind.bindings[Controls.BindingIndex(controlToRebind)]
+                        //     );
+                            
+                        //     Controls.Bindings.Enable();
+                        // }
+
+                        WriteCurrentBindingsToPlayerPrefs(); // should this be moved to the front of these few?
+                        OnRebindCompleted?.Invoke(); // so that if you copy another one it will properly update
+                    })
+                    .OnCancel((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
+                    {
+                        CompleteRebindingOperation(rebindingOperation);
+                    });
     }
 
     private static void CompleteRebindingOperation(InputActionRebindingExtensions.RebindingOperation rebindingOperation)

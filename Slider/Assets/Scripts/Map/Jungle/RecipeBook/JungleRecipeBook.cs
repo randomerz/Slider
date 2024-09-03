@@ -6,7 +6,8 @@ public class JungleRecipeBook : MonoBehaviour
 {
     private bool engagedWithTV;
 
-    private BindingBehavior directionalBindingBehavior;
+    private BindingBehavior keyboardDirectionalBindingBehavior;
+    private BindingBehavior controllerDirectionalBindingBehavior;
     private BindingBehavior quitBindingBehaviorEsc;
     private BindingBehavior quitBindingBehaviorAction;
 
@@ -38,8 +39,21 @@ public class JungleRecipeBook : MonoBehaviour
             jungleRecipeBookHints.StartHintRoutine();
 
             // Add bindings
-            directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, 
-                context => HandleDirectionalInput(context.ReadValue<Vector2>())
+            keyboardDirectionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, 
+                context => {
+                    if (Controls.UsingKeyboardMouseOrKeyboardOnly())
+                    {
+                        HandleDirectionalInput(context.ReadValue<Vector2>());
+                    }
+                }
+            );
+            controllerDirectionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, 
+                context => {
+                    if (Controls.UsingController())
+                    {
+                        HandleDirectionalInput(context.ReadValue<Vector2>());
+                    }
+                }
             );
             quitBindingBehaviorAction = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, 
                 context => SetEngageWithTV(false)
@@ -65,7 +79,8 @@ public class JungleRecipeBook : MonoBehaviour
             jungleRecipeBookHints.StopHintRoutine();
 
             // Undo previous bindings
-            Controls.UnregisterBindingBehavior(directionalBindingBehavior);
+            Controls.UnregisterBindingBehavior(keyboardDirectionalBindingBehavior);
+            Controls.UnregisterBindingBehavior(controllerDirectionalBindingBehavior);
             Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
             Controls.UnregisterBindingBehavior(quitBindingBehaviorEsc);
             Controls.Bindings.UI.OpenArtifact.Enable();
