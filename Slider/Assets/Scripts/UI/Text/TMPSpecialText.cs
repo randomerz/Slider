@@ -114,19 +114,19 @@ public class TMPSpecialText : MonoBehaviour
     /// </summary>
     public string ParseTextAndRefreshTyper()
     {
-        var (cleaned, cmdArgs) = ParseTextFirstFrame(m_TextMeshPro.text);
+        var (cleaned, cmdArgs) = ParseTextFirstFrame(m_TextMeshPro.text, forceEnglishText: false);
         m_TextMeshPro.text = cleaned;
         StartCoroutine(IParseText(cleaned, cmdArgs));
         return cleaned;
     }
     
-    public string ParseTextPure(string text)
+    public string ParseTextPure(string text, bool forceEnglishText)
     {
-        var (str, _) = ParseTextFirstFrame(text);
+        var (str, _) = ParseTextFirstFrame(text, forceEnglishText);
         return str;
     }
 
-    private (string cleaned, List<CommandArg> cmdArgs) ParseTextFirstFrame(string text)
+    private (string cleaned, List<CommandArg> cmdArgs) ParseTextFirstFrame(string text, bool forceEnglishText)
     {
         string cleaned = text;
         List<CommandArg> commandArgs = new();
@@ -167,7 +167,7 @@ public class TMPSpecialText : MonoBehaviour
                 }
 
                 string originalText = text.Substring(i + command.Length + 2, closing_tag - (i + command.Length + 2));
-                originalText = ParseCommandReplaceText(commandHash, originalText);
+                originalText = ParseCommandReplaceText(commandHash, originalText, forceEnglishText);
 
                 // remove tags
                 text = text.Substring(0, i) + 
@@ -363,7 +363,7 @@ public class TMPSpecialText : MonoBehaviour
         return true;
     }
 
-    private string ParseCommandReplaceText(int commandHash, string originalText)
+    private string ParseCommandReplaceText(int commandHash, string originalText, bool forceEnglishText)
     {
         switch (commandHash)
         {
@@ -371,7 +371,7 @@ public class TMPSpecialText : MonoBehaviour
             case 696029845:
             // string
             case -983953243:
-                return GetString(originalText);
+                return GetString(originalText, forceEnglishText);
         }
 
         return originalText;
@@ -677,9 +677,10 @@ public class TMPSpecialText : MonoBehaviour
 
     #region var-string
 
-    private string GetString(string stringName)
+    private string GetString(string stringName, bool forceEnglishText)
     {
-        return SaveSystem.Current.GetString(stringName);
+        var pair = SaveSystem.Current.GetLocalizedStringPair(stringName);
+        return forceEnglishText ? pair.original : pair.TranslatedFallbackToOriginal;
     }
 
     #endregion

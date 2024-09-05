@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 3240447105416965926}
   - component: {fileID: 3240447105416965927}
   - component: {fileID: 3240447105416965921}
+  - component: {fileID: 591519519506173311}
   m_Layer: 5
   m_Name: DebugCanvas
   m_TagString: GameUI
@@ -336,6 +337,18 @@ MonoBehaviour:
   consoleText: {fileID: 3632206682415413529}
   anchorPrefab: {fileID: 7895592663859285606, guid: 943cb2ed11f603141a66c99e265099d4, type: 3}
   minecartPrefab: {fileID: 2751716942032489634, guid: 7c947d829ca8f984d94686e57a784593, type: 3}
+--- !u!114 &591519519506173311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3240447105416965922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5842180126977012611
 GameObject:
   m_ObjectHideFlags: 0
