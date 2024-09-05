@@ -123,8 +123,21 @@ public static class DialogueTableProviderExtensions
     {
         return self.GetLocalized(key, i);
     }
+
+    public static LocalizationPair GetLocalized<I>(this I self, string key, int i = 0)
+        where I : MonoBehaviour, IDialogueTableProvider
+    {
+        return self.GetLocalized(key, i);
+    }
     
     public static string GetLocalizedSingle<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
+    {
+        var pair = self.GetLocalized(key, i);
+        return pair.TranslatedFallbackToOriginal;
+    }
+
+    public static string GetLocalizedSingle<I, T>(this I self, string key, int i = 0)
+        where I : MonoBehaviour, IDialogueTableProvider
     {
         var pair = self.GetLocalized(key, i);
         return pair.TranslatedFallbackToOriginal;
