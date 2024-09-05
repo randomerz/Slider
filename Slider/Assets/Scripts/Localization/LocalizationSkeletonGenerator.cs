@@ -257,17 +257,16 @@ public class LocalizationSkeletonGenerator : EditorWindow
            
            globalStrings.Add(SpecificTypeHelpers.CollectibleToPath(cname, collectible.GetCollectibleData().area), cname);
        }
-
-       // TODO: migrate these from the old loc branch
-       // foreach (var kv in Areas.DiscordNames)
-       // {
-       //     globalStrings.Add(SpecificTypeHelpers.AreaToDiscordNamePath(kv.Key), kv.Value);
-       // }
-       //
-       // foreach (var kv in Areas.DisplayNames)
-       // {
-       //     globalStrings.Add(SpecificTypeHelpers.AreaToDisplayNamePath(kv.Key), kv.Value);
-       // }
+       
+       foreach (var kv in Areas.DiscordNames)
+       {
+           globalStrings.Add(SpecificTypeHelpers.AreaToDiscordNamePath(kv.Key), kv.Value);
+       }
+       
+       foreach (var kv in Areas.DisplayNames)
+       {
+           globalStrings.Add(SpecificTypeHelpers.AreaToDisplayNamePath(kv.Key), kv.Value);
+       }
 
        string tempDirectory = Path.Combine(Path.GetTempPath(), "__slider_localization_external_save_dir__");
        if (Directory.Exists(tempDirectory)) {
