@@ -325,8 +325,7 @@ public class SaveProfile
     {
         strings[name] = value;
     }
-
-    // TODO(loc)
+    
     public void SetLocalizedstring(string name, string value, string localized)
     {
         SetString(name, value);
