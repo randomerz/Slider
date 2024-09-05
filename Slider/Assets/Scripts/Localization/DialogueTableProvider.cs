@@ -66,6 +66,11 @@ public interface IDialogueTableProvider
         return Enum.GetName(typeof(T), key) + Localizable.indexSeparatorSecondary + i.ToString();
     }
 
+    protected static string LocalizationKey(string key, int i = 0)
+    {
+        return key + Localizable.indexSeparatorSecondary + i.ToString();
+    }
+
     /// <summary>
     /// Retrieves localization from table, translation is inserted by the LocalizationLoader at runtime
     /// </summary>
@@ -76,7 +81,13 @@ public interface IDialogueTableProvider
     public LocalizationPair GetLocalized<T>(T key, int i = 0) where T: Enum
     {
         string index = LocalizationKey(key, i);
-        return GetLocalized(index);
+        return GetLocalizedInternal(index);
+    }
+
+    public LocalizationPair GetLocalized(string key, int i = 0 )
+    {
+        string index = LocalizationKey(key, i);
+        return GetLocalizedInternal(index);
     }
 
     /// <summary>
@@ -84,7 +95,7 @@ public interface IDialogueTableProvider
     /// </summary>
     /// <param name="formattedIndex">Serialized result of LocalizationKey, please do not come up with your own string to put here :)</param>
     /// <returns>Pair of (original, translated) strings</returns>
-    public LocalizationPair GetLocalized(string formattedIndex)
+    private LocalizationPair GetLocalizedInternal(string formattedIndex)
     {
         if (TranslationTable.TryGetValue(formattedIndex, out var val))
         {
@@ -96,20 +107,6 @@ public interface IDialogueTableProvider
             original = "ERROR: NOT FOUND",
             translated = null
         };
-    }
-    
-    public bool LocalizeEntry(string key, string translated)
-    {
-        if (TranslationTable.ContainsKey(key))
-        {
-            TranslationTable[key] = new LocalizationPair {
-                original = TranslationTable[key].original,
-                translated = translated
-            };
-            return true;
-        }
-    
-        return false;
     }
 }
 
