@@ -302,7 +302,7 @@ namespace Localization
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
         
         public static string DefaultLocale => "English";
-        public static string GoofyAhLanguage => "Piratese";
+        public static string TestingLanguage => "Piratese";
         
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
@@ -759,8 +759,8 @@ be corrupted, these rules may be helpful for debugging purposes...
         private Scene? sceneContext = null;
         private GameObject subcontextAnchor = null;
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
-        private Dictionary<string, string> AdditionalStrings = new();
-        public Dictionary<string, string> AdditionalExportedStrings = new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
+        private Dictionary<string, string> ImportedGlobalStrings = new();
+        public Dictionary<string, string> GlobalStringsToExport = new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
 
         private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
 
@@ -782,7 +782,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         // TODO: add variable substitution support here by passing a list of <var_name>:<var_orig> values here
         private LocalizableContext(LocaleConfiguration localeConfiguration, Dictionary<string, string> globalStrings) : this()
         {
-            AdditionalStrings = globalStrings;
+            ImportedGlobalStrings = globalStrings;
             
             foreach (var option in localeConfiguration.options)
             {
@@ -931,9 +931,14 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private IEnumerable<TrackedLocalizable> ExportCollectibleString(Collectible collectible)
         {
-            if (!AdditionalExportedStrings.TryAdd(
-                    SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name,
+            // Debug.LogError(SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area));
+            
+            if (!GlobalStringsToExport.TryAdd(
+                    
+                    SpecificTypeHelpers.CollectibleToPath(
+                        collectible.GetCollectibleData().name,
                         collectible.GetCollectibleData().area),
+                    
                     collectible.GetCollectibleData().name))
             {
                Debug.LogWarning($"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}"); 
@@ -1248,7 +1253,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             SortedDictionary<string, string> data = SerializeTrackedLocalizables();
 
-            foreach (var kv in AdditionalStrings)
+            foreach (var kv in ImportedGlobalStrings)
             {
                 data.Add(kv.Key, kv.Value);
             }
