@@ -79,7 +79,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         }
     );
 
-    private string ShapeNameToSpecialMessage(string shapeName) => TranslationTable[shapeName].translated;
+    private string ShapeNameToSpecialMessage(string shapeName) => this.GetLocalized(shapeName).translated;
 
     // Idle, Happy, Disgusted, Smug, Interested, Shocked
     private string ShapeNameToSpecialAnimation(string shapeName) => shapeName switch
