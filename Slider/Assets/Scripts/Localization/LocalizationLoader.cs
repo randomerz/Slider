@@ -43,45 +43,29 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     #region SpecificTypes
 
     public static string LoadAreaDiscordTranslation(Area area)
-    {
-        if (
-            _instance?.localeGlobalFile == null 
-            || !_instance.localeGlobalFile.records.TryGetValue(
-                SpecificTypeHelpers.AreaToDiscordNamePath(area), 
-                out var translation))
-        {
-            return area.ToString();
-        }
-        
-        return translation.Translated ?? area.ToString();
-    }
+        => LoadTranslatedString(SpecificTypeHelpers.AreaToDiscordNamePath(area), area.ToString());
     
     public static string LoadAreaDisplayName(Area area)
-    {
-        if (
-            _instance?.localeGlobalFile == null 
-            || !_instance.localeGlobalFile.records.TryGetValue(
-                SpecificTypeHelpers.AreaToDisplayNamePath(area), 
-                out var translation))
-        {
-            return area.ToString();
-        }
-        
-        return translation.Translated ?? area.ToString();
-    }
+        => LoadTranslatedString(SpecificTypeHelpers.AreaToDisplayNamePath(area), area.ToString());
     
     public static string LoadJungleShapeTranslation(string shapeName)
+        => LoadTranslatedString(SpecificTypeHelpers.JungleShapeToPath(shapeName), shapeName);
+
+    public static string LoadCollectibleTranslation(string name, Area area)
+        => LoadTranslatedString(SpecificTypeHelpers.CollectibleToPath(name, area), name);
+
+    private static string LoadTranslatedString(string path, string fallback)
     {
         if (
             _instance?.localeGlobalFile == null 
             || !_instance.localeGlobalFile.records.TryGetValue(
-                SpecificTypeHelpers.JungleShapeToPath(shapeName), 
+                path, 
                 out var translation))
         {
-            return shapeName;
+            return fallback;
         }
 
-        return translation.Translated ?? shapeName;
+        return translation.Translated ?? fallback;
     }
     
     #endregion

@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ItemPickupEffect : MonoBehaviour
+public class ItemPickupEffect : MonoBehaviour, IDialogueTableProvider
 {
     public static System.EventHandler<System.EventArgs> OnCutsceneStart;
 
@@ -19,6 +21,17 @@ public class ItemPickupEffect : MonoBehaviour
 
     public static ItemPickupEffect _instance;
 
+    enum ItemPickupEffectStrings
+    {
+        Acquired
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<ItemPickupEffectStrings, string>()
+        {
+            { ItemPickupEffectStrings.Acquired, "<item/> Acquired!"}
+        });
+
     void Awake()
     {
         _instance = this;
@@ -31,7 +44,12 @@ public class ItemPickupEffect : MonoBehaviour
 
     public static void StartCutscene(Sprite itemSprite, string itemName, System.Action onTextVisibleCallback=null)
     {
-        _instance.itemText.text = itemName + " Acquired!";
+        _instance.itemText.text = (_instance as IDialogueTableProvider).Interpolate(
+            _instance.GetLocalizedSingle(ItemPickupEffectStrings.Acquired),
+            new()
+            {
+                {"item", LocalizationLoader.LoadCollectibleTranslation(itemName, SGrid.Current.GetArea())}
+            });
         _instance.itemImage.sprite = itemSprite;
         _instance.itemImage.SetNativeSize();
         _instance.itemImage.rectTransform.localScale = 1f / 16f * Vector3.one;

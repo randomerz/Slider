@@ -108,6 +108,25 @@ public interface IDialogueTableProvider
             translated = null
         };
     }
+    
+    /// <summary>
+    /// In a string, find self-closed tags labeled with some key. Then, substitute that tag using the dictionary entry
+    /// corresponding to the key
+    /// *ex.* "<item/> Acquired!>" + Dict{"item":"Breadge"} = "Breadge Acquired!"
+    /// 
+    /// This function is preferred compared to string interpolation to better accommodate for different language SVO orders
+    /// and other intricacies. *ex.* [获得][物品]="[acquired][item]" for CN is reverse of default ordering.
+    /// </summary>
+    /// <returns></returns>
+    public string Interpolate(string format, Dictionary<string, string> substitutions)
+    {
+        foreach (var (k, v) in substitutions)
+        {
+            format = format.Replace($"<{k}/>", v);
+        }
+
+        return format;
+    }
 }
 
 public static class DialogueTableProviderExtensions
