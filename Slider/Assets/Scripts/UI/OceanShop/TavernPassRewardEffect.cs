@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TavernPassRewardEffect : MonoBehaviour
+public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
 {
     public float animationDuration;
     public AnimationCurve animationCurve;
@@ -17,6 +18,16 @@ public class TavernPassRewardEffect : MonoBehaviour
     private const float MAX_MASK_SIZE = 480;
     private const float SOUND_DAMPEN_LENGTH = 2;
 
+    enum TavernPassRewardEffectStrings
+    {
+        Acquired
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<TavernPassRewardEffectStrings, string>()
+        {
+            { TavernPassRewardEffectStrings.Acquired, "<item/> Acquired!"}
+        });
     public void StartEffect(string name, Sprite sprite, System.Action onTextVisibleCallback=null, System.Action onEndEffectCallback=null)
     {
         InitEffect(name, sprite);
@@ -29,12 +40,16 @@ public class TavernPassRewardEffect : MonoBehaviour
         yield return Effect(onTextVisibleCallback, onEndEffectCallback);
     }
 
-    private void InitEffect(string name, Sprite sprite)
+    private void InitEffect(string itemName, Sprite sprite)
     {
         gameObject.SetActive(true);
         maskRectTransform.sizeDelta = Vector2.zero;
 
-        displayText.text = $"{name} Acquired!";
+        displayText.text = (this as IDialogueTableProvider).Interpolate(
+            this.GetLocalizedSingle(TavernPassRewardEffectStrings.Acquired),
+            new (){
+                { "item", LocalizationLoader.LoadCollectibleTranslation(itemName, SGrid.Current.GetArea()) }
+            });
         collectibleImage.sprite = sprite;
 
         AudioManager.DampenMusic(this, 0.2f, SOUND_DAMPEN_LENGTH);

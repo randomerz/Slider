@@ -64,6 +64,11 @@ public class Collectible : MonoBehaviour
         return cData.name;
     }
 
+    public string GetTranslatedName()
+    {
+        return LocalizationLoader.LoadCollectibleTranslation(cData.name, cData.area);
+    }
+
     public void SetArea(Area a) 
     {
         cData.area = a;

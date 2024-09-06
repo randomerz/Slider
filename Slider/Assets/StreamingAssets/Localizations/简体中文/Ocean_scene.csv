@@ -1,4 +1,4 @@
-"Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.11","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -222,10 +222,9 @@ be corrupted, these rules may be helpful for debugging purposes...
 "OceanArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Special Items/Scroll of Realigning","Scroll of Realigning","Scroll of Realigning",
 "OceanArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Special Items/Scroll Scrap","Scroll Scap","Scroll Scap",
 "OceanArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Text/ItemNameText","Collection","Collection",
-"OceanArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameText","Map","Map
-",
-"OceanArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameTextBG","Map","Map
-",
+"OceanArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel@LegendaryCheeseburger:0","Legendary ""Burger""","Legendary "Burger"",
+"OceanArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameText","Map","Map",
+"OceanArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameTextBG","Map","Map",
 "OceanArtifactCanvas/ArtifactFrame/Tabs/Realigning Tabs/LoadTextHolder/Load TMP Text","Load!","Load!",
 "OceanArtifactCanvas/ArtifactFrame/Tabs/Realigning Tabs/SaveTextHolder/Save TMP Text","Save!","Save!",
 "OceanShopCanvas/ShopPanel/BottomPanel/Dialogue/BlackBG/Main Text","> Something went wrong!","> Something went wrong!",
@@ -267,6 +266,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 ","Exit
 ",
 "OceanShopCanvas/ShopPanel/Collectible Acquired Effect/Background Mask/Item Acquired Text","Item Acquired!","Item Acquired!",
+"OceanShopCanvas/ShopPanel/Collectible Acquired Effect@Acquired:0","<item/> Acquired!","<item/> Acquired!",
 "OceanShopCanvas/ShopPanel@ABuddingRomance:0","I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. It's really been weighing him down. If you can be a solid wingman, maybe he can get his message across.","I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. It's really been weighing him down. If you can be a solid wingman, maybe he can get his message across.",
 "OceanShopCanvas/ShopPanel@ABuddingRomance:1","Beware of disturbing the seas though. Too much water can sink even the most heartfelt messages.","Beware of disturbing the seas though. Too much water can sink even the most heartfelt messages.",
 "OceanShopCanvas/ShopPanel@Aliens:0","Some shifty-looking fellows walked in a while ago. They pay well so I can't complain, but something seems different about them.","Some shifty-looking fellows walked in a while ago. They pay well so I can't complain, but something seems different about them.",

@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-// TODO: Localize
-public class UIArtifactInventory : MonoBehaviour
+public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
 {
     public List<ArtifactInventoryCollectible> collectibles;
 
@@ -17,7 +17,17 @@ public class UIArtifactInventory : MonoBehaviour
 
     public TextMeshProUGUI inventoryText;
 
-    private const string LEGENDARY_CHEESEBURGER = "Legendary \"Burger\"";
+    enum ArtifactInventoryStrings
+    {
+        LegendaryCheeseburger
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = 
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<ArtifactInventoryStrings, string>
+            {
+                { ArtifactInventoryStrings.LegendaryCheeseburger, "Legendary \"Burger\"" }
+            });
 
     [Header("Special Collectible Counters")] // could be refactored
     public ArtifactInventoryCollectible oilCollectible;
@@ -76,7 +86,7 @@ public class UIArtifactInventory : MonoBehaviour
 
         if (PlayerInventory.Contains("Legendary Cheese Burger", Area.MagiTech))
         {
-            breadgeCollectible.displayName = LEGENDARY_CHEESEBURGER;
+            breadgeCollectible.displayName = this.GetLocalizedSingle(ArtifactInventoryStrings.LegendaryCheeseburger);
             breadgeAnimator.SetBool("isOn", true);
         }
     }

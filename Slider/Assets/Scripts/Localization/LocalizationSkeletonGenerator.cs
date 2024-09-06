@@ -106,8 +106,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
                    $"Generate localization skeletons within the project?\nThis may overwrite existing content!",
                    "Yes", "No"))
            {
-               var apply = GenerateSkeleton(configuration, referenceRoot: referenceLocalizationPath, isDev: true);
-               apply();
+               var copyFullyUpdatedCsvBackToProj = GenerateSkeleton(configuration, referenceRoot: referenceLocalizationPath, isDev: true);
+               copyFullyUpdatedCsvBackToProj();
            }
        }
        GUILayout.Label("^ generates a relevant CSV files to the StreamingAssets folder, following configurations set in the localization project configuration object. Such files will be directly copied into the build!");
@@ -125,8 +125,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
                    "Yes", "No"))
            {
                EditorPrefs.SetString(saveLocalizationOutsidePathPreference, saveLocalizationDir);
-               var apply = GenerateSkeleton(configuration, root: saveLocalizationDir, referenceRoot: referenceLocalizationPath, isDev: true);
-               apply();
+               var copyFullyUpdatedCsvBackToRoot = GenerateSkeleton(configuration, root: saveLocalizationDir, referenceRoot: referenceLocalizationPath, isDev: true);
+               copyFullyUpdatedCsvBackToRoot();
            }
        }
        GUILayout.Label("^ generates a relevant CSV files to any selected folder, following configurations set in the localization project configuration object");
@@ -237,26 +237,26 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            globalStrings.Add(SpecificTypeHelpers.JungleShapeToPath(s.shapeName), s.shapeName);
        }
-       
-       var collectibles = AssetDatabase
-           .FindAssets("t:prefab")
-           .Select(AssetDatabase.GUIDToAssetPath)
-           .Select(AssetDatabase.LoadAssetAtPath<GameObject>)
-           .Where(go => go.GetComponent<Collectible>() != null);
-
-       foreach (var c in collectibles)
-       {
-           var collectible = c.GetComponent<Collectible>();
-           var cname = collectible.GetCollectibleData().name;
-           
-           // this is true only for variant roots
-           if (string.IsNullOrWhiteSpace(cname))
-           {
-               continue;
-           }
-           
-           globalStrings.Add(SpecificTypeHelpers.CollectibleToPath(cname, collectible.GetCollectibleData().area), cname);
-       }
+       //
+       // var collectibles = AssetDatabase
+       //     .FindAssets("t:prefab")
+       //     .Select(AssetDatabase.GUIDToAssetPath)
+       //     .Select(AssetDatabase.LoadAssetAtPath<GameObject>)
+       //     .Where(go => go.GetComponent<Collectible>() != null);
+       //
+       // foreach (var c in collectibles)
+       // {
+       //     var collectible = c.GetComponent<Collectible>();
+       //     var cname = collectible.GetCollectibleData().name;
+       //     
+       //     // this is true only for variant roots
+       //     if (string.IsNullOrWhiteSpace(cname))
+       //     {
+       //         continue;
+       //     }
+       //     
+       //     globalStrings.Add(SpecificTypeHelpers.CollectibleToPath(cname, collectible.GetCollectibleData().area), cname);
+       // }
        
        foreach (var kv in Areas.DiscordNames)
        {
@@ -296,18 +296,6 @@ public class LocalizationSkeletonGenerator : EditorWindow
            }
            Directory.CreateDirectory(inProjectDirectory);
        }
-       
-       foreach (var locale in projectConfiguration.InitialLocales)
-       {
-           LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale, globalStrings);
-           string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
-           
-           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, tempDirectory), serializedConfigs);
-           if (localeIsValid[locale.name] && root == null)
-           {
-               WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name), serializedConfigs);
-           }
-       }
 
        // AT: note: reference file = old translations that should be considered for migration into new translations
        //           for migration to be considered the scene must exactly match (or in the case of locale config, the
@@ -317,7 +305,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            // If locale is English, don't bother migrating old translations
            // Otherwise, if an older translation exists, try migrate it
-           if (locale.name == LocalizationFile.DefaultLocale || locale.name == LocalizationFile.GoofyAhLanguage || !File.Exists(path))
+           if (locale.name == LocalizationFile.DefaultLocale || locale.name == LocalizationFile.TestingLanguage || !File.Exists(path))
            {
                return null;
            }
@@ -341,7 +329,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
                    referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot)),
-                   autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => "_ho_"  : null
+                   autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_ho_"  : null
                );
 
                WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, prefab, tempDirectory), serializedSkeleton);
@@ -363,7 +351,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            var scene = EditorSceneManager.OpenScene(editorBuildSettingsScene.path);
            var skeleton = LocalizableContext.ForSingleScene(scene);
 
-           foreach (var kv in skeleton.AdditionalExportedStrings)
+           foreach (var kv in skeleton.GlobalStringsToExport)
            {
                if (!globalStrings.TryAdd(kv.Key, kv.Value))
                {
@@ -378,7 +366,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
                    referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, scene, referenceRoot)),
-                   autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => "_ho_"  : null
+                   autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_ho_"  : null
                );
                
                WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, scene, tempDirectory), serializedSkeleton);
@@ -390,14 +378,30 @@ public class LocalizationSkeletonGenerator : EditorWindow
        }
        
        // Write locale global files at last due to global strings being accumulated over the scan...
+       // foreach (var locale in projectConfiguration.InitialLocales)
+       // {
+       //     LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale, globalStrings);
+       //     string serializedConfigs = localeGlobalConfig.Serialize(
+       //         serializeConfigurationDefaults: true, 
+       //         referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.LocaleGlobalFilePath(locale.name, referenceRoot)),
+       //         autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_yarr_" : null);
+       //     WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
+       // }
+       //
+       //
        foreach (var locale in projectConfiguration.InitialLocales)
        {
            LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale, globalStrings);
            string serializedConfigs = localeGlobalConfig.Serialize(
-               serializeConfigurationDefaults: true, 
+               serializeConfigurationDefaults: true,
                referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.LocaleGlobalFilePath(locale.name, referenceRoot)),
-               autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => "_yarr_" : null);
-           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
+               autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_yarr_" : null);
+           
+           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, tempDirectory), serializedConfigs);
+           if (localeIsValid[locale.name] && root == null)
+           {
+               WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name), serializedConfigs);
+           }
        }
 
        try
