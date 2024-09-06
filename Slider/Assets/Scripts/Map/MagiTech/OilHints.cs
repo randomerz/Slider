@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// TODO: Localize
 public class OilHints : MonoBehaviour
 {
     public const string OIL_HINT_SAVE_STRING = "MagiTechOilHint";

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+// TODO: Localize
 public class UIArtifactInventory : MonoBehaviour
 {
     public List<ArtifactInventoryCollectible> collectibles;
@@ -16,7 +17,6 @@ public class UIArtifactInventory : MonoBehaviour
 
     public TextMeshProUGUI inventoryText;
 
-    // TODO: Localize
     private const string LEGENDARY_CHEESEBURGER = "Legendary \"Burger\"";
 
     [Header("Special Collectible Counters")] // could be refactored

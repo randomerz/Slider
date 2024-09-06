@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: Localize
 public class Printer : MonoBehaviour
 {
     public GameObject wallObject;
@@ -137,20 +138,20 @@ public class Printer : MonoBehaviour
             List<string> mlist = new List<string>();
             if (!floor)
             {
-                mlist.Add(" the base");
+                mlist.Add("the base");
                 operatorHint = "The base is right here to my left, but you'll probably need that Conductive Bob somehow!!!!";
             }
             if (!walls)
             {
-                mlist.Add(" the walls");
+                mlist.Add("the walls");
                 operatorHint = "The walls are up behind that giant door!!!!";
             }
             if (!wires)
             {
-                mlist.Add(" the wires");
+                mlist.Add("the wires");
                 operatorHint = "The wires are in the bottom-right of the Factory!!!!";
             }
-            operatorMessage = $"It still needs{string.Join(',', mlist)}!!!";
+            operatorMessage = $"It still needs{string.Join(", ", mlist)}!!!";
         }
         SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
         SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);

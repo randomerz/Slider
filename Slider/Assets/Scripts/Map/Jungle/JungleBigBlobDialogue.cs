@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class JungleBigBlobDialogue : MonoBehaviour
+public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
 {
     public const string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
     private readonly List<string> BASIC_SHAPES = new() {
@@ -44,38 +45,41 @@ public class JungleBigBlobDialogue : MonoBehaviour
         c.SetSpec(true);
     }
 
-    private string ShapeNameToSpecialMessage(string shapeName) => shapeName switch
-    {
-        // "Bandage" => "",
-        "Bread" => "It's gluten free!",
-        // "Camera" => "",
-        "Chest" => "That would make for some great buried treasure!",
-        "Circle" => "OMG Circle!!! Just like me!!!!",
-        // "Crate" => "",
-        "Crutch" => "Crutch? Isn't that a police baton? Yay!!",
-        // "Female" => "",
-        "Fish" => "Blub blub blub",
-        "FishBowl" => "NOOOO YOU TRAPPED MR. BLUB BLUB",
-        "Flag" => "A race? I hope everyone's a winner!",
-        "Glasses" => "I SEE you've made something cool.",
-        "Heart" => "Aww <3",
-        // "House" => "",
-        "Icecream" => "Artificial vanilla, my favorite!",
-        "Line" => "Does Barron want more lines..?",
-        "Lollipop" => "Yummy!!!",
-        // "Male" => "",
-        "Minecart" => "OMG do you think I can fit in it?",
-        "Mushroom" => "Watch out!! It might explode!",
-        "Pickaxe" => "Diggy diggy hole",
-        "Plus" => "Eww... is that... math?",
-        // "Popsicle" => "",
-        "Rail" => "I am going to 'Rail' you!",
-        // "Semicircle" => "",
-        "Ship" => "Ahoy!!!",
-        "Square" => "Squares are okay... but I like circles more!",
-        "Triangle" => "If you were a triangle you'd be acute one!",
-        _ => null
-    };
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<string, string>
+        {
+            // { "Bandage", "" },
+            { "Bread", "It's gluten free!" },
+            // { "Camera", "" },
+            { "Chest", "That would make for some great buried treasure!" },
+            { "Circle", "OMG Circle!!! Just like me!!!!" },
+            // { "Crate", "" },
+            { "Crutch", "Crutch? Isn't that a police baton? Yay!!" },
+            // { "Female", "" },
+            { "Fish", "Blub blub blub" },
+            { "FishBowl", "NOOOO YOU TRAPPED MR. BLUB BLUB" },
+            { "Flag", "A race? I hope everyone's a winner!" },
+            { "Glasses", "I SEE you've made something cool." },
+            { "Heart", "Aww <3" },
+            // { "House", "" },
+            { "Icecream", "Artificial vanilla, my favorite!" },
+            { "Line", "Does Barron want more lines..?" },
+            { "Lollipop", "Yummy!!!" },
+            // { "Male", "" },
+            { "Minecart", "OMG do you think I can fit in it?" },
+            { "Mushroom", "Watch out!! It might explode!" },
+            { "Pickaxe", "Diggy diggy hole" },
+            { "Plus", "Eww... is that... math?" },
+            // { "Popsicle", "" },
+            { "Rail", "I am going to 'Rail' you!" },
+            // { "Semicircle", "" },
+            { "Ship", "Ahoy!!!" },
+            { "Square", "Squares are okay... but I like circles more!" },
+            { "Triangle", "If you were a triangle you'd be acute one!" },
+        }
+    );
+
+    private string ShapeNameToSpecialMessage(string shapeName) => TranslationTable[shapeName].translated;
 
     // Idle, Happy, Disgusted, Smug, Interested, Shocked
     private string ShapeNameToSpecialAnimation(string shapeName) => shapeName switch
