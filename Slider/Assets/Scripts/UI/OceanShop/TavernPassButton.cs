@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: Localize
 public class TavernPassButton : MonoBehaviour 
 {
     public bool isComplete;

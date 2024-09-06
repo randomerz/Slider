@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class Printer : MonoBehaviour
+public class Printer : MonoBehaviour, IDialogueTableProvider
 {
     public GameObject wallObject;
     public GameObject floorObject;
@@ -24,6 +25,56 @@ public class Printer : MonoBehaviour
     private bool walls = false;
     private bool floor = false;
     private bool wires = false;
+
+    private enum PrinterDialogueCode
+    {
+        RequirementsAll,
+        RequirementsStart,
+        RequirementsBase,
+        RequirementsWalls,
+        RequirementsWires,
+        HintBase,
+        HintWalls,
+        HintWires,
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<PrinterDialogueCode, string>
+        {
+            {
+                PrinterDialogueCode.RequirementsAll,
+                "I'll just need these materials: the base, the walls, and the wires!!!"
+            },
+            {
+                PrinterDialogueCode.RequirementsStart,
+                "It still needs: "
+            },
+            {
+                PrinterDialogueCode.RequirementsBase,
+                "the base"
+            },
+            {
+                PrinterDialogueCode.RequirementsWalls,
+                "the walls"
+            },
+            {
+                PrinterDialogueCode.RequirementsWires,
+                "the wires"
+            },
+            {
+                PrinterDialogueCode.HintBase,
+                "The base is right here to my left, but you'll probably need that Conductive Bob somehow!!!!"
+            },
+            {
+                PrinterDialogueCode.HintWalls,
+                "The walls are up behind that giant door!!!!"
+            },
+            {
+                PrinterDialogueCode.HintWires,
+                "The wires are in the bottom-right of the Factory!!!!"
+            },
+        }
+    );
 
     private void OnEnable()
     {
@@ -125,7 +176,7 @@ public class Printer : MonoBehaviour
         if (!floor && !walls && !wires)
         {
             // first message
-            operatorMessage = "I'll just need these materials: the base, the walls, and the wires!!!";
+            operatorMessage = this.GetLocalized(PrinterDialogueCode.RequirementsAll).translated;
         }
         else if (floor && walls && wires)
         {
@@ -137,20 +188,21 @@ public class Printer : MonoBehaviour
             List<string> mlist = new List<string>();
             if (!floor)
             {
-                mlist.Add(" the base");
-                operatorHint = "The base is right here to my left, but you'll probably need that Conductive Bob somehow!!!!";
+                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsBase).translated);
+                operatorHint = this.GetLocalized(PrinterDialogueCode.HintBase).translated;
             }
             if (!walls)
             {
-                mlist.Add(" the walls");
-                operatorHint = "The walls are up behind that giant door!!!!";
+                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsWalls).translated);
+                operatorHint = this.GetLocalized(PrinterDialogueCode.HintWalls).translated;
             }
             if (!wires)
             {
-                mlist.Add(" the wires");
-                operatorHint = "The wires are in the bottom-right of the Factory!!!!";
+                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsWires).translated);
+                operatorHint = this.GetLocalized(PrinterDialogueCode.HintWires).translated;
             }
-            operatorMessage = $"It still needs{string.Join(',', mlist)}!!!";
+            String reqruirementsStart = this.GetLocalized(PrinterDialogueCode.RequirementsStart).translated;
+            operatorMessage = $"{reqruirementsStart}{string.Join(", ", mlist)}!!!";
         }
         SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
         SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);
