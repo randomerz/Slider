@@ -1218,7 +1218,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             char sep = LocalizationFile.csvSeparator;
             
             // file format explainer
-            builder.Append($"\"{LocalizationFile.explainer.Replace("\"", "\"\"")}\"{sep}\r\n");
+            builder.Append($"\"Slider.v{Application.version}\"{sep}\"Unity.v{Application.unityVersion}\"{sep}\"(file format explainer)->\"{sep}\"{LocalizationFile.explainer.Replace("\"", "\"\"")}\"{sep}\r\n");
             
             // properties and values
             foreach (var (name, defaults) in configs)
