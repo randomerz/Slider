@@ -22,6 +22,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
 
     public enum ShopDialogueCode
     {
+        TavernPassRewards,
         DefaultMain,
         FirstTime,
         NoAnchor,
@@ -72,7 +73,20 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
     public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
         new Dictionary<ShopDialogueCode, string[]>
         {
-            { ShopDialogueCode.DefaultMain, mainShopDialgoue } ,
+            {
+                ShopDialogueCode.TavernPassRewards, new[] {
+                    "Free Slider",
+                    "All Sliders",
+                    "Tavern Jukebox",
+                    "Tavern Cat",
+                    "Bob's Favor",
+                }
+            },
+
+            { 
+                ShopDialogueCode.DefaultMain, 
+                mainShopDialgoue 
+            },
 
             {
                 ShopDialogueCode.FirstTime, new[] {
@@ -521,6 +535,13 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         }
     }
 
+    public string GetLocalizedRewardName(int index) 
+    {
+        return this.GetLocalized(
+            ShopDialogueCode.TavernPassRewards, 
+            index
+        ).TranslatedFallbackToOriginal;
+    }
 
 
     #region Dialogues
