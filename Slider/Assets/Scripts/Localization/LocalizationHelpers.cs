@@ -302,7 +302,7 @@ namespace Localization
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
         
         public static string DefaultLocale => "English";
-        public static string TestingLanguage => "Piratese";
+        public static string TestingLanguage => "Debug";
         
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
@@ -870,7 +870,9 @@ be corrupted, these rules may be helpful for debugging purposes...
                         
                     .GetComponentsInChildren(type, includeInactive: true)
                     
-                    .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null)
+                    .Where(c => 
+                        c.GetComponent<ExcludeFromLocalization>() == null 
+                        && c.GetComponentInParent<ExcludeFromLocalization>() == null)
                     
                     // Do not re-select something that is in a localization injector (i.e. a prefab)
                     // this is done because those objects will be selected when localizing that prefab itself

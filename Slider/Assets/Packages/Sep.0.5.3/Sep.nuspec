@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Sep</id>
+    <version>0.5.3</version>
+    <authors>nietras</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>Icon.png</icon>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/nietras/Sep/</projectUrl>
+    <iconUrl>https://raw.github.com/nietras/Sep/main/Icon.png</iconUrl>
+    <description>World's Fastest .NET CSV Parser. Modern, minimal, fast, zero allocation, reading and writing of separated values (csv, tsv etc.). Cross-platform, trimmable and AOT/NativeAOT compatible.</description>
+    <releaseNotes>https://github.com/nietras/Sep/releases</releaseNotes>
+    <copyright>Copyright © nietras A/S 2023</copyright>
+    <tags>csv csvhelper comma semi-colon tab separated value delimited io file read write parse format</tags>
+    <repository type="git" url="https://github.com/nietras/Sep/" commit="900506f6c6034b754bf05e1c647fc5ca6ee23203" />
+    <dependencies>
+      <group targetFramework="net7.0">
+        <dependency id="csFastFloat" version="4.1.4" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="csFastFloat" version="4.1.4" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
