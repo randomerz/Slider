@@ -1,0 +1,866 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sylvan.Data.Csv</name>
+    </assembly>
+    <members>
+        <member name="T:Sylvan.Data.Csv.CsvDataReader">
+            <summary>
+            A data reader for delimited text data.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CreateAsync(System.String,Sylvan.Data.Csv.CsvDataReaderOptions)">
+            <summary>
+            Creates a new CsvDataReader asynchronously.                                                                                          
+            </summary>
+            <param name="filename">The name of a file containing CSV data.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <returns>A task representing the asynchronous creation of a CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CreateAsync(System.String,Sylvan.Data.Csv.CsvDataReaderOptions,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new CsvDataReader asynchronously.                                                                                          
+            </summary>
+            <param name="filename">The name of a file containing CSV data.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <param name="cancel">The optional cancellation token to be used for cancelling the initialization sequence.</param>
+            <returns>A task representing the asynchronous creation of a CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CreateAsync(System.IO.TextReader,Sylvan.Data.Csv.CsvDataReaderOptions)">
+            <summary>
+            Creates a new CsvDataReader asynchronously.
+            </summary>
+            <param name="reader">The TextReader for the delimited data.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <returns>A task representing the asynchronous creation of a CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CreateAsync(System.IO.TextReader,Sylvan.Data.Csv.CsvDataReaderOptions,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new CsvDataReader asynchronously.
+            </summary>
+            <param name="reader">The TextReader for the delimited data.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <param name="cancel">The optional cancellation token to be used for cancelling the initialization sequence.</param>
+            <returns>A task representing the asynchronous creation of a CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CreateAsync(System.IO.TextReader,System.Char[],Sylvan.Data.Csv.CsvDataReaderOptions)">
+            <summary>
+            Creates a new CsvDataReader asynchronously.
+            </summary>
+            <param name="reader">The TextReader for the delimited data.</param>
+            <param name="buffer">A buffer to use for internal processing.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <returns>A task representing the asynchronous creation of a CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CreateAsync(System.IO.TextReader,System.Char[],Sylvan.Data.Csv.CsvDataReaderOptions,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new CsvDataReader asynchronously.
+            </summary>
+            <param name="reader">The TextReader for the delimited data.</param>
+            <param name="buffer">A buffer to use for internal processing.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <param name="cancel">The optional cancellation token to be used for cancelling the initialization sequence.</param>
+            <returns>A task representing the asynchronous creation of a CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.ReadAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.NextResultAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.CloseAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.Create(System.String,Sylvan.Data.Csv.CsvDataReaderOptions)">
+            <summary>
+            Creates a new CsvDataReader.
+            </summary>
+            <param name="filename">The name of a file containing CSV data.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <returns>A CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.Create(System.IO.TextReader,Sylvan.Data.Csv.CsvDataReaderOptions)">
+            <summary>
+            Creates a new CsvDataReader.
+            </summary>
+            <param name="reader">The TextReader for the delimited data.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <returns>A CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.Create(System.IO.TextReader,System.Char[],Sylvan.Data.Csv.CsvDataReaderOptions)">
+            <summary>
+            Creates a new CsvDataReader.
+            </summary>
+            <param name="reader">The TextReader for the delimited data.</param>
+            <param name="buffer">A buffer to use for internal processing.</param>
+            <param name="options">The options to configure the reader, or null to use the default options.</param>
+            <returns>A CsvDataReader instance.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.Read">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.NextResult">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.Initialize">
+            <summary>
+            Initializes the schema starting with the current row.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.Item(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.Depth">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.RowFieldCount">
+            <summary>
+            Gets the number of fields in the current row.
+            This may be different than FieldCount.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.FieldCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.HasRows">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.RowNumber">
+            <summary> Gets the current 1-based row number of the data reader.</summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.IsClosed">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.RecordsAffected">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetBoolean(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetByte(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetBytes(System.Int32,System.Int64,System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetChar(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetChars(System.Int32,System.Int64,System.Char[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetTimeSpan(System.Int32)">
+            <summary>
+            Gets the value of the field as a <see cref="T:System.TimeSpan"/>.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetDateTimeOffset(System.Int32)">
+            <summary>
+            Gets the value of the field as a <see cref="T:System.DateTimeOffset"/>.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetDateTime(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetDecimal(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetDouble(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetDataTypeName(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetFieldType(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetFloat(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetGuid(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetInt16(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetInt32(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetInt64(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetName(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetOrdinal(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetString(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetValue(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetValues(System.Object[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.IsDBNull(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.IsDBNullAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetColumnSchema">
+            <summary>
+            Gets a collection of DbColumns describing the schema of the data reader.
+            </summary>
+            <returns>A collection of DbColumn.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetSchemaTable">
+            <inheritdoc/>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReader.CsvColumn.Item(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetFieldSpan(System.Int32)">
+            <summary>
+            Gets a span containing the characters of a field.
+            </summary>
+            <remarks> The contents of the returned span will have any quotes removed and be fully unescaped. </remarks>
+            <param name="ordinal">The field ordinal.</param>
+            <returns>A span containing the characters of the field.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetRawRecordSpan">
+            <summary>
+            Gets a span containing the current record data, including the line ending.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetRawRecord(System.Char[],System.Int32)">
+            <summary>
+            Copies the raw record data from the buffer.
+            </summary>
+            <param name="buffer">The buffer to receive the data, or null to query the required size.</param>
+            <param name="offset">The offset into the buffer to start writing.</param>
+            <returns>The length of the record data.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReader.GetFieldValue``1(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Sylvan.Data.Csv.StringFactory">
+            <summary>
+            A function that can be used to de-dupe strings during construction directly from internal buffers.
+            </summary>
+            <remarks>
+            The Sylvan.Common library can provide an implementation of this method via the Sylvan.StringPool type.
+            </remarks>
+        </member>
+        <member name="T:Sylvan.Data.Csv.ColumnStringFactory">
+            <summary>
+            A function that can be used to de-dupe strings during construction directly from internal buffers.
+            </summary>
+            <remarks>
+            The Sylvan.Common library can provide an implementation of this method via the Sylvan.StringPool type.
+            </remarks>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CommentHandler">
+            <summary>
+            A callback handler to receive comments read from a CSV file.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CommentHandler.HandleComment(Sylvan.Data.Csv.CsvDataReader,System.String)">
+            <summary>
+            The method that is called when comments are read.
+            </summary>
+            <param name="reader">The CsvDataReader.</param>
+            <param name="comment">The comment string.</param>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CommentHandler.op_Implicit(System.Action{Sylvan.Data.Csv.CsvDataReader,System.String})~Sylvan.Data.Csv.CommentHandler">
+            <summary>
+            Implicitly casts an Action to a CommentHandler.
+            </summary>
+            <param name="handler">The method to receive the comment.</param>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CommentHandler.op_Implicit(System.Action{System.String})~Sylvan.Data.Csv.CommentHandler">
+            <summary>
+            Implicitly casts an Action to a CommentHandler.
+            </summary>
+            <param name="handler">The method to receive the comment.</param>
+        </member>
+        <member name="T:Sylvan.Data.Csv.BinaryEncoding">
+            <summary>
+            Gets the binary encoding used when reading fields with GetBytes.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.BinaryEncoding.Base64">
+            <summary>
+            Reads values as base64, does not support whitespace in values.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.BinaryEncoding.Hexadecimal">
+            <summary>
+            Read values as hexadecimal, allows optional "0x" prefix.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.ResultSetMode">
+            <summary>
+            Specifies how result sets are interpreted within a CSV file.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.ResultSetMode.SingleResult">
+            <summary>
+            The entire file is interpreted as a single result set.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.ResultSetMode.MultiResult">
+            <summary>
+            In multi result mode a new result set is identified by a change in column count.
+            Empty lines are skipped between result sets.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvDataReaderOptions">
+            <summary>
+            Options for configuring a CsvDataReader.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataReaderOptions.#ctor">
+            <summary>
+            Creates a CsvDataReaderOptions with the default values.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.ResultSetMode">
+            <summary>
+            Indicates the behavior of result transitions.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.BinaryEncoding">
+            <summary>
+            Indicates the binary encoding that should be used when writing binary columns.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.StringFactory">
+            <summary>
+            A string factory function which can de-dupe strings on construction. Defaults to null.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.ColumnStringFactory">
+            <summary>
+            A string factory function which can de-dupe strings on construction. Defaults to null.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.CommentHandler">
+            <summary>
+            A callback method which will be called when a comment is found in the CSV.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.TrueString">
+            <summary>
+            The string which represents true values when reading boolean. Defaults to null.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.FalseString">
+            <summary>
+            The string which represents false values when reading boolean. Defaults to null.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.DateFormat">
+            <summary>
+            The format string to use to parse dates. Defaults to null, in which case standard date parsing rules apply.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.DateTimeFormat">
+            <summary>
+            The format string to use to parse DateTime values. Defaults to null, in which case standard date parsing rules apply.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.HasHeaders">
+            <summary>
+            Specifies if the CSV data contains a header row with column names. Defaults to true.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Delimiter">
+            <summary>
+            Specifies the field delimiter. By default, uses autodetect.
+            </summary>
+            <remarks>
+            Setting the delimiter will disable auto-detection.
+            </remarks>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Quote">
+            <summary>
+            Specifies the character used for quoting fields. Defaults to '"'.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Comment">
+            <summary>
+            Specifies the character used to indicate a comment. Defaults to '#'.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.CsvStyle">
+            <summary>
+            Indicates the CSV parsing style, defaults to Standard.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Escape">
+            <summary>
+            Specifies the character used for escaping characters in quoted fields. Defaults to '"'.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.BufferSize">
+            <summary>
+            The size of buffer to use when reading records.
+            A record must fit within a single buffer, otherwise an exception is thrown.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.MaxBufferSize">
+            <summary>
+            The maximum size the internal buffer will be allowed to grow.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Buffer">
+            <summary>
+            The buffer to use when reading records.
+            The default is null, in which case the reader will allocate the buffer.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.HeaderComparer">
+            <summary>
+            The StringComparer to use when looking up header values.
+            Can be used to allow case-insensitive column lookup.
+            The default is Ordinal.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Culture">
+            <summary>
+            The CultureInfo to use when parsing values in the CSV data.
+            Defaults to the InvariantCulture.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.OwnsReader">
+            <summary>
+            Indicates if the TextReader should be closed when the CsvDataReader is closed. The default is true.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataReaderOptions.Schema">
+            <summary>
+            Allows specifying a strongly-typed schema for the CSV data.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvDataWriter">
+            <summary>
+            Writes data from a DbDataReader as delimited values to a TextWriter.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataWriter.WriteAsync(System.Data.Common.DbDataReader,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously writes delimited data.
+            </summary>
+            <param name="reader">The DbDataReader to be written.</param>
+            <param name="cancel">A cancellation token to cancel the asynchronous operation.</param>
+            <returns>A task representing the asynchronous write operation.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataWriter.Write(System.Data.Common.DbDataReader)">
+            <summary>
+            Synchronously writes delimited data.
+            </summary>
+            <param name="reader">The DbDataReader to be written.</param>
+            <returns>A task representing the asynchronous write operation.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataWriter.Create(System.String,Sylvan.Data.Csv.CsvDataWriterOptions)">
+            <summary>
+            Creates a new CsvDataWriter.
+            </summary>
+            <param name="fileName">The path of the file to write.</param>
+            <param name="options">The options used to configure the writer, or null to use the defaults.</param>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataWriter.Create(System.IO.TextWriter,Sylvan.Data.Csv.CsvDataWriterOptions)">
+            <summary>
+            Creates a new CsvDataWriter.
+            </summary>
+            <param name="writer">The TextWriter to receive the delimited data.</param>
+            <param name="options">The options used to configure the writer, or null to use the defaults.</param>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataWriter.Create(System.IO.TextWriter,System.Char[],Sylvan.Data.Csv.CsvDataWriterOptions)">
+            <summary>
+            Creates a new CsvDataWriter.
+            </summary>
+            <param name="writer">The TextWriter to receive the delimited data.</param>
+            <param name="buffer">A buffer to use for internal processing.</param>
+            <param name="options">The options used to configure the writer, or null to use the defaults.</param>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvStringQuoting">
+            <summary>
+            Specifies how strings are quoted
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStringQuoting.Default">
+            <summary>
+            Strings are only quoted when it is required.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStringQuoting.AlwaysQuoteEmpty">
+            <summary>
+            Empty strings are always quoted. This distinguishes them from null.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStringQuoting.AlwaysQuoteNonEmpty">
+            <summary>
+            Non-empty strings are always quoted. This helps prevent confusion with numbers and dates.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStringQuoting.AlwaysQuote">
+            <summary>
+            All strings are always quoted.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvDataWriterOptions">
+            <summary>
+            Options for configuring a CsvWriter.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvDataWriterOptions.#ctor">
+            <summary>
+            Creates a CsvWriterOptions with the default values.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.BinaryEncoding">
+            <summary>
+            Indicates the encoding format to use when writing binary columns.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.WriteHeaders">
+            <summary>
+            Indicates if the header row should be written.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.TrueString">
+            <summary>
+            The string to write for boolean true values. The default is "True".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.FalseString">
+            <summary>
+            The string to write for boolean false values. The default is "False".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.DateTimeFormat">
+            <summary>
+            The format string used when writing DateTime values. The default is \"O\".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.DateTimeOffsetFormat">
+            <summary>
+            The format string used when writing DateTimeOffset values. The default is \"O\".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.DateFormat">
+            <summary>
+            The format string used when writing DateTime values, or DateOnly values on supported frameworks, that have a time component. The default is \"O\".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.TimeSpanFormat">
+            <summary>
+            The format string used when writing TimeSpan values that have to time component. The default is \"c\".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Style">
+            <summary>
+            The style of the CSV file to be written, defaults to <see cref="F:Sylvan.Data.Csv.CsvStyle.Standard"/>.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Delimiter">
+            <summary>
+            The delimiter to use between fields. The default is ','.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.QuoteStrings">
+            <summary>
+            The rules to use when quoting strings, defaults to <see cref="F:Sylvan.Data.Csv.CsvStringQuoting.Default"/>
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.QuoteEmptyStrings">
+            <summary>
+            Empty strings will be written as empty quotes in the CSV.
+            This allows distinguishing empty strings from null.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Quote">
+            <summary>
+            The character to use for quoting fields. The default is '"'.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Escape">
+            <summary>
+            The character to use for escaping in quoted fields fields. The default is '"'.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Comment">
+            <summary>
+            The character used to indicate a comment line. The default is '#'.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.NewLine">
+            <summary>
+            The string to use for line breaks separating records. The default is "\n".
+            Must be one of "\r", "\n", or "\r\n".
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.BufferSize">
+            <summary>
+            The buffer size to use for writing values.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.MaxBufferSize">
+            <summary>
+            The maximum size the internal buffer can grow to.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Buffer">
+            <summary>
+            The buffer to use when writing records.
+            The default is null, in which case the writer will allocate a buffer of BufferSize.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvDataWriterOptions.Culture">
+            <summary>
+            The CultureInfo to use when writing values. The default is the InvariantCulture.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvSchema">
+            <summary>
+            An ICsvSchemaProvider implementation based on an existing schema.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvSchema.Nullable">
+            <summary>
+            Gets a ICsvSchemaProvider that treats empty strings as null.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvSchema.Dynamic">
+            <summary>
+            Gets a ICsvSchemaProvider that treats fields as "dynamic", where
+            the data type can change from row to row.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvSchema.#ctor(System.Collections.Generic.IEnumerable{System.Data.Common.DbColumn})">
+            <summary>
+            Creates a new CsvSchemaProvider.
+            </summary>
+            <param name="schema">An DbColumn schema.</param>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvSchema.#ctor(System.Collections.Generic.IEnumerable{System.Data.Common.DbColumn},System.StringComparer)">
+            <summary>
+            Creates a new CsvSchemaProvider.
+            </summary>
+            <param name="schema">An DbColumn schema.</param>
+            <param name="headerComparer">A StringComparer used to match header names to the provided schema.</param>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvSchema.GetColumn(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvStyle">
+            <summary>
+            The CSV quoting and escaping styles.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStyle.Standard">
+            <summary>
+            Parses using the standard RFC4180 mode.
+            Malformed fields will produce a <see cref="T:Sylvan.Data.Csv.CsvFormatException"/> during calls to <see cref="M:Sylvan.Data.Csv.CsvDataReader.Read"/>.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStyle.Unquoted">
+            <summary>
+            Interprets fields as if they are implicitly quoted. Delimiters and new lines within fields are preceded by an escape character.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStyle.Escaped">
+            <summary>
+            Interprets fields as if they are implicitly quoted. Delimiters and new lines within fields are preceded by an escape character.
+            </summary>
+        </member>
+        <member name="F:Sylvan.Data.Csv.CsvStyle.Lax">
+            <summary>
+            Parses CSV using lax quote handling where incorrectly quoted fields don't produce an error.
+            In this mode a field will be parsed using the <see cref="F:Sylvan.Data.Csv.CsvStyle.Standard"/> mode, and when a (unescaped) closing quote is found, the remainder
+            of the field will be parsed as if it were unquoted.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvFormatException">
+            <summary>
+            The exception that is thrown when CSV data is malformed.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvFormatException.RowNumber">
+            <summary>
+            The row number containing the malformed data.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.CsvFormatException.FieldOrdinal">
+            <summary>
+            The ordinal of the field containing the malformed data.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvConfigurationException">
+            <summary>
+            The exception that is thrown when the configuration options specify invalid options.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvRecordTooLargeException">
+            <summary>
+            The exception that is thrown when a single CSV record is too large to fit in the read buffer.
+            </summary>
+            <remarks>
+            CsvRecordTooLargeException is typically an indication of a incorrectly formatted CSV file.
+            Most CSV files should easily fit the constraints of the default buffer size. It is possible
+            to increase the buffer size for exceptional cases
+            </remarks>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvMissingHeadersException">
+            <summary>
+            The exception that is thrown when reading an empty CSV when headers are expected.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.AmbiguousColumnException">
+            <summary>
+            The exception thrown when trying to get the ordinal for a column
+            name that appears more than once.
+            </summary>
+        </member>
+        <member name="P:Sylvan.Data.Csv.AmbiguousColumnException.Name">
+            <summary>
+            Gets the the ambiguous column name.
+            </summary>
+        </member>
+        <member name="T:Sylvan.Data.Csv.CsvSchemaProvider">
+            <summary>
+            A base implementation of ICsvSchemaProvider.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvSchemaProvider.GetColumn(System.String,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Sylvan.Data.Csv.CsvSchemaProvider.GetFieldCount(Sylvan.Data.Csv.CsvDataReader)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Sylvan.Data.Csv.ICsvSchemaProvider">
+            <summary>
+            Provides the ability to specify a schema for a CsvDataReader.
+            </summary>
+        </member>
+        <member name="M:Sylvan.Data.Csv.ICsvSchemaProvider.GetColumn(System.String,System.Int32)">
+            <summary>
+            Gets the schema for a column with the given name and/or ordinal.
+            </summary>
+            <param name="name">The name of the column, or null if the data contains no headers.</param>
+            <param name="ordinal">The zero-based ordinal of the column.</param>
+            <returns>A DbColumn for the given column, or null to use the default.</returns>
+        </member>
+        <member name="M:Sylvan.Data.Csv.ICsvSchemaProvider.GetFieldCount(Sylvan.Data.Csv.CsvDataReader)">
+            <summary>
+            Gets the number of fields in the schema.
+            </summary>
+            <param name="reader">The data reader being initialized.</param>
+            <returns>The number of fields.</returns>
+        </member>
+        <member name="T:Sylvan.IsoDate">
+            <summary>
+            Provides ISO 8601 date parsing and formatting.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryParse(System.ReadOnlySpan{System.Char},System.DateTime@)">
+            <summary>
+            Parse the given <paramref name="source"/> as extended ISO 8601 format.
+            </summary>
+            <param name="source">The source to parse.</param>
+            <param name="value">The parsed <see cref="T:System.DateTime"/> if successful.</param>
+            <returns>"true" if successfully parsed.</returns>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryParse(System.ReadOnlySpan{System.Char},System.DateTimeOffset@)">
+            <summary>
+            Parse the given <paramref name="source"/> as extended ISO 8601 format.
+            </summary>
+            <param name="source">The source to parse.</param>
+            <param name="value">The parsed <see cref="T:System.DateTimeOffset"/> if successful.</param>
+            <returns>"true" if successfully parsed.</returns>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryParseDateTimeOffset(System.ReadOnlySpan{System.Char},Sylvan.IsoDate.DateTimeParseData@)">
+             <summary>
+             ISO 8601 date time parser (ISO 8601-1:2019).
+             </summary>
+             <param name="source">The date/time to parse in UTF-8 format.</param>
+             <param name="parseData">The parsed <see cref="T:Sylvan.IsoDate.DateTimeParseData"/> for the given <paramref name="source"/>.</param>
+             <remarks>
+             Supports extended calendar date (5.2.2.1) and complete (5.4.2.1) calendar date/time of day
+             representations with optional specification of seconds and fractional seconds.
+            
+             Times can be explicitly specified as UTC ("Z" - 5.3.3) or offsets from UTC ("+/-hh:mm" 5.3.4.2).
+             If unspecified they are considered to be local per spec.
+            
+             Examples: (TZD is either "Z" or hh:mm offset from UTC)
+            
+              YYYY-MM-DD               (eg 1997-07-16)
+              YYYY-MM-DDThh:mm         (eg 1997-07-16T19:20)
+              YYYY-MM-DDThh:mm:ss      (eg 1997-07-16T19:20:30)
+              YYYY-MM-DDThh:mm:ss.s    (eg 1997-07-16T19:20:30.45)
+              YYYY-MM-DDThh:mmTZD      (eg 1997-07-16T19:20+01:00)
+              YYYY-MM-DDThh:mm:ssTZD   (eg 1997-07-16T19:20:3001:00)
+              YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45Z)
+            
+             Generally speaking we always require the "extended" option when one exists (3.1.3.5).
+             The extended variants have separator characters between components ('-', ':', '.', etc.).
+             Spaces are not permitted.
+             </remarks>
+             <returns>"true" if successfully parsed.</returns>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryCreateDateTimeOffset(System.DateTime,Sylvan.IsoDate.DateTimeParseData@,System.DateTimeOffset@)">
+            <summary>
+            Overflow-safe DateTimeOffset factory.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryCreateDateTimeOffset(Sylvan.IsoDate.DateTimeParseData@,System.DateTimeOffset@)">
+            <summary>
+            Overflow-safe DateTimeOffset factory.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryCreateDateTimeOffsetInterpretingDataAsLocalTime(Sylvan.IsoDate.DateTimeParseData,System.DateTimeOffset@)">
+            <summary>
+            Overflow-safe DateTimeOffset/Local time conversion factory.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.ToStringIso(System.DateTime)">
+            <summary>
+            Gets a DateTime value as an ISO 8601 formatted string.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryFormatIso(System.DateTime,System.Span{System.Char},System.Int32@)">
+            <summary>
+            Tries to write the Datetime value as an ISO 8601 formatted string.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.ToStringIso(System.DateTimeOffset)">
+            <summary>
+            Gets the DateTimeOffset as an ISO 8601 string.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.TryFormatIso(System.DateTimeOffset,System.Span{System.Char},System.Int32@)">
+            <summary>
+            Tries to write a DateTimeOffSet as an ISO 8601 formatted string.
+            </summary>
+        </member>
+        <member name="M:Sylvan.IsoDate.WriteFourDigits(System.UInt32,System.Span{System.Char},System.Int32)">
+            <summary>
+            Writes a value [ 0000 .. 9999 ] to the buffer starting at the specified offset.
+            This method performs best when the starting index is a constant literal.
+            </summary>
+        </member>
+    </members>
+</doc>
