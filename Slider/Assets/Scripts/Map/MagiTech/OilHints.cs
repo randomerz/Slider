@@ -38,7 +38,7 @@ public class OilHints : MonoBehaviour, IDialogueTableProvider
 
     private void Start()
     {
-        SaveSystem.Current.SetString(OIL_HINT_SAVE_STRING, this.GetLocalized(OilDialogueCode.HintError).translated);
+        SaveSystem.Current.SetString(OIL_HINT_SAVE_STRING, this.GetLocalized(OilDialogueCode.HintError).TranslatedFallbackToOriginal);
     }
 
     private void Update()
@@ -51,23 +51,23 @@ public class OilHints : MonoBehaviour, IDialogueTableProvider
         string hint;
         if (!PlayerInventory.Contains("Oil #1", Area.MagiTech))
         {
-            hint = this.GetLocalized(OilDialogueCode.HintError).translated;
+            hint = this.GetLocalized(OilDialogueCode.HintError).TranslatedFallbackToOriginal;
         }
         else if (!PlayerInventory.Contains("Oil #2", Area.MagiTech))
         {
-            hint = this.GetLocalized(OilDialogueCode.HintNumber2).translated;
+            hint = this.GetLocalized(OilDialogueCode.HintNumber2).TranslatedFallbackToOriginal;
         }
         else if (!PlayerInventory.Contains("Oil #3", Area.MagiTech))
         {
-            hint = this.GetLocalized(OilDialogueCode.HintNumber3).translated;
+            hint = this.GetLocalized(OilDialogueCode.HintNumber3).TranslatedFallbackToOriginal;
         }
         else if (!PlayerInventory.Contains("Oil #4", Area.MagiTech))
         {
-            hint = this.GetLocalized(OilDialogueCode.HintNumber4).translated;
+            hint = this.GetLocalized(OilDialogueCode.HintNumber4).TranslatedFallbackToOriginal;
         }
         else
         {
-            hint = this.GetLocalized(OilDialogueCode.HintError).translated;
+            hint = this.GetLocalized(OilDialogueCode.HintError).TranslatedFallbackToOriginal;
         }
         SaveSystem.Current.SetString(OIL_HINT_SAVE_STRING, hint);
     }

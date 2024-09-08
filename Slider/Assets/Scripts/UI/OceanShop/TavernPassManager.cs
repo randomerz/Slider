@@ -105,6 +105,12 @@ public class TavernPassManager : MonoBehaviour, ISavable
             InitializeProgressBar();
         }
 
+        // Start is too early!
+        foreach (TavernPassButton b in tavernPassButtons)
+        {
+            b.rewardName = shopManager.shopDialogueManager.GetLocalizedRewardName(b.rewardIndex);
+        }
+
         if (!tavernPassButtons[0].isComplete)
         {
             ShopManager.CanClosePanel = false;

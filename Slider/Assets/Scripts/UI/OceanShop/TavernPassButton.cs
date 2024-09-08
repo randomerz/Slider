@@ -1,13 +1,18 @@
 using System.Collections;
+using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.UI;
 
 // TODO: Localize
-public class TavernPassButton : MonoBehaviour 
+public class TavernPassButton : MonoBehaviour
 {
     public bool isComplete;
 
+    // Set by TavernPassManager
     public string rewardName;
+    // Set in inspector
+    public int rewardIndex;
     public Image rewardImage;
     public Image image;
 
