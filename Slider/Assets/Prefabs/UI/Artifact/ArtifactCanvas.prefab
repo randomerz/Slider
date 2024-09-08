@@ -998,6 +998,7 @@ GameObject:
   - component: {fileID: 2620790810742040728}
   - component: {fileID: 2620790810742040729}
   - component: {fileID: 4884099563033190283}
+  - component: {fileID: 8255937526474285478}
   m_Layer: 5
   m_Name: ArtifactCanvas
   m_TagString: Untagged
@@ -1109,6 +1110,18 @@ MonoBehaviour:
   artifactAnimator: {fileID: 3570373044967959373}
   artifactWorldMap: {fileID: 8186015413363989533}
   hasArtifact: 1
+--- !u!114 &8255937526474285478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2620790810742040741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40ccac8adb15d34d8009e04d2c9fd85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2620790811287915178
 GameObject:
   m_ObjectHideFlags: 0

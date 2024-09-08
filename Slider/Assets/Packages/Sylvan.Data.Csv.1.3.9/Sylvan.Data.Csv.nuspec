@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Sylvan.Data.Csv</id>
+    <version>1.3.9</version>
+    <authors>Mark Pflug</authors>
+    <license type="file">license.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <icon>Sylvan.png</icon>
+    <readme>readme.md</readme>
+    <projectUrl>https://github.com/MarkPflug/Sylvan</projectUrl>
+    <iconUrl>https://markpflug.github.io/Sylvan.png</iconUrl>
+    <description>A .NET library for reading and writing delimited CSV data.</description>
+    <copyright>© 2024 Mark Pflug</copyright>
+    <tags>csv delimited data datareader datawriter simd .NET Sylvan</tags>
+    <repository type="git" url="https://github.com/markpflug/Sylvan" commit="dd9718a55abf52c2ec6adbe1985d3e05fc96fbf8" />
+    <dependencies>
+      <group targetFramework="net6.0" />
+      <group targetFramework=".NETStandard2.0" />
+      <group targetFramework=".NETStandard2.1" />
+    </dependencies>
+  </metadata>
+</package>

@@ -62,9 +62,29 @@ public class GameBuilder
         {
             return;
         }
+
+        if (!EditorUtility.DisplayDialog(
+                "Confirm",
+                "In order to select the proper set of localization CSV files to include for the build, the "
+                + "localization serialization process must be run. This will override exising CSV files in the"
+                + "project's StreamingAssets folder",
+                "Continue", "Abort"))
+        {
+            return;
+        }
+
+        string referenceLocalizationPath =
+                EditorUtility.OpenFolderPanel(
+                    "Reference localization", 
+                    EditorPrefs.GetString(LocalizationSkeletonGenerator.referenceLocalizationPathPreference, null)
+                    , null);
+        
+        EditorPrefs.SetString(LocalizationSkeletonGenerator.referenceLocalizationPathPreference, referenceLocalizationPath);
         
         var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
-        var copyFullyUpdatedCsvBackToProj = LocalizationSkeletonGenerator.GenerateSkeleton(config, isDev: !isRelease);
+        var copyFullyUpdatedCsvBackToProj = LocalizationSkeletonGenerator.GenerateSkeleton(
+            config, isDev: !isRelease,
+            referenceRoot: referenceLocalizationPath);
 
         string filename = GetProjectName();
 
