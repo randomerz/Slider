@@ -540,7 +540,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         return this.GetLocalized(
             ShopDialogueCode.TavernPassRewards, 
             index
-        ).translated;
+        ).TranslatedFallbackToOriginal;
     }
 
 

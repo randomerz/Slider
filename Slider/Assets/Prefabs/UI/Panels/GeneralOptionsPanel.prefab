@@ -165,6 +165,7 @@ MonoBehaviour:
   - {fileID: 8439142575822471990}
   - {fileID: 3665229635888079946}
   subSelectableSets: []
+  supressLength0Warning: 0
 --- !u!1 &1584417467485821243
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,9 +717,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1639343961439156847, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_text
-      value: 'Setting will be applied once you restart or return to main menu...
-
-'
+      value: Setting will be applied once you restart or return to main menu...
       objectReference: {fileID: 0}
     - target: {fileID: 1639343961439156847, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_fontSize

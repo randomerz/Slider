@@ -176,7 +176,7 @@ public class Printer : MonoBehaviour, IDialogueTableProvider
         if (!floor && !walls && !wires)
         {
             // first message
-            operatorMessage = this.GetLocalized(PrinterDialogueCode.RequirementsAll).translated;
+            operatorMessage = this.GetLocalized(PrinterDialogueCode.RequirementsAll).TranslatedFallbackToOriginal;
         }
         else if (floor && walls && wires)
         {
@@ -188,20 +188,20 @@ public class Printer : MonoBehaviour, IDialogueTableProvider
             List<string> mlist = new List<string>();
             if (!floor)
             {
-                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsBase).translated);
-                operatorHint = this.GetLocalized(PrinterDialogueCode.HintBase).translated;
+                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsBase).TranslatedFallbackToOriginal);
+                operatorHint = this.GetLocalized(PrinterDialogueCode.HintBase).TranslatedFallbackToOriginal;
             }
             if (!walls)
             {
-                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsWalls).translated);
-                operatorHint = this.GetLocalized(PrinterDialogueCode.HintWalls).translated;
+                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsWalls).TranslatedFallbackToOriginal);
+                operatorHint = this.GetLocalized(PrinterDialogueCode.HintWalls).TranslatedFallbackToOriginal;
             }
             if (!wires)
             {
-                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsWires).translated);
-                operatorHint = this.GetLocalized(PrinterDialogueCode.HintWires).translated;
+                mlist.Add(this.GetLocalized(PrinterDialogueCode.RequirementsWires).TranslatedFallbackToOriginal);
+                operatorHint = this.GetLocalized(PrinterDialogueCode.HintWires).TranslatedFallbackToOriginal;
             }
-            String reqruirementsStart = this.GetLocalized(PrinterDialogueCode.RequirementsStart).translated;
+            String reqruirementsStart = this.GetLocalized(PrinterDialogueCode.RequirementsStart).TranslatedFallbackToOriginal;
             operatorMessage = $"{reqruirementsStart}{string.Join(", ", mlist)}!!!";
         }
         SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
