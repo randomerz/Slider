@@ -350,9 +350,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0h32
-
-'
+  m_text: 0h32
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
   m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
@@ -977,15 +975,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   savePanelManager: {fileID: 0}
+  buttonBackgroundImage: {fileID: 0}
+  lightGrayBackgroundSprite: {fileID: -313926302, guid: a9f583b3f5eb0214380b68dbd4344603, type: 3}
+  darkGrayBackgroundSprite: {fileID: -717014505, guid: a9f583b3f5eb0214380b68dbd4344603, type: 3}
   profileNameText: {fileID: 4878303943723569546}
   completionText: {fileID: 4218468602550359317}
   timeText: {fileID: 6735744220110793356}
   catSticker: {fileID: 8971869277420901850}
   breadge: {fileID: 6158101591939698357}
   profileIndex: -1
-  buttonBackgroundImage: {fileID: 0}
-  lightGrayBackgroundSprite: {fileID: -313926302, guid: a9f583b3f5eb0214380b68dbd4344603, type: 3}
-  darkGrayBackgroundSprite: {fileID: -717014505, guid: a9f583b3f5eb0214380b68dbd4344603, type: 3}
 --- !u!224 &4878303943723569545 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}

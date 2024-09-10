@@ -163,6 +163,7 @@ MonoBehaviour:
   - {fileID: 8335741643519427395}
   - {fileID: 5114431367375051314}
   subSelectableSets: []
+  supressLength0Warning: 0
 --- !u!1 &1584417467485821243
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,9 +596,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1639343961439156847, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_text
-      value: 'Auto Move
-
-'
+      value: Auto Move
       objectReference: {fileID: 0}
     - target: {fileID: 2653679040040304340, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Pivot.x
