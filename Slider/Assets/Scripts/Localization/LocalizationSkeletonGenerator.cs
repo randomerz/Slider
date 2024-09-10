@@ -276,6 +276,23 @@ public class LocalizationSkeletonGenerator : EditorWindow
            projectConfiguration.InitialLocales.ToDictionary((config) => config.name, _ => true) 
            : GetLocaleValidityMap(projectConfiguration);
        
+       string tempDirectory = Path.Combine(Path.GetTempPath(), "__slider_localization_external_save_dir__");
+       if (Directory.Exists(tempDirectory)) {
+           Directory.Delete(tempDirectory, true);
+       }
+       Directory.CreateDirectory(tempDirectory);
+
+       if (root == referenceRoot)
+       {
+           var resolvedReferenceRoot = LocalizationFile.LocalizationRootPath(root);
+           string tempDirectory2 = Path.Combine(Path.GetTempPath(), "__slider_localization_external_ref_dir__");
+           if (Directory.Exists(tempDirectory2)) {
+               Directory.Delete(tempDirectory2, true);
+           }
+           CopyDirectory(resolvedReferenceRoot, tempDirectory2, true);
+           referenceRoot = tempDirectory2;
+       }
+       
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
        var shapes = AssetDatabase.FindAssets("t:Shape")
@@ -294,12 +311,6 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            globalStrings.Add(SpecificTypeHelpers.AreaToDisplayNamePath(kv.Key), kv.Value);
        }
-
-       string tempDirectory = Path.Combine(Path.GetTempPath(), "__slider_localization_external_save_dir__");
-       if (Directory.Exists(tempDirectory)) {
-           Directory.Delete(tempDirectory, true);
-       }
-       Directory.CreateDirectory(tempDirectory);
 
        if (root == null)
        {

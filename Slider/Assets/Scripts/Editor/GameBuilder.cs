@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEditor.Build.Reporting;
 using System;
 using System.IO;
-using Localization;
 using NUnit.Framework;
 
 /// <summary>
@@ -63,13 +62,11 @@ public class GameBuilder
         {
             return;
         }
-
-        string referenceLocalizationPath = LocalizationFile.LocalizationRootPath();
         
         var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
         var copyFullyUpdatedCsvBackToProj = LocalizationSkeletonGenerator.GenerateSkeleton(
             config, isDev: !isRelease,
-            referenceRoot: referenceLocalizationPath);
+            referenceRoot: null);
 
         string filename = GetProjectName();
 
