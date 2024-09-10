@@ -562,6 +562,16 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         private Dictionary<Config, int> configParsingCacheInt = new();
         private Dictionary<Config, float> configParsingCacheFloat = new();
+
+        internal string GetConfigValue(Config key)
+        {
+            if (configs.TryGetValue(key, out LocalizationConfig valStr))
+            {
+                return valStr.Value;
+            }
+
+            return defaultConfigs[key].Value;
+        }
         
         internal bool TryParseConfigValue(Config key, out int value)
         {
