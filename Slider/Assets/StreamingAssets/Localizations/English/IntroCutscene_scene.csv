@@ -33,8 +33,8 @@ be corrupted, these rules may be helpful for debugging purposes...
   - If a separator, \r, or \n is encountered while in an enclosed context,
     it will be preserved
 ",
-"IsValid"," ","NonDialogueFontScale"," ","DialogueFontScale"," ",
-"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size."," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size.","","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.","","The author(s) of this file, will appear in credits","",
 "Path","Orig","Translation",
 "Canvas/SkipDialogue","Press any key to skip","Press any key to skip",
 "Canvas/Texts/Text (1)","In ages past, man held the power to remake the world.","In ages past, man held the power to remake the world.",

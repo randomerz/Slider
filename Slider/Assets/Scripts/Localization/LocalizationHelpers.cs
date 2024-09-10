@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
-using System.Text;
 using TMPro;
+using Sylvan.Data.Csv;
 using UnityEngine.SceneManagement;
 
 namespace Localization
@@ -302,7 +302,7 @@ namespace Localization
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
         
         public static string DefaultLocale => "English";
-        public static string TestingLanguage => "Piratese";
+        public static string TestingLanguage => "Debug";
         
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
@@ -354,7 +354,8 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             IsValid,
             NonDialogueFontScale,
-            DialogueFontScale
+            DialogueFontScale,
+            Author
         }
 
         public static readonly Dictionary<Config, string> ConfigToName = 
@@ -376,6 +377,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                 "1")
             },
             {
+                Config.Author, new LocalizationConfig(
+                    "The author(s) of this file, will appear in credits", "Anonymous")
+            },
+            {
                 Config.NonDialogueFontScale, new LocalizationConfig(
                 "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size.","1.0")
             },
@@ -392,7 +397,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             // }
         };
 
-        internal SortedDictionary<Config, LocalizationConfig> configs;
+        private SortedDictionary<Config, LocalizationConfig> configs;
         internal SortedDictionary<string, ParsedLocalizable> records;
 
         public string LocaleName => locale;
@@ -400,14 +405,14 @@ be corrupted, these rules may be helpful for debugging purposes...
         public bool IsDefaultLocale => locale.Equals(DefaultLocale);
         public static bool SupportsPixelFont(string locale) => locale.Equals(DefaultLocale); // TODO: change when pixel font adds Spanish supports or something...
         
-        enum ParserState
-        {
-            Empty,
-            HasPath,
-            HasOriginal,
-            HasTranslation,
-            Inval
-        }
+        // enum ParserState
+        // {
+        //     Empty,
+        //     HasPath,
+        //     HasOriginal,
+        //     HasTranslation,
+        //     Inval
+        // }
 
         public enum ParserError
         {
@@ -443,7 +448,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
 
             using var file = File.OpenRead(filePath);
-            LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
+            LocalizationFile parsed = new(locale, filePath, localeConfig);
             
             #if DEVELOPMENT_BUILD || UNITY_EDITOR
             #else
@@ -455,22 +460,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             return (parsed, ParserError.NoError);
         }
         
-        private LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)
+        private LocalizationFile(string locale, string filePath, LocalizationFile localeConfig = null)
         {
             this.locale = locale;
             
             records = new();
-
-            int currentRow = 0; // first row is row 0
-            int currentCol = 0;
-
-            ParserState cellState = ParserState.Empty;
-
-            string path = null;
-            string orig = null;
-            string trans = null;
-
-            string property = null;
 
             configs = new();
             foreach (var (k, v) in (localeConfig != null ? localeConfig.configs : defaultConfigs))
@@ -478,240 +472,92 @@ be corrupted, these rules may be helpful for debugging purposes...
                 configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
             }
 
-            while (true)
+            var opts = new CsvDataReaderOptions
             {
-                var (content, isNewLineStart, isEof) = ParseCell(reader);
-                
-                if (isNewLineStart)
+                HasHeaders = false
+            };
+            
+            using var reader = CsvDataReader.Create(filePath, opts);
+            for (var currentRow = 0; reader.Read(); currentRow++)
+            {
+                if (currentRow < 4)
                 {
-                    currentRow++;
-                    // Debug.Log($"New line {currentRow} starts with {content}");
-                    currentCol = 0;
-                }
-                else
-                {
-                    currentCol++;
-                }
-
-                if (!isEof && currentRow < 4)
-                {
-                    // parameter row
+                    // second row of the file are property/value pairs
                     if (currentRow == 1)
                     {
-                        if (currentCol % 2 == 0)
-                        {
-                            property = content.Trim();
-                        }
-                        else if (property != null)
-                        {
-                            if (ConfigFromName.TryGetValue(property, out var propertyEnum))
-                            {
-                                if (!string.IsNullOrWhiteSpace(content))
-                                {
-                                    configs[propertyEnum] = configs[propertyEnum].Override(content);
-                                    // Debug.Log($"[Localization] Parsed localization config: {property} = {content}");
-                                }
-                            }
-                            else
-                            {
-                                Debug.LogError($"[Localization] Unrecognized localization config {property} with value {content}");
-                            }
-                            
-                            // reset property
-                            property = null;
-                        }
+                        ParsePropertiesRow(reader);
                     }
-                    
+
                     continue;
                 }
-
-                // on new line, commit the last entry
-                if (isNewLineStart || isEof)
+                    
+                if (reader.RowFieldCount < 3)
                 {
-                    if (path != null && cellState == ParserState.HasTranslation) // this should always be true but JetBrains kept giving warning, so this check is added
+                    switch (reader.RowFieldCount)
                     {
-                        var newRecord = ParsedLocalizable.ParsePath(path, trans);
-                        if (newRecord == null)
-                        {
-                            Debug.LogError($"[Localization] Null localizable parsed {path}");
-                        }
-                        else
-                        {
-                            records.Add(path, newRecord);
-                        }
-                    }
-                    else
-                    {
-                        switch (cellState)
-                        {
-                            case ParserState.HasPath:
-                                Debug.LogError($"[Localization] Inval: only path {path}");
-                                break;
-                            case ParserState.HasOriginal:
-                                Debug.LogError($"[Localization] Inval: Only path orig {path} : {orig}");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    cellState = ParserState.Empty;
-                }
-
-                if (isEof)
-                {
-                    break;
-                }
-
-                switch (cellState)
-                {
-                    case ParserState.Empty:
-                        if (string.IsNullOrWhiteSpace(content))
-                        {
-                            cellState = ParserState.Inval;
+                        case 1:
+                            Debug.LogError($"[Localization] Inval: only path {reader.GetString(0)}");
                             break;
-                        }
-
-                        path = content;
-                        cellState = ParserState.HasPath;
-                        break;
-                    case ParserState.HasPath:
-                        cellState = ParserState.HasOriginal;
-                        orig = content;
-                        break;
-                    case ParserState.HasOriginal:
-                        if (string.IsNullOrWhiteSpace(content))
-                        {
-                            cellState = ParserState.Inval;
+                        case 2:
+                            Debug.LogError($"[Localization] Inval: Only path orig {reader.GetString(0)} : {reader.GetString(1)}");
                             break;
-                        }
-
-                        trans = content;
-                        cellState = ParserState.HasTranslation;
-                        break;
-                    case ParserState.HasTranslation:
-                        break;
-                    case ParserState.Inval:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        default: break;
+                    }
+                }
+                else
+                {
+                    ParseRecordRow(reader);
                 }
             }
-            
-            reader.Close();
         }
         
-        private (string content, bool isNewLineStart, bool isEOF) ParseCell(StreamReader reader)
+        
+        private void ParsePropertyValue(string propertyName, string value)
         {
-            bool isNewLineStart = false;
-            StringBuilder builder = new();
-
-            bool isEnclosed = false;
-
-            // read initial \r \n sequence before a cell begins
-            // then, read character right after it only if it is a quote (in which case it is interpreted as an opening
-            // quote of an enclosed cell)
-            // if the reader starts at EOF, or encounters EOF after a string of \r and \n, then the file is considered
-            // terminated
-            while (true)
+            // property value
+            if (ConfigFromName.TryGetValue(propertyName, out var propertyEnum))
             {
-                if (reader.EndOfStream)
+                if (!string.IsNullOrWhiteSpace(value))
                 {
-                    return (null, isNewLineStart, true);
+                    configs[propertyEnum] = configs[propertyEnum].Override(value);
+                    // Debug.Log($"[Localization] Parsed localization config: {property} = {content}");
                 }
+            }
+            else
+            {
+                Debug.LogError($"[Localization] Unrecognized localization config {propertyName} with value {value}");
+            }
+        }
 
-                char c = (char)reader.Peek();
-
-                if (c is '\r' or '\n')
+        private void ParsePropertiesRow(CsvDataReader reader)
+        {
+            var propertyName = "";
+            for (var i = 0; i < reader.RowFieldCount; i++)
+            {
+                var cell = reader.GetString(i);
+                if (i % 2 == 0)
                 {
-                    isNewLineStart = true;
-                    reader.Read();
+                    propertyName = cell;
                 }
                 else
                 {
-                    if (c == '"')
-                    {
-                        isEnclosed = true;
-                        reader.Read();
-                    }
-
-                    break;
+                    ParsePropertyValue(propertyName, cell);
                 }
             }
+        }
 
-            bool isLastCharacterEscapingQuote = false;
-            while (true)
+        private void ParseRecordRow(CsvDataReader reader)
+        {
+            var path = reader.GetString(0);
+            var newRecord = ParsedLocalizable.ParsePath(path, reader.GetString(2));
+            if (newRecord == null)
             {
-                char c = (char)reader.Peek();
-                bool isThisCharacterEscapingQuote = false;
-
-                if (c == '\r' || c == '\n' || c == csvSeparator)
-                {
-                    if (!isEnclosed)
-                    {
-                        // only read in the character if it is a separator. if it is \r or \n, leave the character for
-                        // the next parser run. This is useful when there is only one such break. If it is read in
-                        // instead of preserved, the next parser run will start at a non \r or \n character, and
-                        // mistake the cell as on the same row as this cell
-                        if (c == csvSeparator)
-                        {
-                            reader.Read();
-                        }
-
-                        break;
-                    }
-                    else
-                    {
-                        reader.Read();
-                        builder.Append(c);
-                    }
-                }
-                else if (c == '"')
-                {
-                    reader.Read(); // always read in quotes, this leaves Peek available for examining what comes after!
-                    char nextAfterQuote = (char)reader.Peek();
-
-                    if (isEnclosed)
-                    {
-                        // if this quote is escaped, read it and don't consider it as an escaping quote
-                        if (isLastCharacterEscapingQuote)
-                        {
-                            isThisCharacterEscapingQuote = false;
-                            builder.Append(c);
-                        }
-                        // if a non-escaped quote is followed by \r, \n, or separator, then it is considered the closing
-                        // quote of this enclosed context
-                        else if (nextAfterQuote == '\r' || nextAfterQuote == '\n' || nextAfterQuote == csvSeparator)
-                        {
-                            // only read the next character in if it is a separator, same reasoning as above
-                            if (nextAfterQuote == csvSeparator)
-                            {
-                                reader.Read();
-                            }
-                            break;
-                        }
-                        // otherwise, consider this quote as an escaping quote for the next quote
-                        else
-                        {
-                            isThisCharacterEscapingQuote = true;
-                        }
-                    }
-                    else
-                    {
-                        // Having a quote in a non-enclosed cell
-                        builder.Append(c);
-                    }
-                }
-                else
-                {
-                    builder.Append(c);
-                    reader.Read();
-                }
-
-                isLastCharacterEscapingQuote = isThisCharacterEscapingQuote;
+                Debug.LogError($"[Localization] Null localizable parsed {path}");
             }
-
-            return (builder.ToString(), isNewLineStart, false);
+            else
+            {
+                records.Add(path, newRecord);
+            }
         }
         
         private Dictionary<Config, int> configParsingCacheInt = new();
@@ -870,7 +716,9 @@ be corrupted, these rules may be helpful for debugging purposes...
                         
                     .GetComponentsInChildren(type, includeInactive: true)
                     
-                    .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null)
+                    .Where(c => 
+                        c.GetComponent<ExcludeFromLocalization>() == null 
+                        && c.GetComponentInParent<ExcludeFromLocalization>(includeInactive: true) == null)
                     
                     // Do not re-select something that is in a localization injector (i.e. a prefab)
                     // this is done because those objects will be selected when localizing that prefab itself
@@ -1216,40 +1064,49 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(ArtifactInventoryCollectible), SerializeCollectibleUI },
         };
         
-        public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile, Func<string> autoPadTranslated = null)
+        public void Serialize(
+            bool serializeConfigurationDefaults, 
+            TextWriter tw, 
+            LocalizationFile referenceFile, 
+            Func<string> autoPadTranslated = null)
         {
-            StringBuilder builder = new StringBuilder();
+            // AT: currently not using Sylvan CSV Writer bc their interface is for rigid db dumping instead of custom (and variable) schema writing
+            
+            var sep = LocalizationFile.csvSeparator;
 
-            char sep = LocalizationFile.csvSeparator;
+            void SerializeCells(params string[] cells)
+                => tw.Write(
+                    string.Join(
+                        string.Empty,
+                        cells.Select(c => '"' + c.Replace("\"", "\"\"") + '"' + LocalizationFile.csvSeparator))
+                    );
             
             // file format explainer
-            builder.Append($"\"Slider.v{Application.version}\"{sep}\"Unity.v{Application.unityVersion}\"{sep}\"(file format explainer)->\"{sep}\"{LocalizationFile.explainer.Replace("\"", "\"\"")}\"{sep}\r\n");
+            SerializeCells(
+                $"Slider.v{Application.version}",
+                $"Unity.v{Application.unityVersion}",
+                "(file format explainer)->",
+                LocalizationFile.explainer);
+            tw.WriteLine();
             
             // properties and values
             foreach (var (name, defaults) in configs)
             {
                 var nameStr = LocalizationFile.ConfigToName[name];
-                
-                if (serializeConfigurationDefaults)
-                {
-                    builder.Append($"\"{nameStr.Replace("\"", "\"\"")}\"{sep}\"{defaults.Value.Replace("\"", "\"\"")}\"{sep}");
-                }
-                else
-                {
-                    builder.Append($"\"{nameStr.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
-                }
+                SerializeCells(nameStr, serializeConfigurationDefaults ? defaults.Value : "");
             }
-            builder.Append("\r\n");
+            tw.WriteLine();
             
             // property comments
             foreach (var (name, defaults) in configs)
             {
-                builder.Append($"\"{defaults.Comment.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
+                SerializeCells(defaults.Comment, "");
             }
-            builder.Append("\r\n");
+            tw.WriteLine();
             
             // headers 
-            builder.Append($"\"Path\"{sep}\"Orig\"{sep}\"Translation\"{sep}\r\n");
+            SerializeCells("Path", "Orig", "Translation");
+            tw.WriteLine();
 
             SortedDictionary<string, string> data = SerializeTrackedLocalizables();
 
@@ -1258,24 +1115,21 @@ be corrupted, these rules may be helpful for debugging purposes...
                 data.Add(kv.Key, kv.Value);
             }
             
-            foreach (var (_path, _orig) in data)
+            foreach (var (path, orig) in data)
             {
                 // use double double-quotes to escape double-quotes
-
-                string path = _path.Replace("\"", "\"\"");
-                string orig = _orig.Replace("\"", "\"\"");
 
                 string translated = orig;
                 
                 if (referenceFile != null)
                 {
-                    if (referenceFile.records.TryGetValue(_path, out var referenceTranslation))
+                    if (referenceFile.records.TryGetValue(path, out var referenceTranslation))
                     {
                         translated = referenceTranslation.Translated;
                     }
                     else
                     {
-                        Debug.LogWarning($"[Localization] No existing translation at {_path}");
+                        Debug.LogWarning($"[Localization] No existing translation at {path}");
                     }
                 }
 
@@ -1285,10 +1139,9 @@ be corrupted, these rules may be helpful for debugging purposes...
                     translated = pad + translated + pad;
                 }
                 
-                builder.Append($"\"{path}\"{sep}\"{orig}\"{sep}\"{translated}\"{sep}\r\n"); // for skeleton file, just use original as the translation
+                SerializeCells(path, orig, translated); // for skeleton file, just use original as the translation
+                tw.WriteLine();
             }
-
-            return builder.ToString();
         }
         
         private SortedDictionary<string, string> SerializeTrackedLocalizables()

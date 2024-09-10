@@ -164,7 +164,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.randomerz-games.Slider
+    Standalone: com.boomo.Slider
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -800,7 +800,8 @@ PlayerSettings:
     WebGL: STEAMWORKS_NET
   additionalCompilerArguments: {}
   platformArchitecture: {}
-  scriptingBackend: {}
+  scriptingBackend:
+    Standalone: 0
   il2cppCompilerConfiguration: {}
   il2cppCodeGeneration: {}
   managedStrippingLevel:

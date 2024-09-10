@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3080141659926160577}
   - component: {fileID: 3630733914113186977}
   - component: {fileID: 8406170763141297277}
+  - component: {fileID: 3947427220139416211}
   m_Layer: 5
   m_Name: Number
   m_TagString: Untagged
@@ -170,6 +171,18 @@ MonoBehaviour:
   wavePeriod: 1
   typeLoopSpeed: 0.05
   ignoreColor: 0
+--- !u!114 &3947427220139416211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061887543161893474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2003804469871488209
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,6 +394,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isComplete: 0
   rewardName: Nothing!
+  rewardIndex: 0
   rewardImage: {fileID: 6117189401826818893}
   image: {fileID: 2867930191889083186}
   defaultSprite: {fileID: -2033572852, guid: 39e0f921dba1ccc4e97c36fca985e772, type: 3}
