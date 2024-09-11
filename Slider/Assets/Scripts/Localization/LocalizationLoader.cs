@@ -69,6 +69,13 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     }
     
     #endregion
+
+    /// <summary>
+    /// Null on English, for everything else defaults to 'Anonymous' if not specified.
+    /// </summary>
+    /// <returns></returns>
+    private static string GetCreditInformation() =>
+        CurrentLocale == LocalizationFile.DefaultLocale ? null : _instance.localeGlobalFile.GetConfigValue(LocalizationFile.Config.Author);
     
     private static (LocalizationFile global, LocalizationFile context) LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath, LocalizationFile existingGlobal = null)
     {
