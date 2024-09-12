@@ -70,7 +70,8 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
 
     private bool AreResetConditionsMet()
     {
-        return !(AreAnyAlliesAlive() || numSliderCollectiblesActive > 0 || numUnspawnedAlliesActive > 0);
+        bool didWin = SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING);
+        return !didWin && !(AreAnyAlliesAlive() || numSliderCollectiblesActive > 0 || numUnspawnedAlliesActive > 0);
     }
 
     private bool AreAnyAlliesAlive()
