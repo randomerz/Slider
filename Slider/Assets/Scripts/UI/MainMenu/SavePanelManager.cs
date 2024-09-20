@@ -4,7 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
-public class SavePanelManager : MonoBehaviour
+public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
 {
     public enum SaveMode 
     {
@@ -19,9 +19,23 @@ public class SavePanelManager : MonoBehaviour
     }
     public static System.EventHandler<SaveModeArgs> OnSaveModeChanged;
 
-    private const string NORMAL_MODE_TEXT = "";
-    private const string DELETE_MODE_TEXT = "Delete file?";
-    private const string BACKUP_MODE_TEXT = "Restore a backup?";
+    public Dictionary<string, Localization.LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<SaveMode, string>
+        {
+            {
+                SaveMode.Normal,
+                "Select Save"
+            },
+            {
+                SaveMode.Delete,
+                "Delete file?"
+            },
+            {
+                SaveMode.Backup,
+                "Restore a backup?"
+            },
+        }
+    );
 
     [SerializeField] private NewSavePanelManager newSavePanelManager;
     [SerializeField] private UIMenu savePanel;
@@ -86,18 +100,7 @@ public class SavePanelManager : MonoBehaviour
     {
         ClearButtonToConfirm();
 
-        switch (mode)
-        {
-            case SaveMode.Normal:
-                titleText.text = NORMAL_MODE_TEXT;
-                break;
-            case SaveMode.Delete:
-                titleText.text = DELETE_MODE_TEXT;
-                break;
-            case SaveMode.Backup:
-                titleText.text = BACKUP_MODE_TEXT;
-                break;
-        }
+        titleText.text = this.GetLocalized(mode).TranslatedFallbackToOriginal;
 
         CurrentMode = mode;
         OnSaveModeChanged?.Invoke(this, new SaveModeArgs { mode = CurrentMode });
