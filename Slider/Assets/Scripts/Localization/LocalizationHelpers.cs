@@ -403,7 +403,6 @@ be corrupted, these rules may be helpful for debugging purposes...
         public string LocaleName => locale;
         private string locale;
         public bool IsDefaultLocale => locale.Equals(DefaultLocale);
-        public static bool SupportsPixelFont(string locale) => locale.Equals(DefaultLocale); // TODO: change when pixel font adds Spanish supports or something...
         
         // enum ParserState
         // {

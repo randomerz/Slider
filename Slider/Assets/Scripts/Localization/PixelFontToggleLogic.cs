@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Localization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,9 +8,6 @@ public class PixelFontToggleLogic : MonoBehaviour
     [SerializeField]
     private GameObject popup;
     private Toggle toggle;
-
-    private bool CurrentLocaleSupportsPixelFont =>
-        LocalizationFile.SupportsPixelFont(SettingsManager.Setting<string>(Settings.Locale).CurrentValue);
     
     private void OnEnable()
     {
@@ -22,23 +15,11 @@ public class PixelFontToggleLogic : MonoBehaviour
         popup.SetActive(false);
     }
 
-    private void Update()
-    {
-        // AT: sorry,,,
-        toggle.enabled = CurrentLocaleSupportsPixelFont;
-    }
-
     public void OnToggle(bool toggleIsOn)
     {
         if (!toggleIsOn)
         {
             SettingsManager.Setting<bool>(Settings.HighContrastTextEnabled).SetCurrentValue(true);
-        }
-
-        // For locales not using pixel font anyway, don't refresh
-        if (!CurrentLocaleSupportsPixelFont)
-        {
-            return;
         }
         
         // for main menu scene, apply setting directly
