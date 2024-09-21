@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Localization;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 using FuckCSharpWhyDoIHaveToRelayEverything = DialogueTableProviderExtensions;
 
 public interface IDialogueTableProvider
