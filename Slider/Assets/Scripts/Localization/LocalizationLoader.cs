@@ -10,8 +10,17 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 {
     [SerializeField]
     private TMP_FontAsset localizationFont;
+    
+    [SerializeField]
+    private TMP_FontAsset localizationFontNonPixel;
 
-    public static TMP_FontAsset LocalizationFont => _instance.localizationFont;
+    private static TMP_FontAsset LocalizationFontPixel => _instance.localizationFont;
+    private static TMP_FontAsset LocalizationFontNonPixel => _instance.localizationFontNonPixel;
+
+    public static TMP_FontAsset LocalizationFont =>
+        SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue
+            ? LocalizationFontPixel
+            : LocalizationFontNonPixel;
 
     private LocalizationFile localeGlobalFile;
     
