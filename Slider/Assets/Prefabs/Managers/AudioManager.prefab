@@ -1073,6 +1073,16 @@ MonoBehaviour:
       Path: event:/SFX/Misc/Glass Crash After
     canPause: 1
     dopplerScale: 1
+  - name: Bird Die Squawk
+    fmodEvent:
+      Guid:
+        Data1: 413630909
+        Data2: 1341687097
+        Data3: 947484853
+        Data4: 1645031250
+      Path: event:/SFX/Desert/Bird Die Squawk
+    canPause: 1
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:
