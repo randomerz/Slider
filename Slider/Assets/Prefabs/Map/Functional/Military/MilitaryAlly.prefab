@@ -600,6 +600,22 @@ PrefabInstance:
       propertyPath: representativeNPC
       value: 
       objectReference: {fileID: 3814289163833834964}
+    - target: {fileID: 345858409069772840, guid: 13180426214bf0744b10916556b1c87f, type: 3}
+      propertyPath: otherNPCs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 345858409069772840, guid: 13180426214bf0744b10916556b1c87f, type: 3}
+      propertyPath: otherNPCs.Array.data[0]
+      value: 
+      objectReference: {fileID: 5890515417108691382}
+    - target: {fileID: 345858409069772840, guid: 13180426214bf0744b10916556b1c87f, type: 3}
+      propertyPath: otherNPCs.Array.data[1]
+      value: 
+      objectReference: {fileID: 3987532577082094605}
+    - target: {fileID: 345858409069772840, guid: 13180426214bf0744b10916556b1c87f, type: 3}
+      propertyPath: otherNPCs.Array.data[2]
+      value: 
+      objectReference: {fileID: 5486483322377191580}
     - target: {fileID: 786265832092280424, guid: 13180426214bf0744b10916556b1c87f, type: 3}
       propertyPath: m_Name
       value: MilitaryFlag

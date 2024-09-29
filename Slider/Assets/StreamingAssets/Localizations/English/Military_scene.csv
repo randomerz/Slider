@@ -1,4 +1,4 @@
-"Slider.v1.0.12","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.13","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -207,3 +207,22 @@ be corrupted, these rules may be helpful for debugging purposes...
 "Map/World Grid/Objects/WarningSign@0:0","Warning! Progress in The Flats <wavy>will not be saved!</wavy>","Warning! Progress in The Flats <wavy>will not be saved!</wavy>",
 "Map/World Grid/Objects/WarningSign@0:1","If you quit or leave the area during a run, you will have to restart!","If you quit or leave the area during a run, you will have to restart!",
 "Map/World Grid/Objects/WarningSign@1:0","You won! Congratulations!!","You won! Congratulations!!",
+"MilitaryManager@Default:0","Keep at it kiddo. You're lucky that last run was just a simulation.","Keep at it kiddo. You're lucky that last run was just a simulation.",
+"MilitaryManager@Generic:0","Here's some advice: You'll get a new supply drop every other tile.","Here's some advice: You'll get a new supply drop every other tile.",
+"MilitaryManager@Generic:1","Recon is telling us that the aliens usually target the nearest robot. Ties broken randomly.","Recon is telling us that the aliens usually target the nearest robot. Ties broken randomly.",
+"MilitaryManager@Generic:2","There's 6 waves total. Each spawns when all the enemies are defeated.","There's 6 waves total. Each spawns when all the enemies are defeated.",
+"MilitaryManager@Generic:3","You don't have to use resupplies right away. It can be helpful to hold off until a more opportune moment.","You don't have to use resupplies right away. It can be helpful to hold off until a more opportune moment.",
+"MilitaryManager@Generic:4","At the end of a wave, you might be able to find some time to move bad tiles out of the way.","At the end of a wave, you might be able to find some time to move bad tiles out of the way.",
+"MilitaryManager@Generic:5","Do your best to keep your allies alive. Every unit matters in the end!","Do your best to keep your allies alive. Every unit matters in the end!",
+"MilitaryManager@Intro1:0","Use that flag to move us to adjacent tiles!","Use that flag to move us to adjacent tiles!",
+"MilitaryManager@Intro2:0","Defend our land!","Defend our land!",
+"MilitaryManager@MoveCancelled:0","Move was cancelled.","Move was cancelled.",
+"MilitaryManager@MoveError1:0","I am... dead??? Something went wrong!","I am... dead??? Something went wrong!",
+"MilitaryManager@MoveError2:0","Something went wrong!","Something went wrong!",
+"MilitaryManager@MoveOccupied:0","Can't move to an occupied tile!","Can't move to an occupied tile!",
+"MilitaryManager@MoveOffMap:0","We cannot leave the battlefield!","We cannot leave the battlefield!",
+"MilitaryManager@MoveSuccess1:0","Let's go, soldiers!","Let's go, soldiers!",
+"MilitaryManager@MoveSuccess2:0","Keep moving forward!","Keep moving forward!",
+"MilitaryManager@MoveThroughWalls:0","We cannot move through walls!","We cannot move through walls!",
+"MilitaryManager@MoveTooFar:0","New location was not one tile away!","New location was not one tile away!",
+"MilitaryManager@UnitSelect:0","Here's some advice: You can swap the unit you spawn. Use the flag before the computer.","Here's some advice: You can swap the unit you spawn. Use the flag before the computer.",

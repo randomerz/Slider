@@ -48,6 +48,7 @@ namespace Localization
         public string original;
         public string translated;
 
+        public string TranslatedOrFallback => TranslatedFallbackToOriginal;
         public string TranslatedFallbackToOriginal => translated ?? original;
 
         public static LocalizationPair operator +(LocalizationPair a, LocalizationPair b)

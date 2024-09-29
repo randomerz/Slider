@@ -7,6 +7,7 @@ public class MilitaryUnitFlag : Item
     public MilitaryUnit attachedUnit;
     [SerializeField] private MilitaryUnitFlagResetter resetter;
     [SerializeField] private NPC representativeNPC;
+    [SerializeField] private NPC[] otherNPCs;
 
     private bool isDropping;
     private bool cancelOnAfterDropComplete;
@@ -19,6 +20,17 @@ public class MilitaryUnitFlag : Item
         if (resetter == null)
         {
             Debug.LogError($"Resetter was null on awake. Check your build!");
+        }
+    }
+    
+    public override void Start()
+    {
+        base.Start();
+
+        representativeNPC.Conds[0].dialogueChain[0].dialogue = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.Intro1);
+        foreach (NPC npc in otherNPCs)
+        {
+            npc.Conds[0].dialogueChain[0].dialogue = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.Intro2);
         }
     }
 
@@ -65,7 +77,7 @@ public class MilitaryUnitFlag : Item
 
         if (!wasSuccessful)
         {
-            if (reason == "Move was cancelled.")
+            if (reason == MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveCancelled))
             {
                 AudioManager.Play("UI Click");
             }
@@ -82,13 +94,13 @@ public class MilitaryUnitFlag : Item
     {
         if (cancelOnAfterDropComplete)
         {
-            reason = "Move was cancelled.";
+            reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveCancelled);
             return false;
         }
 
         if (attachedUnit == null)
         {
-            reason = "I am... dead??? Something went wrong!";
+            reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveError1);
             Debug.LogError($"Attached Unit was null.");
             return false;
         }
@@ -97,7 +109,7 @@ public class MilitaryUnitFlag : Item
 
         if (hitStile == null)
         {
-            reason = "We cannot leave the battlefield!";
+            reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveOffMap);
             return false;
         }
         
@@ -106,13 +118,13 @@ public class MilitaryUnitFlag : Item
 
         if (direction.magnitude == 0)
         {
-            reason = "Move was cancelled.";
+            reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveCancelled);
             return false;
         }
 
         if (direction.magnitude != 1)
         {
-            reason = "New location was not one tile away!";
+            reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveTooFar);
             return false;
         }
 
@@ -120,7 +132,7 @@ public class MilitaryUnitFlag : Item
         {
             if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam == attachedUnit.UnitTeam)
             {
-                reason = "Can't move to an occupied tile!";
+                reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveOccupied);
                 return false;
             }
         }
@@ -129,7 +141,7 @@ public class MilitaryUnitFlag : Item
         {
             if (unspawnedAlly.parentStile == hitStile)
             {
-                reason = "Can't move to an occupied tile!";
+                reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveOccupied);
                 return false;
             }
         }
@@ -140,7 +152,7 @@ public class MilitaryUnitFlag : Item
         {
             if (!CanMoveBetweenTiles(originalSTile as MilitarySTile, hitStile as MilitarySTile, direction))
             {
-                reason = "We cannot move through walls!";
+                reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveThroughWalls);
                 return false;
             }
         }
@@ -152,7 +164,7 @@ public class MilitaryUnitFlag : Item
         if (resetter == null)
         {
             Debug.LogError($"[Military] FlagResetter was dead! Am I dead?! Aborting!");
-            reason = "Something went wrong!";
+            reason = MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveError2);
             return false;
         }
 
@@ -169,7 +181,9 @@ public class MilitaryUnitFlag : Item
             this, 0.1f
         );
 
-        reason = Random.Range(0, 2) == 0 ? "Let's go, soldiers!" : "Keep moving forward!";
+        reason = Random.Range(0, 2) == 0 ? 
+            MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveSuccess1) : 
+            MilitaryAllyDialogue.GetLocalizedOf(MilitaryAllyDialogue.MilitaryAllyDialogueCode.MoveSuccess2);
         return true;
     }
 
