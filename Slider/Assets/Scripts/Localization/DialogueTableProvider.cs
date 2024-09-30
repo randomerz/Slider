@@ -162,6 +162,7 @@ public static class DialogueTableProviderExtensions
     }
 
     public static string Interpolate<I>(this I self, string format, Dictionary<string, string> substitutions)
+        where I : MonoBehaviour, IDialogueTableProvider
     {
         return self.Interpolate(format, substitutions);
     }
