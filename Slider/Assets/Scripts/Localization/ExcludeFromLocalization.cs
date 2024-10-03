@@ -4,4 +4,5 @@ using UnityEngine;
 
 public class ExcludeFromLocalization : MonoBehaviour
 {
+    public bool excludeFromTranslationOnly = false;
 }

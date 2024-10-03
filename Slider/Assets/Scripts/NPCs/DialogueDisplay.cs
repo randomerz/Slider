@@ -118,17 +118,6 @@ public class DialogueDisplay : MonoBehaviour
         highContrastBG.SetActive(highContrastMode && !emptyMessage);
     }
 
-    public void SetFont(TMP_FontAsset font, float scale, bool clearWordSpacing, FontWeight? weight = null)
-    {
-        textTyperText.SetFont(font, scale, weight);
-        textTyperBG.SetFont(font, scale, weight);
-
-        if (clearWordSpacing)
-        {
-            textTyperText.ClearWordSpacing();
-        }
-    }
-
     private void CheckSize()
     {
         bool doubleSizeMode = SettingsManager.Setting<bool>(Settings.BigTextEnabled).CurrentValue;

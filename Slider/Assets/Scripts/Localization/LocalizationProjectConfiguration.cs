@@ -76,7 +76,11 @@ public class LocalizationProjectConfiguration : ScriptableObject
             .FindAssets("t:prefab")
             .Select(AssetDatabase.GUIDToAssetPath)
             .Select(AssetDatabase.LoadAssetAtPath<GameObject>)
-            .Where(go => go.GetComponent<LocalizationInjector>() != null);
+            .Where(go =>
+            {
+                var injector =  go.GetComponent<LocalizationInjector>();
+                return injector != null && injector.prefabVariantParent == null; // TODO: actually handle variants as parent-child files, this just skips over variants
+            });
     }
 
     public IEnumerable<GameObject> RelevantPrefabs

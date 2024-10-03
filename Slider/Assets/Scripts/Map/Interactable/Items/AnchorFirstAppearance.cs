@@ -1,14 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class AnchorFirstAppearance : MonoBehaviour
+public class AnchorFirstAppearance : MonoBehaviour, IDialogueTableProvider
 {
     public Anchor anchor;
     public SpriteRenderer spriteRenderer;
     public PlayerActionHints hints;
     public static event System.EventHandler<System.EventArgs> OnAnchorAcquire;
-    
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<string, string>
+        {
+            { "Anchor", "Anchor" }
+        });
+
     void Start()
     {
         if (PlayerInventory.Instance.GetHasCollectedAnchor())
@@ -24,7 +31,7 @@ public class AnchorFirstAppearance : MonoBehaviour
 
     public void DoCutscene()
     {
-        ItemPickupEffect.StartCutscene(spriteRenderer.sprite, "Anchor");
+        ItemPickupEffect.StartCutscene(spriteRenderer.sprite, this.GetLocalizedSingle("Anchor"));
         anchor.OnPickUp.RemoveListener(DoCutscene);
         OnAnchorAcquire?.Invoke(this, new System.EventArgs{});
         hints.TriggerHint("anchor");

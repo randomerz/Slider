@@ -22,15 +22,13 @@ public class TMPTextTyper : MonoBehaviour
 
     private static float textSpeed;
 
-    private TextMeshProUGUI TextMeshPro
+    public TextMeshProUGUI TextMeshPro
     {
         get
         {
             if (m_TextMeshPro == null)
             {
                 m_TextMeshPro = GetComponent<TextMeshProUGUI>();
-                originalFontSize = m_TextMeshPro.fontSize;
-                originalFont = m_TextMeshPro.font;
             }
 
             return m_TextMeshPro;
@@ -44,9 +42,6 @@ public class TMPTextTyper : MonoBehaviour
 
     private Coroutine coroutine;
     [HideInInspector] public bool finishedTyping;
-
-    private float originalFontSize;
-    private TMP_FontAsset originalFont;
 
     void Awake()
     {
@@ -293,19 +288,10 @@ public class TMPTextTyper : MonoBehaviour
 
     }
 
-    public void SetFont(TMP_FontAsset font, float scale = 1.0f, FontWeight? weight = null)
-    {
-        TextMeshPro.font = font == null ? originalFont : font;
-        TextMeshPro.fontSize = scale * originalFontSize;
-        if (weight != null)
-        {
-            TextMeshPro.fontWeight = (FontWeight) weight;
-        }
-    }
-
     public void ClearWordSpacing()
     {
         TextMeshPro.wordSpacing = 0;
+        TextMeshPro.lineSpacing = 0;
     }
     
     public void SetAlpha(float alpha)
