@@ -115,17 +115,37 @@ namespace Localization
         }
     }
 
+    internal struct SerializedLocalizableData
+    {
+        public string text;
+        public string metadata;
+
+        public static implicit operator SerializedLocalizableData(string s)
+        {
+            return new SerializedLocalizableData
+            {
+                text = s,
+                metadata = null
+            };
+        }
+
+        public bool IsEmpty => string.IsNullOrWhiteSpace(text) && string.IsNullOrWhiteSpace(metadata);
+    }
+
     internal sealed class ParsedLocalizable : Localizable
     {
-        public string Translated { get; }
+        private readonly SerializedLocalizableData _data;
+        
+        public string Translated => _data.text;
+        public string Metadata => _data.metadata;
 
-        private ParsedLocalizable(string hierarchyPath, string index, string translated) : base(hierarchyPath.Split('/'))
+        private ParsedLocalizable(string hierarchyPath, string index, SerializedLocalizableData data) : base(hierarchyPath.Split('/'))
         {
             this.index = index;
-            Translated = translated;
+            _data = data;
         }
         
-        internal static ParsedLocalizable ParsePath(string fullPath, string translated = null)
+        internal static ParsedLocalizable ParsePath(string fullPath, SerializedLocalizableData data)
         {
             string[] pathAndIndex = fullPath.Split(indexSeparator);
 
@@ -136,12 +156,12 @@ namespace Localization
 
             if (pathAndIndex.Length == 1)
             {
-                return new ParsedLocalizable(pathAndIndex[0], null, translated);
+                return new ParsedLocalizable(pathAndIndex[0], null, data);
             }
 
             try
             {
-                return new ParsedLocalizable(pathAndIndex[0], pathAndIndex[1], translated);
+                return new ParsedLocalizable(pathAndIndex[0], pathAndIndex[1], data);
             }
             catch (FormatException)
             {
@@ -157,6 +177,9 @@ namespace Localization
         // in the case of different indices (different dialogue numbers of the same NPC, for example)
         public T GetAnchor<T>() where T: class => (_anchor as T);
         private readonly Component _anchor;
+
+        public LocalizableContext.LocalizationStrategy Strategy =
+            LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
 
         private TrackedLocalizable(Component c) : base(GetComponentPath(c))
         {
@@ -184,7 +207,7 @@ namespace Localization
             index = cond.ToString() + Localizable.indexSeparatorSecondary + diag.ToString();
         }
 
-        public TrackedLocalizable(DialogueDisplay display) : this(display as Component)
+        public TrackedLocalizable(TMPTextTyper typer) : this(typer as Component)
         {
             index = null;
         }
@@ -317,8 +340,6 @@ however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
 be corrupted, these rules may be helpful for debugging purposes...
-- In general, any consecutive string of \r and \n (in any order) will be
-  treated as one SINGLE line break, except within an enclosed context
 - The first 4 rows can be arbitrarily long
   - The first cell of first row is used to store this block of instruction
     text
@@ -330,22 +351,8 @@ be corrupted, these rules may be helpful for debugging purposes...
   - Columns in the third row are exclusively comments for properties in the
     second row
 - Every following line can include any number of cells, but only the
-  first three will be parsed (you can use the rest as comments if needed)
-- The file must end in a sequence of \r and \n's
-- Every cell containing a ^, \r, or \n must be enclosed in ""
-  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
-    then the parser is said to enter an ""enclosed context"", such context
-    ends immediately when a non-escaped "" that is not followed by \r, \n,
-    or a separator is encountered
-  - "" within each cell should be escaped using another "" in front of it,
-  - If a "" is encountered in a non-enclosed context, and it is not right
-    after a separator, \r, or \n, then it is entirely ignored
-  - If a non-escaped "" is encountered in an enclosed context...
-    - If it is followed by a separator, \r, or \n, then it is considered
-      the closing quote of the current context
-    - Otherwise, it is ignored
-  - If a separator, \r, or \n is encountered while in an enclosed context,
-    it will be preserved
+  first four will be parsed (you can use the rest as comments if needed)
+  - The fourth column is an optional metadata column
 ";
 
         internal static readonly char csvSeparator = ',';
@@ -382,13 +389,12 @@ be corrupted, these rules may be helpful for debugging purposes...
             },
             {
                 Config.NonDialogueFontScale, new LocalizationConfig(
-                "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size.","1.0")
+                    "Float value that scales font size of all non-dialogue text, 1.0 for full size.", "1.0")
             },
 
             {
                 Config.DialogueFontScale, new LocalizationConfig(
-                "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.",
-                "1.0")
+                    "Float value that scales font size of all dialogue text, 1.0 for full size.", "1.0")
             },
             
             // { fontOverridePath_name, new LocalizationConfig(
@@ -398,7 +404,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         };
 
         private SortedDictionary<Config, LocalizationConfig> configs;
-        internal SortedDictionary<string, ParsedLocalizable> records;
+        private SortedDictionary<string, ParsedLocalizable> records;
 
         public string LocaleName => locale;
         private string locale;
@@ -424,13 +430,13 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             switch (error)
             {
-                case LocalizationFile.ParserError.NoError:
+                case ParserError.NoError:
                     Debug.Log($"[Localization] Localization file parser: null file without error thrown at {path}");
                     break;
-                case LocalizationFile.ParserError.FileNotFound:
+                case ParserError.FileNotFound:
                     Debug.Log($"[Localization] Localization file parser: file not found {path}");
                     break;
-                case LocalizationFile.ParserError.ExplicitlyDisabled:
+                case ParserError.ExplicitlyDisabled:
                     Debug.LogWarning($"[Localization] Localization file parser: localization file at {path} explicitly disabled");
                     break;
                 default:
@@ -548,7 +554,12 @@ be corrupted, these rules may be helpful for debugging purposes...
         private void ParseRecordRow(CsvDataReader reader)
         {
             var path = reader.GetString(0);
-            var newRecord = ParsedLocalizable.ParsePath(path, reader.GetString(2));
+            var newRecord = ParsedLocalizable.ParsePath(path, 
+                new SerializedLocalizableData
+                {
+                    text = reader.GetString(2),
+                    metadata = reader.RowFieldCount > 3 ? reader.GetString(3) : null
+                });
             if (newRecord == null)
             {
                 Debug.LogError($"[Localization] Null localizable parsed {path}");
@@ -606,6 +617,15 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             value = -1.0f;
             return false;
+        }
+
+        internal ParsedLocalizable GetRecord(string path)
+        {
+            if (!records.TryGetValue(path, out var entry))
+            {
+                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
+            }
+            return entry;
         }
     }
 
@@ -684,7 +704,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
-            { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
+            { typeof(TMPTextTyper), component => new List<TrackedLocalizable>{ new (component as TMPTextTyper) } },
             { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) },
             { typeof(IDialogueTableProvider), component => SelectLocalizablesFromTableProvider(component as IDialogueTableProvider) },
             { typeof(ArtifactInventoryCollectible), component => new List<TrackedLocalizable>{ new (component as ArtifactInventoryCollectible) }},
@@ -702,7 +722,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private void PopulateLocalizableInstances(GameObject rootGameObject)
         {
-            if (rootGameObject.GetComponent<ExcludeFromLocalization>() != null)
+            var exclude = rootGameObject.GetComponent<ExcludeFromLocalization>();
+            if (exclude != null && !exclude.excludeFromTranslationOnly)
             {
                 return;
             }
@@ -711,44 +732,76 @@ be corrupted, these rules may be helpful for debugging purposes...
             // Recursively include subcontexts (prefabs) if the current context is not already specifically for that subcontext
             // The current implmentation does not consider nested subcontexts. Currently there's no usage of that in the game in general.
             if (subcontextAnchor == null){
-                var query = rootGameObject.GetComponentsInChildren(typeof(LocalizationInjector), includeInactive: true);
+                var query = rootGameObject.GetComponentsInChildren<LocalizationInjector>(includeInactive: true);
                 
                 foreach (var injector in query)
                 {
-                    localizables[typeof(LocalizationInjector)].Add(new TrackedLocalizable(injector as LocalizationInjector));
+                    localizables[typeof(LocalizationInjector)].Add(new TrackedLocalizable(injector));
                 }
             }
             
             foreach (var type in SelectorFunctionMap.Keys)
             {
                 var query = rootGameObject
-                        
+
                     .GetComponentsInChildren(type, includeInactive: true)
-                    
-                    .Where(c => 
-                        c.GetComponent<ExcludeFromLocalization>() == null 
-                        && c.GetComponentInParent<ExcludeFromLocalization>(includeInactive: true) == null)
-                    
-                    // Do not re-select something that is in a localization injector (i.e. a prefab)
-                    // this is done because those objects will be selected when localizing that prefab itself
-                    .Where(c => 
+
+                    .Where(c =>
                         !localizables[typeof(LocalizationInjector)]
                             .Any(
-                                injectorWrapper => c.transform.IsChildOf(injectorWrapper.GetAnchor<Component>().transform)
-                                )
-                        );
+                                injectorWrapper =>
+                                    c.transform.IsChildOf(injectorWrapper.GetAnchor<Component>().transform)
+                            )
+                    )
+
+                    .GroupBy<Component, LocalizationStrategy?>(c =>
+                    {
+                        var exclude = c.GetComponent<ExcludeFromLocalization>();
+                        if (exclude == null)
+                        {
+                            exclude = c.GetComponentInParent<ExcludeFromLocalization>(includeInactive: true);
+                        }
+
+                        if (exclude != null)
+                        {
+                            return exclude.excludeFromTranslationOnly ? LocalizationStrategy.ChangeStyleOnly : null;
+                        }
+
+                        return LocalizationStrategy.TranslateTextAndChangeStyle;
+                    });
+                
+                // Do not re-select something that is in a localization injector (i.e. a prefab)
+                // this is done because those objects will be selected when localizing that prefab itself
                 
                 localizables.TryAdd(type, new());
                 localizables[type]
                     .AddRange(query
-                        .SelectMany(component => SelectorFunctionMap[type](component)));
+                        .SelectMany(grouping =>
+                        {
+                            if (grouping.Key == null)
+                            {
+                                return new List<TrackedLocalizable>();
+                            }
+                            
+                            var many = grouping.SelectMany(c => SelectorFunctionMap[type](c)).ToList();
+                            foreach (var t in many)
+                            {
+                                t.Strategy = grouping.Key.Value; // assigning it here purely to avoid shotgun change in all the constructors of the class...
+                            }
+
+                            return many;
+                        })
+                    );
             }
         }
 
         private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromTmp(TMP_Text tmp)
         {
             // skip TMP stuff under NPC and dropdown
-            if (tmp.gameObject.GetComponentInParent<NPC>(includeInactive: true) != null || tmp.gameObject.GetComponentInParent<TMP_Dropdown>(includeInactive: true) != null)
+            if (
+                tmp.gameObject.GetComponent<TMPTextTyper>() != null
+                || tmp.gameObject.GetComponentInParent<NPC>(includeInactive: true) != null 
+                || tmp.gameObject.GetComponentInParent<TMP_Dropdown>(includeInactive: true) != null)
             {
                 return new List<TrackedLocalizable>() { };
             }
@@ -808,7 +861,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         ////////////////////////// Applying Localization ///////////////////////////////////////////////////////////////
 
-        private enum LocalizationStrategy
+        public enum LocalizationStrategy
         {
             ChangeStyleOnly,
             TranslateTextAndChangeStyle
@@ -819,7 +872,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Text), LocalizeTmp },
             { typeof(TMP_Dropdown), LocalizeDropdownOption },
             { typeof(NPC), LocalizeNpc },
-            { typeof(DialogueDisplay), LocalizeDialogueDisplay },
+            { typeof(TMPTextTyper), LocalizeTextTyper },
             { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
             { typeof(PlayerActionHints), LocalizePlayerActionHints },
             { typeof(IDialogueTableProvider), LocalizeTableProvider },
@@ -830,20 +883,16 @@ be corrupted, these rules may be helpful for debugging purposes...
         /// No undo, force refresh when text styling needs to be reverted...
         /// </summary>
         /// <param name="file"></param>
-        public void Localize(LocalizationFile file)
+        public void Localize(LocalizationFile file, LocalizationStrategy strategy)
         {
             bool isEnglish = file.IsDefaultLocale;
-            bool canUsePixelFont = SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
+            bool useDefaultPixelFont = SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
 
-            if (isEnglish && canUsePixelFont)
+            if (isEnglish && useDefaultPixelFont)
             {
                 // Debug.Log("[Localization] Localization strategy: skipping...");
                 return;
             }
-
-            var strategy = isEnglish
-                ? LocalizationStrategy.ChangeStyleOnly
-                : LocalizationStrategy.TranslateTextAndChangeStyle;
 
             string ctxDisplayName = subcontextAnchor == null
                 ? "Scene-" + (sceneContext.HasValue ? sceneContext.Value.name + sceneContext.Value.GetHashCode() : "???")
@@ -856,7 +905,15 @@ be corrupted, these rules may be helpful for debugging purposes...
                 {
                     foreach (var trackedLocalizable in instances)
                     {
-                        localizationFuncion(trackedLocalizable, file, strategy);
+                        if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle &&
+                            trackedLocalizable.Strategy == LocalizationStrategy.ChangeStyleOnly)
+                        {
+                            localizationFuncion(trackedLocalizable, file, LocalizationStrategy.ChangeStyleOnly);
+                        }
+                        else
+                        {
+                            localizationFuncion(trackedLocalizable, file, strategy);
+                        }
                     }
                 }
             }
@@ -865,44 +922,32 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, LocalizationStrategy strategy)
         {
             var tmpCasted = tmp.GetAnchor<TMP_Text>();
-            var path = tmp.FullPath;
+            var entry = file.GetRecord(tmp.FullPath);
 
-            if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle)
+            if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle && entry != null)
             {
-                if (file.records.TryGetValue(path, out var entry))
-                {
-                    tmpCasted.text = entry.Translated;
-                }
-                else
-                {
-                    Debug.LogWarning($"[Localization] {path}: NOT FOUND");
-                }
+                tmpCasted.text = entry.Translated;
             }
-            
-            tmpCasted.font = LocalizationLoader.LocalizationFont;
+
+            var metadata = tmpCasted.ParseMetadata(entry?.Metadata);
+            tmpCasted.font = LocalizationLoader.LocalizationFont(metadata.family);
+
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
-            // tmpCasted.fontWeight = FontWeight.SemiBold; // for some reason some characters aren't bolded
-
-            if (tmpCasted.GetComponent<TMPTextTyper>())
+            // tmpCasted.ForceConvertMiddleToMidline();
+            tmpCasted.enableWordWrapping = false;
+            
+            if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
             {
-                // is dialogue
-            }
-            else
-            {
-                // is not dialogue
-                tmpCasted.enableWordWrapping = false;
-                if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
-                {
-                    tmpCasted.fontSize *= scale;
-                }
+                tmpCasted.fontSize = metadata.size * scale;
             }
             
         }
         
         private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, LocalizationStrategy strategy)
         {
-            TMP_Dropdown dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
+            var dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
+            var entry = file.GetRecord(dropdownOption.FullPath);
 
             // particular option in dropdown, change text as well as size modifications (using rich text)
             if (dropdownOption.IndexInComponent != null)
@@ -912,18 +957,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                     int idx = int.Parse(dropdownOption
                         .IndexInComponent); // possibly malformed path, consider logging error instead
 
-                    string path = dropdownOption.FullPath;
-
-                    if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle)
+                    if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle && entry != null)
                     {
-                        if (file.records.TryGetValue(path, out var entry))
-                        {
-                            dropdown.options[idx].text = entry.Translated;
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"[Localization] {path}: NOT FOUND");
+                        
+                        dropdown.options[idx].text = entry.Translated;
                     }
                 }
                 catch (IndexOutOfRangeException)
@@ -937,12 +974,14 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 void ApplyStyle(TMP_Text txt)
                 {
-                    txt.font = LocalizationLoader.LocalizationFont;
+                    var metadata = txt.ParseMetadata(entry?.Metadata);
+                    txt.font = LocalizationLoader.LocalizationFont(metadata.family);
                     txt.overflowMode = TextOverflowModes.Overflow;
                     if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
                     {
-                        txt.fontSize *= scale;
+                        txt.fontSize = metadata.size * scale;
                         txt.enableWordWrapping = false;
+                        // txt.ForceConvertMiddleToMidline();
                         // txt.fontWeight = FontWeight.SemiBold;
                     }
                 }
@@ -967,13 +1006,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                 int idxDiag = int.Parse(idx[1]);
                 var npcCasted = npc.GetAnchor<NPC>();
                 
-                if (file.records.TryGetValue(path, out var entry))
+                if (!string.IsNullOrWhiteSpace(npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue))
                 {
+                    var entry = file.GetRecord(path);
                     npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
-                }
-                else if (!string.IsNullOrWhiteSpace(npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue)) 
-                {
-                    Debug.LogWarning($"[Localization] {path}: NOT FOUND");
                 }
 
             }
@@ -983,12 +1019,21 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeDialogueDisplay(TrackedLocalizable display, LocalizationFile file, LocalizationStrategy strategy)
+        private static void LocalizeTextTyper(TrackedLocalizable typer, LocalizationFile file, LocalizationStrategy strategy)
         {
-            if (file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
+            if (!file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
-                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true);
+                return;
             }
+            
+            var tmp = typer.GetAnchor<TMPTextTyper>().TextMeshPro;
+            var entry = file.GetRecord(typer.FullPath);
+            var metadata = tmp.ParseMetadata(entry?.Metadata);
+            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
+            tmp.fontSize = tmp.ParseMetadata(entry?.Metadata).size * adjFlt;
+            tmp.wordSpacing = 0;
+            
+            tmp.SetLayoutDirty();
         }
 
         private static void LocalizePlayerActionHints(TrackedLocalizable hints, LocalizationFile file,
@@ -1000,11 +1045,12 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
 
             var path = hints.FullPath;
-            if (file.records.TryGetValue(path, out var entry))
+            var entry = file.GetRecord(path);
+            if (entry != null)
             {
                 try
                 {
-                    int idx = int.Parse(hints.IndexInComponent);
+                    var idx = int.Parse(hints.IndexInComponent);
                     hints.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText = entry.Translated;
                 }
                 catch (IndexOutOfRangeException)
@@ -1025,23 +1071,18 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return;
             }
             
-            var path = tableProviderEntry.FullPath;
-            if (file.records.TryGetValue(path, out var entry))
-            {
-                // AT: cursed Unity editor crashing bug if I call any interface function,
-                // so instead just rewrite the function here...
-                // For some reason running during play mode is fine, but non-play mode won't
-                // allow it. Probably some Unity Mono issue...
-                var table = tableProviderEntry.GetAnchor<IDialogueTableProvider>().TranslationTable;
-                table[tableProviderEntry.IndexInComponent] = new LocalizationPair() {
-                    original = table[tableProviderEntry.IndexInComponent].original,
-                    translated = entry.Translated
-                };
-            }
-            else
-            {
-                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
-            }
+            var entry = file.GetRecord(tableProviderEntry.FullPath);
+            if (entry == null) return;
+            
+            // AT: cursed Unity editor crashing bug if I call any interface function,
+            // so instead just rewrite the function here...
+            // For some reason running during play mode is fine, but non-play mode won't
+            // allow it. Probably some Unity Mono issue...
+            var table = tableProviderEntry.GetAnchor<IDialogueTableProvider>().TranslationTable;
+            table[tableProviderEntry.IndexInComponent] = new LocalizationPair() {
+                original = table[tableProviderEntry.IndexInComponent].original,
+                translated = entry.Translated
+            };
         }
         
         private static void LocalizeCollectibleUI(TrackedLocalizable collectible, LocalizationFile file, LocalizationStrategy strategy)
@@ -1050,24 +1091,21 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 return;
             }
-            
-            var path = collectible.FullPath;
-            if (file.records.TryGetValue(path, out var entry))
+
+            var entry = file.GetRecord(collectible.FullPath);
+            if (entry != null)
             {
                 collectible.GetAnchor<ArtifactInventoryCollectible>().displayName = entry.Translated;
-            }
-            else
-            {
-                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
             }
         }
         
         /////////////////////////// Serialization //////////////////////////////////////////////////////////////////////
-        private static readonly Dictionary<Type, Func<TrackedLocalizable, string>> SerializationFunctionMap = new()
+        private static readonly Dictionary<Type, Func<TrackedLocalizable, SerializedLocalizableData>> SerializationFunctionMap = new()
         {
             { typeof(TMP_Text), SerializeTmp },
             { typeof(TMP_Dropdown), SerializeDropdownOption },
             { typeof(NPC), SerializeNpc },
+            { typeof(TMPTextTyper), SerializeTextTyper },
             { typeof(PlayerActionHints), SerializePlayerActionHints },
             { typeof(IDialogueTableProvider), SerializeTableProvider },
             { typeof(ArtifactInventoryCollectible), SerializeCollectibleUI },
@@ -1077,9 +1115,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             bool serializeConfigurationDefaults, 
             TextWriter tw, 
             LocalizationFile referenceFile, 
-            Func<string> autoPadTranslated = null)
+            string autoPadTranslated = null)
         {
             // AT: currently not using Sylvan CSV Writer bc their interface is for rigid db dumping instead of custom (and variable) schema writing
+            autoPadTranslated = autoPadTranslated ?? "";
             
             var sep = LocalizationFile.csvSeparator;
 
@@ -1114,10 +1153,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             tw.WriteLine();
             
             // headers 
-            SerializeCells("Path", "Orig", "Translation");
+            SerializeCells("Path", "Orig", "Translation", "Metadata");
             tw.WriteLine();
 
-            SortedDictionary<string, string> data = SerializeTrackedLocalizables();
+            SortedDictionary<string, SerializedLocalizableData> data = SerializeTrackedLocalizables();
 
             foreach (var kv in ImportedGlobalStrings)
             {
@@ -1128,47 +1167,41 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 // use double double-quotes to escape double-quotes
 
-                string translated = orig;
-                
-                if (referenceFile != null)
-                {
-                    if (referenceFile.records.TryGetValue(path, out var referenceTranslation))
-                    {
-                        translated = referenceTranslation.Translated;
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"[Localization] No existing translation at {path}");
-                    }
-                }
+                string translated = orig.text;
 
-                if (autoPadTranslated != null)
+                if (!string.IsNullOrWhiteSpace(translated))
                 {
-                    string pad = autoPadTranslated();
-                    translated = pad + translated + pad;
+                    translated = referenceFile?.GetRecord(path)?.Translated ?? translated;
+                    translated = autoPadTranslated + translated + autoPadTranslated;
+                }
+                else
+                {
+                    translated = null;
                 }
                 
-                SerializeCells(path, orig, translated); // for skeleton file, just use original as the translation
+                // AT: metadata is freshly updated each time, no referencing!
+                
+                SerializeCells(path, orig.text ?? "", translated ?? "", orig.metadata ?? ""); // for skeleton file, just use original as the translation
                 tw.WriteLine();
             }
         }
         
-        private SortedDictionary<string, string> SerializeTrackedLocalizables()
+        private SortedDictionary<string, SerializedLocalizableData> SerializeTrackedLocalizables()
         {
-            SortedDictionary<string, string> result = new();
+            SortedDictionary<string, SerializedLocalizableData> result = new();
             
             Dictionary<Type, Action<TrackedLocalizable>> serializationMappingAdaptor = new();
             foreach (var (type, serialize) in SerializationFunctionMap)
             {
                 serializationMappingAdaptor.Add(type, localizable =>
                 {
-                    string orig = serialize(localizable);
-                    if (string.IsNullOrWhiteSpace(orig))
+                    var data = serialize(localizable);
+                    if (data.IsEmpty)
                     {
                         return;
                     }
-                    string path = localizable.FullPath;
-                    if (!result.TryAdd(path, orig))
+                    var path = localizable.FullPath;
+                    if (!result.TryAdd(path, data))
                     {
                         Debug.LogError($"[Localization] Duplicate path: {path}");
                     }
@@ -1189,25 +1222,35 @@ be corrupted, these rules may be helpful for debugging purposes...
             return result;
         }
 
-        private static string SerializeTmp(TrackedLocalizable tmp)
+        private static SerializedLocalizableData SerializeTmp(TrackedLocalizable tmp)
         {
-            return tmp.GetAnchor<TMP_Text>().text;
+            var t = tmp.GetAnchor<TMP_Text>();
+            return new SerializedLocalizableData
+            {
+                text = t.text,
+                metadata = t.GetMetadata()
+            };
         }
         
-        private static string SerializeDropdownOption(TrackedLocalizable dropdownOption)
+        private static SerializedLocalizableData SerializeDropdownOption(TrackedLocalizable dropdownOption)
         {
+            var d = dropdownOption.GetAnchor<TMP_Dropdown>();
             if (dropdownOption.IndexInComponent != null)
             {
-                return dropdownOption.GetAnchor<TMP_Dropdown>().options[int.Parse(dropdownOption.IndexInComponent)].text;
+                return d.options[int.Parse(dropdownOption.IndexInComponent)].text;
             }
             // for dropdown itself, not particular options
             else
             {
-                return null;
+                return new SerializedLocalizableData
+                {
+                    text = null,
+                    metadata = d.itemText.GetMetadata().ToString()
+                };
             }
         }
         
-        private static string SerializeNpc(TrackedLocalizable npc)
+        private static SerializedLocalizableData SerializeNpc(TrackedLocalizable npc)
         {
             if (npc.IndexInComponent == null)
             {
@@ -1239,7 +1282,17 @@ be corrupted, these rules may be helpful for debugging purposes...
             return null;
         }
 
-        private static string SerializePlayerActionHints(TrackedLocalizable hint)
+        private static SerializedLocalizableData SerializeTextTyper(TrackedLocalizable typer)
+        {
+            var t = typer.GetAnchor<TMPTextTyper>();
+            return new SerializedLocalizableData
+            {
+                text = null,
+                metadata = t.TextMeshPro.GetMetadata()
+            };
+        }
+
+        private static SerializedLocalizableData SerializePlayerActionHints(TrackedLocalizable hint)
         {
             if (!int.TryParse(hint.IndexInComponent, out int idx))
             {
@@ -1256,7 +1309,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static string SerializeTableProvider(TrackedLocalizable tableProvider)
+        private static SerializedLocalizableData SerializeTableProvider(TrackedLocalizable tableProvider)
         {
             // AT: cursed Unity editor crashing bug if I call any interface function,
             // so instead just rewrite the function here...
@@ -1265,9 +1318,72 @@ be corrupted, these rules may be helpful for debugging purposes...
             return tableProvider.GetAnchor<IDialogueTableProvider>().TranslationTable[tableProvider.IndexInComponent].original;
         }
         
-        private static string SerializeCollectibleUI(TrackedLocalizable collectible)
+        private static SerializedLocalizableData SerializeCollectibleUI(TrackedLocalizable collectible)
         {
             return collectible.GetAnchor<ArtifactInventoryCollectible>().displayName;
+        }
+    }
+
+    struct FontMetadata
+    {
+        public string family;
+        public float size;
+
+        public override string ToString() => $"{family};{size}";
+        public static implicit operator string(FontMetadata self) => self.ToString();
+    }
+
+    internal static class TmpTextExtensions
+    {
+        // // pixel one alignment is really fucking weird expecially when UI height is LESS than font height for some fuckin reason
+        // internal static void ForceConvertMiddleToMidline(this TMP_Text txt)
+        // {
+        //     // pixel one alignment is really fucking weird expecially when UI height is LESS than font height for some fuckin reason
+        //     if (txt.verticalAlignment == VerticalAlignmentOptions.Middle)
+        //     {
+        //         txt.verticalAlignment = VerticalAlignmentOptions.Geometry;
+        //         txt.SetLayoutDirty();
+        //     }
+        // }
+
+        internal static FontMetadata GetMetadata(this TMP_Text txt) => new FontMetadata
+        {
+            family = txt.font.faceInfo.familyName,
+            size = txt.fontSize
+        };
+
+        internal static FontMetadata ParseMetadata(this TMP_Text txt, string metadata)
+        {
+            if (string.IsNullOrWhiteSpace(metadata))
+            {
+                // fallback to current state
+                return txt.GetMetadata();
+            }
+
+            var cols = metadata.Split(';');
+            var l = cols.Length;
+
+            if (l == 0)
+            {
+                return txt.GetMetadata();
+            }
+
+            var family = cols[0];
+
+            if (l > 1 && float.TryParse(cols[1], out var size))
+            {
+                return new FontMetadata
+                {
+                    family = family,
+                    size = size
+                };
+            }
+
+            return new FontMetadata
+            {
+                family = family,
+                size = float.NaN
+            };
         }
     }
 }

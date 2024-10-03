@@ -155,7 +155,7 @@ public static class DialogueTableProviderExtensions
         return pair.TranslatedFallbackToOriginal;
     }
 
-    public static string GetLocalizedSingle<I, T>(this I self, string key, int i = 0)
+    public static string GetLocalizedSingle<I>(this I self, string key, int i = 0)
         where I : MonoBehaviour, IDialogueTableProvider
     {
         var pair = self.GetLocalized(key, i);

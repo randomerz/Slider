@@ -2,14 +2,10 @@ using UnityEngine;
 
 public class LocalizationInjector : MonoBehaviour
 {
-    // AT: no longer used, Refresh should only be called through LocalizationLoader
-    void Start()
-    {
-        // Refresh();
-    }
-
+    public GameObject prefabVariantParent = null;
+    
     public void Refresh()
     {
-        LocalizationLoader.LocalizePrefab(gameObject);
+        LocalizationLoader.LocalizePrefab(gameObject, prefabVariantParent == null ? gameObject : prefabVariantParent);
     }
 }

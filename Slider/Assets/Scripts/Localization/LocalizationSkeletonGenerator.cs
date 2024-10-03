@@ -335,7 +335,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                        serializeConfigurationDefaults: false,
                        tw: tw,
                        referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot)),
-                       autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_ho_"  : null
+                       autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? "_ho_"  : null
                        ),
                    localeIsValid[locale.name] && root == null);
            }
@@ -370,7 +370,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                        serializeConfigurationDefaults: false,
                        tw: tw,
                        referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, scene, referenceRoot)),
-                       autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_har_"  : null
+                       autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? "_har_"  : null
                    ),
                    localeIsValid[locale.name] && root == null);
            }
@@ -387,7 +387,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                    serializeConfigurationDefaults: true,
                    tw: tw,
                    referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.LocaleGlobalFilePath(locale.name, referenceRoot)),
-                   autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? () => "_yarr_"  : null
+                   autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? "_yarr_"  : null
                ),
                localeIsValid[locale.name] && root == null);
        }

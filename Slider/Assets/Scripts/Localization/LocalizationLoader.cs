@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Localization;
 using TMPro;
 using UnityEngine;
@@ -9,18 +11,65 @@ using LocalizationFile = Localization.LocalizationFile;
 public class LocalizationLoader : Singleton<LocalizationLoader>
 {
     [SerializeField]
-    private TMP_FontAsset localizationFont;
+    private TMP_FontAsset localizationFontPixelBig;
+    [SerializeField]
+    private TMP_FontAsset localizationFontPixelSmall;
+    [SerializeField]
+    private TMP_FontAsset localizationFontNonPixelBig;
+    [SerializeField]
+    private TMP_FontAsset localizationFontNonPixelSmall;
+    
+    private static TMP_FontAsset LocalizationFontPixelBig => _instance.localizationFontPixelBig;
+    private static TMP_FontAsset LocalizationFontPixelSmall => _instance.localizationFontPixelSmall;
+    private static TMP_FontAsset LocalizationFontNonPixelBig => _instance.localizationFontNonPixelBig;
+    private static TMP_FontAsset LocalizationFontNonPixelSmall => _instance.localizationFontNonPixelSmall;
+
+    public static TMP_FontAsset LocalizationFont(string originalFamilyName)
+    {
+        var big = BigFontFamilyNames.Contains(originalFamilyName);
+        if (UsePixelFont)
+        {
+            if (big)
+            {
+                return LocalizationFontPixelBig;
+            }
+            else
+            {
+                return LocalizationFontPixelSmall;
+            }
+        }
+        else
+        {
+            if (big)
+            {
+                return LocalizationFontNonPixelBig;
+            }
+            else
+            {
+                return LocalizationFontNonPixelSmall;
+            }
+        }
+    }
     
     [SerializeField]
-    private TMP_FontAsset localizationFontNonPixel;
+    private TMP_FontAsset[] BigFonts;
 
-    private static TMP_FontAsset LocalizationFontPixel => _instance.localizationFont;
-    private static TMP_FontAsset LocalizationFontNonPixel => _instance.localizationFontNonPixel;
+    private static HashSet<string> BigFontFamilyNames
+    {
+        get
+        {
+            if (_instance._bigFontFamilyNames == null)
+            {
+                _instance._bigFontFamilyNames = _instance.BigFonts.Select(f => f.faceInfo.familyName).ToHashSet();
+            }
 
-    public static TMP_FontAsset LocalizationFont =>
-        SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue
-            ? LocalizationFontPixel
-            : LocalizationFontNonPixel;
+            return _instance._bigFontFamilyNames;
+        }
+    }
+    
+    private HashSet<string> _bigFontFamilyNames = null;
+
+    public static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
 
     private LocalizationFile localeGlobalFile;
     
@@ -63,19 +112,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     public static string LoadCollectibleTranslation(string name, Area area)
         => LoadTranslatedString(SpecificTypeHelpers.CollectibleToPath(name, area), name);
 
-    private static string LoadTranslatedString(string path, string fallback)
-    {
-        if (
-            _instance?.localeGlobalFile == null 
-            || !_instance.localeGlobalFile.records.TryGetValue(
-                path, 
-                out var translation))
-        {
-            return fallback;
-        }
-
-        return translation.Translated ?? fallback;
-    }
+    private static string LoadTranslatedString(string path, string fallback) 
+        => _instance.localeGlobalFile?.GetRecord(path)?.Translated ?? fallback;
     
     #endregion
 
@@ -126,25 +164,34 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
             LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
             LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
             
-            loaded.Localize(loadedAsset.context);
-            persistent.Localize(loadedAsset.context);
+            bool isEnglish = loadedAsset.context.IsDefaultLocale;
+            var strategy = isEnglish
+                ? LocalizableContext.LocalizationStrategy.ChangeStyleOnly
+                : LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
+            
+            loaded.Localize(loadedAsset.context, strategy);
+            persistent.Localize(loadedAsset.context, strategy);
         }
     }
 
-    public static void LocalizePrefab(GameObject prefab)
+    public static void LocalizePrefab(GameObject target, GameObject variantParent)
     {
         if (_instance == null)
         {
-            Debug.LogWarning($"Attempting to localize prefab {prefab} without a localization loader singleton");
+            Debug.LogWarning($"Attempting to localize prefab {target} without a localization loader singleton");
             // return;
         }
         
         var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, prefab), _instance?.localeGlobalFile);
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, variantParent), _instance?.localeGlobalFile);
 
         if (loadedAsset.context != null)
         {
-            LocalizableContext.ForSinglePrefab(prefab).Localize(loadedAsset.context);
+            bool isEnglish = loadedAsset.context.IsDefaultLocale;
+            var strategy = isEnglish
+                ? LocalizableContext.LocalizationStrategy.ChangeStyleOnly
+                : LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
+            LocalizableContext.ForSinglePrefab(target).Localize(loadedAsset.context, strategy);
         }
     }
 }

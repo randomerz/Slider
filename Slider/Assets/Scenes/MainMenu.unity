@@ -4968,10 +4968,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.0052083335
-    y: 0.14537036
-    width: 0.16666667
-    height: 0.16666666
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -5296,6 +5296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  excludeFromTranslationOnly: 1
 --- !u!1 &652610988
 GameObject:
   m_ObjectHideFlags: 0
@@ -10870,18 +10871,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_fontSize
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 7d692a08c71f59f4f9199623c9376bfd, type: 2}
-    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_fontStyle
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_fontSizeMax
       value: 16
       objectReference: {fileID: 0}
@@ -10892,10 +10881,6 @@ PrefabInstance:
     - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_fontSizeBase
       value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_enableAutoSizing
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_VerticalAlignment
@@ -11062,14 +11047,6 @@ PrefabInstance:
       value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_fontSize
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 7d692a08c71f59f4f9199623c9376bfd, type: 2}
-    - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_fontSizeMax
       value: 16
       objectReference: {fileID: 0}
@@ -11080,10 +11057,6 @@ PrefabInstance:
     - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_fontSizeBase
       value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      propertyPath: m_enableAutoSizing
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_hasFontAssetChanged
@@ -11191,9 +11164,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6634315279850880283, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2099968323}
-    - targetCorrespondingSourceObject: {fileID: 6634315279850880283, guid: 39b52053e09450e4486902ba10441f98, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2099968324}
   m_SourcePrefab: {fileID: 100100000, guid: 39b52053e09450e4486902ba10441f98, type: 3}
 --- !u!224 &1288482251 stripped
 RectTransform:
@@ -14736,6 +14706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  excludeFromTranslationOnly: 1
 --- !u!1 &1647404631
 GameObject:
   m_ObjectHideFlags: 0
@@ -18760,18 +18731,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   setting: 17
---- !u!114 &2099968324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2099968320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2102549789
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cee1884ec0454fa08568605d8cb04485, type: 3}
+  m_Name: fusion_unscaled
+  m_EditorClassIdentifier: 
+  faceInfo:
+    m_FaceIndex: 0
+    m_FamilyName: Fusion Pixel 12px Proportional latin
+    m_StyleName: Regular
+    m_PointSize: 12
+    m_Scale: 0.85
+    m_UnitsPerEM: 1200
+    m_LineHeight: 14.5
+    m_AscentLine: 10.5
+    m_CapLine: 16
+    m_MeanLine: 8
+    m_Baseline: 0
+    m_DescentLine: -3
+    m_SuperscriptOffset: 35
+    m_SuperscriptSize: 0.5
+    m_SubscriptOffset: -10
+    m_SubscriptSize: 0.5
+    m_UnderlineOffset: -2
+    m_UnderlineThickness: 0
+    m_StrikethroughOffset: 6
+    m_StrikethroughThickness: 0
+    m_TabWidth: 15
+  variants:
+  - {fileID: 11400000, guid: 2171bb06159c6804688595919e288132, type: 2}
+  - {fileID: 11400000, guid: ce1572e12b61bde48b8dbb3f9c7d732a, type: 2}
+  - {fileID: 11400000, guid: d5755e5b979aa5b4ca4a403286c0b182, type: 2}
+  - {fileID: 11400000, guid: 45ceb7bfe5a74d44094cb85b84d4687f, type: 2}
+  - {fileID: 11400000, guid: ce1dab3faae560b41a43c6a3074c204b, type: 2}
