@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5709868020311835814}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -107,7 +106,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5709868019397410320}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -183,7 +181,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5709868020269735490}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -259,7 +256,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5709868020408041977}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -309,6 +305,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 746715385489775347, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
@@ -629,7 +626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2620790810742040741, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Name
-      value: MilitaryArtifactCanvas
+      value: MilitaryArtifactCanvas Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3971361838587542632, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -691,11 +688,36 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -37
       objectReference: {fileID: 0}
+    - target: {fileID: 8255937526474285478, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      propertyPath: prefabVariantParent
+      value: 
+      objectReference: {fileID: 2620790810742040741, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
     - target: {fileID: 9000219405782878557, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 044770ba9a10a744eac1dfebb69356e6, type: 3}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1175310765330394150, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 648113728}
+    - targetCorrespondingSourceObject: {fileID: 1175310763384114292, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1098990417}
+    - targetCorrespondingSourceObject: {fileID: 1175310763254256591, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1371766593}
+    - targetCorrespondingSourceObject: {fileID: 1175310763375629968, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 406747708}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2620790810742040741, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1202724529}
+    - targetCorrespondingSourceObject: {fileID: 746715385489775347, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 880539424}
   m_SourcePrefab: {fileID: 100100000, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
 --- !u!114 &2068773953593511357 stripped
 MonoBehaviour:
@@ -769,7 +791,7 @@ MonoBehaviour:
   islandId: -1
   x: 0
   y: 0
-  shouldFlicker: 0
+  islandSprite: {fileID: 0}
 --- !u!1 &8875722972260563603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2620790810742040741, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
