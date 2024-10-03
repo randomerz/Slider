@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
 
-public class JungleRecipeBookHints : MonoBehaviour 
+public class JungleRecipeBookHints : MonoBehaviour , IDialogueTableProvider
 {
     private Coroutine hintCoroutine;
 
@@ -13,21 +15,41 @@ public class JungleRecipeBookHints : MonoBehaviour
     private const float HINT_DELAY = 4;
     private const string JUNGLE_UI_HINT_TEXT = "jungleUIHintText";
 
-    private const string HINT_CONTROLS = "You can move the screen left/right to view different recipes.";
-    private readonly string[] HINTS_GENERAL = {
+    private bool hasScreenChanged;
+    private bool hasControlsHintBeenUsed;
+    private bool[] hasGeneralHintBeenUsed;
+
+    private static string[] HINTS_GENERAL = {
         "The hints will fill up as you create more shapes.",
         "The business stuff? Oh don't worry about it, it's all made up anyway.",
         "Hope this helps!",
         "The triple-merges can be a bit tricky.",
     };
-    private bool hasScreenChanged;
-    private bool hasControlsHintBeenUsed;
-    private bool[] hasGeneralHintBeenUsed;
+
+    private enum JungleRecipeHintsCode
+    {
+        HintControls,
+        HintsGeneral,
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<JungleRecipeHintsCode, string[]>
+        {
+            {
+                JungleRecipeHintsCode.HintControls,
+                new[] { "You can move the screen left/right to view different recipes." }
+            },
+            {
+                JungleRecipeHintsCode.HintsGeneral,
+                HINTS_GENERAL
+            },
+        }
+    );
     
     private void Awake() 
     {
         hasGeneralHintBeenUsed = new bool[HINTS_GENERAL.Length];
-        DisplayAndTriggerDialogue(HINTS_GENERAL[0]); 
+        DisplayAndTriggerDialogue(this.GetLocalized(JungleRecipeHintsCode.HintsGeneral, 0).TranslatedFallbackToOriginal); 
     }
 
     private void OnEnable() 
@@ -80,7 +102,7 @@ public class JungleRecipeBookHints : MonoBehaviour
                 }
             }
             
-            DisplayAndTriggerDialogue(HINT_CONTROLS);
+            DisplayAndTriggerDialogue(this.GetLocalized(JungleRecipeHintsCode.HintControls).TranslatedFallbackToOriginal);
             hasControlsHintBeenUsed = true;
             hintCoroutine = null;
             yield break;
@@ -96,7 +118,7 @@ public class JungleRecipeBookHints : MonoBehaviour
 
         yield return new WaitForSeconds(HINT_DELAY);
 
-        DisplayAndTriggerDialogue(HINTS_GENERAL[hintIndex]);
+        DisplayAndTriggerDialogue(this.GetLocalized(JungleRecipeHintsCode.HintsGeneral, hintIndex).TranslatedFallbackToOriginal);
         hasGeneralHintBeenUsed[hintIndex] = true;
         hintCoroutine = null;
     }

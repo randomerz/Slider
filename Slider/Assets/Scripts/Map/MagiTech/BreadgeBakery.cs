@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class BreadgeBakery : MonoBehaviour
+public class BreadgeBakery : MonoBehaviour, IDialogueTableProvider
 {
     public const string BREADGE_HINT_SAVE_STRING = "MagiTechBreadgeHint";
     public const string BREADGE_AMOUNT_SAVE_STRING = "MagiTechBreadgeAmount";
@@ -23,6 +24,41 @@ public class BreadgeBakery : MonoBehaviour
     [SerializeField] private Collectible rainbowBreadgeCollectible;
     [SerializeField] private AnimationCurve breadgeStartCurve;
     [SerializeField] private AnimationCurve breadgeEndCurve;
+
+    public enum BreadgeHintCode
+    {
+        AllCollected,
+        NoneCollected,
+        MissingError,
+        MissingOne,
+        MissingMultiple,
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<BreadgeHintCode, string>
+        {
+            {
+                BreadgeHintCode.AllCollected,
+                "Woah, you have them all!"
+            },
+            {
+                BreadgeHintCode.NoneCollected,
+                "You're missing... all of them!"
+            },
+            {
+                BreadgeHintCode.MissingError,
+                "You should only be missing one but I'm not sure where -- something went wrong tell the devs!"
+            },
+            {
+                BreadgeHintCode.MissingOne,
+                "You're only missing the one from <area/>!"
+            },
+            {
+                BreadgeHintCode.MissingMultiple,
+                "You're missing: <allAreas/>."
+            },
+        }
+    );
 
     private class ManagedBreadgeObject 
     {
@@ -92,25 +128,33 @@ public class BreadgeBakery : MonoBehaviour
         SaveSystem.Current.SetString(BREADGE_AMOUNT_SAVE_STRING, (9 - missingAreas.Count).ToString());
         if (breadgeAmount == 9)
         {
-            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, "Woah, you have them all!");
+            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, this.GetLocalizedSingle(BreadgeHintCode.AllCollected));
         }
         else if (breadgeAmount == 0)
         {
-            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, "You're missing... all of them!");
+            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, this.GetLocalizedSingle(BreadgeHintCode.NoneCollected));
         }
         else if (breadgeAmount == 8)
         {
             if (missingAreas.Count == 0)
             {
-                SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, $"You should only be missing one but I'm not sure where -- something went wrong tell the devs!");
+                SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, this.GetLocalizedSingle(BreadgeHintCode.MissingError));
                 return;
             }
-            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, $"You're only missing the one from {missingAreas[0]}!");
+            string dialogue = this.Interpolate(
+                this.GetLocalizedSingle(BreadgeHintCode.MissingOne),
+                new() {{ "area", missingAreas[0] }}
+            );
+            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, dialogue);
         }
         else
         {
             string allAreas = string.Join(", ", missingAreas);
-            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, $"You're missing: {allAreas}.");
+            string dialogue = this.Interpolate(
+                this.GetLocalizedSingle(BreadgeHintCode.MissingMultiple),
+                new() {{ "allAreas", allAreas }}
+            );
+            SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, dialogue);
         }
     }
 

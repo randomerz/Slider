@@ -10,6 +10,7 @@ public class Shape : ScriptableObject
 {
     [FormerlySerializedAs("name")]
     public string shapeName;
+    private string LocalizedShapeName => LocalizationLoader.LoadJungleShapeTranslation(shapeName);
 
     [FormerlySerializedAs("sprite")]
     public Sprite fullSprite;
@@ -45,10 +46,10 @@ public class Shape : ScriptableObject
         {
             case JungleRecipeBookSave.ShapeStatus.Full:
             case JungleRecipeBookSave.ShapeStatus.PendingFull:
-                return shapeName;
+                return LocalizedShapeName;
             case JungleRecipeBookSave.ShapeStatus.Outline:
             case JungleRecipeBookSave.ShapeStatus.PendingOutline:
-                return Regex.Replace(shapeName, "[a-zA-Z]", "_");
+                return Regex.Replace(LocalizedShapeName, ".", "_");
             case JungleRecipeBookSave.ShapeStatus.None:
             default:
                 return "???";

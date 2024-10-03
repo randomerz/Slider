@@ -30,18 +30,18 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
             return;
         }
 
-        string message = ShapeNameToSpecialMessage(item.itemName);
-        if (message != null)
+        LocalizationPair pair = ShapeNameToSpecialMessage(item.itemName);
+        if (pair.translated != null)
         {
+            SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, pair.TranslatedFallbackToOriginal);
             npc.Conds[^1].dialogueChain[0].animationOnStart = ShapeNameToSpecialAnimation(item.itemName);
         }
         else
         {
-            message = ShapeNameToGenericMessage(item.itemName);
+            SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, ShapeNameToGenericMessage(item.itemName));
             npc.Conds[^1].dialogueChain[0].animationOnStart = "Idle";
         }
 
-        SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, message);
         c.SetSpec(true);
     }
 
@@ -79,7 +79,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         }
     );
 
-    private string ShapeNameToSpecialMessage(string shapeName) => this.GetLocalized(shapeName).TranslatedFallbackToOriginal;
+    private LocalizationPair ShapeNameToSpecialMessage(string shapeName) => this.GetLocalized(shapeName);
 
     // Idle, Happy, Disgusted, Smug, Interested, Shocked
     private string ShapeNameToSpecialAnimation(string shapeName) => shapeName switch

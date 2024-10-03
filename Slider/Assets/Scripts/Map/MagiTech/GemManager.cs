@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Localization;
 using UnityEngine;
 
-public class GemManager : MonoBehaviour, ISavable
+public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
 {
     private const string NUM_REMAINING_GEMS_STRING = "magiTechNumRemainingGems";
     private const string GEM_FUEL_HINT_STRING = "MagitechGemFuelHint";
@@ -26,6 +27,39 @@ public class GemManager : MonoBehaviour, ISavable
 
     public DesyncItem presentConductiveBob;
     public DesyncItem pastConductiveBob;
+
+    private enum GemHintCode
+    {
+        SingleGemHint,
+        MultiGemHint,
+    }
+
+    private static readonly string[] AREA_HINTS = new string[] {
+        "Uh oh, something went wrong! Make sure to get all the gems and let a dev know.",
+        "I heard the Village Gem was spotted near the laser.",
+        "The Cave Gem was a part of some Desync experiments in the past.",
+        "The Ocean gem..? Uh... something is wrong.",
+        "The Jungle gem was owned by the same wizard who made this recipe!",
+        "I heard the Desert gem was lost in the ancient temple in the Impact Zone.",
+        "The Factory gem should be in the museum.",
+        "The Mountain gem should be in the museum.",
+        "The Military gem was spotted behind one of the rocks in the past, towards the west.",
+        "The MagiTech gem... is on the tile I haven't given you! Something went wrong!",
+    };
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<GemHintCode, string[]>
+        {
+            {
+                GemHintCode.SingleGemHint,
+                AREA_HINTS
+            },
+            {
+                GemHintCode.MultiGemHint,
+                new string[] { "Hmmm... the gems should be somewhere in this area. Can you get me: <remainingGems/>?" }
+            },
+        }
+    );
 
     private void Start() 
     {
@@ -274,8 +308,8 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void UpdateGemHint()
     {
-        string specific = "Uh oh, something went wrong! Make sure to get all the gems and let a dev know.";
-        List<string> all = new();
+        string specific = this.GetLocalized(GemHintCode.SingleGemHint, 0).TranslatedOrFallback;
+        List<Area> all = new();
         int num = 0;
 
         foreach (Area a in gems.Keys)
@@ -289,38 +323,7 @@ public class GemManager : MonoBehaviour, ISavable
             {
                 num += 1;
 
-                all.Add(a.ToString());
-
-                switch (a)
-                {
-                    case Area.Village:
-                        specific = "I heard the Village Gem was spotted near the laser.";
-                        break;
-                    case Area.Caves:
-                        specific = "The Cave Gem was a part of some Desync experiments in the past.";
-                        break;
-                    case Area.Ocean:
-                        specific = "The Ocean gem..? Uh... something is wrong.";
-                        break;
-                    case Area.Jungle:
-                        specific = "The Jungle gem was owned by the same wizard who made this recipe!";
-                        break;
-                    case Area.Desert:
-                        specific = "I heard the Desert gem was lost in the ancient temple in the Impact Zone.";
-                        break;
-                    case Area.Factory:
-                        specific = "The Factory gem should be in the museum.";
-                        break;
-                    case Area.Mountain:
-                        specific = "The Mountain gem should be in the museum.";
-                        break;
-                    case Area.Military:
-                        specific = "The Military gem was spotted behind one of the rocks in the past, towards the west.";
-                        break;
-                    case Area.MagiTech:
-                        specific = "The MagiTech gem... is on the tile I haven't given you! Something went wrong!";
-                        break;
-                };
+                all.Add(a);
             }
         }
 
@@ -329,13 +332,23 @@ public class GemManager : MonoBehaviour, ISavable
             presentConductiveBob.SetIsTracked(false);
             pastConductiveBob.SetIsTracked(false);
         }
-        else if (num == 1 && specific == "The Cave Gem was a part of some Desync experiments in the past.")
+        else if (num == 1)
         {
-            presentConductiveBob.SetIsTracked(true);
-            pastConductiveBob.SetIsTracked(true);
+            specific = this.GetLocalizedSingle(GemHintCode.MultiGemHint, (int)all[0]);
+            if (all[0] == Area.Caves)
+            {
+                presentConductiveBob.SetIsTracked(true);
+                pastConductiveBob.SetIsTracked(true);
+            }
         }
 
-        string combined = $"Hmmm... the gems should be somewhere in this area. Can you get me: {String.Join(", ", all)}?";
+        string combined = this.Interpolate(
+            this.GetLocalizedSingle(GemHintCode.MultiGemHint),
+            new() {{
+                "remainingGems",
+                string.Join(", ", all.Select(a => a.GetDisplayName()))
+            }}
+        );
 
         SaveSystem.Current.SetString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
     }

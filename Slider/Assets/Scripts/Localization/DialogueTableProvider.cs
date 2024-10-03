@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Localization;
 using UnityEngine;
-
 using FuckCSharpWhyDoIHaveToRelayEverything = DialogueTableProviderExtensions;
 
 public interface IDialogueTableProvider
@@ -14,7 +13,7 @@ public interface IDialogueTableProvider
     protected static Dictionary<string, LocalizationPair> InitializeTable(
         Dictionary<string, string> input)
     {
-        return input.ToDictionary(kv => kv.Key, kv => new LocalizationPair()
+        return input.ToDictionary(kv => LocalizationKey(kv.Key), kv => new LocalizationPair()
         {
             original = kv.Value,
             translated = null
@@ -160,5 +159,11 @@ public static class DialogueTableProviderExtensions
     {
         var pair = self.GetLocalized(key, i);
         return pair.TranslatedFallbackToOriginal;
+    }
+
+    public static string Interpolate<I>(this I self, string format, Dictionary<string, string> substitutions)
+        where I : MonoBehaviour, IDialogueTableProvider
+    {
+        return self.Interpolate(format, substitutions);
     }
 }

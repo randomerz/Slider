@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class BaboonTree : MonoBehaviour
+public class BaboonTree : MonoBehaviour, IDialogueTableProvider
 {
     private enum BaboonState
     {
@@ -10,6 +11,26 @@ public class BaboonTree : MonoBehaviour
         Connected,
         Snapping,
     }
+
+    private enum BaboonDialogueCode
+    {
+        Vertically,
+        Horizontally,
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<BaboonDialogueCode, string>
+        {
+            {
+                BaboonDialogueCode.Vertically,
+                "Hmm... try shaking it vertically too, just to be safe."
+            },
+            {
+                BaboonDialogueCode.Horizontally,
+                "Hmm... try shaking it horizontally too, just to be safe."
+            },
+        }
+    );
 
     [SerializeField] private float baboonFallDuration;
     [SerializeField] private AnimationCurve baboonFallCurve;
@@ -146,8 +167,8 @@ public class BaboonTree : MonoBehaviour
             didVertical = true;
         }
 
-        SaveSystem.Current.SetString("desertRemainingShakeDirection",
-            didHorizontal ? "vertically" : "horizontally"
+        SaveSystem.Current.SetString("desertRemainingShakeDirection", this.GetLocalized(
+            didHorizontal ? BaboonDialogueCode.Horizontally : BaboonDialogueCode.Vertically).TranslatedFallbackToOriginal
         );
 
         if (isWalking && !isFalling)
@@ -223,6 +244,6 @@ public class BaboonTree : MonoBehaviour
     public void IsBothDirectionsDone(Condition c)  => c.SetSpec(didHorizontal && didVertical); // yes is both directions done
     public void IsFalling(Condition c)             => c.SetSpec(isFalling);
     public void DidShakeAfterWalk(Condition c)     => c.SetSpec(numShakesAfterWalk >= 1);
-    public void ThreeShakeAfterWalk(Condition c)     => c.SetSpec(numShakesAfterWalk >= 3);
+    public void ThreeShakeAfterWalk(Condition c)   => c.SetSpec(numShakesAfterWalk >= 3);
 
 }

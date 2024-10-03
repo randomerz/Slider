@@ -48,6 +48,7 @@ namespace Localization
         public string original;
         public string translated;
 
+        public string TranslatedOrFallback => TranslatedFallbackToOriginal;
         public string TranslatedFallbackToOriginal => translated ?? original;
 
         public static LocalizationPair operator +(LocalizationPair a, LocalizationPair b)
@@ -105,12 +106,23 @@ namespace Localization
         protected static string[] GetComponentPath(Component current)
         {
             List<string> pathComponents = new();
+
+            Transform root = null;
             for (Transform go = current.transform; go != null; go = go.parent)
             {
                 pathComponents.Add(go.name);
+                root = go;
             }
-
+            
             pathComponents.Reverse();
+            
+            // AT: assume injectors are always at root object level
+            var inj = root.GetComponent<LocalizationInjector>();
+            if (inj != null && inj.prefabVariantParent)
+            {
+                pathComponents[0] = inj.prefabVariantParent.name;
+            }
+            
             return pathComponents.ToArray();
         }
     }
