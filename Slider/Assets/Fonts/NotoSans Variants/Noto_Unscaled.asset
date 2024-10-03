@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cee1884ec0454fa08568605d8cb04485, type: 3}
+  m_Name: Noto_Unscaled
+  m_EditorClassIdentifier: 
+  faceInfo:
+    m_FaceIndex: 0
+    m_FamilyName: Noto Sans
+    m_StyleName: SemiBold
+    m_PointSize: 36
+    m_Scale: 0.85
+    m_UnitsPerEM: 1000
+    m_LineHeight: 43.5
+    m_AscentLine: 32.6
+    m_CapLine: 29
+    m_MeanLine: 22
+    m_Baseline: 1
+    m_DescentLine: -6.5
+    m_SuperscriptOffset: 42.76
+    m_SuperscriptSize: 0.5
+    m_SubscriptOffset: -11.72
+    m_SubscriptSize: 0.5
+    m_UnderlineOffset: -5
+    m_UnderlineThickness: 0
+    m_StrikethroughOffset: 8.8
+    m_StrikethroughThickness: 2
+    m_TabWidth: 10
+  variants:
+  - {fileID: 11400000, guid: 84b73e96f279c2144879f225eebf1a6d, type: 2}
+  - {fileID: 11400000, guid: 050ac1c19c3338c4bbdf35deea0a5de2, type: 2}
+  - {fileID: 11400000, guid: 63dcc424cb7ed5a439c3d9051b98c00e, type: 2}
+  - {fileID: 11400000, guid: 6f77b25bc7eb6b54fa6de354dc858513, type: 2}
+  - {fileID: 11400000, guid: 48a3ac123a89f07439aca826eb713b5a, type: 2}

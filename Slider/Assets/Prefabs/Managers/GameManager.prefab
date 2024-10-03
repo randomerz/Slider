@@ -273,8 +273,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 533831353c096c84aaebe0eb7b42f175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationFont: {fileID: 11400000, guid: dc462876eb7e9f9499e7039328fa71d0, type: 2}
-  localizationFontNonPixel: {fileID: 11400000, guid: 7d692a08c71f59f4f9199623c9376bfd, type: 2}
+  localizationFontPixelBig: {fileID: 11400000, guid: d5755e5b979aa5b4ca4a403286c0b182, type: 2}
+  localizationFontPixelSmall: {fileID: 11400000, guid: 8e981fa73b13c124fab49ef26c4bb8fc, type: 2}
+  localizationFontNonPixelBig: {fileID: 11400000, guid: 48a3ac123a89f07439aca826eb713b5a, type: 2}
+  localizationFontNonPixelSmall: {fileID: 11400000, guid: e595f55111b3c134e8482af17ce1e6b6, type: 2}
+  BigFonts:
+  - {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
+  - {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
+  - {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
 --- !u!114 &5852722716209220533
 MonoBehaviour:
   m_ObjectHideFlags: 0

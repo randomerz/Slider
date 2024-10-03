@@ -3,8 +3,6 @@ however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
 be corrupted, these rules may be helpful for debugging purposes...
-- In general, any consecutive string of \r and \n (in any order) will be
-  treated as one SINGLE line break, except within an enclosed context
 - The first 4 rows can be arbitrarily long
   - The first cell of first row is used to store this block of instruction
     text
@@ -16,26 +14,12 @@ be corrupted, these rules may be helpful for debugging purposes...
   - Columns in the third row are exclusively comments for properties in the
     second row
 - Every following line can include any number of cells, but only the
-  first three will be parsed (you can use the rest as comments if needed)
-- The file must end in a sequence of \r and \n's
-- Every cell containing a ^, \r, or \n must be enclosed in ""
-  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
-    then the parser is said to enter an ""enclosed context"", such context
-    ends immediately when a non-escaped "" that is not followed by \r, \n,
-    or a separator is encountered
-  - "" within each cell should be escaped using another "" in front of it,
-  - If a "" is encountered in a non-enclosed context, and it is not right
-    after a separator, \r, or \n, then it is entirely ignored
-  - If a non-escaped "" is encountered in an enclosed context...
-    - If it is followed by a separator, \r, or \n, then it is considered
-      the closing quote of the current context
-    - Otherwise, it is ignored
-  - If a separator, \r, or \n is encountered while in an enclosed context,
-    it will be preserved
+  first four will be parsed (you can use the rest as comments if needed)
+  - The fourth column is an optional metadata column
 ",
 "IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
-"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size.","","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.","","The author(s) of this file, will appear in credits","",
-"Path","Orig","Translation",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
+"Path","Orig","Translation","Metadata",
 "BG Text Daniel and VGDev/Text/Text","A Game by 
 
 Daniel Carr 
@@ -48,7 +32,7 @@ Daniel Carr
 
 and 
 
-VGDev",
+VGDev","PixelTitanOne;1",
 "BG Text Daniel and VGDev/Text/Text Outline (1)","A Game by 
 
 Daniel Carr 
@@ -61,7 +45,7 @@ Daniel Carr
 
 and 
 
-VGDev",
+VGDev","PixelTitanOne;1",
 "BG Text Daniel and VGDev/Text/Text Outline (2)","A Game by 
 
 Daniel Carr 
@@ -74,7 +58,7 @@ Daniel Carr
 
 and 
 
-VGDev",
+VGDev","PixelTitanOne;1",
 "BG Text Daniel and VGDev/Text/Text Outline (3)","A Game by 
 
 Daniel Carr 
@@ -87,7 +71,7 @@ Daniel Carr
 
 and 
 
-VGDev",
+VGDev","PixelTitanOne;1",
 "BG Text Daniel and VGDev/Text/Text Outline (4)","A Game by 
 
 Daniel Carr 
@@ -100,82 +84,82 @@ Daniel Carr
 
 and 
 
-VGDev",
+VGDev","PixelTitanOne;1",
 "BG Text Thank you/Text/Text","Thank you
 
-for playing!","플레이해 주셔서
+for playing!","Thank you
 
-감사합니다!",
+for playing!","PixelTitanOne;1",
 "BG Text Thank you/Text/Text Outline (1)","Thank you
 
-for playing!","플레이해 주셔서
+for playing!","Thank you
 
-감사합니다!",
+for playing!","PixelTitanOne;1",
 "BG Text Thank you/Text/Text Outline (2)","Thank you
 
-for playing!","플레이해 주셔서
+for playing!","Thank you
 
-감사합니다!",
+for playing!","PixelTitanOne;1",
 "BG Text Thank you/Text/Text Outline (3)","Thank you
 
-for playing!","플레이해 주셔서
+for playing!","Thank you
 
-감사합니다!",
+for playing!","PixelTitanOne;1",
 "BG Text Thank you/Text/Text Outline (4)","Thank you
 
-for playing!","플레이해 주셔서
+for playing!","Thank you
 
-감사합니다!",
-"Credits Manager@Default:0","Skip","Skip",
-"CreditsCanvas/Skip Prompt/Skip Prompt Text","Skip","건너뛰기",
-"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+for playing!","PixelTitanOne;1",
+"Credits Manager@Default:0","Skip","Skip","",
+"CreditsCanvas/Skip Prompt/Skip Prompt Text","Skip","Skip","PixelTitanZero;54",
+"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text","Art
-Programming","아트
-프로그래밍",
+Programming","Art
+Programming","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (1)","Art
-Programming","아트
-프로그래밍",
+Programming","Art
+Programming","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (2)","Art
-Programming","아트
-프로그래밍",
+Programming","Art
+Programming","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (3)","Art
-Programming","아트
-프로그래밍",
+Programming","Art
+Programming","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (4)","Art
-Programming","아트
-프로그래밍",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text","Avery Greer","Avery Greer",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (1)","Avery Greer","Avery Greer",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (2)","Avery Greer","Avery Greer",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (3)","Avery Greer","Avery Greer",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (4)","Avery Greer","Avery Greer",
+Programming","Art
+Programming","PixelTitanZero;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text","Avery Greer","Avery Greer","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (1)","Avery Greer","Avery Greer","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (2)","Avery Greer","Avery Greer","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (3)","Avery Greer","Avery Greer","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (4)","Avery Greer","Avery Greer","PixelTitanOne;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
-Audio","프로그래밍
-오디오",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text","Allison Lu","Allison Lu",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (1)","Allison Lu","Allison Lu",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (2)","Allison Lu","Allison Lu",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (3)","Allison Lu","Allison Lu",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (4)","Allison Lu","Allison Lu",
-"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+Audio","Programming
+Audio","PixelTitanZero;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text","Allison Lu","Allison Lu","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (1)","Allison Lu","Allison Lu","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (2)","Allison Lu","Allison Lu","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (3)","Allison Lu","Allison Lu","PixelTitanOne;1",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (4)","Allison Lu","Allison Lu","PixelTitanOne;1",
+"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
@@ -188,7 +172,7 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy",
+Nia Bellamy","PixelTitanZero;1",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (1)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
@@ -201,7 +185,7 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy",
+Nia Bellamy","PixelTitanZero;1",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (2)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
@@ -214,7 +198,7 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy",
+Nia Bellamy","PixelTitanZero;1",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (3)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
@@ -227,7 +211,7 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy",
+Nia Bellamy","PixelTitanZero;1",
 "Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (4)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
@@ -240,260 +224,252 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text","Additional Art","추가 아트",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (1)","Additional Art","추가 아트",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (2)","Additional Art","추가 아트",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (3)","Additional Art","추가 아트",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (4)","Additional Art","추가 아트",
-"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (1)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (2)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (3)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (4)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR",
+Nia Bellamy","PixelTitanZero;1",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text","Additional Art","Additional Art","PixelTitanOne;1",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (1)","Additional Art","Additional Art","PixelTitanOne;1",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (2)","Additional Art","Additional Art","PixelTitanOne;1",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (3)","Additional Art","Additional Art","PixelTitanOne;1",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (4)","Additional Art","Additional Art","PixelTitanOne;1",
+"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR","PixelTitanZero;1",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (1)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR","PixelTitanZero;1",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (2)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR","PixelTitanZero;1",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (3)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR","PixelTitanZero;1",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (4)","Additional sound from ZapSplat and SFXR","Additional sound from ZapSplat and SFXR","PixelTitanZero;1",
 "Map/Tiles/Audio tile/WorldCanvas/Text/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-",
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","PixelTitanZero;1",
 "Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (1)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-",
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","PixelTitanZero;1",
 "Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (2)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-",
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","PixelTitanZero;1",
 "Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (3)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-",
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","PixelTitanZero;1",
 "Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (4)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text","Project Lead","프로젝트 리드",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (1)","Project Lead","프로젝트 리드",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (2)","Project Lead","프로젝트 리드",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (3)","Project Lead","프로젝트 리드",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (4)","Project Lead","프로젝트 리드",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text","Daniel Carr","Daniel Carr",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (1)","Daniel Carr","Daniel Carr",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (2)","Daniel Carr","Daniel Carr",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (3)","Daniel Carr","Daniel Carr",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (4)","Daniel Carr","Daniel Carr",
-"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","PixelTitanZero;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text","Project Lead","Project Lead","PixelTitanZero;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (1)","Project Lead","Project Lead","PixelTitanZero;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (2)","Project Lead","Project Lead","PixelTitanZero;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (3)","Project Lead","Project Lead","PixelTitanZero;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (4)","Project Lead","Project Lead","PixelTitanZero;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text","Daniel Carr","Daniel Carr","PixelTitanOne;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (1)","Daniel Carr","Daniel Carr","PixelTitanOne;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (2)","Daniel Carr","Daniel Carr","PixelTitanOne;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (3)","Daniel Carr","Daniel Carr","PixelTitanOne;1",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (4)","Daniel Carr","Daniel Carr","PixelTitanOne;1",
+"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text","Programming 
 Design
 Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅",
+Marketing","Programming 
+Design
+Tech Art
+Marketing","PixelTitanZero;1",
 "Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming 
 Design
 Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅",
+Marketing","Programming 
+Design
+Tech Art
+Marketing","PixelTitanZero;1",
 "Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming 
 Design
 Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅",
+Marketing","Programming 
+Design
+Tech Art
+Marketing","PixelTitanZero;1",
 "Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming 
 Design
 Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅",
+Marketing","Programming 
+Design
+Tech Art
+Marketing","PixelTitanZero;1",
 "Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming 
 Design
 Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text","Chase O'Brien","Chase O'Brien",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (1)","Chase O'Brien","Chase O'Brien",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (2)","Chase O'Brien","Chase O'Brien",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (3)","Chase O'Brien","Chase O'Brien",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (4)","Chase O'Brien","Chase O'Brien",
-"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+Marketing","Programming 
+Design
+Tech Art
+Marketing","PixelTitanZero;1",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text","Chase O'Brien","Chase O'Brien","PixelTitanOne;1",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (1)","Chase O'Brien","Chase O'Brien","PixelTitanOne;1",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (2)","Chase O'Brien","Chase O'Brien","PixelTitanOne;1",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (3)","Chase O'Brien","Chase O'Brien","PixelTitanOne;1",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (4)","Chase O'Brien","Chase O'Brien","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text","Music
-Art","음악
-아트",
+Art","Music
+Art","PixelTitanZero;1",
 "Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (1)","Music
-Art","음악
-아트",
+Art","Music
+Art","PixelTitanZero;1",
 "Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (2)","Music
-Art","음악
-아트",
+Art","Music
+Art","PixelTitanZero;1",
 "Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (3)","Music
-Art","음악
-아트",
+Art","Music
+Art","PixelTitanZero;1",
 "Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (4)","Music
-Art","음악
-아트",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text","Travis Bittel","Travis Bittel",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (1)","Travis Bittel","Travis Bittel",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (2)","Travis Bittel","Travis Bittel",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (3)","Travis Bittel","Travis Bittel",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (4)","Travis Bittel","Travis Bittel",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text","Programming","프로그래밍",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","프로그래밍",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","프로그래밍",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","프로그래밍",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","프로그래밍",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text","Eli Corley","Eli Corley",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (1)","Eli Corley","Eli Corley",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (2)","Eli Corley","Eli Corley",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (3)","Eli Corley","Eli Corley",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (4)","Eli Corley","Eli Corley",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue","2","2",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font","2","2",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue","4","4",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font","4","4",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text","Music","음악",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music","음악",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music","음악",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music","음악",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music","음악",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text","Alan Tao","Alan Tao",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (1)","Alan Tao","Alan Tao",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (2)","Alan Tao","Alan Tao",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (3)","Alan Tao","Alan Tao",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (4)","Alan Tao","Alan Tao",
+Art","Music
+Art","PixelTitanZero;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text","Travis Bittel","Travis Bittel","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (1)","Travis Bittel","Travis Bittel","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (2)","Travis Bittel","Travis Bittel","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (3)","Travis Bittel","Travis Bittel","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (4)","Travis Bittel","Travis Bittel","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text","Eli Corley","Eli Corley","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (1)","Eli Corley","Eli Corley","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (2)","Eli Corley","Eli Corley","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (3)","Eli Corley","Eli Corley","PixelTitanOne;1",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (4)","Eli Corley","Eli Corley","PixelTitanOne;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text","Music","Music","PixelTitanZero;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music","Music","PixelTitanZero;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music","Music","PixelTitanZero;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music","Music","PixelTitanZero;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music","Music","PixelTitanZero;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text","Alan Tao","Alan Tao","PixelTitanOne;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (1)","Alan Tao","Alan Tao","PixelTitanOne;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (2)","Alan Tao","Alan Tao","PixelTitanOne;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (3)","Alan Tao","Alan Tao","PixelTitanOne;1",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (4)","Alan Tao","Alan Tao","PixelTitanOne;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
-Audio","프로그래밍
-오디오",
+Audio","Programming
+Audio","PixelTitanZero;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text","Ethan 
 Aristanto","Ethan 
-Aristanto",
+Aristanto","PixelTitanOne;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (1)","Ethan 
 Aristanto","Ethan 
-Aristanto",
+Aristanto","PixelTitanOne;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (2)","Ethan 
 Aristanto","Ethan 
-Aristanto",
+Aristanto","PixelTitanOne;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (3)","Ethan 
 Aristanto","Ethan 
-Aristanto",
+Aristanto","PixelTitanOne;1",
 "Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (4)","Ethan 
 Aristanto","Ethan 
-Aristanto",
-"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+Aristanto","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text","Programming
 Design
-Music","프로그래밍
-디자인
-음악",
+Music","Programming
+Design
+Music","PixelTitanZero;1",
 "Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
 Design
-Music","프로그래밍
-디자인
-음악",
+Music","Programming
+Design
+Music","PixelTitanZero;1",
 "Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
 Design
-Music","프로그래밍
-디자인
-음악",
+Music","Programming
+Design
+Music","PixelTitanZero;1",
 "Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
 Design
-Music","프로그래밍
-디자인
-음악",
+Music","Programming
+Design
+Music","PixelTitanZero;1",
 "Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
 Design
-Music","프로그래밍
-디자인
-음악",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text","Elliot Chen","Elliot Chen",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (1)","Elliot Chen","Elliot Chen",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (2)","Elliot Chen","Elliot Chen",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (3)","Elliot Chen","Elliot Chen",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (4)","Elliot Chen","Elliot Chen",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text","Programming","프로그래밍",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","프로그래밍",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","프로그래밍",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","프로그래밍",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","프로그래밍",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text","Drew Busch","Drew Busch",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (1)","Drew Busch","Drew Busch",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (2)","Drew Busch","Drew Busch",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (3)","Drew Busch","Drew Busch",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (4)","Drew Busch","Drew Busch",
-"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+Music","Programming
+Design
+Music","PixelTitanZero;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text","Elliot Chen","Elliot Chen","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (1)","Elliot Chen","Elliot Chen","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (2)","Elliot Chen","Elliot Chen","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (3)","Elliot Chen","Elliot Chen","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (4)","Elliot Chen","Elliot Chen","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text","Drew Busch","Drew Busch","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (1)","Drew Busch","Drew Busch","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (2)","Drew Busch","Drew Busch","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (3)","Drew Busch","Drew Busch","PixelTitanOne;1",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (4)","Drew Busch","Drew Busch","PixelTitanOne;1",
+"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text","Programming
-Tech Art","프로그래밍
-아트 기술지원",
+Tech Art","Programming
+Tech Art","PixelTitanZero;1",
 "Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
-Tech Art","프로그래밍
-아트 기술지원",
+Tech Art","Programming
+Tech Art","PixelTitanZero;1",
 "Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
-Tech Art","프로그래밍
-아트 기술지원",
+Tech Art","Programming
+Tech Art","PixelTitanZero;1",
 "Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
-Tech Art","프로그래밍
-아트 기술지원",
+Tech Art","Programming
+Tech Art","PixelTitanZero;1",
 "Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
-Tech Art","프로그래밍
-아트 기술지원",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text","Logan Bowers","Logan Bowers",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (1)","Logan Bowers","Logan Bowers",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (2)","Logan Bowers","Logan Bowers",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (3)","Logan Bowers","Logan Bowers",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (4)","Logan Bowers","Logan Bowers",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+Tech Art","Programming
+Tech Art","PixelTitanZero;1",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text","Logan Bowers","Logan Bowers","PixelTitanOne;1",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (1)","Logan Bowers","Logan Bowers","PixelTitanOne;1",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (2)","Logan Bowers","Logan Bowers","PixelTitanOne;1",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (3)","Logan Bowers","Logan Bowers","PixelTitanOne;1",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (4)","Logan Bowers","Logan Bowers","PixelTitanOne;1",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text","Kate Tran 
 Jimmy Huang
 Maddie King
@@ -506,7 +482,7 @@ Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
 Rithvik Maladi
-",
+","PixelTitanZero;1",
 "Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (1)","Kate Tran 
 Jimmy Huang
 Maddie King
@@ -519,7 +495,7 @@ Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
 Rithvik Maladi
-",
+","PixelTitanZero;1",
 "Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (2)","Kate Tran 
 Jimmy Huang
 Maddie King
@@ -532,7 +508,7 @@ Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
 Rithvik Maladi
-",
+","PixelTitanZero;1",
 "Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (3)","Kate Tran 
 Jimmy Huang
 Maddie King
@@ -545,7 +521,7 @@ Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
 Rithvik Maladi
-",
+","PixelTitanZero;1",
 "Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (4)","Kate Tran 
 Jimmy Huang
 Maddie King
@@ -558,57 +534,57 @@ Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
 Rithvik Maladi
-",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text","Additional Contributions","추가 기여",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (1)","Additional Contributions","추가 기여",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (2)","Additional Contributions","추가 기여",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (3)","Additional Contributions","추가 기여",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (4)","Additional Contributions","추가 기여",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text","Jamie Lee","Jamie Lee",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (1)","Jamie Lee","Jamie Lee",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (2)","Jamie Lee","Jamie Lee",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (3)","Jamie Lee","Jamie Lee",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (4)","Jamie Lee","Jamie Lee",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text","Art","아트",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (1)","Art","아트",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (2)","Art","아트",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (3)","Art","아트",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (4)","Art","아트",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text","Programming","프로그래밍",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (1)","Programming","프로그래밍",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (2)","Programming","프로그래밍",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (3)","Programming","프로그래밍",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (4)","Programming","프로그래밍",
+","PixelTitanZero;1",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text","Additional Contributions","Additional Contributions","PixelTitanOne;1",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (1)","Additional Contributions","Additional Contributions","PixelTitanOne;1",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (2)","Additional Contributions","Additional Contributions","PixelTitanOne;1",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (3)","Additional Contributions","Additional Contributions","PixelTitanOne;1",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (4)","Additional Contributions","Additional Contributions","PixelTitanOne;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text","Jamie Lee","Jamie Lee","PixelTitanOne;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (1)","Jamie Lee","Jamie Lee","PixelTitanOne;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (2)","Jamie Lee","Jamie Lee","PixelTitanOne;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (3)","Jamie Lee","Jamie Lee","PixelTitanOne;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (4)","Jamie Lee","Jamie Lee","PixelTitanOne;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (1)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (2)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (3)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (4)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (1)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (2)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (3)","Programming","Programming","PixelTitanZero;1",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (4)","Programming","Programming","PixelTitanZero;1",
 "Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text","Pawan 
 Jayakumar","Pawan 
-Jayakumar",
+Jayakumar","PixelTitanOne;1",
 "Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (1)","Pawan 
 Jayakumar","Pawan 
-Jayakumar",
+Jayakumar","PixelTitanOne;1",
 "Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (2)","Pawan 
 Jayakumar","Pawan 
-Jayakumar",
+Jayakumar","PixelTitanOne;1",
 "Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (3)","Pawan 
 Jayakumar","Pawan 
-Jayakumar",
+Jayakumar","PixelTitanOne;1",
 "Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (4)","Pawan 
 Jayakumar","Pawan 
-Jayakumar",
-"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","추가 프로그래밍",
+Jayakumar","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","Additional Programming","PixelTitanOne;1",
 "Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
@@ -617,8 +593,7 @@ Muskaan Gupta","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta
-",
+Muskaan Gupta","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (1)","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
@@ -627,8 +602,7 @@ Muskaan Gupta","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta
-",
+Muskaan Gupta","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (2)","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
@@ -637,8 +611,7 @@ Muskaan Gupta","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta
-",
+Muskaan Gupta","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (3)","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
@@ -647,8 +620,7 @@ Muskaan Gupta","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta
-",
+Muskaan Gupta","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (4)","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
@@ -657,13 +629,12 @@ Muskaan Gupta","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta
-",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","추가 프로그래밍",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","추가 프로그래밍",
+Muskaan Gupta","PixelTitanZero;1",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","Additional Programming","PixelTitanOne;1",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","Additional Programming","PixelTitanOne;1",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text","Reinart Realina
 Thomas Dayton
 Nicolas Cai
@@ -674,7 +645,7 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia",
+Steven Jia","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (1)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
@@ -685,7 +656,7 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia",
+Steven Jia","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (2)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
@@ -696,7 +667,7 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia",
+Steven Jia","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (3)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
@@ -707,7 +678,7 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia",
+Steven Jia","PixelTitanZero;1",
 "Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (4)","Reinart Realina
 Thomas Dayton
 Nicolas Cai
@@ -718,74 +689,74 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia",
-"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text","Art","아트",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (1)","Art","아트",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (2)","Art","아트",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (3)","Art","아트",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (4)","Art","아트",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text","Max Zhang","Max Zhang",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (1)","Max Zhang","Max Zhang",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (2)","Max Zhang","Max Zhang",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (3)","Max Zhang","Max Zhang",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (4)","Max Zhang","Max Zhang",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text","Design","디자인",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (1)","Design","디자인",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (2)","Design","디자인",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (3)","Design","디자인",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (4)","Design","디자인",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text","Sara Inani","Sara Inani",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (1)","Sara Inani","Sara Inani",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (2)","Sara Inani","Sara Inani",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (3)","Sara Inani","Sara Inani",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (4)","Sara Inani","Sara Inani",
-"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
-"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","제 대사에 무언가 문제가 생겼습니다!",
+Steven Jia","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (1)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (2)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (3)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (4)","Art","Art","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text","Max Zhang","Max Zhang","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (1)","Max Zhang","Max Zhang","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (2)","Max Zhang","Max Zhang","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (3)","Max Zhang","Max Zhang","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (4)","Max Zhang","Max Zhang","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text","Design","Design","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (1)","Design","Design","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (2)","Design","Design","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (3)","Design","Design","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (4)","Design","Design","PixelTitanZero;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text","Sara Inani","Sara Inani","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (1)","Sara Inani","Sara Inani","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (2)","Sara Inani","Sara Inani","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (3)","Sara Inani","Sara Inani","PixelTitanOne;1",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (4)","Sara Inani","Sara Inani","PixelTitanOne;1",
+"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
+"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue","","","TinyUnicode;1",
+"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text","Mark Brown
 Beth O'Brien
 Playtesters
 ","Mark Brown
 Beth O'Brien
-플레이테스터
-",
+Playtesters
+","PixelTitanZero;1",
 "Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (1)","Mark Brown
 Beth O'Brien
 Playtesters
 ","Mark Brown
 Beth O'Brien
-플레이테스터
-",
+Playtesters
+","PixelTitanZero;1",
 "Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (2)","Mark Brown
 Beth O'Brien
 Playtesters
 ","Mark Brown
 Beth O'Brien
-플레이테스터
-",
+Playtesters
+","PixelTitanZero;1",
 "Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (3)","Mark Brown
 Beth O'Brien
 Playtesters
 ","Mark Brown
 Beth O'Brien
-플레이테스터
-",
+Playtesters
+","PixelTitanZero;1",
 "Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (4)","Mark Brown
 Beth O'Brien
 Playtesters
 ","Mark Brown
 Beth O'Brien
-플레이테스터
-",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text","Special Thanks","Special Thanks",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (1)","Special Thanks","Special Thanks",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (2)","Special Thanks","Special Thanks",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (3)","Special Thanks","Special Thanks",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (4)","Special Thanks","Special Thanks",
+Playtesters
+","PixelTitanZero;1",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text","Special Thanks","Special Thanks","PixelTitanOne;1",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (1)","Special Thanks","Special Thanks","PixelTitanOne;1",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (2)","Special Thanks","Special Thanks","PixelTitanOne;1",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (3)","Special Thanks","Special Thanks","PixelTitanOne;1",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (4)","Special Thanks","Special Thanks","PixelTitanOne;1",

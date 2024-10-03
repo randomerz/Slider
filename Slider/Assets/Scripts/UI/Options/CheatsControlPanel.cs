@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CheatsControlPanel : MonoBehaviour
+public class CheatsControlPanel : MonoBehaviour, IDialogueTableProvider
 {
     private List<Collectible> collectibles = new();
     private List<int> collectibleIndexesToGive = new();
@@ -27,13 +28,31 @@ public class CheatsControlPanel : MonoBehaviour
     private bool isNoClipOn;
     private bool didSpawnAnchor;
 
-    private const string GIVE_STRING = "Give";
-    private const string TELEPORT_STRING = "Teleport";
-    private const string UNDO_STRING = "Undo";
-    private const string SPAWN_ANCHOR = "Spawn Anchor";
-    private const string RECALL_ANCHOR = "Recall Anchor";
-    private const string NO_CLIP_OFF = "NoClip-Off";
-    private const string NO_CLIP_ON = "NoClip-On";
+    public enum CheatsControlPanelStrings
+    {
+        NoCollectibles,
+        Give,
+        Teleport,
+        Undo,
+        SpawnAnchor,
+        RecallAnchor,
+        NoClipOff,
+        NoClipOn,
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<CheatsControlPanelStrings, string>()
+        {
+            { CheatsControlPanelStrings.NoCollectibles, "No Collectibles!" },
+            { CheatsControlPanelStrings.Give, "Give" },
+            { CheatsControlPanelStrings.Teleport, "Teleport" },
+            { CheatsControlPanelStrings.Undo, "Undo" },
+            { CheatsControlPanelStrings.SpawnAnchor, "Spawn Anchor" },
+            { CheatsControlPanelStrings.RecallAnchor, "Recall Anchor" },
+            { CheatsControlPanelStrings.NoClipOff, "NoClip-Off" },
+            { CheatsControlPanelStrings.NoClipOn , "NoCLip-On" }
+        }
+    );
 
     [SerializeField] private TextMeshProUGUI collectibleLabelText;
     [SerializeField] private TextMeshProUGUI collectibleButtonText;
@@ -65,10 +84,12 @@ public class CheatsControlPanel : MonoBehaviour
         SetCollectibleIndex(0);
         SetAreaIndex(0);
 
-        noClipText.text = isNoClipOn ? NO_CLIP_ON : NO_CLIP_OFF;
+        noClipText.text = this.GetLocalizedSingle(isNoClipOn ? CheatsControlPanelStrings.NoClipOn : CheatsControlPanelStrings.NoClipOff);
         bool playerHasAnchor = PlayerInventory.Instance != null && PlayerInventory.Instance.GetHasCollectedAnchor();
         didSpawnAnchor = playerHasAnchor;
-        anchorText.text = playerHasAnchor ? RECALL_ANCHOR : SPAWN_ANCHOR;
+        anchorText.text = this.GetLocalizedSingle(playerHasAnchor
+            ? CheatsControlPanelStrings.RecallAnchor
+            : CheatsControlPanelStrings.SpawnAnchor);
     }
 
     public void CheckCheatsOnPauseClosed()
@@ -170,7 +191,7 @@ public class CheatsControlPanel : MonoBehaviour
             Debug.Log($"[Cheats] Spawned Anchor");
 
             didSpawnAnchor = true;
-            anchorText.text = RECALL_ANCHOR;
+            anchorText.text = this.GetLocalizedSingle(CheatsControlPanelStrings.RecallAnchor);
             Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
             PlayerInventory.Instance.SetHasCollectedAnchor(true);
         }
@@ -202,7 +223,7 @@ public class CheatsControlPanel : MonoBehaviour
         p.toggleCollision();
 
         isNoClipOn = !isNoClipOn;
-        noClipText.text = isNoClipOn ? NO_CLIP_ON : NO_CLIP_OFF;
+        noClipText.text = this.GetLocalizedSingle(isNoClipOn ? CheatsControlPanelStrings.NoClipOn : CheatsControlPanelStrings.NoClipOff);
     }
 
     public void DoRespawnPlayer()
@@ -264,16 +285,16 @@ public class CheatsControlPanel : MonoBehaviour
 
         if (collectibles.Count == 0)
         {
-            collectibleLabelText.text = "No Collectibles!";
+            collectibleLabelText.text = this.GetLocalizedSingle(CheatsControlPanelStrings.NoCollectibles);
             collectibleLabelText.fontStyle = FontStyles.Normal;
-            collectibleButtonText.text = GIVE_STRING;
+            collectibleButtonText.text = this.GetLocalizedSingle(CheatsControlPanelStrings.Give);
             return;
         }
 
         bool isOn = collectibleIndexesToGive.Contains(index);
-        collectibleLabelText.text = collectibles[index].GetName();
+        collectibleLabelText.text = collectibles[index].GetTranslatedName();
         collectibleLabelText.fontStyle = isOn ? FontStyles.Underline : FontStyles.Normal;
-        collectibleButtonText.text = isOn ? UNDO_STRING : GIVE_STRING;
+        collectibleButtonText.text = this.GetLocalizedSingle(isOn ? CheatsControlPanelStrings.Undo : CheatsControlPanelStrings.Give);
     }
 
     private void DoGive(string collectibleName) 
@@ -288,9 +309,11 @@ public class CheatsControlPanel : MonoBehaviour
         currentAreaIndex = index;
 
         bool isOn = areaToTeleportTo == ALL_AREAS[index];
-        areaLabelText.text = ALL_AREAS[index].ToString();
+        areaLabelText.text = ALL_AREAS[index].GetDisplayName();
         areaLabelText.fontStyle = isOn ? FontStyles.Underline : FontStyles.Normal;
-        areaButtonText.text = isOn ? UNDO_STRING : TELEPORT_STRING;
+        areaButtonText.text = (this as IDialogueTableProvider).GetLocalized(
+                isOn ? CheatsControlPanelStrings.Undo : CheatsControlPanelStrings.Teleport
+                ).TranslatedFallbackToOriginal;
     }
 
     private void DoSetScene(string sceneName)
