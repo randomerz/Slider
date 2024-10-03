@@ -1,4 +1,4 @@
-"Slider.v1.0.12","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.13","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -191,7 +191,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@3:0","A rope bridge... that doesn't look too stable.","A rope bridge... that doesn't look too stable.","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@3:1","Could you test it by shaking it with that land magic?","Could you test it by shaking it with that land magic?","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@4:0","Again? Try shaking it with that land magic.","Again? Try shaking it with that land magic.","",
-"Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@5:0","Hmm... try shaking it <var>desertRemainingShakeDirection</var> too, just to be safe.","Hmm... try shaking it <var>desertRemainingShakeDirection</var> too, just to be safe.","",
+"Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@5:0","<var>desertRemainingShakeDirection</var>","<var>desertRemainingShakeDirection</var>","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@6:0","Okay, I suppose it looks stable enough... Let me make my way over...","Okay, I suppose it looks stable enough... Let me make my way over...","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@6:1","Carefully...","Carefully...","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@7:0","WOAH! I- I think I saw a sna- AH!","WOAH! I- I think I saw a sna- AH!","",
@@ -200,6 +200,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@7:3","Nonononono I can't I can't keep going.","Nonononono I can't I can't keep going.","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@8:0","<jitter>STOP THAT WHAT ARE YOU DOING?!</jitter>","<jitter>STOP THAT WHAT ARE YOU DOING?!</jitter>","",
 "Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree/StuckHolder/Baboon@9:0","<jitter>I'M GONNA FALL OFF IF YOU KEEP SHAKING IT</jitter>","<jitter>I'M GONNA FALL OFF IF YOU KEEP SHAKING IT</jitter>","",
+"Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree@Horizontally:0","Hmm... try shaking it horizontally too, just to be safe.","Hmm... try shaking it horizontally too, just to be safe.","",
+"Map/EightPuzzle/STile (3)/Objects/Baboon Right Tree@Vertically:0","Hmm... try shaking it vertically too, just to be safe.","Hmm... try shaking it vertically too, just to be safe.","",
 "Map/EightPuzzle/STile (3)/Objects/MagitechEnable/Bartender Watch Explosion/Canvas/Dialogue","","","TinyUnicode;1",
 "Map/EightPuzzle/STile (3)/Objects/MagitechEnable/Bartender Watch Explosion/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/EightPuzzle/STile (3)/Objects/MagitechEnable/Bartender Watch Explosion@0:0","Oh, you're back again, strange one.","Oh, you're back again, strange one.","",
