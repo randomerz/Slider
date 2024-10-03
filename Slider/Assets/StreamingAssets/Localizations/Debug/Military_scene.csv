@@ -1,4 +1,4 @@
-"Slider.v1.0.12","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.13","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -291,3 +291,22 @@ be corrupted, these rules may be helpful for debugging purposes...
 "Map/World Grid/Objects/WarningSign@0:0","Warning! Progress in The Flats <wavy>will not be saved!</wavy>","_har_Warning! Progress in The Flats <wavy>will not be saved!</wavy>_har_","",
 "Map/World Grid/Objects/WarningSign@0:1","If you quit or leave the area during a run, you will have to restart!","_har_If you quit or leave the area during a run, you will have to restart!_har_","",
 "Map/World Grid/Objects/WarningSign@1:0","You won! Congratulations!!","_har_You won! Congratulations!!_har_","",
+"MilitaryManager@HintDefault:0","Keep at it kiddo. You're lucky that last run was just a simulation.","_har_Keep at it kiddo. You're lucky that last run was just a simulation._har_","",
+"MilitaryManager@HintGeneric:0","Here's some advice: You'll get a new supply drop every other tile.","_har_Here's some advice: You'll get a new supply drop every other tile._har_","",
+"MilitaryManager@HintGeneric:1","Recon is telling us that the aliens usually target the nearest robot. Ties broken randomly.","_har_Recon is telling us that the aliens usually target the nearest robot. Ties broken randomly._har_","",
+"MilitaryManager@HintGeneric:2","There's 6 waves total. Each spawns when all the enemies are defeated.","_har_There's 6 waves total. Each spawns when all the enemies are defeated._har_","",
+"MilitaryManager@HintGeneric:3","You don't have to use resupplies right away. It can be helpful to hold off until a more opportune moment.","_har_You don't have to use resupplies right away. It can be helpful to hold off until a more opportune moment._har_","",
+"MilitaryManager@HintGeneric:4","At the end of a wave, you might be able to find some time to move bad tiles out of the way.","_har_At the end of a wave, you might be able to find some time to move bad tiles out of the way._har_","",
+"MilitaryManager@HintGeneric:5","Do your best to keep your allies alive. Every unit matters in the end!","_har_Do your best to keep your allies alive. Every unit matters in the end!_har_","",
+"MilitaryManager@HintUnitSelect:0","Here's some advice: You can swap the unit you spawn. Use the flag before the computer.","_har_Here's some advice: You can swap the unit you spawn. Use the flag before the computer._har_","",
+"MilitaryManager@Intro1:0","Use that flag to move us to adjacent tiles!","_har_Use that flag to move us to adjacent tiles!_har_","",
+"MilitaryManager@Intro2:0","Defend our land!","_har_Defend our land!_har_","",
+"MilitaryManager@MoveCancelled:0","Move was cancelled.","_har_Move was cancelled._har_","",
+"MilitaryManager@MoveError1:0","I am... dead??? Something went wrong!","_har_I am... dead??? Something went wrong!_har_","",
+"MilitaryManager@MoveError2:0","Something went wrong!","_har_Something went wrong!_har_","",
+"MilitaryManager@MoveOccupied:0","Can't move to an occupied tile!","_har_Can't move to an occupied tile!_har_","",
+"MilitaryManager@MoveOffMap:0","We cannot leave the battlefield!","_har_We cannot leave the battlefield!_har_","",
+"MilitaryManager@MoveSuccess1:0","Let's go, soldiers!","_har_Let's go, soldiers!_har_","",
+"MilitaryManager@MoveSuccess2:0","Keep moving forward!","_har_Keep moving forward!_har_","",
+"MilitaryManager@MoveThroughWalls:0","We cannot move through walls!","_har_We cannot move through walls!_har_","",
+"MilitaryManager@MoveTooFar:0","New location was not one tile away!","_har_New location was not one tile away!_har_","",
