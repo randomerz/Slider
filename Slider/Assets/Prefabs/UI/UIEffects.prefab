@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2599640352343678411}
   - component: {fileID: 2507698560058707884}
   m_Layer: 5
-  m_Name: HintText
+  m_Name: Hint Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Have you considered that it's a skill issue?
+  m_text: Something went wrong!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
   m_sharedMaterial: {fileID: 2433850607178412188, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
@@ -1139,6 +1139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40ccac8adb15d34d8009e04d2c9fd85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabVariantParent: {fileID: 0}
 --- !u!1 &7648707882290023317
 GameObject:
   m_ObjectHideFlags: 0

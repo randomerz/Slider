@@ -2403,6 +2403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03db5f9c6300c74ca48f580a2b55ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FOLLOW_SAVE_STRING: MiscChadIsFollowingPlayer
   isFollowingEnabled: 0
   closeSpeed: 6.5
   farSpeed: 7.5
@@ -2431,6 +2432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npc: {fileID: 7852471215734204838}
   chadFollowPlayer: {fileID: 7095568128949748009}
+  chadChirpDataProviderPrefab: {fileID: 6229580820139371303, guid: b23fbcaa7e191524b90522576cc9ba33, type: 3}
 --- !u!61 &5550093793891639629 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 1390625317152906189, guid: eb8cd11432469439eb214403b87b5b92, type: 3}

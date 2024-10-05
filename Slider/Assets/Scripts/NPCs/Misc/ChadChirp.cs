@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public partial class ChadChirp : MonoBehaviour, ISavable
+public class ChadChirp : MonoBehaviour, ISavable
 {
     public class ChadChirpArgs : System.EventArgs
     {
@@ -23,9 +23,19 @@ public partial class ChadChirp : MonoBehaviour, ISavable
     [Header("References")]
     public NPC npc;
     public ChadFollowPlayer chadFollowPlayer;
+    public GameObject chadChirpDataProviderPrefab;
+
+    private void Awake()
+    {
+        if (ChadChirpDataProvider.Instance == null)
+        {
+            Instantiate(chadChirpDataProviderPrefab);
+        }
+    }
 
     private void Start()
     {
+
         SaveSystem.Current.SetString(CHIRP_SAVE_STRING, "Onwards!"); // fallback case
 
         RestartSmallTalk();
@@ -46,19 +56,12 @@ public partial class ChadChirp : MonoBehaviour, ISavable
 
     public void Save()
     {
-        foreach (ChadChirpData d in ChadChirpData.chirpDataList)
-        {
-            SaveSystem.Current.SetBool(ChadChirpData.GetChirpUsedSaveString(d), d.hasBeenUsed);
-        }
+        ChadChirpDataProvider.DoSave();
     }
 
     public void Load(SaveProfile profile)
     {
-        for (int i = 0; i < ChadChirpData.chirpDataList.Count; i++)
-        {
-            ChadChirpData d = ChadChirpData.chirpDataList[i];
-            d.hasBeenUsed = profile.GetBool(ChadChirpData.GetChirpUsedSaveString(d));
-        }
+        ChadChirpDataProvider.DoLoad(profile);
     }
 
     private void Update()
@@ -85,7 +88,7 @@ public partial class ChadChirp : MonoBehaviour, ISavable
             return;
         }
 
-        ChadChirpData data = ChadChirpData.chirpDataList.FirstOrDefault(d => d.id == id);
+        ChadChirpData data = ChadChirpDataProvider.GetChirpData(id);
 
         if (data == null)
         {
@@ -130,7 +133,7 @@ public partial class ChadChirp : MonoBehaviour, ISavable
         timeUntilCanChirp = CAN_CHIRP_COOLDOWN;
         timeUntilWantsToChirp = WANT_CHIRP_COOLDOWN;
         RestartSmallTalk();
-        TypeDialogue(data.text);
+        TypeDialogue(ChadChirpDataProvider.GetChirpTranslated(id));
     }
 
     public void TypeDialogue(string text)
@@ -151,9 +154,9 @@ public partial class ChadChirp : MonoBehaviour, ISavable
 
     private void TrySmallTalk()
     {
-        int rand = 1 + Random.Range(0, NUMBER_OF_SMALL_TALKS);
+        int rand = 1 + Random.Range(0, ChadChirpData.NUMBER_OF_SMALL_TALKS);
         string id = $"RandomSmallTalk{rand}";
-        ChadChirpData data = ChadChirpData.chirpDataList.FirstOrDefault(d => d.id == id);
+        ChadChirpData data = ChadChirpDataProvider.GetChirpData(id);
 
         if (data == null)
         {
