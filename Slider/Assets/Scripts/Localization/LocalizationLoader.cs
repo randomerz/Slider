@@ -112,8 +112,21 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     public static string LoadCollectibleTranslation(string name, Area area)
         => LoadTranslatedString(SpecificTypeHelpers.CollectibleToPath(name, area), name);
 
-    private static string LoadTranslatedString(string path, string fallback) 
-        => _instance.localeGlobalFile?.GetRecord(path)?.Translated ?? fallback;
+    private static string LoadTranslatedString(string path, string fallback)
+    {
+        var file = _instance.localeGlobalFile;
+        if (file == null)
+        {
+            return fallback;
+        }
+
+        if (file.TryGetRecord(path, out var entry) && entry.TryGetTranslated(out var translated))
+        {
+            return translated;
+        }
+
+        return fallback;
+    }
     
     #endregion
 
