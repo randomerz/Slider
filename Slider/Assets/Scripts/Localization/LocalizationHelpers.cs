@@ -1069,14 +1069,21 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 return;
             }
-            
-            var tmp = typer.GetAnchor<TMPTextTyper>().TextMeshPro;
+
+            var t = typer.GetAnchor<TMPTextTyper>();
+            var tmp = t.TextMeshPro;
             string metadata = null;
             if (file.TryGetRecord(typer.FullPath, out var entry))
             {
                 metadata = entry.Metadata;
+                if (t.localizeText && entry.TryGetTranslated(out var translation))
+                {
+                    tmp.text = translation;
+                }
             }
+            
             metadata = tmp.ParseMetadata(metadata);
+            
             tmp.font = LocalizationLoader.LocalizationFont(metadata);
             tmp.fontSize = tmp.ParseMetadata(entry?.Metadata).size * adjFlt;
             tmp.wordSpacing = 0;
@@ -1163,7 +1170,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             string autoPadTranslated = null)
         {
             // AT: currently not using Sylvan CSV Writer bc their interface is for rigid db dumping instead of custom (and variable) schema writing
-            autoPadTranslated = autoPadTranslated ?? "";
+            autoPadTranslated ??= "";
             
             var sep = LocalizationFile.csvSeparator;
 
@@ -1331,7 +1338,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             var t = typer.GetAnchor<TMPTextTyper>();
             return new SerializedLocalizableData
             {
-                text = null,
+                text = t.localizeText ? t.TextMeshPro.text : null,
                 metadata = t.TextMeshPro.GetMetadata()
             };
         }

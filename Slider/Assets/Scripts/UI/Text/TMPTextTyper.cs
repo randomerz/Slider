@@ -20,6 +20,9 @@ public class TMPTextTyper : MonoBehaviour
     public bool fadeTextIn = true;
     public int rolloverCharacterSpread = 10;
 
+    [Tooltip("If set to true, localization will save and load text into the TMP text box associated with this typer, otherwise localization will only record the metadata without the text")]
+    public bool localizeText = false;
+
     private static float textSpeed;
 
     public TextMeshProUGUI TextMeshPro
