@@ -146,8 +146,18 @@ namespace Localization
     internal sealed class ParsedLocalizable : Localizable
     {
         private readonly SerializedLocalizableData _data;
-        
-        public string Translated => _data.text;
+
+        public bool TryGetTranslated(out string translated)
+        {
+            if (!string.IsNullOrWhiteSpace(_data.text))
+            {
+                translated = _data.text;
+                return true;
+            }
+            translated = null;
+
+            return false;
+        }
         public string Metadata => _data.metadata;
 
         private ParsedLocalizable(string hierarchyPath, string index, SerializedLocalizableData data) : base(hierarchyPath.Split('/'))
@@ -481,8 +491,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             this.locale = locale;
             
             records = new();
-
             configs = new();
+            
             foreach (var (k, v) in (localeConfig != null ? localeConfig.configs : defaultConfigs))
             {
                 configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
@@ -490,20 +500,22 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             var opts = new CsvDataReaderOptions
             {
+                CsvStyle = CsvStyle.Standard,
                 HasHeaders = false
             };
             
             using var reader = CsvDataReader.Create(filePath, opts);
-            for (var currentRow = 0; reader.Read(); currentRow++)
+            
+            for (var currentRow = 0; SafeRead(reader); currentRow++)
             {
-                if (currentRow < 4)
+                // second row of the file are property/value pairs
+                if (currentRow == 1)
                 {
-                    // second row of the file are property/value pairs
-                    if (currentRow == 1)
-                    {
-                        ParsePropertiesRow(reader);
-                    }
-
+                    ParsePropertiesRow(reader);
+                }
+                else if (currentRow < 4)
+                {
+                    
                     continue;
                 }
                     
@@ -526,7 +538,19 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
             }
         }
-        
+
+        private static bool SafeRead(CsvDataReader reader)
+        {
+            try
+            {
+                return reader.Read();
+            }
+            catch (CsvFormatException e)
+            {
+                Debug.LogError($"CSV format error on row {e.RowNumber}: {e}");
+                return false;
+            } 
+        }
         
         private void ParsePropertyValue(string propertyName, string value)
         {
@@ -630,13 +654,15 @@ be corrupted, these rules may be helpful for debugging purposes...
             return false;
         }
 
-        internal ParsedLocalizable GetRecord(string path)
+        internal bool TryGetRecord(string path, out ParsedLocalizable entry)
         {
-            if (!records.TryGetValue(path, out var entry))
+            if (!records.TryGetValue(path, out entry))
             {
                 Debug.LogWarning($"[Localization] {path}: NOT FOUND");
+                entry = null;
+                return false;
             }
-            return entry;
+            return true;
         }
     }
 
@@ -933,11 +959,12 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, LocalizationStrategy strategy)
         {
             var tmpCasted = tmp.GetAnchor<TMP_Text>();
-            var entry = file.GetRecord(tmp.FullPath);
-
-            if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle && entry != null)
+            if (file.TryGetRecord(tmp.FullPath, out var entry) && strategy == LocalizationStrategy.TranslateTextAndChangeStyle)
             {
-                tmpCasted.text = entry.Translated;
+                if (entry.TryGetTranslated(out var translated))
+                {
+                    tmpCasted.text = translated;
+                }
             }
 
             var metadata = tmpCasted.ParseMetadata(entry?.Metadata);
@@ -960,7 +987,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, LocalizationStrategy strategy)
         {
             var dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
-            var entry = file.GetRecord(dropdownOption.FullPath);
+            var hasEntry = file.TryGetRecord(dropdownOption.FullPath, out var entry);
 
             // particular option in dropdown, change text as well as size modifications (using rich text)
             if (dropdownOption.IndexInComponent != null)
@@ -970,10 +997,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                     int idx = int.Parse(dropdownOption
                         .IndexInComponent); // possibly malformed path, consider logging error instead
 
-                    if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle && entry != null)
+                    if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle && hasEntry)
                     {
-                        
-                        dropdown.options[idx].text = entry.Translated;
+                        if (entry.TryGetTranslated(out var translated))
+                        {
+                            dropdown.options[idx].text = translated;
+                        }
                     }
                 }
                 catch (IndexOutOfRangeException)
@@ -1021,8 +1050,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                 
                 if (!string.IsNullOrWhiteSpace(npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue))
                 {
-                    var entry = file.GetRecord(path);
-                    npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
+                    if (file.TryGetRecord(path, out var entry) && entry.TryGetTranslated(out var translated))
+                    {
+                        npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = translated;
+                    }
                 }
 
             }
@@ -1038,11 +1069,22 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 return;
             }
+
+            var t = typer.GetAnchor<TMPTextTyper>();
+            var tmp = t.TextMeshPro;
+            string metadata = null;
+            if (file.TryGetRecord(typer.FullPath, out var entry))
+            {
+                metadata = entry.Metadata;
+                if (t.localizeText && entry.TryGetTranslated(out var translation))
+                {
+                    tmp.text = translation;
+                }
+            }
             
-            var tmp = typer.GetAnchor<TMPTextTyper>().TextMeshPro;
-            var entry = file.GetRecord(typer.FullPath);
-            var metadata = tmp.ParseMetadata(entry?.Metadata);
-            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
+            metadata = tmp.ParseMetadata(metadata);
+            
+            tmp.font = LocalizationLoader.LocalizationFont(metadata);
             tmp.fontSize = tmp.ParseMetadata(entry?.Metadata).size * adjFlt;
             tmp.wordSpacing = 0;
             
@@ -1058,13 +1100,12 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
 
             var path = hints.FullPath;
-            var entry = file.GetRecord(path);
-            if (entry != null)
+            if (file.TryGetRecord(path, out var entry) && entry.TryGetTranslated(out var translated))
             {
                 try
                 {
                     var idx = int.Parse(hints.IndexInComponent);
-                    hints.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText = entry.Translated;
+                    hints.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText = translated;
                 }
                 catch (IndexOutOfRangeException)
                 {
@@ -1084,8 +1125,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return;
             }
             
-            var entry = file.GetRecord(tableProviderEntry.FullPath);
-            if (entry == null) return;
+            if (!file.TryGetRecord(tableProviderEntry.FullPath, out var entry) || !entry.TryGetTranslated(out var translated)) return;
             
             // AT: cursed Unity editor crashing bug if I call any interface function,
             // so instead just rewrite the function here...
@@ -1094,7 +1134,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             var table = tableProviderEntry.GetAnchor<IDialogueTableProvider>().TranslationTable;
             table[tableProviderEntry.IndexInComponent] = new LocalizationPair() {
                 original = table[tableProviderEntry.IndexInComponent].original,
-                translated = entry.Translated
+                translated = translated
             };
         }
         
@@ -1104,11 +1144,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 return;
             }
-
-            var entry = file.GetRecord(collectible.FullPath);
-            if (entry != null)
+            
+            if (file.TryGetRecord(collectible.FullPath, out var entry) && entry.TryGetTranslated(out var translated))
             {
-                collectible.GetAnchor<ArtifactInventoryCollectible>().displayName = entry.Translated;
+                collectible.GetAnchor<ArtifactInventoryCollectible>().displayName = translated;
             }
         }
         
@@ -1131,7 +1170,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             string autoPadTranslated = null)
         {
             // AT: currently not using Sylvan CSV Writer bc their interface is for rigid db dumping instead of custom (and variable) schema writing
-            autoPadTranslated = autoPadTranslated ?? "";
+            autoPadTranslated ??= "";
             
             var sep = LocalizationFile.csvSeparator;
 
@@ -1180,21 +1219,20 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 // use double double-quotes to escape double-quotes
 
-                string translated = orig.text;
+                string text = orig.text;
 
-                if (!string.IsNullOrWhiteSpace(translated))
+                if (!string.IsNullOrWhiteSpace(text))
                 {
-                    translated = referenceFile?.GetRecord(path)?.Translated ?? translated;
-                    translated = autoPadTranslated + translated + autoPadTranslated;
-                }
-                else
-                {
-                    translated = null;
+                    if (referenceFile != null && referenceFile.TryGetRecord(path, out var entry) && entry.TryGetTranslated(out var translated))
+                    {
+                        text = translated;
+                    }
+                    text = autoPadTranslated + text + autoPadTranslated;
                 }
                 
                 // AT: metadata is freshly updated each time, no referencing!
                 
-                SerializeCells(path, orig.text ?? "", translated ?? "", orig.metadata ?? ""); // for skeleton file, just use original as the translation
+                SerializeCells(path, orig.text ?? "", text ?? "", orig.metadata ?? ""); // for skeleton file, just use original as the translation
                 tw.WriteLine();
             }
         }
@@ -1300,7 +1338,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             var t = typer.GetAnchor<TMPTextTyper>();
             return new SerializedLocalizableData
             {
-                text = null,
+                text = t.localizeText ? t.TextMeshPro.text : null,
                 metadata = t.TextMeshPro.GetMetadata()
             };
         }
