@@ -12,6 +12,5 @@ public class SelectBestSelectableInSet : MonoBehaviour
     {
         Selectable bestSelectableInCurrentMenu = selectables.Where(selectable => selectable.isActiveAndEnabled && selectable.IsInteractable()).First();
         CoroutineUtils.ExecuteAfterEndOfFrame(() => bestSelectableInCurrentMenu.Select(), this);
-        Debug.Log(bestSelectableInCurrentMenu.gameObject.name);
     }
 }

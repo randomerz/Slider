@@ -7,23 +7,38 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem.XInput;
 using System.Linq;
+using Localization;
 
 /// <summary>
 /// Handles switching between the various panels available in the controls menu and 
 /// selecting the correct one to show when the menu is open based on the current control scheme. 
 /// Use <see cref="SetCurrentPanel(int)"/> to change to a new panel.
 /// </summary>
-public class ControlsMenuPanelHandler : MonoBehaviour
+public class ControlsMenuPanelHandler : MonoBehaviour, IDialogueTableProvider
 {
     [SerializeField] private GameObject[] panels;
     [SerializeField] private TextMeshProUGUI titleText;
     
     public const int KEYBOARD_PANEL = 0;
     public const int CONTROLLER_PANEL = 1;
-    private string[] SCHEME_NAMES = {
+    private static readonly string[] SCHEME_NAMES = {
         "Keyboard",
         "Controller"
     };
+
+    private enum SchemeDialogueCode
+    {
+        Scheme,
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<SchemeDialogueCode, string[]> {
+            {
+                SchemeDialogueCode.Scheme,
+                SCHEME_NAMES
+            }
+        }
+    );
 
     private int currentPanel = 0;
 
@@ -38,7 +53,7 @@ public class ControlsMenuPanelHandler : MonoBehaviour
     public void SetCurrentPanel(int newPanelIndex)
     {
         currentPanel = newPanelIndex;
-        titleText.text = SCHEME_NAMES[newPanelIndex];
+        titleText.text = this.GetLocalizedSingle(SchemeDialogueCode.Scheme, newPanelIndex);
         for (int i = 0; i < panels.Length; i++)
         {
             panels[i].SetActive(i == newPanelIndex);

@@ -27,6 +27,7 @@ public enum Settings
     Locale,
     PixelFontEnabled,
     KeyboardOnly,
+    LargerControllerDeadzone,
 }
 
 static class SettingsMethods
@@ -53,6 +54,7 @@ static class SettingsMethods
         Settings.Locale => "locale",
         Settings.PixelFontEnabled => "pixelFontEnabled",
         Settings.KeyboardOnly => "keyboardOnly",
+        Settings.LargerControllerDeadzone => "largerControllerDeadzone",
         _ => ""
     };
 }

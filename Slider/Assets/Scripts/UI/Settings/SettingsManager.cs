@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Localization;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -105,6 +106,13 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.KeyboardOnly,
             defaultValue: false,
             onValueChanged: (keyboardOnly) => { Controls.OnKeyboardOnlyMenuSettingChanged(keyboardOnly); }
+        );
+
+        RegisterAndLoadSetting(Settings.LargerControllerDeadzone,
+            defaultValue: false,
+            onValueChanged: (largerControllerDeadzone) => { 
+                InputSystem.settings.defaultDeadzoneMin = largerControllerDeadzone ? 0.75f : 0.25f;
+            }
         );
     }
 
