@@ -1,4 +1,4 @@
-"Slider.v1.0.13","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.14","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -44,6 +44,7 @@ Feel free to use these if you get stuck.","경고! 치트는 되돌릴 수 없�
 "UICanvas/OptionsMenu/RightContainer/CheatsPanel/List/Dev Console/Label","Dev Console","개발자 콘솔","PixelUnicode;16",
 "UICanvas/OptionsMenu/RightContainer/CheatsPanel/List/Teleport Selector Button Pair/Holder/Label","Village","마을","PixelTitanZero;16",
 "UICanvas/OptionsMenu/RightContainer/CheatsPanel/List/Teleport Selector Button Pair/TP Button/Text","Teleport","텔레포트","PixelTitanZero;16",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Larger Deadzone/Label","Larger Deadzone","Larger Deadzone","PixelUnicode;14",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Alt View","Alt View","Alt 뷰어","PixelUnicode;14",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Button East","Back","돌아가기","PixelUnicode;14",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Button North","Cycle","보관","PixelUnicode;14",
@@ -73,6 +74,9 @@ Feel free to use these if you get stuck.","경고! 치트는 되돌릴 수 없�
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Control Label","Pause","정지","PixelUnicode;14",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/ResetButtonHolder/Reset to Defaults Button/Text","Reset Keybinds","조작키 리셋","PixelTitanZero;16",
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Rebinding Overlay/Text (TMP)","Rebinding Move Left...","왼쪽 이동 키 설정...","PixelTitanZero;16",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel@Scheme:0","Keyboard","Keyboard","",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel@Scheme:1","Controller","Controller","",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/ApplySettingsHolder/ApplySettings Button/Text","Save Changes","Save Changes","PixelTitanZero;16",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/Display Text","Display","화면","PixelTitanZero;24",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown","","","PixelUnicode;16",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@0","30","30","",
@@ -83,6 +87,7 @@ Feel free to use these if you get stuck.","경고! 치트는 되돌릴 수 없�
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@5","240","240","",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@6","Uncapped","무제한","",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Label","FPS","FPS","PixelUnicode;16",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FullScreen Toggle/Label","Full Screen","Full Screen","PixelUnicode;16",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown","","","PixelUnicode;16",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@0","1280 x 720","1280 x 720","",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@1","1280 x 800","1280 x 800","",

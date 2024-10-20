@@ -11,7 +11,7 @@ public class ConfirmDisplaySettings : Singleton<ConfirmDisplaySettings>
     public ResolutionSettingRetriever resolutionSettingsRetriever;
     public Toggle fullScreenToggle;
 
-    private const float CONFIRMATION_TIME = 3;
+    private const float CONFIRMATION_TIME = 10;
 
     private string applyChangesOriginalText;
     private bool didConfirm;
