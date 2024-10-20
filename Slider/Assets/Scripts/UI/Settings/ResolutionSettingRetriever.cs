@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class ResolutionSettingRetriever : AbstractSettingRetriever
 {
+    public UIDropDownController dropdown;
+
     // This list has to match the order in the resolution setting dropdown
     private static readonly Dictionary<int, Resolution> dropdownIndexToResolution = new Dictionary<int, Resolution>()
     {
@@ -34,5 +36,12 @@ public class ResolutionSettingRetriever : AbstractSettingRetriever
     public override void WriteSettingValue(object value)
     {
         SettingsManager.Setting(Settings.Resolution).SetCurrentValue(dropdownIndexToResolution[(int)value]);
+    }
+
+    public void RestoreResolution(Resolution resolution)
+    {
+        int index = dropdownIndexToResolution.FirstOrDefault(i => i.Value == resolution).Key;
+        dropdown.value = index;
+        // WriteSettingValue(index);
     }
 }
