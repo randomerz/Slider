@@ -4699,6 +4699,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1261461284148987834, guid: f9f770399e0e6e44fbcbfdb5cd0bdf37, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 2905154067163065431}
     - target: {fileID: 1285901772815984486, guid: f9f770399e0e6e44fbcbfdb5cd0bdf37, type: 3}
       propertyPath: m_Name
       value: DisplayPanel
