@@ -448,6 +448,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
 
     private bool ShouldShowPing()
     {
-        return !CurrDchainIsEmpty() && !context.CurrCond.isDialogueChainExhausted;
+        return !CurrDchainIsEmpty() && !context.CurrCond.isDialogueChainExhausted && !context.isInCutscene;
     }
 }

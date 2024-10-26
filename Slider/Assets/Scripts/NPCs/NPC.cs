@@ -28,6 +28,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
     private bool finishedStart;
+    public bool isInCutscene;
 
     // For editor
     [HideInInspector] public bool autoSetWaitUntilPlayerAction = true;

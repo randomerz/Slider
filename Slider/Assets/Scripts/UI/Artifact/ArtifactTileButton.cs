@@ -56,6 +56,16 @@ public class ArtifactTileButton : MonoBehaviour
             return false;
         } 
     }
+    public bool TileIsAnchored { 
+        get
+        {
+            if (MyStile != null)
+            {
+                return MyStile.hasAnchor;
+            }
+            return false;
+        } 
+    }
     public ArtifactTileButton LinkButton { get; private set; }
 
     protected void Awake() 

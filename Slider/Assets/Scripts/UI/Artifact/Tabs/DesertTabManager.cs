@@ -115,7 +115,7 @@ public class DesertTabManager : ArtifactTabManager
     private void UpdateGrayTab()
     {
         middle = UIArtifact.GetButton(1, 1);
-        if (middle != null && middle.TileIsActive) 
+        if (middle != null && middle.TileIsActive && !middle.TileIsAnchored) 
         {
             grayMiddleTab.SetActive(false);
         }
