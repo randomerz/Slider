@@ -179,6 +179,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
 
         foreach (NPC character in cutsceneCharacters)
         {
+            character.isInCutscene = true;
             if (character.IsDialogueBoxActive())
             {
                 character.DeactivateDialogueBox();
@@ -198,6 +199,7 @@ public class SimpleInteractableCutscene : MonoBehaviour, IInteractable
 
         foreach (NPC character in cutsceneCharacters)
         {
+            character.isInCutscene = false;
             character.PollForNewConditional();
         }
 
