@@ -50,7 +50,7 @@ public class CheatsControlPanel : MonoBehaviour, IDialogueTableProvider
             { CheatsControlPanelStrings.SpawnAnchor, "Spawn Anchor" },
             { CheatsControlPanelStrings.RecallAnchor, "Recall Anchor" },
             { CheatsControlPanelStrings.NoClipOff, "NoClip-Off" },
-            { CheatsControlPanelStrings.NoClipOn , "NoCLip-On" }
+            { CheatsControlPanelStrings.NoClipOn , "NoClip-On" }
         }
     );
 
