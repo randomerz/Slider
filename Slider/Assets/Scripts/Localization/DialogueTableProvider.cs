@@ -103,7 +103,8 @@ public interface IDialogueTableProvider
 
         return new LocalizationPair
         {
-            original = "ERROR: NOT FOUND",
+            original = TranslationTable.Count == 0 ? 
+                $"ERROR: TABLE NOT INITIALIZED" : $"ERROR: KEY {formattedIndex} NOT FOUND",
             translated = null
         };
     }

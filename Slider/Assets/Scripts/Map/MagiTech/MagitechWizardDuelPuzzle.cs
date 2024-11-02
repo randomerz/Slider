@@ -98,6 +98,10 @@ public class MagitechWizardDuelPuzzle : MonoBehaviour
 
     public void CheckTurnInShieldFire()
     {
+        if (PlayerInventory.Contains("Slider 8", Area.MagiTech))
+        {
+            return;
+        }
         if (PlayerInventory.GetCurrentItem() == pastStoolItem)
         {
             fireItemResetter.ResetItem(pastStoolItem);
@@ -110,6 +114,10 @@ public class MagitechWizardDuelPuzzle : MonoBehaviour
 
     public void CheckTurnInShieldLightning()
     {
+        if (PlayerInventory.Contains("Slider 8", Area.MagiTech))
+        {
+            return;
+        }
         if (PlayerInventory.GetCurrentItem() == pastStoolItem)
         {
             lightningItemResetter.ResetItem(pastStoolItem);
