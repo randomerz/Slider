@@ -5,8 +5,15 @@ using UnityEngine;
 public class DesertScrollScrapTabHintPrompt : MonoBehaviour, ISavable
 {
     private bool promptedPreviously = false;
+    private bool sceneMostlyInitialized = false;
 
     [SerializeField] private PlayerActionHints playerActionHints;
+
+    private void Start()
+    {
+        sceneMostlyInitialized = true;
+        CheckHint();
+    }
 
     public void Load(SaveProfile profile)
     {
@@ -20,7 +27,12 @@ public class DesertScrollScrapTabHintPrompt : MonoBehaviour, ISavable
 
     private void OnEnable()
     {
-        if (!promptedPreviously && PlayerInventory.Contains("Scroll Scrap"))
+        CheckHint();
+    }
+
+    private void CheckHint()
+    {
+        if (!promptedPreviously && sceneMostlyInitialized && PlayerInventory.Contains("Scroll Scrap"))
         {
             // playerActionHints.TriggerHint("scrollscrap");
             UIEffects.StartSpotlight(
