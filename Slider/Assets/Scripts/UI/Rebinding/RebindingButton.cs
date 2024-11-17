@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class RebindingButton : MonoBehaviour
 {
     [SerializeField] private Control control;
+    [SerializeField] private TextMeshProUGUI controlLabel;
     [SerializeField] private TextMeshProUGUI bindingText;
 
     private void Awake()
@@ -26,7 +27,7 @@ public class RebindingButton : MonoBehaviour
         {
             return;
         }
-        InputRebinding.StartInteractiveRebindOperation(control);
+        InputRebinding.StartInteractiveRebindOperation(control, controlLabel.text);
     }
 
     private void UpdateText()

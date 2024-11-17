@@ -143,6 +143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7854259615445279599}
+  - component: {fileID: 8215221220512459188}
   m_Layer: 5
   m_Name: Rebinding Button
   m_TagString: Untagged
@@ -171,6 +172,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 115, y: 25}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &8215221220512459188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5156153098200397439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8168dc5106d76ee4192fb764fe019457, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  control: 1
+  controlLabel: {fileID: 4373515817267283180}
+  bindingText: {fileID: 980024002313327354}
 --- !u!1001 &9002111815988959263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -181,7 +197,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_text
-      value: Control
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_fontSize
@@ -220,12 +236,16 @@ PrefabInstance:
       value: MainMenu Button Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8215221220512459188}
+    - target: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RemapKeybind
+      value: OnClick
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: InputRebindButton, Assembly-CSharp
+      value: RebindingButton, SliderScripts
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_Pivot.x
@@ -320,6 +340,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+--- !u!114 &980024002313327354 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+  m_PrefabInstance: {fileID: 9002111815988959263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &980024003107684384 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}

@@ -45,7 +45,7 @@ public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
         gameObject.SetActive(true);
         maskRectTransform.sizeDelta = Vector2.zero;
 
-        displayText.text = (this as IDialogueTableProvider).Interpolate(
+        displayText.text = IDialogueTableProvider.Interpolate(
             this.GetLocalizedSingle(TavernPassRewardEffectStrings.Acquired),
             new (){
                 { "item", LocalizationLoader.LoadCollectibleTranslation(itemName, SGrid.Current.GetArea()) }

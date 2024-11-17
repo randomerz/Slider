@@ -8,12 +8,13 @@ using UnityEngine.EventSystems;
 
 public class InputRebinding
 {
-    public static Action<Control> OnRebindStarted;
+    public static Action<string> OnRebindStarted;
     public static Action OnRebindCompleted;
 
     private static bool rebindIsInProgress;
+    private static InputActionRebindingExtensions.RebindingOperation currentRebindingOperation;
 
-    public static void StartInteractiveRebindOperation(Control controlToRebind)
+    public static void StartInteractiveRebindOperation(Control controlToRebind, string localizedName)
     {
         if (rebindIsInProgress)
         {
@@ -21,12 +22,12 @@ public class InputRebinding
         }
 
         rebindIsInProgress = true;
-        OnRebindStarted?.Invoke(controlToRebind);
+        OnRebindStarted?.Invoke(localizedName);
 
         Controls.Bindings.Disable();
 
         InputAction actionToRebind = Controls.InputActionForControl(controlToRebind);
-        actionToRebind.PerformInteractiveRebinding()
+        currentRebindingOperation = actionToRebind.PerformInteractiveRebinding()
                     .WithTargetBinding(Controls.BindingIndex(controlToRebind))
                     .WithTimeout(5f)
                     .WithControlsExcluding("Mouse")
@@ -61,6 +62,7 @@ public class InputRebinding
                     .OnCancel((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
                     {
                         CompleteRebindingOperation(rebindingOperation);
+                        OnRebindCompleted?.Invoke();
                     });
     }
 
@@ -68,8 +70,17 @@ public class InputRebinding
     {
         Controls.Bindings.Enable();
         rebindingOperation.Dispose();
+        currentRebindingOperation = null;
         // OnRebindCompleted?.Invoke();
         rebindIsInProgress = false;
+    }
+
+    public static void CancelCurrentRebindingOperation()
+    {
+        if (currentRebindingOperation != null)
+        {
+            currentRebindingOperation.Cancel();
+        }
     }
 
     private static void RemoveDuplicateBindings(Control controlThatWasJustRebound)

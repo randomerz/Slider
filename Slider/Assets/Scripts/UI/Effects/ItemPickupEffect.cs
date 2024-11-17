@@ -44,7 +44,7 @@ public class ItemPickupEffect : MonoBehaviour, IDialogueTableProvider
 
     public static void StartCutscene(Sprite itemSprite, string itemName, System.Action onTextVisibleCallback=null)
     {
-        _instance.itemText.text = (_instance as IDialogueTableProvider).Interpolate(
+        _instance.itemText.text = IDialogueTableProvider.Interpolate(
             _instance.GetLocalizedSingle(ItemPickupEffectStrings.Acquired),
             new()
             {

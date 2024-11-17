@@ -19,14 +19,20 @@ public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
 
     enum ArtifactInventoryStrings
     {
-        LegendaryCheeseburger
+        Collection,
+        LegendaryCheeseburger,
     }
     
     public Dictionary<string, LocalizationPair> TranslationTable { get; } = 
         IDialogueTableProvider.InitializeTable(
             new Dictionary<ArtifactInventoryStrings, string>
             {
-                { ArtifactInventoryStrings.LegendaryCheeseburger, "Legendary \"Burger\"" }
+                {
+                    ArtifactInventoryStrings.Collection, "Collection" 
+                },
+                {
+                    ArtifactInventoryStrings.LegendaryCheeseburger, "Legendary \"Burger\"" 
+                }
             });
 
     [Header("Special Collectible Counters")] // could be refactored
@@ -43,11 +49,11 @@ public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
         if (Controls.UsingControllerOrKeyboardOnly())
         {
             if (!TrySelectLeftmostSelectible())
-                UpdateText("Collection");
+                UpdateText(this.GetLocalizedSingle(ArtifactInventoryStrings.Collection));
         }
         else
         {
-            UpdateText("Collection");
+            UpdateText(this.GetLocalizedSingle(ArtifactInventoryStrings.Collection));
         }
 
         UpdateCollectibleCounters(this, null);

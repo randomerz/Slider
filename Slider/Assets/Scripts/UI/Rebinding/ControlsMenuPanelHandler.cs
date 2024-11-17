@@ -50,6 +50,11 @@ public class ControlsMenuPanelHandler : MonoBehaviour, IDialogueTableProvider
         SetCurrentPanel(currentPanel);
     }
 
+    private void OnDisable()
+    {
+        InputRebinding.CancelCurrentRebindingOperation();
+    }
+
     public void SetCurrentPanel(int newPanelIndex)
     {
         currentPanel = newPanelIndex;

@@ -13,8 +13,10 @@ public class RebindOverlayHandler : MonoBehaviour
     [SerializeField] private GameObject rebindingOverlayPanel;
     [SerializeField] private TextMeshProUGUI rebindingOverlayPanelText;
 
-    private Action<Control> showRebindingOverlayPanel;
+    private Action<string> showRebindingOverlayPanel;
     private Action hideRebindingOverlayPanel;
+
+    private string localizedRebindingTemplate;
 
     private void Awake()
     {
@@ -32,11 +34,24 @@ public class RebindOverlayHandler : MonoBehaviour
         InputRebinding.OnRebindCompleted -= hideRebindingOverlayPanel;
     }
 
-    private void ShowRebindingPanelForCurrentRebindOperation(Control control)
+    private void OnEnable()
     {
-        string controlDisplayString = Controls.ControlDisplayString(control)
-                                              .ToUpper();
-        rebindingOverlayPanelText.text = $"REBINDING {controlDisplayString}...";
+        localizedRebindingTemplate = rebindingOverlayPanelText.text;
+    }
+    
+    private void OnDisable()
+    {
+        rebindingOverlayPanelText.text = localizedRebindingTemplate;
+    }
+
+    private void ShowRebindingPanelForCurrentRebindOperation(string localizedName)
+    {
+        rebindingOverlayPanelText.text = IDialogueTableProvider.Interpolate(
+            localizedRebindingTemplate,
+            new() {
+                {"control", localizedName}
+            }
+        );
         rebindingOverlayPanel.SetActive(true);
     }
 }
