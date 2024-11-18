@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
-public class CreditsManager : MonoBehaviour, IDialogueTableProvider
+public class CreditsManager : MonoBehaviour
 {
     [System.Serializable]
     public class CreditsTileMove
@@ -36,19 +36,20 @@ public class CreditsManager : MonoBehaviour, IDialogueTableProvider
 
     private AsyncOperation sceneLoad;
     
-    #region Localization
-
-    enum SkipType
-    {
-        Default
-    }
-    public Dictionary<string, LocalizationPair> TranslationTable { get; } = 
-        IDialogueTableProvider.InitializeTable(
-            new Dictionary<SkipType, string>
-            {
-                { SkipType.Default, "Skip" }
-            });
-    #endregion
+    // Shouldn't this be handled by the text replace anyway?
+    // 
+    // #region Localization
+    // enum SkipType
+    // {
+    //     Default
+    // }
+    // public Dictionary<string, LocalizationPair> TranslationTable { get; } = 
+    //     IDialogueTableProvider.InitializeTable(
+    //         new Dictionary<SkipType, string>
+    //         {
+    //             { SkipType.Default, "Skip" }
+    //         });
+    // #endregion
 
     private void Start()
     {
@@ -127,7 +128,7 @@ public class CreditsManager : MonoBehaviour, IDialogueTableProvider
 
     private void InitializeSkipPrompt()
     {
-        skipPromptText.text = this.GetLocalizedSingle(SkipType.Default);
+        // skipPromptText.text = this.GetLocalizedSingle(SkipType.Default);
         skipPromptSlider.value = 0;
         skipPromptSlider.gameObject.SetActive(true);
     }

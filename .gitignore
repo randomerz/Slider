@@ -114,3 +114,6 @@ fmod_editor.log
 
 # Jetbrains superiority
 .idea
+
+# Don't commit localization .meta files
+/Slider/[Aa]ssets/StreamingAssets/**.meta
