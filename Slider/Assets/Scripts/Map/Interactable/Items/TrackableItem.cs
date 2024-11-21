@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class TrackableItem : Item
 {
-    private bool trackerEnabled;
+    public bool trackerEnabled;
+
+    public override void Start()
+    {
+        base.Start();
+
+        if (trackerEnabled)
+        {
+            SetTrackerEnabled(trackerEnabled);
+        }
+    }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
