@@ -63,6 +63,13 @@ public class PlayerInventory : MonoBehaviour
             equipables.Add(anchor.GetComponent<Item>());
             anchor.GetComponent<Item>().SetCollider(false);
         }
+
+        // If haven't logged on in a while + correct scene, spawn with anchor
+        if (SaveSystem.Current.GetBool("playerSpawnWithAnchorEquipped"))
+        {
+            SaveSystem.Current.SetBool("playerSpawnWithAnchorEquipped", false);
+            NextItem();
+        }
     }
 
     public static int GetNumBreadge()

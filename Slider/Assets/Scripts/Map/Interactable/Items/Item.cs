@@ -353,4 +353,12 @@ public class Item : MonoBehaviour, ISavable
         }
         gameObject.SetActive(true);
     }
+
+    public void RemoveFromPlayerIfHolding()
+    {
+        if (PlayerInventory.GetCurrentItem() == this)
+        {
+            PlayerInventory.RemoveItem();
+        }
+    }
 }
