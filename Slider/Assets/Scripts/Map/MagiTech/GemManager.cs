@@ -342,7 +342,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
             }
         }
 
-        string combined = this.Interpolate(
+        string combined = IDialogueTableProvider.Interpolate(
             this.GetLocalizedSingle(GemHintCode.MultiGemHint),
             new() {{
                 "remainingGems",

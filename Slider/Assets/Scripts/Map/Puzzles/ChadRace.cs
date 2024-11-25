@@ -203,7 +203,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
 
                     if (numTimesChadWon >= 10)
                     {
-                        string dialogue = this.Interpolate(
+                        string dialogue = IDialogueTableProvider.Interpolate(
                             this.GetLocalizedSingle(ChadRaceDialogueCode.WonXTimes),
                             new() {{"numTimesChadWon", numTimesChadWon.ToString()}});
                         DisplayAndTriggerDialogue(dialogue);

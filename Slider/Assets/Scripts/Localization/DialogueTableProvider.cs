@@ -161,10 +161,4 @@ public static class DialogueTableProviderExtensions
         var pair = self.GetLocalized(key, i);
         return pair.TranslatedFallbackToOriginal;
     }
-
-    public static string Interpolate<I>(this I self, string format, Dictionary<string, string> substitutions)
-        where I : MonoBehaviour, IDialogueTableProvider
-    {
-        return self.Interpolate(format, substitutions);
-    }
 }

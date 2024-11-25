@@ -141,7 +141,7 @@ public class BreadgeBakery : MonoBehaviour, IDialogueTableProvider
                 SaveSystem.Current.SetString(BREADGE_HINT_SAVE_STRING, this.GetLocalizedSingle(BreadgeHintCode.MissingError));
                 return;
             }
-            string dialogue = this.Interpolate(
+            string dialogue = IDialogueTableProvider.Interpolate(
                 this.GetLocalizedSingle(BreadgeHintCode.MissingOne),
                 new() {{ "area", missingAreas[0] }}
             );
@@ -150,7 +150,7 @@ public class BreadgeBakery : MonoBehaviour, IDialogueTableProvider
         else
         {
             string allAreas = string.Join(", ", missingAreas);
-            string dialogue = this.Interpolate(
+            string dialogue = IDialogueTableProvider.Interpolate(
                 this.GetLocalizedSingle(BreadgeHintCode.MissingMultiple),
                 new() {{ "allAreas", allAreas }}
             );
