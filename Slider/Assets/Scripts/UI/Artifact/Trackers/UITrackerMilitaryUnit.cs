@@ -30,6 +30,12 @@ public class UITrackerMilitaryUnit : UITracker
 
     private void Start()
     {
+        if (target == null || TargetUnit == null)
+        {
+            Debug.LogWarning($"[Military] Target does not exist but tracker still exists.");
+            Destroy(gameObject);
+            return;
+        }
         isTargetAlien = TargetUnit.UnitTeam == MilitaryUnit.Team.Alien;
     }
 

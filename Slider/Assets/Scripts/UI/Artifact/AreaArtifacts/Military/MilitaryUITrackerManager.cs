@@ -47,6 +47,12 @@ public class MilitaryUITrackerManager : UITrackerManager
             unitTrackerBuffer.Add(unit);
             return;
         }
+
+        if (unit == null)
+        {
+            Debug.Log($"[Military] Tried adding Unit Tracker for a unit that was null. Skipping.");
+            return;
+        }
         
         GameObject go = Instantiate((_instance as MilitaryUITrackerManager).militaryUITrackerPrefab, _instance.transform);
         UITracker uiTracker = go.GetComponent<UITracker>();

@@ -145,15 +145,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
     }
 
 
-    private void SelectTopmostButton()
-    {
-        StartCoroutine(ISelectTopmostButton());
-    }
-    private IEnumerator ISelectTopmostButton()
+    public void SelectTopmostButton()
     {
         // Safety to prevent inputs from triggering a button immediately after opening the menu
-        yield return new WaitForEndOfFrame();
-        UINavigationManager.SelectBestButtonInCurrentMenu();
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => UINavigationManager.SelectBestButtonInCurrentMenu(), this);
     }
     
     public static void QuitGame()

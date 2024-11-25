@@ -4,7 +4,17 @@ public class OpenGuideHandler : MonoBehaviour
 {
     public void OpenGuideWebsite()
     {
-        Application.OpenURL("https://www.boomo.me/walkthroughs/slider.html");
+        string locale = (string)SettingsManager.Setting(Settings.Locale).GetCurrentValue();
+        string url = "https://www.boomo.me/walkthroughs/slider.html";
+        switch (locale)
+        {
+            case "한국어":
+                url = "https://www.boomo.me/walkthroughs/slider-kr.html";
+                break;
+            case "简体中文":
+                break;
+        }
+        Application.OpenURL(url);
     }
 
     public void OpenFeedbackFormHTTP()

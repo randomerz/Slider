@@ -3,6 +3,7 @@ using System.Linq;
 using Localization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SettingRetriever))]
@@ -16,14 +17,17 @@ public class LocaleSelector : MonoBehaviour
         
         Dropdown.ClearOptions();
         
-        var sortedOptions = LocalizationFile.LocaleList(retriever.ReadSettingValue() as string).Select(locale =>
-        {
-            TMP_Dropdown.OptionData data = new()
-            {
-                text = locale
-            };
-            return data;
-        }).ToList();
+        bool isDebugMode = (bool)SettingsManager.Setting(Settings.DevConsole).GetCurrentValue();
+        var sortedOptions = LocalizationFile.LocaleList(retriever.ReadSettingValue() as string)
+                .Where(locale => locale != "Debug" || Application.isEditor || isDebugMode)
+                .Select(locale => {
+                    TMP_Dropdown.OptionData data = new()
+                    {
+                        text = locale
+                    };
+                    return data;
+                })
+                .ToList();
         
         Dropdown.options.AddRange(sortedOptions);
         Dropdown.value = 0;
@@ -53,13 +57,11 @@ public class LocaleSelector : MonoBehaviour
     {
         ShowHide.SetActive(false);
         Dropdown.gameObject.SetActive(true);
+        Dropdown.Select();
     }
 
     public void OnSelectionValueChanged()
     {
-        Dropdown.gameObject.SetActive(false);
-        ShowHide.SetActive(true);
-
         string originalLocale = retriever.ReadSettingValue() as string ?? LocalizationFile.DefaultLocale;
         string selection = Dropdown.options[Dropdown.value].text;
 
