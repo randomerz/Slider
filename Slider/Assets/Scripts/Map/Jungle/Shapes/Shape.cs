@@ -10,7 +10,7 @@ public class Shape : ScriptableObject
 {
     [FormerlySerializedAs("name")]
     public string shapeName;
-    private string LocalizedShapeName => LocalizationLoader.LoadJungleShapeTranslation(shapeName);
+    public string LocalizedShapeName => LocalizationLoader.LoadJungleShapeTranslation(shapeName);
 
     [FormerlySerializedAs("sprite")]
     public Sprite fullSprite;

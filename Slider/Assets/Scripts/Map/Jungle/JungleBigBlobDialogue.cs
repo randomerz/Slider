@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Localization;
+using UnityEditor.UI;
 using UnityEngine;
 
 public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
@@ -38,7 +39,8 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         }
         else
         {
-            SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, ShapeNameToGenericMessage(item.itemName));
+            string localizedShapeName = LocalizationLoader.LoadJungleShapeTranslation(item.itemName);
+            SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, ShapeNameToGenericMessage(localizedShapeName));
             npc.Conds[^1].dialogueChain[0].animationOnStart = "Idle";
         }
 
@@ -48,6 +50,8 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
     public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
         new Dictionary<string, string>
         {
+            { "Generic", "Woah! Is that a <shape/>?!" },
+
             // { "Bandage", "" },
             { "Bread", "It's gluten free!" },
             // { "Camera", "" },
@@ -117,7 +121,12 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
 
     private string ShapeNameToGenericMessage(string shapeName)
     {
-        return $"Woah! Is that a {shapeName}?!";
+        return IDialogueTableProvider.Interpolate(
+            this.GetLocalizedSingle("Generic"),
+            new() {
+                { "shape", shapeName }
+            }
+        );
     }
 
     private bool IsInRecipeList(string shapeName)

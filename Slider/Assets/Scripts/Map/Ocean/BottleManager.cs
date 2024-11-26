@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class BottleManager : MonoBehaviour, ISavable
+public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
 {
     private const string validTiles = "1367"; //these tiles have a water path for the bottle
     
@@ -29,6 +30,50 @@ public class BottleManager : MonoBehaviour, ISavable
         new Vector3(4.5f,-7.5f)
     };
 
+    public enum RomeoErrorCode
+    {
+        Generic,
+        NotEnoughTiles,
+        BlockedLand,
+        BlockedShipWreck,
+        BlockedIsland,
+        BlockedVolcano,
+        BlockedEmpty,
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<RomeoErrorCode, string>
+        {
+            {
+                RomeoErrorCode.Generic,
+                "The path is obstructed!"
+            },
+            {
+                RomeoErrorCode.NotEnoughTiles,
+                "There are not enough tiles!"
+            },
+            {
+                RomeoErrorCode.BlockedLand,
+                "There is land in the way!"
+            },
+            {
+                RomeoErrorCode.BlockedShipWreck,
+                "The shipwreck is in the way!"
+            },
+            {
+                RomeoErrorCode.BlockedIsland,
+                "The island is in the way!"
+            },
+            {
+                RomeoErrorCode.BlockedVolcano,
+                "The volcano is in the way!"
+            },
+            {
+                RomeoErrorCode.BlockedEmpty,
+                "The space in front of me is empty!"
+            },
+        }
+    );
     
     private void Awake() 
     {
@@ -62,31 +107,31 @@ public class BottleManager : MonoBehaviour, ISavable
 
     private void UpdateRomeoReason()
     {
-        string reason = "The path is obstructed!";
+        string reason = this.GetLocalizedSingle(RomeoErrorCode.Generic);
         string gridString = SGrid.GetGridString();
         if(SGrid.Current.GetNumTilesCollected() < 4)
         {
-            reason = "There are not enough tiles!";
+            reason = this.GetLocalizedSingle(RomeoErrorCode.NotEnoughTiles);
         }
         else if (gridString[0] == '2' || gridString[0] == '8')
         {
-            reason = "There is land in the way!";
+            reason = this.GetLocalizedSingle(RomeoErrorCode.BlockedLand);
         }
         else if (gridString[0] == '4')
         {
-            reason = "The shipwreck is in the way!";
+            reason = this.GetLocalizedSingle(RomeoErrorCode.BlockedShipWreck);
         }
         else if (gridString[0] == '5')
         {
-            reason = "The island is in the way!";
+            reason = this.GetLocalizedSingle(RomeoErrorCode.BlockedIsland);
         }
         else if (gridString[0] == '9')
         {
-            reason = "The volcano is in the way!";
+            reason = this.GetLocalizedSingle(RomeoErrorCode.BlockedVolcano);
         }
         else if (gridString[0] == '.')
         {
-            reason = "The space in front of me is empty!";
+            reason = this.GetLocalizedSingle(RomeoErrorCode.BlockedEmpty);
         }
 
         SaveSystem.Current.SetString("oceanRomeoReason", reason);

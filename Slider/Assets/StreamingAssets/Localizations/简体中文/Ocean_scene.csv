@@ -1,4 +1,4 @@
-"Slider.v1.0.16","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.16b","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -185,6 +185,13 @@ be corrupted, these rules may be helpful for debugging purposes...
 "Map/EightPuzzle/STile (8)/Objects/Kevin@4:0","Don't have much to give, but this was my finest catch of the day.","Don’t have much to give, but this was my finest catch of the day.","",
 "Map/EightPuzzle/STile (8)/Objects/Kevin@5:0","Thanks again pal, one day I'll teach you how to fish.","Thanks again pal, one day I'll teach you how to fish.","",
 "Map/EightPuzzle/STile (8)/Objects/Kevin@6:0","What's up Big Tuna?","What’s up Big Tuna?","",
+"Map/World Grid/BaseObjects/Bottle Manager@BlockedEmpty:0","The space in front of me is empty!","The space in front of me is empty!","",
+"Map/World Grid/BaseObjects/Bottle Manager@BlockedIsland:0","The island is in the way!","The island is in the way!","",
+"Map/World Grid/BaseObjects/Bottle Manager@BlockedLand:0","There is land in the way!","There is land in the way!","",
+"Map/World Grid/BaseObjects/Bottle Manager@BlockedShipWreck:0","The shipwreck is in the way!","The shipwreck is in the way!","",
+"Map/World Grid/BaseObjects/Bottle Manager@BlockedVolcano:0","The volcano is in the way!","The volcano is in the way!","",
+"Map/World Grid/BaseObjects/Bottle Manager@Generic:0","The path is obstructed!","The path is obstructed!","",
+"Map/World Grid/BaseObjects/Bottle Manager@NotEnoughTiles:0","There are not enough tiles!","There are not enough tiles!","",
 "Map/World Grid/BaseObjects/Juliet/Canvas/Dialogue","","","TinyUnicode;1",
 "Map/World Grid/BaseObjects/Juliet/Canvas/Dialogue BG Font","","","PixelUnicodeFill;1",
 "Map/World Grid/BaseObjects/Juliet@0:0","O Romeo, Romeo, wherefore art thou Romeo? Send me a message!","O Romeo, Romeo, wherefore art thou Romeo? Send me a message!","",
