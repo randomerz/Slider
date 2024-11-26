@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Localization;
-using UnityEditor.UI;
 using UnityEngine;
 
 public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
