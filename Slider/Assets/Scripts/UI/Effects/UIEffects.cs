@@ -152,12 +152,13 @@ public class UIEffects : Singleton<UIEffects>
     {
         if (previousCoroutine != null)
         {
+            Debug.Log($"[UIEffects] Cancelled a running coroutine without invoking previous callbacks.");
             _instance.StopCoroutine(previousCoroutine);
             ClearScreen();
         }
 
         Coroutine c = _instance.StartCoroutine(coroutine);
-        if (!stopable)
+        if (stopable)
         {
             previousCoroutine = c;
             previousCallback = callback;

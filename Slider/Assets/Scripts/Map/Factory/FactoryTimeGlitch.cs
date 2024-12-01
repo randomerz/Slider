@@ -162,6 +162,7 @@ public class FactoryTimeGlitch : MonoBehaviour
     
     private void UpdateMap()
     {
+        Debug.Log($"update map");
         objectsFromPastRoot.SetActive(false);
         objectsFromFutureRoot.SetActive(true);
 
