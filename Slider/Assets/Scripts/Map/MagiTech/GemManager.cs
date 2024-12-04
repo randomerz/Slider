@@ -334,7 +334,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
         }
         else if (num == 1)
         {
-            specific = this.GetLocalizedSingle(GemHintCode.MultiGemHint, (int)all[0]);
+            specific = this.GetLocalizedSingle(GemHintCode.SingleGemHint, (int)all[0]);
             if (all[0] == Area.Caves)
             {
                 presentConductiveBob.SetIsTracked(true);
