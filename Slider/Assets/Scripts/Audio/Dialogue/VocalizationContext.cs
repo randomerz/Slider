@@ -28,6 +28,8 @@ public class VocalRandomizationContext
     public float wordPitchIntonated;
     public float lastWordFinalPitch;
     public bool isCurrentWordLow;
+
+    public float textSpeedMultiplier = 1.0f;
 }
 
 #if UNITY_EDITOR

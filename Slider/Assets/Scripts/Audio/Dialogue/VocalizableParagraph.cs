@@ -71,13 +71,17 @@ namespace SliderVocalization
         /// </summary>
         /// <param name="text">Duration of that narration when played uninterrupted</param>
         /// <returns></returns>
-        public float SetText(string text, NPCEmotes.Emotes emote, int maxPhonemes = int.MaxValue)
+        public float SetText(string text, NPCEmotes.Emotes emote, float textSpeedMultiplier, int maxPhonemes = int.MaxValue)
         {
             this.text = text;
             sentences = SentenceVocalizer.Parse(this.text, preset, maxPhonemes) ?? new();
             
             return (this as IVocalizer).RandomizeVocalization(
-                ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), new()
+                ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true),
+                new VocalRandomizationContext
+                {
+                    textSpeedMultiplier = textSpeedMultiplier,
+                }
                 );
         } 
 
@@ -127,7 +131,7 @@ namespace SliderVocalization
                 EditorGUILayout.BeginHorizontal();
                 if (GUILayout.Button("Apply"))
                 {
-                    reader.SetText(rawText, emote);
+                    reader.SetText(rawText, emote, textSpeedMultiplier: 1.0f);
                     EditorUtility.SetDirty(reader);
                 }
                 if (reader.Vocalizers != null && reader.Vocalizers.Count > 0 && Application.isPlaying)

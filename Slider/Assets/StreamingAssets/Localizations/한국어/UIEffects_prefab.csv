@@ -1,4 +1,4 @@
-"Slider.v1.0.16b","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.17","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -20,7 +20,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 "IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
 "Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
 "Path","Orig","Translation","Metadata",
-"UIEffects/EffectCanvas/Controller Warning/Warning Text","Warning: Interfering inputs between controller and keyboard. You might need to disconnect one.","경고 : 컨트롤러와 키보드 사이의 입력 간섭. 한쪽을 분리해야 합니다.",";6",
-"UIEffects/EffectCanvas/HintsPanel/Hint Text","Something went wrong!","무언가 잘못되었습니다!","PixelTitanZero;12",
-"UIEffects/EffectCanvas/Item Acquired Text","Item Acquired!","아이템을 획득했습니다!","PixelTitanZero;24",
+"UIEffects/EffectCanvas/Controller Warning/Warning Text","Warning: Interfering inputs between controller and keyboard. You might need to disconnect one.","경고 : 컨트롤러와 키보드 사이의 입력 간섭. 한쪽을 분리해야 합니다.","family:;size:6;lineSpacing:0;",
+"UIEffects/EffectCanvas/HintsPanel/Hint Text","Something went wrong!","무언가 잘못되었습니다!","family:PixelTitanZero;size:12;lineSpacing:0;",
+"UIEffects/EffectCanvas/Item Acquired Text","Item Acquired!","아이템을 획득했습니다!","family:PixelTitanZero;size:24;lineSpacing:0;",
 "UIEffects/WorldCanvas@Acquired:0","<item/> Acquired!","<item/> 획득!","",

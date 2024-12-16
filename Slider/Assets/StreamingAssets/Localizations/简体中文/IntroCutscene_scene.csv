@@ -1,4 +1,4 @@
-"Slider.v1.0.16b","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+"Slider.v1.0.17","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -20,21 +20,21 @@ be corrupted, these rules may be helpful for debugging purposes...
 "IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
 "Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
 "Path","Orig","Translation","Metadata",
-"Canvas/SkipDialogue","Press any key to skip","Press any key to skip","TinyUnicode;1.2",
-"Canvas/Texts/Text (1)","In ages past, man held the power to remake the world.","In ages past, man held the power to remake the world.","PixelTitanZero;16",
-"Canvas/Texts/Text (2)","Societies rose and fell, centered around a relic of unimaginable power.","Societies rose and fell, centered around a relic of unimaginable power.","PixelTitanZero;16",
+"Canvas/SkipDialogue","Press any key to skip","Press any key to skip","family:TinyUnicode;size:1.2;lineSpacing:0;",
+"Canvas/Texts/Text (1)","In ages past, man held the power to remake the world.","In ages past, man held the power to remake the world.","family:PixelTitanZero;size:16;lineSpacing:-15;",
+"Canvas/Texts/Text (2)","Societies rose and fell, centered around a relic of unimaginable power.","Societies rose and fell, centered around a relic of unimaginable power.","family:PixelTitanZero;size:16;lineSpacing:-15;",
 "Canvas/Texts/Text (3)","A relic now lost 
 to the sands of time.","A relic now lost 
-to the sands of time.","PixelTitanZero;16",
+to the sands of time.","family:PixelTitanZero;size:16;lineSpacing:-15;",
 "Canvas/Texts/Text (4)","The world has moved on, 
 into a brighter future.","The world has moved on, 
-into a brighter future.","PixelTitanZero;16",
+into a brighter future.","family:PixelTitanZero;size:16;lineSpacing:-15;",
 "Canvas/Texts/Text (5)","But some things
 don't stay buried.","But some things
-don't stay buried.","PixelTitanZero;16",
+don't stay buried.","family:PixelTitanZero;size:16;lineSpacing:-15;",
 "Canvas/Texts/Text (6)","And all thanks to 
 your little cat...","And all thanks to 
-your little cat...","PixelTitanZero;16",
+your little cat...","family:PixelTitanZero;size:16;lineSpacing:-15;",
 "Canvas/Texts/Text (7)","The world faces 
 Cataclysm once more.","The world faces 
-Cataclysm once more.","PixelTitanZero;16",
+Cataclysm once more.","family:PixelTitanZero;size:16;lineSpacing:-15;",

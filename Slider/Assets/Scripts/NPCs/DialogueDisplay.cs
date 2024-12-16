@@ -68,22 +68,21 @@ public class DialogueDisplay : MonoBehaviour
         
         textTyperText.SetTextSpeed(GameSettings.textSpeed);
         textTyperBG.SetTextSpeed(GameSettings.textSpeed);
+
+        if (!AudioManager.useVocalizer || !useVocalizer) return;
         
-        if (AudioManager.useVocalizer && useVocalizer)
+        var totalDuration = vocalizer.SetText(toVocalize, emote, (float) toVocalize.Length / typed.Length);
+
+        textTyperText.SetTextSpeed(totalDuration / typed.Length);
+        textTyperBG.SetTextSpeed(totalDuration / typed.Length);
+
+        AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
+
+        if (vocalizer.GetVocalizationState() == VocalizerCompositeState.CanPlay)
         {
-            float totalDuration = vocalizer.SetText(toVocalize, emote);
-
-            textTyperText.SetTextSpeed(totalDuration / typed.Length);
-            textTyperBG.SetTextSpeed(totalDuration / typed.Length);
-
-            AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
-
-            if (vocalizer.GetVocalizationState() == VocalizerCompositeState.CanPlay)
-            {
-                vocalizer.StartReadAll(emote);
-            }
+            vocalizer.StartReadAll(emote);
         }
-        
+
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
