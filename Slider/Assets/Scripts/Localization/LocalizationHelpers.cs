@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using TMPro;
 using Sylvan.Data.Csv;
 using UnityEngine.SceneManagement;
@@ -972,6 +974,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
+            tmpCasted.lineSpacing = 0;
             // tmpCasted.ForceConvertMiddleToMidline();
             tmpCasted.enableWordWrapping = false;
             tmpCasted.extraPadding = false; // does not work with CN font for some reason
@@ -1018,6 +1021,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 {
                     var metadata = txt.ParseMetadata(entry?.Metadata);
                     txt.font = LocalizationLoader.LocalizationFont(metadata.family);
+                    txt.lineSpacing = 0;
                     txt.overflowMode = TextOverflowModes.Overflow;
                     if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
                     {
@@ -1379,8 +1383,25 @@ be corrupted, these rules may be helpful for debugging purposes...
     {
         public string family;
         public float size;
+        public float lineSpacing;
+        
+        internal static FieldInfo[] fields = typeof(FontMetadata).GetFields();
 
-        public override string ToString() => $"{family};{size}";
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+            
+            foreach (var field in fields)
+            {
+                sb.Append(field.Name);
+                sb.Append(":");
+                sb.Append(field.GetValue(this));
+                sb.Append(";");
+            }
+
+            return sb.ToString();
+        }
+
         public static implicit operator string(FontMetadata self) => self.ToString();
     }
 
@@ -1399,8 +1420,9 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         internal static FontMetadata GetMetadata(this TMP_Text txt) => new FontMetadata
         {
-            family = txt.font.faceInfo.familyName,
-            size = txt.fontSize
+            family = txt.font?.faceInfo.familyName,
+            size = txt.fontSize,
+            lineSpacing = txt.lineSpacing,
         };
 
         internal static FontMetadata ParseMetadata(this TMP_Text txt, string metadata)
@@ -1411,30 +1433,28 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return txt.GetMetadata();
             }
 
-            var cols = metadata.Split(';');
-            var l = cols.Length;
-
-            if (l == 0)
+            var dict = metadata.Split(';').Where(s => s.Contains(':')).Select(s =>
             {
-                return txt.GetMetadata();
-            }
-
-            var family = cols[0];
-
-            if (l > 1 && float.TryParse(cols[1], out var size))
-            {
-                return new FontMetadata
+                var kv = s.Split(':');
+                if (!float.TryParse(kv[1], out var value))
                 {
-                    family = family,
-                    size = size
-                };
-            }
+                    value = float.NaN;
+                }
+                return new Tuple<string, float>(kv[0], value);
+            }).Where((kv) => !float.IsNaN(kv.Item2))
+                .ToDictionary(kv => kv.Item1, kv => kv.Item2);
+            
+            var data = txt.GetMetadata();
 
-            return new FontMetadata
+            foreach (var field in FontMetadata.fields)
             {
-                family = family,
-                size = float.NaN
-            };
+                if (dict.ContainsKey(field.Name))
+                {
+                    field.SetValue(data, dict[field.Name]);
+                }
+            }
+            
+            return data;
         }
     }
 }

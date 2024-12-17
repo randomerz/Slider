@@ -29,12 +29,18 @@ namespace SliderVocalization
 
     public class PauseVocalizer : BaseVocalizer
     {
+        private float duration;
+        
+        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
+        {
+            duration = preset.clauseGap / context.textSpeedMultiplier;
+            return duration;
+        }
 
-        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context) => preset.clauseGap;
         public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         {
             if (float.IsNormal(preset.clauseGap) && !float.IsNegative(preset.clauseGap))
-                yield return new WaitForSeconds(preset.clauseGap);
+                yield return new WaitForSeconds(duration * context.vowelOpenness);
         }
 
         public override void Stop() { }
@@ -51,17 +57,18 @@ namespace SliderVocalization
 
     public class PunctuationVocalizer : BaseVocalizer
     {
-        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context) 
-            => preset.duration * characters.Length;
+        private float duration;
+
+        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
+        {
+            duration = preset.duration * characters.Length / context.textSpeedMultiplier;
+            return duration;
+        }
 
         public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         {
-            for (int i = 0; i < characters.Length; i++)
-            {
-                _progress = i + 1;
-                if (float.IsNormal(preset.duration) && !float.IsNegative(preset.duration))
-                    yield return new WaitForSeconds(preset.duration);
-            }
+            if (float.IsNormal(duration) && !float.IsNegative(duration))
+                yield return new WaitForSeconds(duration);
         }
 
         public override void Stop() { }
@@ -89,6 +96,8 @@ namespace SliderVocalization
         float volumeAdjustmentDB;
         #endregion
         AudioManager.ManagedInstance playingInstance;
+
+        private float pitch;
         
         public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
         {
@@ -101,6 +110,8 @@ namespace SliderVocalization
             
             var description = preset.synth.ToFmodEventDescription();
 
+            pitch = Mathf.Clamp(context.textSpeedMultiplier, 0.5f, 2.0f);
+
             if (description.HasValue)
             {
                 description.Value.getLength(out int miliseconds);
@@ -111,7 +122,11 @@ namespace SliderVocalization
                 totalDuration = 0;
             }
 
-            return totalDuration;
+            // total duration is used in the progress bar, which is regardless of pitch.
+            // here we return the actual time scaled by the pitch
+            // there will be some time inaccuracies beyond 1/2x to 2x time as FMOD does not
+            // allow distorting the sounds further
+            return totalDuration * pitch;
         }
 
         public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
@@ -122,6 +137,7 @@ namespace SliderVocalization
                 .WithAttachmentToTransform(context.root)
                 .WithFixedDuration(totalDuration + preset.maximumFadeout)
                 .WithVolume(preset.volume)
+                .WithPitch(pitch)
                 .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
                 .WithPriorityOverDucking(true);
 
@@ -171,7 +187,7 @@ namespace SliderVocalization
 
         public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
         {
-            duration = preset.duration * (context.isCurrentWordLow ? 1 : (1 - preset.energeticWordSpeedup));
+            duration = preset.duration * (context.isCurrentWordLow ? 1 : (1 - preset.energeticWordSpeedup)) / context.textSpeedMultiplier;
             totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
             initialPitch = context.lastWordFinalPitch;
