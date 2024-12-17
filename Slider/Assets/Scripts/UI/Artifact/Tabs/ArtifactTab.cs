@@ -98,9 +98,8 @@ public class ArtifactTab : MonoBehaviour
 
     public void Select()
     {
-        if(Controls.UsingControllerOrKeyboardOnly())
+        if (Controls.UsingControllerOrKeyboardOnly())
         {
-            // print("selected");
             controllerSelectedImage.enabled = true;
             selected = true;
             OnHoverEnter?.Invoke();
@@ -110,7 +109,7 @@ public class ArtifactTab : MonoBehaviour
     public void Deselect()
     {
         controllerSelectedImage.enabled = false;
-        if(selected)
+        if (selected)
             OnHoverExit?.Invoke();
     }
 }
