@@ -50,6 +50,12 @@ public class Conveyor : ElectricalNode
         base.OnDisable();
         SGridAnimator.OnSTileMoveEndEarly -= OnSTileMoveEndEarly;
         SGrid.OnSTileEnabled -= OnSTileEnabled;
+
+        if (FactoryArtifact.DequeueLocked)
+        {
+            Debug.LogWarning("Factory Dequeue was locked when conveyor was disabled. Unlocking it...");
+            FactoryArtifact.DequeueLocked = false;
+        }
     }
 
     private new void Update()

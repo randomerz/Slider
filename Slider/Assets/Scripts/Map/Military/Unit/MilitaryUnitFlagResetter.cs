@@ -60,8 +60,11 @@ public class MilitaryUnitFlagResetter : MonoBehaviour
 
     public void RemoveFromPlayer()
     {
-        PlayerInventory.RemoveItem();
-        transform.SetParent(resetTransform.parent);
+        if (PlayerInventory.GetCurrentItem() == this)
+        {
+            PlayerInventory.RemoveItem();
+            transform.SetParent(resetTransform.parent);
+        }
     }
 
     public void SetResetTransform(Transform t)
