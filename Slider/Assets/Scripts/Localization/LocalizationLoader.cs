@@ -23,7 +23,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private static TMP_FontAsset LocalizationFontPixelSmall => _instance.localizationFontPixelSmall;
     private static TMP_FontAsset LocalizationFontNonPixelBig => _instance.localizationFontNonPixelBig;
     private static TMP_FontAsset LocalizationFontNonPixelSmall => _instance.localizationFontNonPixelSmall;
-
+    
     public static TMP_FontAsset LocalizationFont(string originalFamilyName)
     {
         var big = BigFontFamilyNames.Contains(originalFamilyName);

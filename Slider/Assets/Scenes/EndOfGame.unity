@@ -667,6 +667,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &475646390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170937965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  excludeFromTranslationOnly: 1
 --- !u!1001 &541170698
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1317,6 +1330,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1764250922}
+    - targetCorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1764250923}
   m_SourcePrefab: {fileID: 100100000, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
 --- !u!224 &692567324 stripped
 RectTransform:
@@ -2737,6 +2753,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boomo Exclamation Point
       objectReference: {fileID: 0}
+    - target: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4574355875102938571, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2856,6 +2876,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1752138862}
+    - targetCorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1752138863}
   m_SourcePrefab: {fileID: 100100000, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
 --- !u!224 &1752138860 stripped
 RectTransform:
@@ -2885,6 +2908,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1752138863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252069126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  excludeFromTranslationOnly: 1
 --- !u!1 &1764250920 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
@@ -2902,6 +2938,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1764250923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764250920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  excludeFromTranslationOnly: 1
 --- !u!1 &1834825822
 GameObject:
   m_ObjectHideFlags: 0
@@ -3513,6 +3562,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
       insertIndex: -1
       addedObject: {fileID: 475646389}
+    - targetCorrespondingSourceObject: {fileID: 2506038082466726204, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 475646390}
   m_SourcePrefab: {fileID: 100100000, guid: a1a66e65aa0fda34fbfba86c4a7a3313, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -150,7 +150,7 @@ namespace Localization
     internal sealed class ParsedLocalizable : Localizable
     {
         private readonly SerializedLocalizableData _data;
-
+        
         public bool TryGetTranslated(out string translated)
         {
             if (!string.IsNullOrWhiteSpace(_data.text))
@@ -158,9 +158,9 @@ namespace Localization
                 translated = _data.text;
                 return true;
             }
-
+        
             translated = null;
-
+        
             return false;
         }
 
@@ -1032,11 +1032,12 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             var b = big.GetAnchor<UIBigText>();
 
-            string translated = null; // purely for syntax purpose...
+            string translated = null;
             var hasTranslated =
-                file.TryGetRecord(big.FullPath, out var entry)
-                && shouldTranslate && entry.TryGetTranslated(out translated);
-
+                    file.TryGetRecord(big.FullPath, out var entry)
+                    && shouldTranslate
+                    && entry.TryGetTranslated(out translated);
+                
             foreach (var txt in b.texts)
             {
                 LocalizeTmp_Stylize(txt, entry, file);
@@ -1085,23 +1086,21 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             var t = typer.GetAnchor<TMPTextTyper>();
             var tmp = t.TextMeshPro;
-            string metadata = null;
             if (file.TryGetRecord(typer.FullPath, out var entry))
             {
-                metadata = entry.Metadata;
                 if (t.localizeText && entry.TryGetTranslated(out var translation))
                 {
                     tmp.text = translation;
                 }
             }
 
-            metadata = tmp.ParseMetadata(metadata);
+            var metadata = tmp.ParseMetadata(entry?.Metadata);
 
-            tmp.font = LocalizationLoader.LocalizationFont(metadata);
-            tmp.fontSize = tmp.ParseMetadata(entry?.Metadata).size * adjFlt;
+            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
+            tmp.fontSize = metadata.size * adjFlt;
             tmp.wordSpacing = 0;
             tmp.lineSpacing = 0;
-
+            
             tmp.SetLayoutDirty();
         }
 
@@ -1140,8 +1139,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return;
             }
 
-            if (!file.TryGetRecord(tableProviderEntry.FullPath, out var entry) ||
-                !entry.TryGetTranslated(out var translated)) return;
+            if (!file.TryGetRecord(tableProviderEntry.FullPath, out var entry)
+                || !entry.TryGetTranslated(out var translated)) return;
 
             // AT: cursed Unity editor crashing bug if I call any interface function,
             // so instead just rewrite the function here...
@@ -1268,8 +1267,10 @@ be corrupted, these rules may be helpful for debugging purposes...
 
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    if (referenceFile != null && referenceFile.TryGetRecord(path.key, out var entry) &&
-                        entry.TryGetTranslated(out var translated))
+                    if (referenceFile != null 
+                        && referenceFile.TryGetRecord(path.key, out var entry) 
+                        && entry.TryGetTranslated(out var translated)
+                        )
                     {
                         text = translated;
                     }

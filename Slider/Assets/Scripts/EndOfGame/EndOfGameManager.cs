@@ -1,13 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 
-public class EndOfGameManager : MonoBehaviour
+public class EndOfGameManager : MonoBehaviour, IDialogueTableProvider
 {
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<string, string>
+        {
+            { "ending", "Reunited with <cat/>!" }
+        });
+    
     [System.Serializable]
     public struct ParallaxPlane
     {
@@ -75,7 +82,20 @@ public class EndOfGameManager : MonoBehaviour
 
     public void UpdateTexts()
     {
-        nameText.SetText($"{SaveSystem.Current?.GetProfileName()}!");
+        if (LocalizationLoader.CurrentLocale != LocalizationFile.DefaultLocale)
+        {
+            var localizedEnding = IDialogueTableProvider.Interpolate(this.GetLocalizedSingle("ending"), new Dictionary<string, string>()
+            {
+                { "cat", SaveSystem.Current?.GetProfileName() ?? "Boomo" }
+            });
+            
+            nameText.SetText(localizedEnding);
+        }
+        else
+        {
+            nameText.SetText((SaveSystem.Current?.GetProfileName() ?? "Boomo") + "!");
+        }
+        
         TimeSpan ts = TimeSpan.FromSeconds(time);
         timeText.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}:{3:D3}",
@@ -105,13 +125,16 @@ public class EndOfGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(PARALLAX_ANIMATION_DURATION - 0.25f - 1.5f);
 
-        StartCoroutine(FadeAnimation(canvasGroupReunited));
+        if (LocalizationLoader.CurrentLocale == LocalizationFile.DefaultLocale)
+        {
+            StartCoroutine(FadeAnimation(canvasGroupReunited));
 
-        yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+            yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
 
-        StartCoroutine(FadeAnimation(canvasGroupWith));
+            StartCoroutine(FadeAnimation(canvasGroupWith));
 
-        yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+            yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+        }
 
         StartCoroutine(FadeAnimation(canvasGroupBoomo));
 
