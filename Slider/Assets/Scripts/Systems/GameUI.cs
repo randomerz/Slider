@@ -17,22 +17,21 @@ public class GameUI : MonoBehaviour
         //public System.Type myType;
         public GameObject prefab;
         public bool activeInMenuScenes;
-        public bool containsLocalizable;
         private GameObject singleton;
 
         public void Singlify()
         {
-            if (containsLocalizable)
-            {
-                foreach (var go in GameObject.FindGameObjectsWithTag("GameUI").Where(go => go.name.Equals(prefab.name)))
-                {
-                    Destroy(go);
-                }
-                
-                singleton = Instantiate(prefab);
-                singleton.name = prefab.name;
-                DontDestroyOnLoad(singleton);
-            }
+            // if (containsLocalizable)
+            // {
+            //     foreach (var go in GameObject.FindGameObjectsWithTag("GameUI").Where(go => go.name.Equals(prefab.name)))
+            //     {
+            //         Destroy(go);
+            //     }
+            //     
+            //     singleton = Instantiate(prefab);
+            //     singleton.name = prefab.name;
+            //     DontDestroyOnLoad(singleton);
+            // }
             
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("GameUI"))
             {

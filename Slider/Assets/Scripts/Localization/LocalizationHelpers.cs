@@ -400,21 +400,16 @@ be corrupted, these rules may be helpful for debugging purposes...
         private string locale;
         public bool IsDefaultLocale => locale.Equals(DefaultLocale);
 
-        // enum ParserState
-        // {
-        //     Empty,
-        //     HasPath,
-        //     HasOriginal,
-        //     HasTranslation,
-        //     Inval
-        // }
-
         public enum ParserError
         {
             NoError,
             FileNotFound,
             ExplicitlyDisabled
         }
+        
+        #if UNITY_EDITOR
+        private string _debug_path;
+        #endif
 
         public static void PrintParserError(ParserError error, string path)
         {
@@ -459,6 +454,10 @@ be corrupted, these rules may be helpful for debugging purposes...
         private LocalizationFile(string locale, string filePath, LocalizationFile localeConfig = null)
         {
             this.locale = locale;
+                  
+#if UNITY_EDITOR
+            _debug_path = filePath;
+#endif
 
             records = new();
             configs = new();
@@ -742,49 +741,38 @@ be corrupted, these rules may be helpful for debugging purposes...
             NoTranslation,
             None
         }
-
-        private void PopulateLocalizableInstances(GameObject rootGameObject)
+        
+        private TranslationExclusionMode GetExclusionMode(Transform t, TranslationExclusionMode defaultLocalizationShouldTranslate)
         {
+            TranslationExclusionMode mode;
+            var e = t.GetComponent<ExcludeFromLocalization>();
+            if (e != null)
             {
-                var exclude = rootGameObject.GetComponent<ExcludeFromLocalization>();
-                if (exclude != null && !exclude.excludeFromTranslationOnly)
+                if (e.excludeFromTranslationOnly)
                 {
-                    return;
-                }
-            }
-
-            TranslationExclusionMode getExclusionMode(Transform t, TranslationExclusionMode defaultLocalizationShouldTranslate)
-            {
-                TranslationExclusionMode mode;
-                var e = t.GetComponent<ExcludeFromLocalization>();
-                if (e != null)
-                {
-                    if (e.excludeFromTranslationOnly)
-                    {
-                        mode = TranslationExclusionMode.NoTranslation;
-                    }
-                    else
-                    {
-                        mode = TranslationExclusionMode.Skip;
-                    }
-                } else
-                {
-                    mode = TranslationExclusionMode.None;
-                }
-
-                if (defaultLocalizationShouldTranslate < mode)
-                {
-                    return defaultLocalizationShouldTranslate;
+                    mode = TranslationExclusionMode.NoTranslation;
                 }
                 else
                 {
-                    return mode;
+                    mode = TranslationExclusionMode.Skip;
                 }
+            } else
+            {
+                mode = TranslationExclusionMode.None;
             }
 
+            if (defaultLocalizationShouldTranslate < mode)
+            {
+                return defaultLocalizationShouldTranslate;
+            }
+            return mode;
+        }
+
+        private void PopulateLocalizableInstances(GameObject rootGameObject)
+        {
             // treat bool as shouldTranslate
             Queue<(Transform t, TranslationExclusionMode parentMode, string path)> todo = new();
-            var topLevelExclusionMode = getExclusionMode(rootGameObject.transform, TranslationExclusionMode.None);
+            var topLevelExclusionMode = GetExclusionMode(rootGameObject.transform, TranslationExclusionMode.None);
 
             if (topLevelExclusionMode == TranslationExclusionMode.Skip)
             {
@@ -800,17 +788,28 @@ be corrupted, these rules may be helpful for debugging purposes...
             todo.Enqueue((rootGameObject.transform, topLevelExclusionMode, root?.prefabName ?? rootGameObject.name));
             while (todo.TryDequeue(out var curr))
             {
-                if (curr.t != rootGameObject.transform)
+                var inj = curr.t.GetComponent<LocalizationInjector>();
+                if (inj != null)
                 {
-                    var inj = curr.t.GetComponent<LocalizationInjector>();
-                    if (inj != null)
+                    if (root != null && inj.gameObject == rootGameObject)
                     {
+                        // the root of an actual injector-rooted object should be allowed
+                        // (not added to localizables to prevent self recursion)
+                    }
+                    else
+                    {
+                        // in any other case, the localizable should be delegated to the injector
+                        // and not the current context
+                        // this includes:
+                        // - Scene -> injector on root obj
+                        // - Scene -> ... -> injector on non-root obj
+                        // - Injector -> ... -> injector on non-root-injector obj
                         localizables[typeof(LocalizationInjector)].Add(new TrackedLocalizable(inj));
                         continue;   
                     }
                 }
 
-                var mode = getExclusionMode(curr.t, curr.parentMode);
+                var mode = GetExclusionMode(curr.t, curr.parentMode);
 
                 if (mode == TranslationExclusionMode.Skip)
                 {
@@ -915,7 +914,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 { typeof(NPC), LocalizeNpc },
                 { typeof(TMPTextTyper), LocalizeTextTyper },
                 { typeof(UIBigText), LocalizeBigText },
-                { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
+                { typeof(LocalizationInjector), InjectLocalizations },
                 { typeof(PlayerActionHints), LocalizePlayerActionHints },
                 { typeof(IDialogueTableProvider), LocalizeTableProvider },
             };
@@ -925,15 +924,6 @@ be corrupted, these rules may be helpful for debugging purposes...
         /// </summary>
         public void Localize(LocalizationFile file, bool shouldTranslate)
         {
-            bool isEnglish = file.IsDefaultLocale;
-            bool useDefaultPixelFont = SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
-
-            if (isEnglish && useDefaultPixelFont)
-            {
-                // Debug.Log("[Localization] Localization strategy: skipping...");
-                return;
-            }
-            
             foreach (var (type, instances) in localizables)
             {
                 if (LocalizationFunctionMap.TryGetValue(type, out var localizationFunction))
@@ -946,6 +936,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
                 }
             }
+        }
+
+        private static void InjectLocalizations(TrackedLocalizable inj, LocalizationFile file, bool shouldTranslate)
+        {
+            var injector = inj.GetAnchor<LocalizationInjector>();
+            LocalizationLoader.InjectLocalization(injector);
         }
 
         private static void LocalizeTmp_Stylize(TMP_Text tmp, ParsedLocalizable entry, LocalizationFile file)
@@ -1275,14 +1271,6 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 serializationMappingAdaptor.Add(type, localizable =>
                 {
-                    // non-injected in scene: null == null
-                    // injected in scene: injector != null
-                    // injected in prefab: injector == injector
-                    if (localizable.GetAnchor<Component>().GetComponentInParent<LocalizationInjector>(includeInactive: true)?.prefabName != root?.prefabName)
-                    {
-                        return;
-                    }
-                    
                     var data = serialize(localizable);
                     if (data.IsEmpty)
                     {

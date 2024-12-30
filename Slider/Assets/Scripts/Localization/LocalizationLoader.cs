@@ -169,36 +169,45 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     {
         var locale = CurrentLocale;
         var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene), localeGlobalFile);
+        if (loadedAsset.context == null)
+        {
+            return;
+        }
 
         localeGlobalFile = loadedAsset.global;
+
+        var shouldStylize = !UsePixelFont;
+        var shouldTranslate = (locale != LocalizationFile.DefaultLocale);
         
-        if (loadedAsset.context != null)
+        if (shouldStylize || shouldTranslate)
         {
             LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
             LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
             
-            var shouldTranslate = !loadedAsset.context.IsDefaultLocale;
             loaded.Localize(loadedAsset.context, shouldTranslate);
             persistent.Localize(loadedAsset.context, shouldTranslate);
         }
     }
 
-    public static void LocalizePrefab(LocalizationInjector injector)
+    public static void InjectLocalization(LocalizationInjector injector)
     {
         Debug.Log($"Localize prefab {injector.gameObject} (instance of {injector.prefabName})");
         
-        if (_instance == null)
+        var locale = CurrentLocale;
+
+        var prefabAssetPath = LocalizationFile.AssetPath(locale, injector);
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, prefabAssetPath, _instance?.localeGlobalFile);
+
+        if (loadedAsset.context == null)
         {
-            Debug.LogWarning($"Code ordering: attempting to localize prefab without localization loader instance setup");
-            // return;
+            return;
         }
         
-        var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, injector), _instance?.localeGlobalFile);
+        var shouldStylize = !UsePixelFont;
+        var shouldTranslate = (locale != LocalizationFile.DefaultLocale);
 
-        if (loadedAsset.context != null)
+        if (shouldStylize || shouldTranslate)
         {
-            var shouldTranslate = !loadedAsset.context.IsDefaultLocale;
             LocalizableContext.ForInjector(injector).Localize(loadedAsset.context, shouldTranslate);
         }
     }

@@ -7,21 +7,18 @@ using UnityEditor;
 public class LocalizationInjector : MonoBehaviour
 {
     public string prefabName;
-    public bool autoRefreshOnSpawn = false;
+    private int numLocalizations = 0; // turn public for debugging
 
     public void Start()
     {
-        if (autoRefreshOnSpawn)
-        {
-            Refresh();
-        }
+        Refresh();
     }
     
-    public void Refresh()
+    void Refresh()
     {
-        if (prefabName != null)
+        if (numLocalizations++ == 0 && prefabName != null)
         {
-            LocalizationLoader.LocalizePrefab(this);
+            LocalizationLoader.InjectLocalization(this);
         }
         else
         {
