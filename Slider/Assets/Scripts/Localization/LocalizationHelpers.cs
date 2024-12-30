@@ -724,7 +724,6 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(UIBigText), SelectSelf },
-            { typeof(LocalizationInjector), SelectSelf},
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
             { typeof(TMPTextTyper), SelectSelf },
             {
@@ -791,7 +790,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 return;
             }
-            
+
+            localizables.TryAdd(typeof(LocalizationInjector), new());
             foreach (var t in SelectorFunctionMap.Keys)
             {
                 localizables.TryAdd(t, new ());
@@ -838,7 +838,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static IEnumerable<TrackedLocalizable> SelectSelf(Component c)
         {
-            return new List<TrackedLocalizable> { new TrackedLocalizable(c) };
+            return new List<TrackedLocalizable> { new (c) };
         }
 
         private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromTmp(TMP_Text tmp)
