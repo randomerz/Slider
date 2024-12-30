@@ -819,13 +819,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                 
                 foreach (var (type, selector) in SelectorFunctionMap)
                 {
-                    var inst = curr.t.GetComponent(type);
-                    if (inst == null)
-                    {
-                        continue;
-                    }
-
-                    foreach (var t in selector(inst))
+                    var inst = curr.t.GetComponents(type);
+                    foreach (var t in inst.SelectMany(selector))
                     {
                         t.shouldTranslate = mode == TranslationExclusionMode.None;
                         t.hierarchyPath = curr.path;
