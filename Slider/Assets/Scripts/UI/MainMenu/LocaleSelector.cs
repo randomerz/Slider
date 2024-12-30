@@ -79,20 +79,12 @@ public class LocaleSelector : MonoBehaviour
         // it back if they want to
         if (!isEnglish)
         {
+            // TODO: add accommodation for whether language supports high contrast
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
 
-        // no need to reload styles (font size, etc.) if switching from english to non-english
-        // just directly refresh localizations
-        if (originalLocale.Equals(LocalizationFile.DefaultLocale))
-        {
-            LocalizationLoader.RefreshLocalization();
-        }
-        // otherwise, force start from default styling (font size, etc.) and run localization on scene load
-        else {
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentSceneName);
-        }
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
         
         // Don't put anything here... there's a force scene reload in the setting change event (see SettingsManager)
     }

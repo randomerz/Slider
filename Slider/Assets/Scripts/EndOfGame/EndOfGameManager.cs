@@ -38,7 +38,7 @@ public class EndOfGameManager : MonoBehaviour
     private System.IDisposable listener;
     private AsyncOperation sceneLoad;
 
-    private float time;
+    private float time = -1.0f;
 
     private void OnDisable() 
     {
@@ -47,7 +47,15 @@ public class EndOfGameManager : MonoBehaviour
 
     public void Start()
     {
-        time = SaveSystem.Current.GetPlayTimeInSeconds();
+        if (SaveSystem.Current != null)
+        {
+            time = SaveSystem.Current.GetPlayTimeInSeconds();
+        }
+        else
+        {
+            Debug.LogError("Couldn't load save profile.");
+        }
+        
         UpdateTexts();
         StartCoroutine(AnimateEndScene());
     }
@@ -67,13 +75,7 @@ public class EndOfGameManager : MonoBehaviour
 
     public void UpdateTexts()
     {
-        if (SaveSystem.Current == null)
-        {
-            Debug.LogError("Couldn't load save profile.");
-            return;
-        }
-
-        nameText.SetText($"{SaveSystem.Current.GetProfileName()}!");
+        nameText.SetText($"{SaveSystem.Current?.GetProfileName()}!");
         TimeSpan ts = TimeSpan.FromSeconds(time);
         timeText.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}:{3:D3}",

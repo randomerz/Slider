@@ -177,13 +177,9 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
             LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
             LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
             
-            bool isEnglish = loadedAsset.context.IsDefaultLocale;
-            var strategy = isEnglish
-                ? LocalizableContext.LocalizationStrategy.ChangeStyleOnly
-                : LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
-            
-            loaded.Localize(loadedAsset.context, strategy);
-            persistent.Localize(loadedAsset.context, strategy);
+            var shouldTranslate = !loadedAsset.context.IsDefaultLocale;
+            loaded.Localize(loadedAsset.context, shouldTranslate);
+            persistent.Localize(loadedAsset.context, shouldTranslate);
         }
     }
 
@@ -200,11 +196,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 
         if (loadedAsset.context != null)
         {
-            bool isEnglish = loadedAsset.context.IsDefaultLocale;
-            var strategy = isEnglish
-                ? LocalizableContext.LocalizationStrategy.ChangeStyleOnly
-                : LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
-            LocalizableContext.ForSinglePrefab(target).Localize(loadedAsset.context, strategy);
+            var shouldTranslate = !loadedAsset.context.IsDefaultLocale;
+            LocalizableContext.ForSinglePrefab(target).Localize(loadedAsset.context, shouldTranslate);
         }
     }
 }
