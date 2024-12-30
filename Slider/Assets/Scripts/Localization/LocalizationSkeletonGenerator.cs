@@ -324,17 +324,18 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
        foreach (var prefab in projectConfiguration.RelevantPrefabs)
        {
-           var skeleton = LocalizableContext.ForSinglePrefab(prefab);
+           var injector = prefab.GetComponent<LocalizationInjector>();
+           var skeleton = LocalizableContext.ForInjector(injector);
            
            foreach (var locale in projectConfiguration.InitialLocales)
            {
                WriteAndCopyIf(
-                   ForceParentPath(LocalizationFile.AssetPath(locale.name, prefab, tempDirectory)),
-                   ForceParentPath(LocalizationFile.AssetPath(locale.name, prefab)),
+                   ForceParentPath(LocalizationFile.AssetPath(locale.name, injector, tempDirectory)),
+                   ForceParentPath(LocalizationFile.AssetPath(locale.name, injector)),
                    (tw) => skeleton.Serialize(
                        serializeConfigurationDefaults: false,
                        tw: tw,
-                       referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot)),
+                       referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, injector, referenceRoot)),
                        autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? "_ho_"  : null
                        ),
                    localeIsValid[locale.name] && root == null);

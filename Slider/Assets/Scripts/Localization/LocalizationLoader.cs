@@ -183,21 +183,23 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         }
     }
 
-    public static void LocalizePrefab(GameObject target, GameObject variantParent)
+    public static void LocalizePrefab(LocalizationInjector injector)
     {
+        Debug.Log($"Localize prefab {injector.gameObject} (instance of {injector.prefabName})");
+        
         if (_instance == null)
         {
-            Debug.LogWarning($"Attempting to localize prefab {target} without a localization loader singleton");
+            Debug.LogWarning($"Code ordering: attempting to localize prefab without localization loader instance setup");
             // return;
         }
         
         var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, variantParent), _instance?.localeGlobalFile);
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, injector), _instance?.localeGlobalFile);
 
         if (loadedAsset.context != null)
         {
             var shouldTranslate = !loadedAsset.context.IsDefaultLocale;
-            LocalizableContext.ForSinglePrefab(target).Localize(loadedAsset.context, shouldTranslate);
+            LocalizableContext.ForInjector(injector).Localize(loadedAsset.context, shouldTranslate);
         }
     }
 }

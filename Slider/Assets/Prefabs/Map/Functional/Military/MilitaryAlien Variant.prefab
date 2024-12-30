@@ -24,6 +24,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1566892738010081809, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
+      propertyPath: prefabName
+      value: MilitaryAlien Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 2034361500281893577, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
       propertyPath: myNPCs.Array.size
       value: 1
@@ -159,6 +163,18 @@ PrefabInstance:
     - target: {fileID: 6928668515798072430, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998752250836028153, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
+      propertyPath: otherNPCs.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998752250836028153, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
+      propertyPath: otherNPCs.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998752250836028153, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
+      propertyPath: otherNPCs.Array.data[2]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7999884904315792569, guid: 2aa7e8a0bc75a7d4d83ddd569625431c, type: 3}
       propertyPath: m_IsActive

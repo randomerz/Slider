@@ -71,6 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3427533592388141898}
   - component: {fileID: 5066515251667805866}
+  - component: {fileID: 1566892738010081809}
   m_Layer: 11
   m_Name: MilitaryAlly
   m_TagString: Untagged
@@ -117,6 +118,20 @@ MonoBehaviour:
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1566892738010081809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2606370981105054504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40ccac8adb15d34d8009e04d2c9fd85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: MilitaryAlly
+  autoRefreshOnSpawn: 1
 --- !u!1001 &425169645042214699
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -89,7 +89,7 @@ namespace Localization
 
     internal abstract class Localizable
     {
-        private string[] componentPath;
+        internal string[] componentPath = null; // populated *after* selection process to avoid needing to curry everything
 
         public string IndexInComponent => index;
         protected string index = null;
@@ -102,30 +102,24 @@ namespace Localization
 
         public string FullPath => string.Join('/', componentPath) + (index != null ? indexSeparator + index : "");
 
-        protected Localizable(string[] componentPath)
+        protected Localizable()
         {
-            this.componentPath = componentPath;
         }
 
-        protected static string[] GetComponentPath(Component current)
+        internal static string[] GetComponentPath(Component current, GameObject rootGameObject)
         {
             List<string> pathComponents = new();
-
-            Transform root = null;
-            for (Transform t = current.transform; t != null; t = t.parent)
+            
+            for (var t = current.transform; ; t = t.parent)
             {
                 pathComponents.Add(t.name);
-                root = t;
+                if (t == rootGameObject.transform)
+                {
+                    break;
+                }
             }
 
             pathComponents.Reverse();
-
-            var i = root.GetComponent<LocalizationInjector>();
-            if (i?.prefabVariantParent)
-            {
-                pathComponents[0] = i.prefabVariantParent.name;
-            }
-
             return pathComponents.ToArray();
         }
     }
@@ -166,10 +160,10 @@ namespace Localization
 
         public string Metadata => _data.metadata;
 
-        private ParsedLocalizable(string hierarchyPath, string index, SerializedLocalizableData data) : base(
-            hierarchyPath.Split('/'))
+        private ParsedLocalizable(string hierarchyPath, string index, SerializedLocalizableData data)
         {
             this.index = index;
+            componentPath = hierarchyPath.Split('/');
             _data = data;
         }
 
@@ -204,13 +198,19 @@ namespace Localization
         // Immediate component that this localizable tracks, several of them can track the same component
         // in the case of different indices (different dialogue numbers of the same NPC, for example)
         public T GetAnchor<T>() where T : class => (_anchor as T);
+        
         private readonly Component _anchor;
 
         public bool shouldTranslate = true;
 
-        public TrackedLocalizable(Component c) : base(GetComponentPath(c))
+        public TrackedLocalizable(Component c) : base()
         {
             _anchor = c;
+        }
+
+        public override string ToString()
+        {
+            return $"{_anchor.gameObject.name} << {_anchor} >> ";
         }
 
         // Track dropdown option
@@ -321,7 +321,7 @@ namespace Localization
         }
 
         private static string LocalizationFileName(Scene scene) => scene.name + "_scene.csv";
-        private static string LocalizationFileName(GameObject prefab) => prefab.name + "_prefab.csv";
+        private static string LocalizationFileName(LocalizationInjector injector) => injector.prefabName + "_prefab.csv";
 
         private static string LocaleGlobalFileName(string locale) => $"_{locale}_configs.csv";
 
@@ -334,8 +334,8 @@ namespace Localization
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
 
-        public static string AssetPath(string locale, GameObject prefab, string root = null) =>
-            Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(prefab));
+        public static string AssetPath(string locale, LocalizationInjector injector, string root = null) =>
+            Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(injector));
 
         // AT: This should really be a variable in LocalizableScene, but I'm placing it here
         //     so I don't have to re-type this whole thing as comments to the LocalizationFile
@@ -657,8 +657,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
     public class LocalizableContext
     {
-        private Scene? sceneContext = null;
-        private GameObject subcontextAnchor = null;
+        private LocalizationInjector root = null;
+        
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
         private Dictionary<string, string> ImportedGlobalStrings = new();
 
@@ -708,14 +708,18 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private LocalizableContext(Scene scene) : this()
         {
-            sceneContext = scene;
-            PopulateLocalizableInstances(scene);
+            var rgos = scene.GetRootGameObjects();
+
+            foreach (GameObject rootObj in rgos)
+            {
+                PopulateLocalizableInstances(rootObj);
+            }
         }
 
-        private LocalizableContext(GameObject prefab) : this()
+        private LocalizableContext(LocalizationInjector injector) : this()
         {
-            subcontextAnchor = prefab;
-            PopulateLocalizableInstances(prefab);
+            root = injector;
+            PopulateLocalizableInstances(injector.gameObject);
         }
 
         /* Following factory methods are just for clearer naming, instead of all uses of this context class being created from same named constructor */
@@ -725,7 +729,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         public static LocalizableContext ForSingleScene(Scene scene) => new(scene);
 
-        public static LocalizableContext ForSinglePrefab(GameObject prefab) => new(prefab);
+        public static LocalizableContext ForInjector(LocalizationInjector injector) => new(injector);
 
         /////////////////////////// Localizable Instance Selection  ////////////////////////////////////////////////////
 
@@ -746,33 +750,21 @@ be corrupted, these rules may be helpful for debugging purposes...
                 typeof(IDialogueTableProvider),
                 component => SelectLocalizablesFromTableProvider(component as IDialogueTableProvider)
             },
-            { typeof(ArtifactInventoryCollectible), SelectSelf },
         };
-
-        private void PopulateLocalizableInstances(Scene scene)
-        {
-            var rgos = scene.GetRootGameObjects();
-
-            foreach (GameObject rootObj in rgos)
-            {
-                PopulateLocalizableInstances(rootObj);
-            }
-        }
 
         private void PopulateLocalizableInstances(GameObject rootGameObject)
         {
-            var exclude = rootGameObject.GetComponent<ExcludeFromLocalization>();
-            if (exclude != null && !exclude.excludeFromTranslationOnly)
             {
-                return;
+                var exclude = rootGameObject.GetComponent<ExcludeFromLocalization>();
+                if (exclude != null && !exclude.excludeFromTranslationOnly)
+                {
+                    return;
+                }
             }
 
             localizables.TryAdd(typeof(LocalizationInjector), new());
-            // Recursively include subcontexts (prefabs) if the current context is not already specifically for that subcontext
-            // The current implmentation does not consider nested subcontexts. Currently there's no usage of that in the game in general.
-            if (subcontextAnchor == null)
             {
-                var query = rootGameObject.GetComponentsInChildren<LocalizationInjector>(includeInactive: true);
+                var query = rootGameObject.GetComponentsInChildren<LocalizationInjector>(includeInactive: true).Where(inj => inj.gameObject != rootGameObject);
 
                 foreach (var injector in query)
                 {
@@ -782,6 +774,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             foreach (var type in SelectorFunctionMap.Keys)
             {
+                localizables.TryAdd(type, new());
+
                 var query = rootGameObject
                     .GetComponentsInChildren(type, includeInactive: true)
                     .Where(c =>
@@ -790,47 +784,30 @@ be corrupted, these rules may be helpful for debugging purposes...
                                 injectorWrapper =>
                                     c.transform.IsChildOf(injectorWrapper.GetAnchor<Component>().transform)
                             )
-                    )
-                    .GroupBy<Component, bool?>(c =>
-                    {
-                        var exclude = c.GetComponent<ExcludeFromLocalization>();
-                        if (exclude == null)
-                        {
-                            exclude = c.GetComponentInParent<ExcludeFromLocalization>(includeInactive: true);
-                        }
-
-                        if (exclude != null)
-                        {
-                            return exclude.excludeFromTranslationOnly ? false : null;
-                        }
-
-                        return true;
-                    });
-
-                // Do not re-select something that is in a localization injector (i.e. a prefab)
-                // this is done because those objects will be selected when localizing that prefab itself
-
-                localizables.TryAdd(type, new());
-                localizables[type]
-                    .AddRange(query
-                        .SelectMany(grouping =>
-                        {
-                            if (grouping.Key == null)
-                            {
-                                return new List<TrackedLocalizable>();
-                            }
-
-                            var many = grouping.SelectMany(c => SelectorFunctionMap[type](c)).ToList();
-                            foreach (var t in many)
-                            {
-                                t.shouldTranslate =
-                                    grouping.Key
-                                        .Value; // assigning it here purely to avoid shotgun change in all the constructors of the class...
-                            }
-
-                            return many;
-                        })
                     );
+
+                foreach (var c in query)
+                {
+                    var excludes = c.GetComponentsInParent<ExcludeFromLocalization>(includeInactive: true);
+
+                    foreach (var e in excludes)
+                    {
+                        if (!e.excludeFromTranslationOnly)
+                        {
+                            goto Next;
+                        }
+                    }
+
+                    localizables[type].AddRange(SelectorFunctionMap[type](c).Select(t =>
+                    {
+                        // having excludes implies at least being excluded from translation (if not also from stylization)
+                        t.shouldTranslate = excludes.Length == 0;
+                        t.componentPath = Localizable.GetComponentPath(t.GetAnchor<Component>(), rootGameObject);
+                        return t;
+                    }));
+
+                    Next: continue;
+                }
             }
         }
 
@@ -894,8 +871,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                         collectible.GetCollectibleData().area),
                     collectible.GetCollectibleData().name))
             {
-                Debug.LogWarning(
-                    $"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}");
+                // Debug.LogWarning(
+                //     $"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}");
             }
 
             return new TrackedLocalizable[] { };
@@ -916,7 +893,6 @@ be corrupted, these rules may be helpful for debugging purposes...
                 { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
                 { typeof(PlayerActionHints), LocalizePlayerActionHints },
                 { typeof(IDialogueTableProvider), LocalizeTableProvider },
-                { typeof(ArtifactInventoryCollectible), LocalizeCollectibleUI },
             };
 
         /// <summary>
@@ -932,13 +908,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 // Debug.Log("[Localization] Localization strategy: skipping...");
                 return;
             }
-
-            string ctxDisplayName = subcontextAnchor == null
-                ? "Scene-" +
-                  (sceneContext.HasValue ? sceneContext.Value.name + sceneContext.Value.GetHashCode() : "???")
-                : "Prefab-" + subcontextAnchor.name + subcontextAnchor.GetHashCode();
-            Debug.Log($"[Localization] Localize {ctxDisplayName} with shouldTranslate: {shouldTranslate}");
-
+            
             foreach (var (type, instances) in localizables)
             {
                 if (LocalizationFunctionMap.TryGetValue(type, out var localizationFunction))
@@ -1099,7 +1069,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
             tmp.fontSize = metadata.size * adjFlt;
             tmp.wordSpacing = 0;
-            tmp.lineSpacing = 0;
+            // AT: this is intentionally not set
+            // tmp.lineSpacing = 0;
             
             tmp.SetLayoutDirty();
         }
@@ -1154,20 +1125,6 @@ be corrupted, these rules may be helpful for debugging purposes...
             };
         }
 
-        private static void LocalizeCollectibleUI(TrackedLocalizable collectible, LocalizationFile file,
-            bool shouldTranslate)
-        {
-            if (!shouldTranslate)
-            {
-                return;
-            }
-
-            if (file.TryGetRecord(collectible.FullPath, out var entry) && entry.TryGetTranslated(out var translated))
-            {
-                collectible.GetAnchor<ArtifactInventoryCollectible>().displayName = translated;
-            }
-        }
-
         /////////////////////////// Serialization //////////////////////////////////////////////////////////////////////
         private static readonly Dictionary<Type, Func<TrackedLocalizable, SerializedLocalizableData>>
             SerializationFunctionMap = new()
@@ -1179,7 +1136,6 @@ be corrupted, these rules may be helpful for debugging purposes...
                 { typeof(TMPTextTyper), SerializeTextTyper },
                 { typeof(PlayerActionHints), SerializePlayerActionHints },
                 { typeof(IDialogueTableProvider), SerializeTableProvider },
-                { typeof(ArtifactInventoryCollectible), SerializeCollectibleUI },
             };
 
         internal struct NullableKey : IComparable<NullableKey>
@@ -1210,13 +1166,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             // AT: currently not using Sylvan CSV Writer bc their interface is for rigid db dumping instead of custom (and variable) schema writing
             autoPadTranslated ??= "";
 
-            var sep = LocalizationFile.csvSeparator;
-
             void SerializeCells(params string[] cells)
                 => tw.Write(
                     string.Join(
                         string.Empty,
-                        cells.Select(c => '"' + c.Replace("\"", "\"\"") + '"' + LocalizationFile.csvSeparator))
+                        cells.Select(c => '"' + (c??"").Replace("\"", "\"\"") + '"' + LocalizationFile.csvSeparator))
                 );
 
             // file format explainer
@@ -1280,8 +1234,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
                 // AT: metadata is freshly updated each time, no referencing!
 
-                SerializeCells(path.key, orig.text ?? "", text ?? "",
-                    orig.metadata ?? ""); // for skeleton file, just use original as the translation
+                SerializeCells(path.key, orig.text, text, orig.metadata); // for skeleton file, just use original as the translation
                 tw.WriteLine();
             }
         }
@@ -1289,12 +1242,22 @@ be corrupted, these rules may be helpful for debugging purposes...
         private SortedDictionary<NullableKey, SerializedLocalizableData> SerializeTrackedLocalizables()
         {
             SortedDictionary<NullableKey, SerializedLocalizableData> result = new();
-
+            
+            Dictionary<NullableKey, TrackedLocalizable> debugHistory = new();
+            
             Dictionary<Type, Action<TrackedLocalizable>> serializationMappingAdaptor = new();
             foreach (var (type, serialize) in SerializationFunctionMap)
             {
                 serializationMappingAdaptor.Add(type, localizable =>
                 {
+                    // non-injected in scene: null == null
+                    // injected in scene: injector != null
+                    // injected in prefab: injector == injector
+                    if (localizable.GetAnchor<Component>().GetComponentInParent<LocalizationInjector>(includeInactive: true)?.prefabName != root?.prefabName)
+                    {
+                        return;
+                    }
+                    
                     var data = serialize(localizable);
                     if (data.IsEmpty)
                     {
@@ -1302,13 +1265,22 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
 
                     var path = localizable.FullPath;
-                    if (!result.TryAdd(new NullableKey()
-                        {
-                            key = path,
-                            valueIsNull = string.IsNullOrWhiteSpace(data.text)
-                        }, data))
+                    var key = new NullableKey()
                     {
-                        Debug.LogError($"[Localization] Duplicate path: {path}");
+                        key = path,
+                        valueIsNull = string.IsNullOrWhiteSpace(data.text)
+                    };
+                    
+                    if (!result.TryAdd(key, data))
+                    {
+                        if (debugHistory[key].GetAnchor<Component>() != localizable.GetAnchor<Component>())
+                        {
+                            throw new Exception($"Different objects sharing the same path: {debugHistory[key]} vs. {localizable}");
+                        }
+                    }
+                    else
+                    {
+                        debugHistory.Add(key, localizable);
                     }
                 });
             }
@@ -1317,12 +1289,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 if (serializationMappingAdaptor.TryGetValue(type, out var serializationFunction))
                 {
-                    foreach (TrackedLocalizable localizable in instances.Where(i => i.shouldTranslate))
-                    {
-                        serializationFunction(localizable);
-                    }
-
-                    foreach (TrackedLocalizable localizable in instances.Where(i => i.shouldTranslate))
+                    foreach (TrackedLocalizable localizable in instances)
                     {
                         serializationFunction(localizable);
                     }
@@ -1443,13 +1410,6 @@ be corrupted, these rules may be helpful for debugging purposes...
             return tableProvider.shouldTranslate
                 ? tableProvider.GetAnchor<IDialogueTableProvider>().TranslationTable[tableProvider.IndexInComponent]
                     .original
-                : null;
-        }
-
-        private static SerializedLocalizableData SerializeCollectibleUI(TrackedLocalizable collectible)
-        {
-            return collectible.shouldTranslate
-                ? collectible.GetAnchor<ArtifactInventoryCollectible>().displayName
                 : null;
         }
     }

@@ -455,7 +455,7 @@ MonoBehaviour:
   m_text: 'Warning: Interfering inputs between controller and keyboard. You might
     need to disconnect one.'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7d692a08c71f59f4f9199623c9376bfd, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 4568131746372901591, guid: 7d692a08c71f59f4f9199623c9376bfd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1139,7 +1139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40ccac8adb15d34d8009e04d2c9fd85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabVariantParent: {fileID: 0}
+  prefabVariantParent: {fileID: 7648707882233313094}
+  autoRefreshOnSpawn: 0
 --- !u!1 &7648707882290023317
 GameObject:
   m_ObjectHideFlags: 0
