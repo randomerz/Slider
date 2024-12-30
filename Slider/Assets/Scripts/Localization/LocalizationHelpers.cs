@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -89,8 +90,8 @@ namespace Localization
 
     internal abstract class Localizable
     {
-        internal string[] componentPath = null; // populated *after* selection process to avoid needing to curry everything
-
+        internal string hierarchyPath;
+        
         public string IndexInComponent => index;
         protected string index = null;
 
@@ -100,27 +101,10 @@ namespace Localization
         // Separates different digits within an index string
         public static char indexSeparatorSecondary = ':';
 
-        public string FullPath => string.Join('/', componentPath) + (index != null ? indexSeparator + index : "");
+        public string FullPath => hierarchyPath + (index != null ? indexSeparator + index : "");
 
         protected Localizable()
         {
-        }
-
-        internal static string[] GetComponentPath(Component current, GameObject rootGameObject)
-        {
-            List<string> pathComponents = new();
-            
-            for (var t = current.transform; ; t = t.parent)
-            {
-                pathComponents.Add(t.name);
-                if (t == rootGameObject.transform)
-                {
-                    break;
-                }
-            }
-
-            pathComponents.Reverse();
-            return pathComponents.ToArray();
         }
     }
 
@@ -163,7 +147,7 @@ namespace Localization
         private ParsedLocalizable(string hierarchyPath, string index, SerializedLocalizableData data)
         {
             this.index = index;
-            componentPath = hierarchyPath.Split('/');
+            this.hierarchyPath = hierarchyPath;
             _data = data;
         }
 
@@ -740,6 +724,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(UIBigText), SelectSelf },
+            { typeof(LocalizationInjector), SelectSelf},
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
             { typeof(TMPTextTyper), SelectSelf },
             {
@@ -752,6 +737,13 @@ be corrupted, these rules may be helpful for debugging purposes...
             },
         };
 
+        private enum TranslationExclusionMode
+        {
+            Skip,
+            NoTranslation,
+            None
+        }
+
         private void PopulateLocalizableInstances(GameObject rootGameObject)
         {
             {
@@ -762,51 +754,89 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
             }
 
-            localizables.TryAdd(typeof(LocalizationInjector), new());
+            TranslationExclusionMode getExclusionMode(Transform t, TranslationExclusionMode defaultLocalizationShouldTranslate)
             {
-                var query = rootGameObject.GetComponentsInChildren<LocalizationInjector>(includeInactive: true).Where(inj => inj.gameObject != rootGameObject);
-
-                foreach (var injector in query)
+                TranslationExclusionMode mode;
+                var e = t.GetComponent<ExcludeFromLocalization>();
+                if (e != null)
                 {
-                    localizables[typeof(LocalizationInjector)].Add(new TrackedLocalizable(injector));
+                    if (e.excludeFromTranslationOnly)
+                    {
+                        mode = TranslationExclusionMode.NoTranslation;
+                    }
+                    else
+                    {
+                        mode = TranslationExclusionMode.Skip;
+                    }
+                } else
+                {
+                    mode = TranslationExclusionMode.None;
+                }
+
+                if (defaultLocalizationShouldTranslate < mode)
+                {
+                    return defaultLocalizationShouldTranslate;
+                }
+                else
+                {
+                    return mode;
                 }
             }
 
-            foreach (var type in SelectorFunctionMap.Keys)
+            // treat bool as shouldTranslate
+            Queue<(Transform t, TranslationExclusionMode parentMode, string path)> todo = new();
+            var topLevelExclusionMode = getExclusionMode(rootGameObject.transform, TranslationExclusionMode.None);
+
+            if (topLevelExclusionMode == TranslationExclusionMode.Skip)
             {
-                localizables.TryAdd(type, new());
-
-                var query = rootGameObject
-                    .GetComponentsInChildren(type, includeInactive: true)
-                    .Where(c =>
-                        !localizables[typeof(LocalizationInjector)]
-                            .Any(
-                                injectorWrapper =>
-                                    c.transform.IsChildOf(injectorWrapper.GetAnchor<Component>().transform)
-                            )
-                    );
-
-                foreach (var c in query)
+                return;
+            }
+            
+            foreach (var t in SelectorFunctionMap.Keys)
+            {
+                localizables.TryAdd(t, new ());
+            }
+            
+            todo.Enqueue((rootGameObject.transform, topLevelExclusionMode, root?.prefabName ?? rootGameObject.name));
+            while (todo.TryDequeue(out var curr))
+            {
+                if (curr.t != rootGameObject.transform)
                 {
-                    var excludes = c.GetComponentsInParent<ExcludeFromLocalization>(includeInactive: true);
-
-                    foreach (var e in excludes)
+                    var inj = curr.t.GetComponent<LocalizationInjector>();
+                    if (inj != null)
                     {
-                        if (!e.excludeFromTranslationOnly)
-                        {
-                            goto Next;
-                        }
+                        localizables[typeof(LocalizationInjector)].Add(new TrackedLocalizable(inj));
+                        continue;   
+                    }
+                }
+
+                var mode = getExclusionMode(curr.t, curr.parentMode);
+
+                if (mode == TranslationExclusionMode.Skip)
+                {
+                    continue;
+                }
+                
+                foreach (var (type, selector) in SelectorFunctionMap)
+                {
+                    var inst = curr.t.GetComponent(type);
+                    if (inst == null)
+                    {
+                        continue;
                     }
 
-                    localizables[type].AddRange(SelectorFunctionMap[type](c).Select(t =>
+                    foreach (var t in selector(inst))
                     {
-                        // having excludes implies at least being excluded from translation (if not also from stylization)
-                        t.shouldTranslate = excludes.Length == 0;
-                        t.componentPath = Localizable.GetComponentPath(t.GetAnchor<Component>(), rootGameObject);
-                        return t;
-                    }));
-
-                    Next: continue;
+                        t.shouldTranslate = mode == TranslationExclusionMode.None;
+                        t.hierarchyPath = curr.path;
+                        localizables[type].Add(t);
+                    }
+                }
+                
+                for (int i = 0; i < curr.t.childCount; i++)
+                {
+                    var child = curr.t.GetChild(i);
+                    todo.Enqueue((child, mode, curr.path + "/" + child.name));
                 }
             }
         }
