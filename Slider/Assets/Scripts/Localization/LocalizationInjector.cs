@@ -16,7 +16,9 @@ public class LocalizationInjector : MonoBehaviour
     
     public void Refresh()
     {
-        if (numLocalizations++ == 0 && prefabName != null)
+        // TODO: swap this back
+        numLocalizations++;
+        if (prefabName != null)
         {
             this.InjectLocalization();
         }

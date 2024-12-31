@@ -23,7 +23,7 @@ public class PixelFontToggleLogic : MonoBehaviour
         // for main menu scene, apply setting directly
         if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            LocalizationLoader.ForceReloadAndKillGameUI();
         }
         // for non-main menu scenes, just apply the setting and tell players to restart
         else

@@ -83,9 +83,8 @@ public class LocaleSelector : MonoBehaviour
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
 
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentSceneName);
-        
+        LocalizationLoader.ForceReloadAndKillGameUI();
+
         // Don't put anything here... there's a force scene reload in the setting change event (see SettingsManager)
     }
 }

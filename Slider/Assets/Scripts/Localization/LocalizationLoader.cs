@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Localization;
 using TMPro;
 using UnityEngine;
@@ -25,50 +27,46 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private static TMP_FontAsset LocalizationFontNonPixelBig => _instance.localizationFontNonPixelBig;
     private static TMP_FontAsset LocalizationFontNonPixelSmall => _instance.localizationFontNonPixelSmall;
     
-    public static TMP_FontAsset LocalizationFont(string originalFamilyName)
+    public static bool TryLoadFont(string originalFamilyName, bool localized, out TMP_FontAsset font)
     {
-        var big = BigFontFamilyNames.Contains(originalFamilyName);
-        if (UsePixelFont)
+        if (!OriginalFonts.TryGetValue(originalFamilyName, out var desc))
         {
-            if (big)
-            {
-                return LocalizationFontPixelBig;
-            }
-            else
-            {
-                return LocalizationFontPixelSmall;
-            }
+            font = null;
+            return false;
+        }
+
+        if (!localized)
+        {
+            font = desc.tmpFont;
+            return true;
+        }
+
+        if (desc.isBig)
+        {
+            font = UsePixelFont ? LocalizationFontPixelBig : LocalizationFontNonPixelBig;
         }
         else
         {
-            if (big)
-            {
-                return LocalizationFontNonPixelBig;
-            }
-            else
-            {
-                return LocalizationFontNonPixelSmall;
-            }
+            font = UsePixelFont ? LocalizationFontPixelSmall : LocalizationFontNonPixelSmall;
         }
-    }
-    
-    [SerializeField]
-    private TMP_FontAsset[] BigFonts;
 
-    private static HashSet<string> BigFontFamilyNames
+        return true;
+    }
+
+    [System.Serializable]
+    public struct SliderFontDescriptor
     {
-        get
-        {
-            if (_instance._bigFontFamilyNames == null)
-            {
-                _instance._bigFontFamilyNames = _instance.BigFonts.Select(f => f.faceInfo.familyName).ToHashSet();
-            }
-
-            return _instance._bigFontFamilyNames;
-        }
+        public TMP_FontAsset tmpFont;
+        public bool isBig;
     }
-    
-    private HashSet<string> _bigFontFamilyNames = null;
+
+    [SerializeField] public SliderFontDescriptor[] originalFonts;
+
+    private static Dictionary<string, SliderFontDescriptor> OriginalFonts => m_originalFonts.Value;
+    private static Lazy<Dictionary<string, SliderFontDescriptor>> m_originalFonts = new (() =>
+    {
+        return _instance.originalFonts.ToDictionary(f => f.tmpFont.faceInfo.familyName, f=>f);
+    });
 
     public static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
 
@@ -180,6 +178,11 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
             loaded.Localize(loadedAsset.context, shouldTranslate);
             persistent.Localize(loadedAsset.context, shouldTranslate);
         }
+    }
+
+    public static void ForceReloadAndKillGameUI()
+    {
+        // TODO: implement
     }
 }
 

@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using TMPro;
 using Sylvan.Data.Csv;
@@ -906,6 +907,13 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         ////////////////////////// Applying Localization ///////////////////////////////////////////////////////////////
 
+        private enum Strategy
+        {
+            Reset,
+            TranslateAndStyle,
+            TranslateOnly
+        }
+        
         private static readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile, bool>>
             LocalizationFunctionMap = new()
             {
@@ -944,28 +952,28 @@ be corrupted, these rules may be helpful for debugging purposes...
             injector.Refresh();
         }
 
+        // TODO
         private static void LocalizeTmp_Stylize(TMP_Text tmp, ParsedLocalizable entry, LocalizationFile file)
         {
             var metadata = tmp.ParseMetadata(entry?.Metadata);
-            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
+//            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
 
             if (!file.IsDefaultLocale)
             {
-                tmp.overflowMode = TextOverflowModes.Overflow;
+                metadata.overflowMode = TextOverflowModes.Overflow;
             }
 
-            tmp.wordSpacing = 0.0f;
-            tmp.lineSpacing = 0;
-            // tmpCasted.ForceConvertMiddleToMidline();
-            tmp.enableWordWrapping = false;
-            tmp.extraPadding = false; // does not work with CN font for some reason
+            metadata.wordSpacing = 0;
+            metadata.lineSpacing = 0;
+            metadata.enableWordWrapping = false;
+            metadata.extraPadding = false; // does not work with CN font for some reason
 
             if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
             {
-                tmp.fontSize = metadata.size * scale;
+                metadata.fontSize *= scale;
             }
-
-            tmp.SetLayoutDirty();
+            
+            tmp.DeserializeMetadataExceptFont(metadata);
         }
 
         private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, bool shouldTranslate)
@@ -984,9 +992,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             
             LocalizeTmp_Stylize(tmpCasted, entry, file);
             
-            Debug.LogWarning($"{tmp.FullPath} {metadata.family}:{metadata.size} -> {LocalizationLoader.LocalizationFont(metadata.family)}:{tmpCasted.fontSize}");
+            // Debug.LogWarning($"{tmp.FullPath} {metadata.family}:{metadata.fontSize} -> {LocalizationLoader.LocalizationFont(metadata.family)}:{tmpCasted.fontSize}");
         }
 
+        // TODO
         private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file,
             bool shouldTranslate)
         {
@@ -1023,6 +1032,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
+        // TODO
         private static void LocalizeBigText(TrackedLocalizable big, LocalizationFile file, bool shouldTranslate)
         {
             var b = big.GetAnchor<UIBigText>();
@@ -1072,15 +1082,12 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
+        // TODO
         private static void LocalizeTextTyper(TrackedLocalizable typer, LocalizationFile file, bool shouldTranslate)
         {
-            if (!file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
-            {
-                return;
-            }
-
             var t = typer.GetAnchor<TMPTextTyper>();
             var tmp = t.TextMeshPro;
+            
             if (file.TryGetRecord(typer.FullPath, out var entry))
             {
                 if (t.localizeText && entry.TryGetTranslated(out var translation))
@@ -1089,15 +1096,16 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
             }
 
-            var metadata = tmp.ParseMetadata(entry?.Metadata);
-
-            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
-            tmp.fontSize = metadata.size * adjFlt;
-            tmp.wordSpacing = 0;
-            // AT: this is intentionally not set
-            // tmp.lineSpacing = 0;
+            var metadata = tmp.ParseMetadata(entry.Metadata);
+            // tmp.font = LocalizatioknLoader.LocalizationFont(metadata.family);
             
-            tmp.SetLayoutDirty();
+            if (!file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
+            {
+                metadata.fontSize *= adjFlt;
+            }
+            metadata.wordSpacing = 0;
+            
+            tmp.DeserializeMetadataExceptFont(metadata);
         }
 
         private static void LocalizePlayerActionHints(TrackedLocalizable hints, LocalizationFile file,
@@ -1322,7 +1330,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             return new SerializedLocalizableData
             {
                 text = tmp.shouldTranslate ? t.text : null,
-                metadata = t.GetMetadata()
+                metadata = t.SerializeMetadata()
             };
         }
 
@@ -1341,7 +1349,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return new SerializedLocalizableData
                 {
                     text = null,
-                    metadata = d.itemText.GetMetadata()
+                    metadata = d.itemText.SerializeMetadata()
                 };
             }
         }
@@ -1352,7 +1360,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             return new SerializedLocalizableData
             {
                 text = big.shouldTranslate ? b.texts[0].text : null,
-                metadata = b.texts[0].GetMetadata()
+                metadata = b.texts[0].SerializeMetadata()
             };
         }
 
@@ -1394,7 +1402,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             return new SerializedLocalizableData
             {
                 text = typer.shouldTranslate && t.localizeText ? t.TextMeshPro.text : null,
-                metadata = t.TextMeshPro.GetMetadata()
+                metadata = t.TextMeshPro.SerializeMetadata()
             };
         }
 
@@ -1430,24 +1438,111 @@ be corrupted, these rules may be helpful for debugging purposes...
                 : null;
         }
     }
-
-    struct FontMetadata
+    
+    partial struct FontMetadata
     {
         public string family;
-        public float size;
+        public float fontSize;
+        public TextOverflowModes overflowMode;
+        public float wordSpacing;
         public float lineSpacing;
+        public bool enableWordWrapping;
+        public bool extraPadding;
+    }
 
-        internal static FieldInfo[] fields = typeof(FontMetadata).GetFields();
+    internal static class TmpTextExtensions
+    {
+        internal static FontMetadata SerializeMetadata(this TMP_Text t) => new()
+        {
+            family = t.font?.faceInfo.familyName,
+            fontSize = t.fontSize,
+            overflowMode = t.overflowMode,
+            wordSpacing = t.wordSpacing,
+            lineSpacing = t.lineSpacing,
+            enableWordWrapping = t.enableWordWrapping,
+            extraPadding = t.extraPadding,
+        };
+
+        // see font logic in localization loader
+        internal static void DeserializeMetadataExceptFont(this TMP_Text t, FontMetadata metadata)
+        {
+            t.fontSize = metadata.fontSize;
+            t.overflowMode = metadata.overflowMode;
+            t.wordSpacing = metadata.wordSpacing;
+            t.lineSpacing = metadata.lineSpacing;
+            t.enableWordWrapping = metadata.enableWordWrapping;
+            t.extraPadding = metadata.extraPadding;
+            
+            t.SetAllDirty();
+        }
+
+        internal static FontMetadata ParseMetadata(this TMP_Text txt, string metadata)
+        {
+            if (string.IsNullOrWhiteSpace(metadata))
+            {
+                // fallback to current state
+                return txt.SerializeMetadata();
+            }
+
+            var data = txt.SerializeMetadata();
+            
+            foreach(
+                var (f, v) in metadata
+                    .Split(';')
+                    .Where(s => s.Contains(':'))
+                    .Select(s => s.Split(":"))
+                    .Where(kv => kv.Length == 2 && FontMetadata.fields.ContainsKey(kv[0]))
+                    .Select(kv => (FontMetadata.fields[kv[0]], kv[1])))
+            {
+                if (f.FieldType == typeof(string))
+                {
+                    f.SetValue(data, v);
+                }
+                else if (f.FieldType == typeof(float))
+                {
+                    if (float.TryParse(v, out var value))
+                    {
+                        f.SetValue(data, value);
+                    }
+                }
+                else if (f.FieldType.IsEnum)
+                {
+                    if (Enum.TryParse(f.FieldType, v, out var value))
+                    {
+                        f.SetValue(data, value);
+                    }
+                }
+                else if (f.FieldType == typeof(bool))
+                {
+                    if (int.TryParse(v, out var value))
+                    {
+                        f.SetValue(data, value == 1);
+                    }
+                }
+            }
+
+            return data;
+        }
+    }
+
+    partial struct FontMetadata
+    {
+        
+        internal static Dictionary<string, FieldInfo> fields =
+            typeof(FontMetadata).GetFields().ToDictionary(f => f.Name, f => f);
 
         public override string ToString()
         {
             StringBuilder sb = new();
 
-            foreach (var field in fields)
+            foreach (var (k, f) in fields)
             {
-                sb.Append(field.Name);
+                sb.Append(k);
                 sb.Append(":");
-                sb.Append(field.GetValue(this));
+                
+                // TODO: modify
+                sb.Append(f.GetValue(this));
+                
                 sb.Append(";");
             }
 
@@ -1455,59 +1550,5 @@ be corrupted, these rules may be helpful for debugging purposes...
         }
 
         public static implicit operator string(FontMetadata self) => self.ToString();
-    }
-
-    internal static class TmpTextExtensions
-    {
-        // // pixel one alignment is really fucking weird expecially when UI height is LESS than font height for some fuckin reason
-        // internal static void ForceConvertMiddleToMidline(this TMP_Text txt)
-        // {
-        //     // pixel one alignment is really fucking weird expecially when UI height is LESS than font height for some fuckin reason
-        //     if (txt.verticalAlignment == VerticalAlignmentOptions.Middle)
-        //     {
-        //         txt.verticalAlignment = VerticalAlignmentOptions.Geometry;
-        //         txt.SetLayoutDirty();
-        //     }
-        // }
-
-        internal static FontMetadata GetMetadata(this TMP_Text txt) => new FontMetadata
-        {
-            family = txt.font?.faceInfo.familyName,
-            size = txt.fontSize,
-            lineSpacing = txt.lineSpacing,
-        };
-
-        internal static FontMetadata ParseMetadata(this TMP_Text txt, string metadata)
-        {
-            if (string.IsNullOrWhiteSpace(metadata))
-            {
-                // fallback to current state
-                return txt.GetMetadata();
-            }
-
-            var dict = metadata.Split(';').Where(s => s.Contains(':')).Select(s =>
-                {
-                    var kv = s.Split(':');
-                    if (!float.TryParse(kv[1], out var value))
-                    {
-                        value = float.NaN;
-                    }
-
-                    return new Tuple<string, float>(kv[0], value);
-                }).Where((kv) => !float.IsNaN(kv.Item2))
-                .ToDictionary(kv => kv.Item1, kv => kv.Item2);
-
-            var data = txt.GetMetadata();
-
-            foreach (var field in FontMetadata.fields)
-            {
-                if (dict.ContainsKey(field.Name))
-                {
-                    field.SetValue(data, dict[field.Name]);
-                }
-            }
-
-            return data;
-        }
     }
 }

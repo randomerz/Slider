@@ -21,22 +21,9 @@ public class GameUI : MonoBehaviour
 
         public void Singlify()
         {
-            // if (containsLocalizable)
-            // {
-            //     foreach (var go in GameObject.FindGameObjectsWithTag("GameUI").Where(go => go.name.Equals(prefab.name)))
-            //     {
-            //         Destroy(go);
-            //     }
-            //     
-            //     singleton = Instantiate(prefab);
-            //     singleton.name = prefab.name;
-            //     DontDestroyOnLoad(singleton);
-            // }
-            
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("GameUI"))
+            var existing = GameObject.FindGameObjectsWithTag("GameUI").Where(go => go.name == prefab.name);
+            foreach (var go in existing)
             {
-                if (go.name != prefab.name)
-                    continue;
                 // if there's one in the scene, may as well take it
                 if (singleton == null)
                 {
