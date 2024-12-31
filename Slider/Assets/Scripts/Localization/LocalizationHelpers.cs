@@ -941,7 +941,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static void InjectLocalizations(TrackedLocalizable inj, LocalizationFile file, bool shouldTranslate)
         {
             var injector = inj.GetAnchor<LocalizationInjector>();
-            LocalizationLoader.InjectLocalization(injector);
+            injector.Refresh();
         }
 
         private static void LocalizeTmp_Stylize(TMP_Text tmp, ParsedLocalizable entry, LocalizationFile file)
@@ -980,7 +980,11 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
             }
 
+            var metadata = tmpCasted.ParseMetadata(entry?.Metadata);
+            
             LocalizeTmp_Stylize(tmpCasted, entry, file);
+            
+            Debug.LogWarning($"{tmp.FullPath} {metadata.family}:{metadata.size} -> {LocalizationLoader.LocalizationFont(metadata.family)}:{tmpCasted.fontSize}");
         }
 
         private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file,

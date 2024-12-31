@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Localization;
@@ -18,6 +17,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private TMP_FontAsset localizationFontNonPixelBig;
     [SerializeField]
     private TMP_FontAsset localizationFontNonPixelSmall;
+
+    internal static LocalizationLoader Instance => _instance;
     
     private static TMP_FontAsset LocalizationFontPixelBig => _instance.localizationFontPixelBig;
     private static TMP_FontAsset LocalizationFontPixelSmall => _instance.localizationFontPixelSmall;
@@ -71,7 +72,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 
     public static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
 
-    private LocalizationFile localeGlobalFile;
+    internal LocalizationFile LocaleGlobalFile;
     
     private void Awake()
     {
@@ -86,14 +87,6 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         {
             RefreshLocalization(to);
         };
-    }
-
-    public static void RefreshLocalization()
-    {
-        if (_instance != null)
-        {
-            _instance.RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
-        }
     }
     
     public static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : SettingsManager.Setting<string>(Settings.Locale).CurrentValue;
@@ -114,7 +107,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 
     private static string LoadTranslatedString(string path, string fallback)
     {
-        var file = _instance.localeGlobalFile;
+        var file = _instance.LocaleGlobalFile;
         if (file == null)
         {
             return fallback;
@@ -134,10 +127,10 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     /// Null on English, for everything else defaults to 'Anonymous' if not specified.
     /// </summary>
     /// <returns></returns>
-    private static string GetCreditInformation() =>
-        CurrentLocale == LocalizationFile.DefaultLocale ? null : _instance.localeGlobalFile.GetConfigValue(LocalizationFile.Config.Author);
+    internal static string GetCreditInformation() =>
+        CurrentLocale == LocalizationFile.DefaultLocale ? null : _instance.LocaleGlobalFile.GetConfigValue(LocalizationFile.Config.Author);
     
-    private static (LocalizationFile global, LocalizationFile context) LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath, LocalizationFile existingGlobal = null)
+    internal static (LocalizationFile global, LocalizationFile context) LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath, LocalizationFile existingGlobal = null)
     {
         LocalizationFile globalFile;
         
@@ -168,13 +161,13 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private void RefreshLocalization(Scene scene)
     {
         var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene), localeGlobalFile);
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene), LocaleGlobalFile);
         if (loadedAsset.context == null)
         {
             return;
         }
 
-        localeGlobalFile = loadedAsset.global;
+        LocaleGlobalFile = loadedAsset.global;
 
         var shouldStylize = !UsePixelFont;
         var shouldTranslate = (locale != LocalizationFile.DefaultLocale);
@@ -188,22 +181,27 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
             persistent.Localize(loadedAsset.context, shouldTranslate);
         }
     }
+}
 
-    public static void InjectLocalization(LocalizationInjector injector)
+// defining this here due to lots of shared logic with regular localization loader usage
+public static class LocalizationInjectorExtensions
+{
+    public static void InjectLocalization(this LocalizationInjector injector)
     {
+            
         Debug.Log($"Localize prefab {injector.gameObject} (instance of {injector.prefabName})");
         
-        var locale = CurrentLocale;
+        var locale = LocalizationLoader.CurrentLocale;
 
         var prefabAssetPath = LocalizationFile.AssetPath(locale, injector);
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, prefabAssetPath, _instance?.localeGlobalFile);
+        var loadedAsset = LocalizationLoader.LoadAssetAndConfigureLocaleDefaults(locale, prefabAssetPath, LocalizationLoader.Instance?.LocaleGlobalFile);
 
         if (loadedAsset.context == null)
         {
             return;
         }
         
-        var shouldStylize = !UsePixelFont;
+        var shouldStylize = !LocalizationLoader.UsePixelFont;
         var shouldTranslate = (locale != LocalizationFile.DefaultLocale);
 
         if (shouldStylize || shouldTranslate)
