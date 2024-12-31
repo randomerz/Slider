@@ -29,7 +29,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     
     public static bool TryLoadFont(string originalFamilyName, bool localized, out TMP_FontAsset font)
     {
-        if (!OriginalFonts.TryGetValue(originalFamilyName, out var desc))
+        if (originalFamilyName == null || !OriginalFonts.TryGetValue(originalFamilyName, out var desc))
         {
             font = null;
             return false;
@@ -65,7 +65,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private static Dictionary<string, SliderFontDescriptor> OriginalFonts => m_originalFonts.Value;
     private static Lazy<Dictionary<string, SliderFontDescriptor>> m_originalFonts = new (() =>
     {
-        return _instance.originalFonts.ToDictionary(f => f.tmpFont.faceInfo.familyName, f=>f);
+        return _instance.originalFonts.ToDictionary(f => f.tmpFont.name, f=>f);
     });
 
     public static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
@@ -166,22 +166,16 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         }
 
         LocaleGlobalFile = loadedAsset.global;
-
-        var shouldStylize = !UsePixelFont;
-        var shouldTranslate = (locale != LocalizationFile.DefaultLocale);
         
-        if (shouldStylize || shouldTranslate)
-        {
-            LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
-            LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
-            
-            loaded.Localize(loadedAsset.context, shouldTranslate);
-            persistent.Localize(loadedAsset.context, shouldTranslate);
-        }
+        LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
+        LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
+        loaded.Localize(loadedAsset.context, UsePixelFont, locale);
+        persistent.Localize(loadedAsset.context, UsePixelFont, locale);
     }
 
-    public static void ForceReloadAndKillGameUI()
+    public static void ForceReload()
     {
+        _instance?.RefreshLocalization(SceneManager.GetActiveScene());
         // TODO: implement
     }
 }
@@ -204,12 +198,6 @@ public static class LocalizationInjectorExtensions
             return;
         }
         
-        var shouldStylize = !LocalizationLoader.UsePixelFont;
-        var shouldTranslate = (locale != LocalizationFile.DefaultLocale);
-
-        if (shouldStylize || shouldTranslate)
-        {
-            LocalizableContext.ForInjector(injector).Localize(loadedAsset.context, shouldTranslate);
-        }
+        LocalizableContext.ForInjector(injector).Localize(loadedAsset.context, LocalizationLoader.UsePixelFont, locale);
     }
 }

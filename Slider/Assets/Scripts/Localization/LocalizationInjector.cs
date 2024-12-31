@@ -7,7 +7,6 @@ using UnityEditor;
 public class LocalizationInjector : MonoBehaviour
 {
     public string prefabName;
-    public int numLocalizations = 0; // turn public for debugging
 
     public void Start()
     {
@@ -16,8 +15,6 @@ public class LocalizationInjector : MonoBehaviour
     
     public void Refresh()
     {
-        // TODO: swap this back
-        numLocalizations++;
         if (prefabName != null)
         {
             this.InjectLocalization();

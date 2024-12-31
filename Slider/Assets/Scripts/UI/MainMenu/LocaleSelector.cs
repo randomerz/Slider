@@ -73,17 +73,15 @@ public class LocaleSelector : MonoBehaviour
         
         retriever.WriteSettingValue(selection);
         
-        bool isEnglish = selection.Equals(LocalizationFile.DefaultLocale);
         // non English font does not have outline (TMP has outline but it seems to be UI text only)
         // instead of messing with outlines just force text background to be on, player can toggle
         // it back if they want to
-        if (!isEnglish)
+        if (!selection.Equals(LocalizationFile.DefaultLocale))
         {
-            // TODO: add accommodation for whether language supports high contrast
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
 
-        LocalizationLoader.ForceReloadAndKillGameUI();
+        LocalizationLoader.ForceReload();
 
         // Don't put anything here... there's a force scene reload in the setting change event (see SettingsManager)
     }

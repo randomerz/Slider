@@ -5,7 +5,6 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using TMPro;
 using Sylvan.Data.Csv;
@@ -220,8 +219,7 @@ namespace Localization
             index = code;
         }
     }
-
-    // TODO: try add typed parsing cache
+    
     internal readonly struct LocalizationConfig
     {
         public readonly string Comment;
@@ -517,7 +515,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
             catch (CsvFormatException e)
             {
-                Debug.LogError($"CSV format error on row {e.RowNumber}: {e}");
+                Debug.LogError($"[Localization] CSV format error on row {e.RowNumber}: {e}");
                 return false;
             }
         }
@@ -646,8 +644,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
         private Dictionary<string, string> ImportedGlobalStrings = new();
 
-        public Dictionary<string, string>
-            GlobalStringsToExport =
+        public readonly Dictionary<string, string> GlobalStringsToExport =
                 new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
 
         private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
@@ -667,7 +664,6 @@ be corrupted, these rules may be helpful for debugging purposes...
         }
 
         // Initializes a null localizable scene for global configuration purposes
-        // TODO: add variable substitution support here by passing a list of <var_name>:<var_orig> values here
         private LocalizableContext(LocaleConfiguration localeConfiguration, Dictionary<string, string> globalStrings) :
             this()
         {
@@ -906,15 +902,15 @@ be corrupted, these rules may be helpful for debugging purposes...
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////// Applying Localization ///////////////////////////////////////////////////////////////
-
+        
         private enum Strategy
         {
             Reset,
+            StylizeOnly,
             TranslateAndStyle,
-            TranslateOnly
         }
         
-        private static readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile, bool>>
+        private static readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile, Strategy>>
             LocalizationFunctionMap = new()
             {
                 { typeof(TMP_Text), LocalizeTmp },
@@ -930,34 +926,53 @@ be corrupted, these rules may be helpful for debugging purposes...
         /// <summary>
         /// No undo, force refresh when text styling needs to be reverted...
         /// </summary>
-        public void Localize(LocalizationFile file, bool shouldTranslate)
+        public void Localize(LocalizationFile file, bool usePixelFont, string locale)
         {
+            Strategy strategy;
+            
+            if (!locale.Equals(LocalizationFile.DefaultLocale))
+            {
+                strategy = Strategy.TranslateAndStyle;
+            }
+            else
+            {
+                if (usePixelFont)
+                {
+                    strategy = Strategy.Reset; // use English pixel fonts
+                }
+                else
+                {
+                    strategy = Strategy.StylizeOnly; // apply non-pixel font and do other adjustments to make it work
+                }
+            }
+            
             foreach (var (type, instances) in localizables)
             {
                 if (LocalizationFunctionMap.TryGetValue(type, out var localizationFunction))
                 {
                     foreach (var trackedLocalizable in instances)
                     {
+                        // some instances do not need translation
+                        var instStrategy = strategy == Strategy.TranslateAndStyle && !trackedLocalizable.shouldTranslate
+                            ? Strategy.StylizeOnly
+                            : strategy;
+                        
                         localizationFunction(
                             trackedLocalizable, file,
-                            shouldTranslate && trackedLocalizable.shouldTranslate);
+                            instStrategy);
                     }
                 }
             }
         }
 
-        private static void InjectLocalizations(TrackedLocalizable inj, LocalizationFile file, bool shouldTranslate)
+        private static void InjectLocalizations(TrackedLocalizable inj, LocalizationFile file, Strategy strategy)
         {
             var injector = inj.GetAnchor<LocalizationInjector>();
             injector.Refresh();
         }
-
-        // TODO
-        private static void LocalizeTmp_Stylize(TMP_Text tmp, ParsedLocalizable entry, LocalizationFile file)
+        
+        private static void StylizeTmpMetadata(ref FontMetadata metadata, LocalizationFile file)
         {
-            var metadata = tmp.ParseMetadata(entry?.Metadata);
-//            tmp.font = LocalizationLoader.LocalizationFont(metadata.family);
-
             if (!file.IsDefaultLocale)
             {
                 metadata.overflowMode = TextOverflowModes.Overflow;
@@ -972,32 +987,40 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 metadata.fontSize *= scale;
             }
+        }
+
+        private static void LocalizeTmp_Stylize(TMP_Text tmp, ParsedLocalizable entry, LocalizationFile file, Strategy strategy)
+        {
+            var metadata = tmp.ParseMetadata(entry?.Metadata);
+
+            if (strategy != Strategy.Reset)
+            {
+                StylizeTmpMetadata(ref metadata, file);   
+            }
             
+            if (LocalizationLoader.TryLoadFont(metadata.family, strategy != Strategy.Reset, out var newFont))
+            {
+                tmp.font = newFont;
+            }
             tmp.DeserializeMetadataExceptFont(metadata);
         }
 
-        private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, bool shouldTranslate)
+        private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, Strategy strategy)
         {
             var tmpCasted = tmp.GetAnchor<TMP_Text>();
 
-            if (file.TryGetRecord(tmp.FullPath, out var entry) && shouldTranslate)
+            if (file.TryGetRecord(tmp.FullPath, out var entry))
             {
-                if (entry.TryGetTranslated(out var translated))
+                if (strategy == Strategy.TranslateAndStyle && entry.TryGetTranslated(out var translated))
                 {
                     tmpCasted.text = translated;
                 }
             }
-
-            var metadata = tmpCasted.ParseMetadata(entry?.Metadata);
             
-            LocalizeTmp_Stylize(tmpCasted, entry, file);
-            
-            // Debug.LogWarning($"{tmp.FullPath} {metadata.family}:{metadata.fontSize} -> {LocalizationLoader.LocalizationFont(metadata.family)}:{tmpCasted.fontSize}");
+            LocalizeTmp_Stylize(tmpCasted, entry, file, strategy);
         }
 
-        // TODO
-        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file,
-            bool shouldTranslate)
+        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, Strategy strategy)
         {
             var dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
             var hasEntry = file.TryGetRecord(dropdownOption.FullPath, out var entry);
@@ -1005,17 +1028,20 @@ be corrupted, these rules may be helpful for debugging purposes...
             // particular option in dropdown, change text as well as size modifications (using rich text)
             if (dropdownOption.IndexInComponent != null)
             {
+                if (!hasEntry || strategy != Strategy.TranslateAndStyle)
+                {
+                    return;
+                }
+
                 try
                 {
-                    int idx = int.Parse(dropdownOption
-                        .IndexInComponent); // possibly malformed path, consider logging error instead
-
-                    if (shouldTranslate && hasEntry)
+                    if (int.TryParse(dropdownOption.IndexInComponent, out var idx) && entry.TryGetTranslated(out var translated))
                     {
-                        if (entry.TryGetTranslated(out var translated))
-                        {
-                            dropdown.options[idx].text = translated;
-                        }
+                        dropdown.options[idx].text = translated;
+                    }
+                    else
+                    {
+                        Debug.LogError($"[Localization] malformed index in {dropdownOption.FullPath}");
                     }
                 }
                 catch (IndexOutOfRangeException)
@@ -1027,35 +1053,34 @@ be corrupted, these rules may be helpful for debugging purposes...
             // entire dropdown itself, change font info
             else
             {
-                LocalizeTmp_Stylize(dropdown.itemText, entry, file);
-                LocalizeTmp_Stylize(dropdown.captionText, entry, file);
+                LocalizeTmp_Stylize(dropdown.itemText, entry, file, strategy);
+                LocalizeTmp_Stylize(dropdown.captionText, entry, file, strategy);
             }
         }
 
-        // TODO
-        private static void LocalizeBigText(TrackedLocalizable big, LocalizationFile file, bool shouldTranslate)
+        private static void LocalizeBigText(TrackedLocalizable big, LocalizationFile file, Strategy strategy)
         {
             var b = big.GetAnchor<UIBigText>();
 
             string translated = null;
             var hasTranslated =
                     file.TryGetRecord(big.FullPath, out var entry)
-                    && shouldTranslate
+                    && strategy == Strategy.TranslateAndStyle
                     && entry.TryGetTranslated(out translated);
                 
             foreach (var txt in b.texts)
             {
-                LocalizeTmp_Stylize(txt, entry, file);
                 if (hasTranslated)
                 {
                     txt.text = translated;
                 }
+                LocalizeTmp_Stylize(txt, entry, file, strategy);
             }
         }
 
-        private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file, bool shouldTranslate)
+        private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file, Strategy strategy)
         {
-            if (!shouldTranslate)
+            if (strategy != Strategy.TranslateAndStyle)
             {
                 return; // leave stylization to texttyper localization
             }
@@ -1082,8 +1107,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        // TODO
-        private static void LocalizeTextTyper(TrackedLocalizable typer, LocalizationFile file, bool shouldTranslate)
+        private static void LocalizeTextTyper(TrackedLocalizable typer, LocalizationFile file, Strategy strategy)
         {
             var t = typer.GetAnchor<TMPTextTyper>();
             var tmp = t.TextMeshPro;
@@ -1097,7 +1121,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
 
             var metadata = tmp.ParseMetadata(entry.Metadata);
-            // tmp.font = LocalizatioknLoader.LocalizationFont(metadata.family);
+            if (LocalizationLoader.TryLoadFont(metadata.family, strategy == Strategy.TranslateAndStyle, out var font))
+            {
+                tmp.font = font;
+            }
             
             if (!file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
@@ -1108,10 +1135,9 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmp.DeserializeMetadataExceptFont(metadata);
         }
 
-        private static void LocalizePlayerActionHints(TrackedLocalizable hints, LocalizationFile file,
-            bool shouldTranslate)
+        private static void LocalizePlayerActionHints(TrackedLocalizable hints, LocalizationFile file, Strategy strategy)
         {
-            if (!shouldTranslate)
+            if (strategy != Strategy.TranslateAndStyle)
             {
                 return;
             }
@@ -1135,16 +1161,18 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeTableProvider(TrackedLocalizable tableProviderEntry, LocalizationFile file,
-            bool shouldTranslate)
+        private static void LocalizeTableProvider(TrackedLocalizable tableProviderEntry, LocalizationFile file, Strategy strategy)
         {
-            if (!shouldTranslate)
+            if (strategy != Strategy.TranslateAndStyle)
             {
                 return;
             }
 
             if (!file.TryGetRecord(tableProviderEntry.FullPath, out var entry)
-                || !entry.TryGetTranslated(out var translated)) return;
+                || !entry.TryGetTranslated(out var translated))
+            {
+                return;
+            }
 
             // AT: cursed Unity editor crashing bug if I call any interface function,
             // so instead just rewrite the function here...
@@ -1454,7 +1482,7 @@ be corrupted, these rules may be helpful for debugging purposes...
     {
         internal static FontMetadata SerializeMetadata(this TMP_Text t) => new()
         {
-            family = t.font?.faceInfo.familyName,
+            family = t.font?.name,
             fontSize = t.fontSize,
             overflowMode = t.overflowMode,
             wordSpacing = t.wordSpacing,
@@ -1528,8 +1556,8 @@ be corrupted, these rules may be helpful for debugging purposes...
     partial struct FontMetadata
     {
         
-        internal static Dictionary<string, FieldInfo> fields =
-            typeof(FontMetadata).GetFields().ToDictionary(f => f.Name, f => f);
+        internal static SortedDictionary<string, FieldInfo> fields =
+            new(typeof(FontMetadata).GetFields().ToDictionary(f => f.Name, f => f));
 
         public override string ToString()
         {
@@ -1541,7 +1569,22 @@ be corrupted, these rules may be helpful for debugging purposes...
                 sb.Append(":");
                 
                 // TODO: modify
-                sb.Append(f.GetValue(this));
+                if (f.FieldType == typeof(bool))
+                {
+                    var val = f.GetValue(this);
+                    if ((bool)val)
+                    {
+                        sb.Append("1");
+                    }
+                    else
+                    {
+                        sb.Append("0");
+                    }
+                }
+                else
+                {
+                    sb.Append(f.GetValue(this));
+                }
                 
                 sb.Append(";");
             }
