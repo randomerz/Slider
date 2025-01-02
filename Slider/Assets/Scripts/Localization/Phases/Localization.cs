@@ -102,7 +102,7 @@ namespace Localization
             {
                 tmp.font = newFont;
             }
-            // tmp.DeserializeMetadataExceptFont(metadata);
+            tmp.DeserializeMetadataExceptFont(metadata);
         }
 
         private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, LocalizationAction strategy)

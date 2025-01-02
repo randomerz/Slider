@@ -11,7 +11,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
     internal static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
     internal static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : SettingsManager.Setting<string>(Settings.Locale).CurrentValue;
 
-    internal static ILocalizationTrackable.LocalizationState ToCurrentSetting => new ILocalizationTrackable.LocalizationState
+    internal static ILocalizationTrackable.LocalizationState CurrentSetting => new ILocalizationTrackable.LocalizationState
     {
         locale = CurrentLocale,
         usePixelFont = UsePixelFont
@@ -54,11 +54,11 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
 
         if (desc.isBig)
         {
-            font = (target == LocalizableContext.StyleChange.LocalizedPixel) ? LocalizationFontPixelBig : LocalizationFontNonPixelBig;
+            font = target == LocalizableContext.StyleChange.LocalizedPixel ? LocalizationFontPixelBig : LocalizationFontNonPixelBig;
         }
         else
         {
-            font = (target == LocalizableContext.StyleChange.LocalizedPixel) ? LocalizationFontPixelSmall : LocalizationFontNonPixelSmall;
+            font = target == LocalizableContext.StyleChange.LocalizedPixel ? LocalizationFontPixelSmall : LocalizationFontNonPixelSmall;
         }
 
         return true;
@@ -81,7 +81,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
 
     internal LocalizationFile LocaleGlobalFile;
 
-    ILocalizationTrackable.LocalizationState ILocalizationTrackable.Record { get; set; } = ILocalizationTrackable.DefaultRecord;
+    ILocalizationTrackable.LocalizationState ILocalizationTrackable.LastLocalizedState => _lastLocalizedState;
+    private ILocalizationTrackable.LocalizationState _lastLocalizedState = ILocalizationTrackable.DefaultState;
 
     private void Awake()
     {
@@ -119,6 +120,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
         RefreshLocalization();
         SceneManager.activeSceneChanged += (_, to) =>
         {
+            _lastLocalizedState = ILocalizationTrackable.DefaultState;
             RefreshLocalization();
         };
     }
@@ -205,7 +207,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
         }
 
         LocaleGlobalFile = loadedAsset.global;
-        SceneCtx(scene).Localize(loadedAsset.context, ToCurrentSetting);
-        PersistentCtx(GameManager.instance.gameObject.scene).Localize(loadedAsset.context, ToCurrentSetting);
+        SceneCtx(scene).Localize(loadedAsset.context, CurrentSetting);
+        PersistentCtx(GameManager.instance.gameObject.scene).Localize(loadedAsset.context, CurrentSetting);
+        _lastLocalizedState = CurrentSetting;
     }
 }

@@ -16,8 +16,9 @@ public class LocalizationInjector : MonoBehaviour, ILocalizationTrackable
     private LocalizableContext _ctx;
 
     private Dictionary<string, LocalizationFile> loadedFiles = new();
-    
-    ILocalizationTrackable.LocalizationState ILocalizationTrackable.Record { get; set; } = ILocalizationTrackable.DefaultRecord;
+
+    ILocalizationTrackable.LocalizationState ILocalizationTrackable.LastLocalizedState => _lastLocalizedState;
+    ILocalizationTrackable.LocalizationState _lastLocalizedState = ILocalizationTrackable.DefaultState;
 
     public void Start()
     {
@@ -42,7 +43,8 @@ public class LocalizationInjector : MonoBehaviour, ILocalizationTrackable
             loadedFiles.Add(locale, loadedAsset.context);
         }
         
-        Ctx.Localize(loadedFiles[locale], LocalizationLoader.ToCurrentSetting);
+        Ctx.Localize(loadedFiles[locale], LocalizationLoader.CurrentSetting);
+        _lastLocalizedState = LocalizationLoader.CurrentSetting;
     }
 }
 

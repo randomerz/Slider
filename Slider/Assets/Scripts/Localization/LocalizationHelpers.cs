@@ -707,75 +707,64 @@ be corrupted, these rules may be helpful for debugging purposes...
             internal bool usePixelFont;
         }
 
-        internal static LocalizationState DefaultRecord = new()
+        internal static LocalizationState DefaultState = new()
         {
             locale = LocalizationFile.DefaultLocale,
             usePixelFont = true
         };
-
-        protected LocalizationState Record
-        {
-            get;
-            set;
-        }
+        
+        internal LocalizationState LastLocalizedState { get; }
 
         internal LocalizableContext.LocalizationAction TrackLocalization(LocalizationState newLocalizationStatus)
         {
-            try
+            if ((LastLocalizedState.locale == newLocalizationStatus.locale) && (LastLocalizedState.usePixelFont == newLocalizationStatus.usePixelFont))
             {
-                if ((Record.locale == newLocalizationStatus.locale) && (Record.usePixelFont == newLocalizationStatus.usePixelFont))
+                return new LocalizableContext.LocalizationAction
                 {
-                    return new LocalizableContext.LocalizationAction
-                    {
-                        ShouldTranslate = false, 
-                        StyleChange = LocalizableContext.StyleChange.Idle
-                    };
-                }
-                
-                var action = new LocalizableContext.LocalizationAction
-                {
-                    ShouldTranslate = Record.locale != newLocalizationStatus.locale
+                    ShouldTranslate = false, 
+                    StyleChange = LocalizableContext.StyleChange.Idle
                 };
-
-                var isAlreadyEnglish = (Record.locale == LocalizationFile.DefaultLocale);
-                var willBeInEnglish = (newLocalizationStatus.locale == LocalizationFile.DefaultLocale);
-                var isUsingPixelFont = Record.usePixelFont;
-                var willBeUsingPixelFont = newLocalizationStatus.usePixelFont;
-
-                // localizing from * to english locale
-                if (willBeInEnglish)
-                {
-                    // any change to english pixel will need to stylize to 
-                    action.StyleChange = willBeUsingPixelFont ? LocalizableContext.StyleChange.DefaultPixel : LocalizableContext.StyleChange.NonPixel;
-                    goto ret;
-                }
-                
-                // localizing from english to non-english locale
-                if (isAlreadyEnglish)
-                {
-                    action.StyleChange = willBeUsingPixelFont ? LocalizableContext.StyleChange.LocalizedPixel : LocalizableContext.StyleChange.NonPixel;
-                    goto ret;
-                }
-                
-                // localizing from non-english to non-english locale
-                
-                // in this case translation has no direct relation with stylization, so idle stylization can
-                // be detected by equality
-                if (isUsingPixelFont == willBeUsingPixelFont)
-                {
-                    action.StyleChange = LocalizableContext.StyleChange.Idle;
-                    goto ret;
-                }
-                
-                action.StyleChange = willBeUsingPixelFont ? LocalizableContext.StyleChange.LocalizedPixel : LocalizableContext.StyleChange.NonPixel;
-
-                ret:
-                    return action;
             }
-            finally
+            
+            var action = new LocalizableContext.LocalizationAction
             {
-                Record = newLocalizationStatus;   
+                ShouldTranslate = LastLocalizedState.locale != newLocalizationStatus.locale
+            };
+
+            var isAlreadyEnglish = (LastLocalizedState.locale == LocalizationFile.DefaultLocale);
+            var willBeInEnglish = (newLocalizationStatus.locale == LocalizationFile.DefaultLocale);
+            var isUsingPixelFont = LastLocalizedState.usePixelFont;
+            var willBeUsingPixelFont = newLocalizationStatus.usePixelFont;
+
+            // localizing from * to english locale
+            if (willBeInEnglish)
+            {
+                // any change to english pixel will need to stylize to 
+                action.StyleChange = willBeUsingPixelFont ? LocalizableContext.StyleChange.DefaultPixel : LocalizableContext.StyleChange.NonPixel;
+                goto ret;
             }
+            
+            // localizing from english to non-english locale
+            if (isAlreadyEnglish)
+            {
+                action.StyleChange = willBeUsingPixelFont ? LocalizableContext.StyleChange.LocalizedPixel : LocalizableContext.StyleChange.NonPixel;
+                goto ret;
+            }
+            
+            // localizing from non-english to non-english locale
+            
+            // in this case translation has no direct relation with stylization, so idle stylization can
+            // be detected by equality
+            if (isUsingPixelFont == willBeUsingPixelFont)
+            {
+                action.StyleChange = LocalizableContext.StyleChange.Idle;
+                goto ret;
+            }
+            
+            action.StyleChange = willBeUsingPixelFont ? LocalizableContext.StyleChange.LocalizedPixel : LocalizableContext.StyleChange.NonPixel;
+
+            ret:
+                return action;
         }
     }
 }
