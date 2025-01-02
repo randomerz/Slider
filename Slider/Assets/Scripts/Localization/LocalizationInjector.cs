@@ -1,28 +1,48 @@
+using System;
+using System.Collections.Generic;
+using Localization;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class LocalizationInjector : MonoBehaviour
+public class LocalizationInjector : MonoBehaviour, ILocalizationTrackable
 {
     public string prefabName;
 
+    private LocalizableContext Ctx => _ctx ??= LocalizableContext.ForInjector(this);
+    private LocalizableContext _ctx;
+
+    private Dictionary<string, LocalizationFile> loadedFiles = new();
+    
+    ILocalizationTrackable.LocalizationState ILocalizationTrackable.Record { get; set; } = ILocalizationTrackable.DefaultRecord;
+
     public void Start()
     {
-        Refresh();
+        Localize();
     }
-    
-    public void Refresh()
+
+    public void Localize()
     {
-        if (prefabName != null)
+        var locale = LocalizationLoader.CurrentLocale;
+
+        if (!loadedFiles.ContainsKey(locale))
         {
-            this.InjectLocalization();
+            var prefabAssetPath = LocalizationFile.AssetPath(locale, this);
+            var loadedAsset = LocalizationLoader.LoadAssetAndConfigureLocaleDefaults(locale, prefabAssetPath, LocalizationLoader.Instance?.LocaleGlobalFile);
+
+            if (loadedAsset.context == null)
+            {
+                Debug.LogError($"Could not load file at {prefabAssetPath}");
+                return;
+            }
+            
+            loadedFiles.Add(locale, loadedAsset.context);
         }
-        else
-        {
-            Debug.LogError($"Empty prefab variant parent for injector: {this}");
-        }
+        
+        Ctx.Localize(loadedFiles[locale], LocalizationLoader.ToCurrentSetting);
     }
 }
 

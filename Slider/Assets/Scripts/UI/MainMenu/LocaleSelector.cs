@@ -81,7 +81,7 @@ public class LocaleSelector : MonoBehaviour
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
 
-        LocalizationLoader.ForceReload();
+        LocalizationLoader.RefreshLocalization();
 
         // Don't put anything here... there's a force scene reload in the setting change event (see SettingsManager)
     }

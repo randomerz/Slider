@@ -300,16 +300,16 @@ public class LocalizationSkeletonGenerator : EditorWindow
            .Select(AssetDatabase.LoadAssetAtPath<Shape>);
 
        var globalStrings = 
-           shapes.ToDictionary(s => SpecificTypeHelpers.JungleShapeToPath(s.shapeName), s => s.shapeName);
+           shapes.ToDictionary(s => LocalizableContext.JungleShapeToPath(s.shapeName), s => s.shapeName);
 
        foreach (var kv in Areas.DiscordNames)
        {
-           globalStrings.Add(SpecificTypeHelpers.AreaToDiscordNamePath(kv.Key), kv.Value);
+           globalStrings.Add(LocalizableContext.AreaToDiscordNamePath(kv.Key), kv.Value);
        }
        
        foreach (var kv in Areas.DisplayNames)
        {
-           globalStrings.Add(SpecificTypeHelpers.AreaToDisplayNamePath(kv.Key), kv.Value);
+           globalStrings.Add(LocalizableContext.AreaToDisplayNamePath(kv.Key), kv.Value);
        }
 
        if (root == null)

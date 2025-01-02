@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+// using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Toggle))]
@@ -21,14 +21,14 @@ public class PixelFontToggleLogic : MonoBehaviour
         }
         
         // for main menu scene, apply setting directly
-        if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
+        // if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
         {
-            LocalizationLoader.ForceReload();
+            LocalizationLoader.RefreshLocalization();
         }
-        // for non-main menu scenes, just apply the setting and tell players to restart
-        else
-        {
-            popup.SetActive(true); // there's no way to just swap out every different pixel font at once, just tell the player to cope
-        }
+        // // for non-main menu scenes, just apply the setting and tell players to restart
+        // else
+        // {
+        //     popup.SetActive(true); // there's no way to just swap out every different pixel font at once, just tell the player to cope
+        // }
     }
 }
