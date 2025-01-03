@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using Sylvan.Data.Csv;
 using UnityEngine.SceneManagement;
 
 namespace Localization
 {
-
     public struct LocalizationPair
     {
         public static explicit operator LocalizationPair(string input)
@@ -414,8 +414,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        public static (LocalizationFile, ParserError) MakeLocalizationFile(string locale, string filePath,
+        
+        public static async Task<(LocalizationFile, ParserError)> MakeLocalizationFile(string locale, string filePath,
             LocalizationFile localeConfig = null)
         {
             if (!File.Exists(filePath))
@@ -423,7 +423,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return (null, ParserError.FileNotFound);
             }
 
-            using var file = File.OpenRead(filePath);
+            await using var file = File.OpenRead(filePath);
             LocalizationFile parsed = new(locale, filePath, localeConfig);
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -634,7 +634,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
 
         private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
-
+        
         private LocalizableContext()
         {
             configs = new();
@@ -674,7 +674,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private LocalizableContext(Scene scene) : this()
         {
-            localizationRoot = LocalizationLoader.Instance;
+            localizationRoot = null;
             var rgos = scene.GetRootGameObjects();
 
             foreach (GameObject rootObj in rgos)
@@ -715,7 +715,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         internal LocalizationState LastLocalizedState { get; }
 
-        internal LocalizableContext.LocalizationAction TrackLocalization(LocalizationState newLocalizationStatus)
+        public LocalizableContext.LocalizationAction TrackLocalization(LocalizationState newLocalizationStatus)
         {
             if ((LastLocalizedState.locale == newLocalizationStatus.locale) && (LastLocalizedState.usePixelFont == newLocalizationStatus.usePixelFont))
             {

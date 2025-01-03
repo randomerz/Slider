@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Timers;
 using TMPro;
 using UnityEngine;
 
@@ -15,10 +16,10 @@ namespace Localization
             NonPixel
         }
 
-        internal struct LocalizationAction
+        public struct LocalizationAction
         {
-            internal bool ShouldTranslate;
-            internal StyleChange StyleChange;
+            public bool ShouldTranslate;
+            public StyleChange StyleChange;
         }
         
         private readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile, LocalizationAction>>
@@ -34,16 +35,8 @@ namespace Localization
                 { typeof(IDialogueTableProvider), LocalizeTableProvider },
             };
         
-        public void Localize(LocalizationFile file, ILocalizationTrackable.LocalizationState state)
+        public void Localize(LocalizationFile file, LocalizationAction strategy)
         {
-            var strategy = localizationRoot.TrackLocalization(state);
-
-            if (strategy is { ShouldTranslate: false, StyleChange: StyleChange.Idle })
-            {
-                Debug.Log($"[Localization] Skip localization of {localizationRoot}");
-                return;
-            }
-
             Debug.Log($"[Localization] Localize {(MonoBehaviour) localizationRoot} with shouldTranslate {strategy.ShouldTranslate}, styleChange {strategy.StyleChange}");
             
             foreach (var (type, instances) in localizables)
@@ -52,7 +45,7 @@ namespace Localization
                 {
                     continue;
                 }
-
+                
                 foreach (var i in instances)
                 {
                     func(i, file, strategy);

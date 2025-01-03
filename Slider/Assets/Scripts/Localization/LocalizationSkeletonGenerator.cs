@@ -222,7 +222,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            return null;
        }
 
-       var (referenceFile, err) = LocalizationFile.MakeLocalizationFile(locale.name, path);
+       var (referenceFile, err) = LocalizationFile.MakeLocalizationFile(locale.name, path).Result;
        if (referenceFile == null)
        {
            LocalizationFile.PrintParserError(err, path);

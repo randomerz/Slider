@@ -15,8 +15,6 @@ public class LocalizationInjector : MonoBehaviour, ILocalizationTrackable
     private LocalizableContext Ctx => _ctx ??= LocalizableContext.ForInjector(this);
     private LocalizableContext _ctx;
 
-    private Dictionary<string, LocalizationFile> loadedFiles = new();
-
     ILocalizationTrackable.LocalizationState ILocalizationTrackable.LastLocalizedState => _lastLocalizedState;
     ILocalizationTrackable.LocalizationState _lastLocalizedState = ILocalizationTrackable.DefaultState;
 
@@ -27,24 +25,34 @@ public class LocalizationInjector : MonoBehaviour, ILocalizationTrackable
 
     public void Localize()
     {
+        var w = new System.Diagnostics.Stopwatch();
+        w.Start();
+        
         var locale = LocalizationLoader.CurrentLocale;
+        
+        var strategy = (this as ILocalizationTrackable).TrackLocalization(LocalizationLoader.CurrentSetting);
 
-        if (!loadedFiles.ContainsKey(locale))
+        if (strategy is { ShouldTranslate: false, StyleChange: LocalizableContext.StyleChange.Idle })
         {
-            var prefabAssetPath = LocalizationFile.AssetPath(locale, this);
-            var loadedAsset = LocalizationLoader.LoadAssetAndConfigureLocaleDefaults(locale, prefabAssetPath, LocalizationLoader.Instance?.LocaleGlobalFile);
-
-            if (loadedAsset.context == null)
-            {
-                Debug.LogError($"Could not load file at {prefabAssetPath}");
-                return;
-            }
-            
-            loadedFiles.Add(locale, loadedAsset.context);
+            Debug.Log($"[Localization] Skip localization of {this}");
+            _lastLocalizedState = LocalizationLoader.CurrentSetting;
+            return;
         }
         
-        Ctx.Localize(loadedFiles[locale], LocalizationLoader.CurrentSetting);
+        var prefabAssetPath = LocalizationFile.AssetPath(locale, this);
+        var loadedAsset = LocalizationLoader.LoadAssetAndConfigureLocaleDefaults(locale, prefabAssetPath);
+
+        if (loadedAsset.context == null)
+        {
+            Debug.LogError($"Could not load file at {prefabAssetPath}");
+            return;
+        }
+        
+        Ctx.Localize(loadedAsset.context, strategy);
         _lastLocalizedState = LocalizationLoader.CurrentSetting;
+        
+        w.Stop();
+        Debug.Log($"[Localization] Elapsed time {w.Elapsed.TotalMilliseconds}ms");
     }
 }
 

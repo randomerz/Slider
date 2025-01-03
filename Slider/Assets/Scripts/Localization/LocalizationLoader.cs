@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Localization;
 using TMPro;
 using UnityEngine;
@@ -26,14 +30,10 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
     [SerializeField]
     private TMP_FontAsset localizationFontNonPixelSmall;
 
-    internal static LocalizationLoader Instance => _instance;
-    
-    private static TMP_FontAsset LocalizationFontPixelBig => _instance.localizationFontPixelBig;
-    private static TMP_FontAsset LocalizationFontPixelSmall => _instance.localizationFontPixelSmall;
-    private static TMP_FontAsset LocalizationFontNonPixelBig => _instance.localizationFontNonPixelBig;
-    private static TMP_FontAsset LocalizationFontNonPixelSmall => _instance.localizationFontNonPixelSmall;
-    
-    public static bool TryLoadFont(string originalFamilyName, LocalizableContext.StyleChange target, out TMP_FontAsset font)
+    public static bool TryLoadFont(string originalFamilyName, LocalizableContext.StyleChange target,
+        out TMP_FontAsset font) => _instance.TryLoadFont_Impl(originalFamilyName, target, out font);
+
+    private bool TryLoadFont_Impl(string originalFamilyName, LocalizableContext.StyleChange target, out TMP_FontAsset font)
     {
         if (originalFamilyName == null || !OriginalFonts.TryGetValue(originalFamilyName, out var desc))
         {
@@ -54,11 +54,11 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
 
         if (desc.isBig)
         {
-            font = target == LocalizableContext.StyleChange.LocalizedPixel ? LocalizationFontPixelBig : LocalizationFontNonPixelBig;
+            font = target == LocalizableContext.StyleChange.LocalizedPixel ? localizationFontPixelBig : localizationFontNonPixelBig;
         }
         else
         {
-            font = target == LocalizableContext.StyleChange.LocalizedPixel ? LocalizationFontPixelSmall : LocalizationFontNonPixelSmall;
+            font = target == LocalizableContext.StyleChange.LocalizedPixel ? localizationFontPixelSmall : localizationFontNonPixelSmall;
         }
 
         return true;
@@ -73,8 +73,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
 
     [SerializeField] public SliderFontDescriptor[] originalFonts;
 
-    private static Dictionary<string, SliderFontDescriptor> OriginalFonts => m_originalFonts.Value;
-    private static Lazy<Dictionary<string, SliderFontDescriptor>> m_originalFonts = new (() =>
+    private Dictionary<string, SliderFontDescriptor> OriginalFonts => m_originalFonts.Value;
+    private Lazy<Dictionary<string, SliderFontDescriptor>> m_originalFonts = new (() =>
     {
         return _instance.originalFonts.ToDictionary(f => f.tmpFont.name, f=>f);
     });
@@ -128,18 +128,18 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
     #region SpecificTypes
 
     public static string LoadAreaDiscordTranslation(Area area)
-        => LoadTranslatedString(LocalizableContext.AreaToDiscordNamePath(area), area.ToString());
+        => _instance.LoadTranslatedString(LocalizableContext.AreaToDiscordNamePath(area), area.ToString());
     
     public static string LoadAreaDisplayName(Area area)
-        => LoadTranslatedString(LocalizableContext.AreaToDisplayNamePath(area), area.ToString());
+        => _instance.LoadTranslatedString(LocalizableContext.AreaToDisplayNamePath(area), area.ToString());
     
     public static string LoadJungleShapeTranslation(string shapeName)
-        => LoadTranslatedString(LocalizableContext.JungleShapeToPath(shapeName), shapeName);
+        => _instance.LoadTranslatedString(LocalizableContext.JungleShapeToPath(shapeName), shapeName);
 
     public static string LoadCollectibleTranslation(string name, Area area)
-        => LoadTranslatedString(LocalizableContext.CollectibleToPath(name, area), name);
+        => _instance.LoadTranslatedString(LocalizableContext.CollectibleToPath(name, area), name);
 
-    private static string LoadTranslatedString(string path, string fallback)
+    private string LoadTranslatedString(string path, string fallback)
     {
         var file = _instance.LocaleGlobalFile;
         if (file == null)
@@ -161,54 +161,118 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
     /// Null on English, for everything else defaults to 'Anonymous' if not specified.
     /// </summary>
     /// <returns></returns>
-    internal static string GetCreditInformation() =>
+    internal string GetCreditInformation() =>
         CurrentLocale == LocalizationFile.DefaultLocale ? null : _instance.LocaleGlobalFile.GetConfigValue(LocalizationFile.Config.Author);
+
+    public static (LocalizationFile global, LocalizationFile context)
+        LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath) =>
+        _instance.LoadAssetAndConfigureLocaleDefaults_Impl(locale, sceneLocalizationFilePath);
     
-    internal static (LocalizationFile global, LocalizationFile context) 
-        LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath, LocalizationFile existingGlobal = null)
+    private (LocalizationFile global, LocalizationFile context) 
+        LoadAssetAndConfigureLocaleDefaults_Impl(string locale, string sceneLocalizationFilePath)
     {
-        LocalizationFile globalFile;
-        
-        if ((existingGlobal?.LocaleName ?? "") != locale)
+        string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
+        if (!assetCache.TryGetValue(localeConfigFilePath, out var globalFile))
         {
-            string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
-            var (localeConfigFile, errorLocale) = LocalizationFile.MakeLocalizationFile(locale, localeConfigFilePath);
-            if (localeConfigFile == null)
-            {
-                LocalizationFile.PrintParserError(errorLocale, localeConfigFilePath);
-                return (null, null);
-            }
-            globalFile = localeConfigFile;
+            globalFile = LoadGlobalFile(locale, localeConfigFilePath).Result;
         }
-        else
+
+        if (!assetCache.TryGetValue(sceneLocalizationFilePath, out var unitFile))
         {
-            globalFile = existingGlobal;
+            unitFile = LoadUnitFile(locale, sceneLocalizationFilePath, globalFile).Result;
         }
-        
-        var (sceneLocalizationFile, errorScene) = LocalizationFile.MakeLocalizationFile(locale, sceneLocalizationFilePath, globalFile);
-        if (sceneLocalizationFile == null)
-        {
-            LocalizationFile.PrintParserError(errorScene, sceneLocalizationFilePath);
-        }
-        return (globalFile, sceneLocalizationFile ?? globalFile); // AT: this is purely for stylistics like non-pixel in dev scenes, won't be hit since all build scenes will have CSV
+        return (globalFile, unitFile ?? globalFile); // AT: this is purely for stylistics like non-pixel in dev scenes, won't be hit since all build scenes will have CSV
     }
 
-    public static void RefreshLocalization() => _instance.RefreshLocalizationImpl();
+    public static void RefreshLocalization() => _instance.RefreshLocalization_Impl();
     
-    private void RefreshLocalizationImpl()
+    private void RefreshLocalization_Impl()
     {
+        StartCoroutine(LoadAllLocaleFilesNextFrame(CurrentSetting.locale));
+        
+        var w = new System.Diagnostics.Stopwatch();
+        w.Start();
+        
         var scene = SceneManager.GetActiveScene();
+        var strategy = (this as ILocalizationTrackable).TrackLocalization(CurrentSetting);
+        if (strategy is { ShouldTranslate: false, StyleChange: LocalizableContext.StyleChange.Idle })
+        {
+            Debug.Log($"[Localization] Skip localization of {this}");
+            _lastLocalizedState = CurrentSetting;
+            return;
+        }
         
         var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene), LocaleGlobalFile);
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults_Impl(locale, LocalizationFile.AssetPath(locale, scene));
         if (loadedAsset.context == null)
         {
             return;
         }
-
         LocaleGlobalFile = loadedAsset.global;
-        SceneCtx(scene).Localize(loadedAsset.context, CurrentSetting);
-        PersistentCtx(GameManager.instance.gameObject.scene).Localize(loadedAsset.context, CurrentSetting);
+        
+        SceneCtx(scene).Localize(loadedAsset.context, strategy);
+        PersistentCtx(GameManager.instance.gameObject.scene).Localize(loadedAsset.context, strategy);
         _lastLocalizedState = CurrentSetting;
+        
+        w.Stop();
+        Debug.Log($"[Localization] Elapsed time {w.Elapsed.TotalMilliseconds}ms");
+    }
+
+    private ConcurrentDictionary<string, LocalizationFile> assetCache = new();
+
+    async Task<LocalizationFile> LoadGlobalFile(string locale, string fullPath)
+    {
+        var (localeConfigFile, errorLocale) = await LocalizationFile.MakeLocalizationFile(locale, fullPath);
+        if (localeConfigFile == null)
+        {
+            LocalizationFile.PrintParserError(errorLocale, fullPath);
+        }
+        else
+        {
+            Debug.Log($"[Localization] ... cache miss: load file {fullPath}");
+            assetCache.TryAdd(fullPath, localeConfigFile);
+        }
+        return localeConfigFile;
+    }
+
+    async Task<LocalizationFile> LoadUnitFile(string locale, string fullPath, LocalizationFile localeConfigFile)
+    {
+        var (sceneLocalizationFile, errorScene) = await LocalizationFile.MakeLocalizationFile(locale, fullPath, localeConfigFile);
+        if (sceneLocalizationFile == null)
+        {
+            LocalizationFile.PrintParserError(errorScene, fullPath);
+        }
+        else
+        {
+            Debug.Log($"[Localization] on frame {Time.frameCount} cache miss: load file {fullPath}");
+            assetCache.TryAdd(fullPath, sceneLocalizationFile);
+        }
+
+        return sceneLocalizationFile ?? localeConfigFile;
+    }
+
+    private IEnumerator LoadAllLocaleFilesNextFrame(string locale)
+    {
+        Debug.Log($"[Localization] on frame {Time.frameCount} start background CSV loading for locale {locale}");
+        yield return new WaitForFixedUpdate();
+        
+        string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
+        if (!assetCache.TryGetValue(localeConfigFilePath, out var localeConfigFile))
+        {
+            var t = LoadGlobalFile(locale, localeConfigFilePath);
+            yield return new WaitUntil(() => t.IsCompleted);
+            localeConfigFile = t.Result;
+        }
+        
+        foreach (var f in Directory.GetFiles(Path.GetDirectoryName(localeConfigFilePath)!, "*.csv",
+                     SearchOption.TopDirectoryOnly))
+        {
+            if (assetCache.ContainsKey(f))
+            {
+                continue;
+            }
+            var t = LoadUnitFile(locale, f, localeConfigFile);
+            yield return new WaitUntil(() => t.IsCompleted);
+        }
     }
 }
