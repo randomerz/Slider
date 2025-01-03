@@ -242,7 +242,7 @@ namespace Localization
                     .Where(localeName =>
                     {
                         var filePath = LocaleGlobalFilePath(localeName, root);
-                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeName, filePath);
+                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeName, filePath).Result;
                         if (parsedGlobalFile != null)
                         {
                             return true;
