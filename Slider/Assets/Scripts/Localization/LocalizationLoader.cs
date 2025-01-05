@@ -188,10 +188,11 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
     
     private void RefreshLocalization_Impl()
     {
+        StopAllCoroutines();
         StartCoroutine(LoadAllLocaleFilesNextFrame(CurrentSetting.locale));
         
-        var w = new System.Diagnostics.Stopwatch();
-        w.Start();
+        // var w = new System.Diagnostics.Stopwatch();
+        // w.Start();
         
         var scene = SceneManager.GetActiveScene();
         var strategy = (this as ILocalizationTrackable).TrackLocalization(CurrentSetting);
@@ -214,8 +215,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
         PersistentCtx(GameManager.instance.gameObject.scene).Localize(loadedAsset.context, strategy);
         _lastLocalizedState = CurrentSetting;
         
-        w.Stop();
-        Debug.Log($"[Localization] Elapsed time {w.Elapsed.TotalMilliseconds}ms");
+        // w.Stop();
+        // Debug.Log($"[Localization] Elapsed time {w.Elapsed.TotalMilliseconds}ms");
     }
 
     private ConcurrentDictionary<string, LocalizationFile> assetCache = new();

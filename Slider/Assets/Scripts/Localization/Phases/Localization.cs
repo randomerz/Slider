@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Timers;
 using TMPro;
 using UnityEngine;
 
@@ -20,6 +19,7 @@ namespace Localization
         {
             public bool ShouldTranslate;
             public StyleChange StyleChange;
+
         }
         
         private readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile, LocalizationAction>>
@@ -86,7 +86,7 @@ namespace Localization
             
             var metadata = tmp.ParseMetadata(entry?.Metadata);
 
-            if (strategy == StyleChange.DefaultPixel)
+            if (strategy != StyleChange.DefaultPixel)
             {
                 StylizeTmpMetadata(ref metadata, file);   
             }
@@ -117,14 +117,12 @@ namespace Localization
         {
             var dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
             var hasEntry = file.TryGetRecord(dropdownOption.FullPath, out var entry);
+            var didTranslate = hasEntry && dropdownOption.shouldTranslate && strategy.ShouldTranslate;
 
             // particular option in dropdown, change text as well as size modifications (using rich text)
             if (dropdownOption.IndexInComponent != null)
             {
-                if (!hasEntry 
-                    || !dropdownOption.shouldTranslate 
-                    || !strategy.ShouldTranslate 
-                    || !entry.TryGetTranslated(out var translated))
+                if (!didTranslate || !entry.TryGetTranslated(out var translated))
                 {
                     return;
                 }
@@ -158,19 +156,20 @@ namespace Localization
         {
             var b = big.GetAnchor<UIBigText>();
 
-            string translated = null;
-            var hasTranslated =
-                    file.TryGetRecord(big.FullPath, out var entry)
-                    && big.shouldTranslate
-                    && strategy.ShouldTranslate
-                    && entry.TryGetTranslated(out translated);
-                
-            foreach (var txt in b.texts)
+            if (
+                file.TryGetRecord(big.FullPath, out var entry)
+                && big.shouldTranslate
+                && strategy.ShouldTranslate
+                && entry.TryGetTranslated(out var translated))
             {
-                if (hasTranslated)
+                foreach (var txt in b.texts)
                 {
                     txt.text = translated;
                 }
+            }
+            
+            foreach (var txt in b.texts)
+            {
                 LocalizeTmp_Stylize(txt, entry, file, strategy.StyleChange);
             }
         }
@@ -214,9 +213,14 @@ namespace Localization
                 tmp.text = translation;
             }
 
-            if (strategy.StyleChange != StyleChange.Idle)
+            if (strategy.StyleChange == StyleChange.Idle)
             {
-                var metadata = tmp.ParseMetadata(entry?.Metadata);
+                return;
+            }
+
+            var metadata = tmp.ParseMetadata(entry?.Metadata);
+            if (strategy.StyleChange != StyleChange.DefaultPixel)
+            {
                 if (LocalizationLoader.TryLoadFont(metadata.family, strategy.StyleChange, out var font))
                 {
                     tmp.font = font;
@@ -227,9 +231,9 @@ namespace Localization
                     metadata.fontSize *= adjFlt;
                 }
                 metadata.wordSpacing = 0;
-            
-                tmp.DeserializeMetadataExceptFont(metadata);   
             }
+            
+            tmp.DeserializeMetadataExceptFont(metadata);
         }
 
         private static void LocalizePlayerActionHints(TrackedLocalizable hints, LocalizationFile file, LocalizationAction strategy)

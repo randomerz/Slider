@@ -1,10 +1,7 @@
-using System;
 using System.Linq;
 using Localization;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SettingRetriever))]
 public class LocaleSelector : MonoBehaviour

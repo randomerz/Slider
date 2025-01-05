@@ -52,26 +52,6 @@ namespace Localization
         public static bool operator ==(LocalizationPair a, LocalizationPair b) => a.original == b.original;
 
         public static bool operator !=(LocalizationPair a, LocalizationPair b) => !(a == b);
-
-        public static LocalizationPair Join(string separator, IEnumerable<LocalizationPair> pairs)
-        {
-            var localizationPairs = pairs as LocalizationPair[] ?? pairs.ToArray();
-            return new LocalizationPair
-            {
-                original = string.Join(separator, localizationPairs.Select(pair => pair.original)),
-                translated = string.Join(separator, localizationPairs.Select(pair => pair.translated))
-            };
-        }
-
-        public static LocalizationPair Join(char separator, IEnumerable<LocalizationPair> pairs)
-        {
-            var localizationPairs = pairs as LocalizationPair[] ?? pairs.ToArray();
-            return new LocalizationPair
-            {
-                original = string.Join(separator, localizationPairs.Select(pair => pair.original)),
-                translated = string.Join(separator, localizationPairs.Select(pair => pair.translated))
-            };
-        }
     }
 
     internal abstract class Localizable

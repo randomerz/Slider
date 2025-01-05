@@ -4,7 +4,6 @@ using System.Linq;
 using Localization;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// <para>

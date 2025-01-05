@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Localization;
 using UnityEngine;
 using Object = UnityEngine.Object;
