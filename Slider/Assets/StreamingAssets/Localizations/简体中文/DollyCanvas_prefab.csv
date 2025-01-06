@@ -1,0 +1,23 @@
+"Slider.v1.0.17","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first four will be parsed (you can use the rest as comments if needed)
+  - The fourth column is an optional metadata column
+",
+"IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
+"Path","Orig","Translation","Metadata",
+"DollyCanvas/Skip Prompt/Skip Prompt Text","Skip","跳过","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:54;lineSpacing:0;overflowMode:Ellipsis;wordSpacing:0;",

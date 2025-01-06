@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Localization;
 
-public class MainMenuSaveButton : MonoBehaviour
+public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
 {
     [SerializeField] private SavePanelManager savePanelManager;
     [SerializeField] private Image buttonBackgroundImage;
@@ -24,7 +25,11 @@ public class MainMenuSaveButton : MonoBehaviour
 
     private bool forceHidingDescriptions;
     
-    private const string PROFILE_EMPTY_STRING = "[ Empty ]";
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<string, string>
+        {
+            { "ProfileEmpty", "[ Empty ]"}
+        });
 
     private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
     private const string DID_CHEAT = "UsedCheats";
@@ -103,10 +108,10 @@ public class MainMenuSaveButton : MonoBehaviour
     {
         return mode switch
         {
-            SavePanelManager.SaveMode.Normal => profile != null ? profile.GetProfileName() : PROFILE_EMPTY_STRING,
-            SavePanelManager.SaveMode.Delete => profile != null ? $"{profile.GetProfileName()}?" : PROFILE_EMPTY_STRING,
-            SavePanelManager.SaveMode.Backup => profileBackup != null ? $"{profileBackup.GetProfileName()}?" : PROFILE_EMPTY_STRING,
-            _ => PROFILE_EMPTY_STRING,
+            SavePanelManager.SaveMode.Normal => profile != null ? profile.GetProfileName() : this.GetLocalizedSingle("ProfileEmpty"),
+            SavePanelManager.SaveMode.Delete => profile != null ? $"{profile.GetProfileName()}?" : this.GetLocalizedSingle("ProfileEmpty"),
+            SavePanelManager.SaveMode.Backup => profileBackup != null ? $"{profileBackup.GetProfileName()}?" : this.GetLocalizedSingle("ProfileEmpty"),
+            _ => this.GetLocalizedSingle("ProfileEmpty"),
         };
     }
 
@@ -247,4 +252,5 @@ public class MainMenuSaveButton : MonoBehaviour
             savePanelManager.SetMode(SavePanelManager.SaveMode.Normal);
         }
     }
+
 }

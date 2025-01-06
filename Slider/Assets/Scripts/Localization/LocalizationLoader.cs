@@ -1,15 +1,26 @@
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using LocalizationFile = Localization.LocalizationFile;
-
-public class LocalizationLoader : Singleton<LocalizationLoader>
+public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTrackable
 {
+    internal static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
+    internal static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : SettingsManager.Setting<string>(Settings.Locale).CurrentValue;
+
+    internal static ILocalizationTrackable.LocalizationState CurrentSetting => new ILocalizationTrackable.LocalizationState
+    {
+        locale = CurrentLocale,
+        usePixelFont = UsePixelFont
+    };
+    
     [SerializeField]
     private TMP_FontAsset localizationFontPixelBig;
     [SerializeField]
@@ -18,103 +29,119 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private TMP_FontAsset localizationFontNonPixelBig;
     [SerializeField]
     private TMP_FontAsset localizationFontNonPixelSmall;
-    
-    private static TMP_FontAsset LocalizationFontPixelBig => _instance.localizationFontPixelBig;
-    private static TMP_FontAsset LocalizationFontPixelSmall => _instance.localizationFontPixelSmall;
-    private static TMP_FontAsset LocalizationFontNonPixelBig => _instance.localizationFontNonPixelBig;
-    private static TMP_FontAsset LocalizationFontNonPixelSmall => _instance.localizationFontNonPixelSmall;
 
-    public static TMP_FontAsset LocalizationFont(string originalFamilyName)
+    public static bool TryLoadFont(string originalFamilyName, LocalizableContext.StyleChange target,
+        out TMP_FontAsset font) => _instance.TryLoadFont_Impl(originalFamilyName, target, out font);
+
+    private bool TryLoadFont_Impl(string originalFamilyName, LocalizableContext.StyleChange target, out TMP_FontAsset font)
     {
-        var big = BigFontFamilyNames.Contains(originalFamilyName);
-        if (UsePixelFont)
+        if (originalFamilyName == null || !OriginalFonts.TryGetValue(originalFamilyName, out var desc))
         {
-            if (big)
-            {
-                return LocalizationFontPixelBig;
-            }
-            else
-            {
-                return LocalizationFontPixelSmall;
-            }
+            font = null;
+            return false;
+        }
+
+        if (target == LocalizableContext.StyleChange.Idle)
+        {
+            throw new Exception("Nonsense code path");
+        }
+
+        if (target == LocalizableContext.StyleChange.DefaultPixel)
+        {
+            font = desc.tmpFont;
+            return true;
+        }
+
+        if (desc.isBig)
+        {
+            font = target == LocalizableContext.StyleChange.LocalizedPixel ? localizationFontPixelBig : localizationFontNonPixelBig;
         }
         else
         {
-            if (big)
-            {
-                return LocalizationFontNonPixelBig;
-            }
-            else
-            {
-                return LocalizationFontNonPixelSmall;
-            }
+            font = target == LocalizableContext.StyleChange.LocalizedPixel ? localizationFontPixelSmall : localizationFontNonPixelSmall;
         }
-    }
-    
-    [SerializeField]
-    private TMP_FontAsset[] BigFonts;
 
-    private static HashSet<string> BigFontFamilyNames
+        return true;
+    }
+
+    [System.Serializable]
+    public struct SliderFontDescriptor
     {
-        get
-        {
-            if (_instance._bigFontFamilyNames == null)
-            {
-                _instance._bigFontFamilyNames = _instance.BigFonts.Select(f => f.faceInfo.familyName).ToHashSet();
-            }
-
-            return _instance._bigFontFamilyNames;
-        }
+        public TMP_FontAsset tmpFont;
+        public bool isBig;
     }
-    
-    private HashSet<string> _bigFontFamilyNames = null;
 
-    public static bool UsePixelFont => SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
+    [SerializeField] public SliderFontDescriptor[] originalFonts;
 
-    private LocalizationFile localeGlobalFile;
-    
+    private Dictionary<string, SliderFontDescriptor> OriginalFonts => m_originalFonts.Value;
+    private Lazy<Dictionary<string, SliderFontDescriptor>> m_originalFonts = new (() =>
+    {
+        return _instance.originalFonts.ToDictionary(f => f.tmpFont.name, f=>f);
+    });
+
+    internal LocalizationFile LocaleGlobalFile;
+
+    ILocalizationTrackable.LocalizationState ILocalizationTrackable.LastLocalizedState => _lastLocalizedState;
+    private ILocalizationTrackable.LocalizationState _lastLocalizedState = ILocalizationTrackable.DefaultState;
+
     private void Awake()
     {
         InitializeSingleton();
     }
 
+    private LocalizableContext SceneCtx(Scene current)
+    {
+        if (current != _scene)
+        {
+            _scene = current;
+            _sceneCtx = LocalizableContext.ForSingleScene(current);
+        }
+
+        return _sceneCtx;
+    }
+    private Scene? _scene;
+    private LocalizableContext _sceneCtx;
+
+    private LocalizableContext PersistentCtx(Scene current)
+    {
+        if (current != _persistent)
+        {
+            _persistent = current;
+            _persistentCtx = LocalizableContext.ForSingleScene(current);
+        }
+
+        return _persistentCtx;
+    }
+    private Scene? _persistent;
+    private LocalizableContext _persistentCtx;
+
     private void Start()
     {
-        RefreshLocalization(SceneManager.GetActiveScene());
-
+        RefreshLocalization();
         SceneManager.activeSceneChanged += (_, to) =>
         {
-            RefreshLocalization(to);
+            _lastLocalizedState = ILocalizationTrackable.DefaultState;
+            RefreshLocalization();
         };
     }
-
-    public static void RefreshLocalization()
-    {
-        if (_instance != null)
-        {
-            _instance.RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
-        }
-    }
-    
-    public static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : SettingsManager.Setting<string>(Settings.Locale).CurrentValue;
 
     #region SpecificTypes
 
     public static string LoadAreaDiscordTranslation(Area area)
-        => LoadTranslatedString(SpecificTypeHelpers.AreaToDiscordNamePath(area), area.ToString());
+        => _instance.LoadTranslatedString(LocalizableContext.AreaToDiscordNamePath(area), area.ToString());
     
     public static string LoadAreaDisplayName(Area area)
-        => LoadTranslatedString(SpecificTypeHelpers.AreaToDisplayNamePath(area), area.ToString());
+        => _instance.LoadTranslatedString(LocalizableContext.AreaToDisplayNamePath(area), area.ToString());
     
     public static string LoadJungleShapeTranslation(string shapeName)
-        => LoadTranslatedString(SpecificTypeHelpers.JungleShapeToPath(shapeName), shapeName);
+        => _instance.LoadTranslatedString(LocalizableContext.JungleShapeToPath(shapeName), shapeName);
 
     public static string LoadCollectibleTranslation(string name, Area area)
-        => LoadTranslatedString(SpecificTypeHelpers.CollectibleToPath(name, area), name);
+        => _instance.LoadTranslatedString(LocalizableContext.CollectibleToPath(name, area), name);
 
-    private static string LoadTranslatedString(string path, string fallback)
+    private string LoadTranslatedString(string path, string fallback)
     {
-        var file = _instance.localeGlobalFile;
+        var file = _instance.LocaleGlobalFile;
         if (file == null)
         {
             return fallback;
@@ -134,77 +161,119 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     /// Null on English, for everything else defaults to 'Anonymous' if not specified.
     /// </summary>
     /// <returns></returns>
-    private static string GetCreditInformation() =>
-        CurrentLocale == LocalizationFile.DefaultLocale ? null : _instance.localeGlobalFile.GetConfigValue(LocalizationFile.Config.Author);
+    internal string GetCreditInformation() =>
+        CurrentLocale == LocalizationFile.DefaultLocale ? null : _instance.LocaleGlobalFile.GetConfigValue(LocalizationFile.Config.Author);
+
+    public static (LocalizationFile global, LocalizationFile context)
+        LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath) =>
+        _instance.LoadAssetAndConfigureLocaleDefaults_Impl(locale, sceneLocalizationFilePath);
     
-    private static (LocalizationFile global, LocalizationFile context) LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath, LocalizationFile existingGlobal = null)
+    private (LocalizationFile global, LocalizationFile context) 
+        LoadAssetAndConfigureLocaleDefaults_Impl(string locale, string sceneLocalizationFilePath)
     {
-        LocalizationFile globalFile;
-        
-        if ((existingGlobal?.LocaleName ?? "") != locale)
+        string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
+        if (!assetCache.TryGetValue(localeConfigFilePath, out var globalFile))
         {
-            string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
-            var (localeConfigFile, errorLocale) = LocalizationFile.MakeLocalizationFile(locale, localeConfigFilePath);
-            if (localeConfigFile == null)
-            {
-                LocalizationFile.PrintParserError(errorLocale, localeConfigFilePath);
-                return (null, null);
-            }
-            globalFile = localeConfigFile;
+            globalFile = LoadGlobalFile(locale, localeConfigFilePath).Result;
+        }
+
+        if (!assetCache.TryGetValue(sceneLocalizationFilePath, out var unitFile))
+        {
+            unitFile = LoadUnitFile(locale, sceneLocalizationFilePath, globalFile).Result;
+        }
+        return (globalFile, unitFile ?? globalFile); // AT: this is purely for stylistics like non-pixel in dev scenes, won't be hit since all build scenes will have CSV
+    }
+
+    public static void RefreshLocalization() => _instance.RefreshLocalization_Impl();
+    
+    private void RefreshLocalization_Impl()
+    {
+        StopAllCoroutines();
+        StartCoroutine(LoadAllLocaleFilesNextFrame(CurrentSetting.locale));
+        
+        // var w = new System.Diagnostics.Stopwatch();
+        // w.Start();
+        
+        var scene = SceneManager.GetActiveScene();
+        var strategy = (this as ILocalizationTrackable).TrackLocalization(CurrentSetting);
+        if (strategy is { ShouldTranslate: false, StyleChange: LocalizableContext.StyleChange.Idle })
+        {
+            Debug.Log($"[Localization] Skip localization of {this}");
+            _lastLocalizedState = CurrentSetting;
+            return;
+        }
+        
+        var locale = CurrentLocale;
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults_Impl(locale, LocalizationFile.AssetPath(locale, scene));
+        if (loadedAsset.context == null)
+        {
+            return;
+        }
+        LocaleGlobalFile = loadedAsset.global;
+        
+        SceneCtx(scene).Localize(loadedAsset.context, strategy);
+        PersistentCtx(GameManager.instance.gameObject.scene).Localize(loadedAsset.context, strategy);
+        _lastLocalizedState = CurrentSetting;
+        
+        // w.Stop();
+        // Debug.Log($"[Localization] Elapsed time {w.Elapsed.TotalMilliseconds}ms");
+    }
+
+    private ConcurrentDictionary<string, LocalizationFile> assetCache = new();
+
+    async Task<LocalizationFile> LoadGlobalFile(string locale, string fullPath)
+    {
+        var (localeConfigFile, errorLocale) = await LocalizationFile.MakeLocalizationFile(locale, fullPath);
+        if (localeConfigFile == null)
+        {
+            LocalizationFile.PrintParserError(errorLocale, fullPath);
         }
         else
         {
-            globalFile = existingGlobal;
+            Debug.Log($"[Localization] ... cache miss: load file {fullPath}");
+            assetCache.TryAdd(fullPath, localeConfigFile);
         }
-        
-        var (sceneLocalizationFile, errorScene) = LocalizationFile.MakeLocalizationFile(locale, sceneLocalizationFilePath, globalFile);
+        return localeConfigFile;
+    }
+
+    async Task<LocalizationFile> LoadUnitFile(string locale, string fullPath, LocalizationFile localeConfigFile)
+    {
+        var (sceneLocalizationFile, errorScene) = await LocalizationFile.MakeLocalizationFile(locale, fullPath, localeConfigFile);
         if (sceneLocalizationFile == null)
         {
-            LocalizationFile.PrintParserError(errorScene, sceneLocalizationFilePath);
+            LocalizationFile.PrintParserError(errorScene, fullPath);
         }
-        return (globalFile, sceneLocalizationFile ?? globalFile); // AT: this is purely for stylistics like non-pixel in dev scenes, won't be hit since all build scenes will have CSV
-    }
-    
-    private void RefreshLocalization(Scene scene)
-    {
-        var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene), localeGlobalFile);
-
-        localeGlobalFile = loadedAsset.global;
-        
-        if (loadedAsset.context != null)
+        else
         {
-            LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
-            LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
-            
-            bool isEnglish = loadedAsset.context.IsDefaultLocale;
-            var strategy = isEnglish
-                ? LocalizableContext.LocalizationStrategy.ChangeStyleOnly
-                : LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
-            
-            loaded.Localize(loadedAsset.context, strategy);
-            persistent.Localize(loadedAsset.context, strategy);
+            Debug.Log($"[Localization] on frame {Time.frameCount} cache miss: load file {fullPath}");
+            assetCache.TryAdd(fullPath, sceneLocalizationFile);
         }
+
+        return sceneLocalizationFile ?? localeConfigFile;
     }
 
-    public static void LocalizePrefab(GameObject target, GameObject variantParent)
+    private IEnumerator LoadAllLocaleFilesNextFrame(string locale)
     {
-        if (_instance == null)
+        Debug.Log($"[Localization] on frame {Time.frameCount} start background CSV loading for locale {locale}");
+        yield return new WaitForFixedUpdate();
+        
+        string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
+        if (!assetCache.TryGetValue(localeConfigFilePath, out var localeConfigFile))
         {
-            Debug.LogWarning($"Attempting to localize prefab {target} without a localization loader singleton");
-            // return;
+            var t = LoadGlobalFile(locale, localeConfigFilePath);
+            yield return new WaitUntil(() => t.IsCompleted);
+            localeConfigFile = t.Result;
         }
         
-        var locale = CurrentLocale;
-        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, variantParent), _instance?.localeGlobalFile);
-
-        if (loadedAsset.context != null)
+        foreach (var f in Directory.GetFiles(Path.GetDirectoryName(localeConfigFilePath)!, "*.csv",
+                     SearchOption.TopDirectoryOnly))
         {
-            bool isEnglish = loadedAsset.context.IsDefaultLocale;
-            var strategy = isEnglish
-                ? LocalizableContext.LocalizationStrategy.ChangeStyleOnly
-                : LocalizableContext.LocalizationStrategy.TranslateTextAndChangeStyle;
-            LocalizableContext.ForSinglePrefab(target).Localize(loadedAsset.context, strategy);
+            if (assetCache.ContainsKey(f))
+            {
+                continue;
+            }
+            var t = LoadUnitFile(locale, f, localeConfigFile);
+            yield return new WaitUntil(() => t.IsCompleted);
         }
     }
 }

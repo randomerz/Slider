@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
 using Localization;
 using UnityEngine;
 
 #if UNITY_EDITOR
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -222,7 +220,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            return null;
        }
 
-       var (referenceFile, err) = LocalizationFile.MakeLocalizationFile(locale.name, path);
+       var (referenceFile, err) = LocalizationFile.MakeLocalizationFile(locale.name, path).Result;
        if (referenceFile == null)
        {
            LocalizationFile.PrintParserError(err, path);
@@ -300,16 +298,16 @@ public class LocalizationSkeletonGenerator : EditorWindow
            .Select(AssetDatabase.LoadAssetAtPath<Shape>);
 
        var globalStrings = 
-           shapes.ToDictionary(s => SpecificTypeHelpers.JungleShapeToPath(s.shapeName), s => s.shapeName);
+           shapes.ToDictionary(s => LocalizableContext.JungleShapeToPath(s.shapeName), s => s.shapeName);
 
        foreach (var kv in Areas.DiscordNames)
        {
-           globalStrings.Add(SpecificTypeHelpers.AreaToDiscordNamePath(kv.Key), kv.Value);
+           globalStrings.Add(LocalizableContext.AreaToDiscordNamePath(kv.Key), kv.Value);
        }
        
        foreach (var kv in Areas.DisplayNames)
        {
-           globalStrings.Add(SpecificTypeHelpers.AreaToDisplayNamePath(kv.Key), kv.Value);
+           globalStrings.Add(LocalizableContext.AreaToDisplayNamePath(kv.Key), kv.Value);
        }
 
        if (root == null)
@@ -324,17 +322,18 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
        foreach (var prefab in projectConfiguration.RelevantPrefabs)
        {
-           var skeleton = LocalizableContext.ForSinglePrefab(prefab);
+           var injector = prefab.GetComponent<LocalizationInjector>();
+           var skeleton = LocalizableContext.ForInjector(injector);
            
            foreach (var locale in projectConfiguration.InitialLocales)
            {
                WriteAndCopyIf(
-                   ForceParentPath(LocalizationFile.AssetPath(locale.name, prefab, tempDirectory)),
-                   ForceParentPath(LocalizationFile.AssetPath(locale.name, prefab)),
+                   ForceParentPath(LocalizationFile.AssetPath(locale.name, injector, tempDirectory)),
+                   ForceParentPath(LocalizationFile.AssetPath(locale.name, injector)),
                    (tw) => skeleton.Serialize(
                        serializeConfigurationDefaults: false,
                        tw: tw,
-                       referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot)),
+                       referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, injector, referenceRoot)),
                        autoPadTranslated: locale.name == LocalizationFile.TestingLanguage ? "_ho_"  : null
                        ),
                    localeIsValid[locale.name] && root == null);

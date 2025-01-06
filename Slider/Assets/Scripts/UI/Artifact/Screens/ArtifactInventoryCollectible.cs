@@ -24,7 +24,7 @@ public class ArtifactInventoryCollectible : MonoBehaviour
 
     public void UpdateInventoryName()
     {
-        inventory.UpdateText(displayName);
+        inventory.UpdateText(LocalizationLoader.LoadCollectibleTranslation(collectibleName, SGrid.Current.GetArea()));
     }
 
     private void OnEnable()

@@ -1,13 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 
-public class EndOfGameManager : MonoBehaviour
+public class EndOfGameManager : MonoBehaviour, IDialogueTableProvider
 {
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<string, string>
+        {
+            { "ending", "Reunited with <cat/>!" }
+        });
+    
     [System.Serializable]
     public struct ParallaxPlane
     {
@@ -38,7 +45,7 @@ public class EndOfGameManager : MonoBehaviour
     private System.IDisposable listener;
     private AsyncOperation sceneLoad;
 
-    private float time;
+    private float time = -1.0f;
 
     private void OnDisable() 
     {
@@ -47,7 +54,15 @@ public class EndOfGameManager : MonoBehaviour
 
     public void Start()
     {
-        time = SaveSystem.Current.GetPlayTimeInSeconds();
+        if (SaveSystem.Current != null)
+        {
+            time = SaveSystem.Current.GetPlayTimeInSeconds();
+        }
+        else
+        {
+            Debug.LogError("Couldn't load save profile.");
+        }
+        
         UpdateTexts();
         StartCoroutine(AnimateEndScene());
     }
@@ -67,13 +82,20 @@ public class EndOfGameManager : MonoBehaviour
 
     public void UpdateTexts()
     {
-        if (SaveSystem.Current == null)
+        if (LocalizationLoader.CurrentLocale != LocalizationFile.DefaultLocale)
         {
-            Debug.LogError("Couldn't load save profile.");
-            return;
+            var localizedEnding = IDialogueTableProvider.Interpolate(this.GetLocalizedSingle("ending"), new Dictionary<string, string>()
+            {
+                { "cat", SaveSystem.Current?.GetProfileName() ?? "Boomo" }
+            });
+            
+            nameText.SetText(localizedEnding);
         }
-
-        nameText.SetText($"{SaveSystem.Current.GetProfileName()}!");
+        else
+        {
+            nameText.SetText((SaveSystem.Current?.GetProfileName() ?? "Boomo") + "!");
+        }
+        
         TimeSpan ts = TimeSpan.FromSeconds(time);
         timeText.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}:{3:D3}",
@@ -103,13 +125,16 @@ public class EndOfGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(PARALLAX_ANIMATION_DURATION - 0.25f - 1.5f);
 
-        StartCoroutine(FadeAnimation(canvasGroupReunited));
+        if (LocalizationLoader.CurrentLocale == LocalizationFile.DefaultLocale)
+        {
+            StartCoroutine(FadeAnimation(canvasGroupReunited));
 
-        yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+            yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
 
-        StartCoroutine(FadeAnimation(canvasGroupWith));
+            StartCoroutine(FadeAnimation(canvasGroupWith));
 
-        yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+            yield return new WaitForSeconds(FADE_INBETWEEN_DURATION);
+        }
 
         StartCoroutine(FadeAnimation(canvasGroupBoomo));
 

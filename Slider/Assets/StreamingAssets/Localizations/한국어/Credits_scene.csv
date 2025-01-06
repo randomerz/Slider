@@ -20,7 +20,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 "IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
 "Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
 "Path","Orig","Translation","Metadata",
-"BG Text Daniel and VGDev/Text/Text","A Game by 
+"BG Text Daniel and VGDev/Text","A Game by 
 
 Daniel Carr 
 
@@ -32,134 +32,22 @@ Daniel Carr
 
 and 
 
-VGDev","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Daniel and VGDev/Text/Text Outline (1)","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Daniel and VGDev/Text/Text Outline (2)","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Daniel and VGDev/Text/Text Outline (3)","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Daniel and VGDev/Text/Text Outline (4)","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","A Game by 
-
-Daniel Carr 
-
-and 
-
-VGDev","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Thank you/Text/Text","Thank you
+VGDev","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
+"BG Text Thank you/Text","Thank you
 
 for playing!","플레이해 주셔서
 
-감사합니다!","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Thank you/Text/Text Outline (1)","Thank you
-
-for playing!","플레이해 주셔서
-
-감사합니다!","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Thank you/Text/Text Outline (2)","Thank you
-
-for playing!","플레이해 주셔서
-
-감사합니다!","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Thank you/Text/Text Outline (3)","Thank you
-
-for playing!","플레이해 주셔서
-
-감사합니다!","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"BG Text Thank you/Text/Text Outline (4)","Thank you
-
-for playing!","플레이해 주셔서
-
-감사합니다!","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"CreditsCanvas/Skip Prompt/Skip Prompt Text","Skip","건너뛰기","family:PixelTitanZero;size:54;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text","Art
+감사합니다!","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text","Allison Lu","Allison Lu","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)","Art
 Programming","아트
-프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (1)","Art
-Programming","아트
-프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (2)","Art
-Programming","아트
-프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (3)","Art
-Programming","아트
-프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (4)","Art
-Programming","아트
-프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text","Avery Greer","Avery Greer","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (1)","Avery Greer","Avery Greer","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (2)","Avery Greer","Avery Greer","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (3)","Avery Greer","Avery Greer","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (4)","Avery Greer","Avery Greer","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text","Programming
+프로그래밍","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)","Avery Greer","Avery Greer","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)","Programming
 Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text","Allison Lu","Allison Lu","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (1)","Allison Lu","Allison Lu","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (2)","Allison Lu","Allison Lu","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (3)","Allison Lu","Allison Lu","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (4)","Allison Lu","Allison Lu","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text","Nathaniel Koehler
+오디오","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Art TIle/WorldCanvas/Text","Additional Art","추가 아트","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)","Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
@@ -171,315 +59,50 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (1)","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (2)","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (3)","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (4)","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","Nathaniel Koehler
-Elizabeth Liu
-Cynthia Peng
-Gazal Mathur
-Mike Wang
-Esther Moon
-Nia Bellamy","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text","Additional Art","추가 아트","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (1)","Additional Art","추가 아트","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (2)","Additional Art","추가 아트","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (3)","Additional Art","추가 아트","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (4)","Additional Art","추가 아트","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (1)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (2)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (3)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)/Text Outline (4)","Additional sound from ZapSplat and SFXR","추가 사운드 
-from ZapSplat and SFXR","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+Nia Bellamy","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Audio tile/WorldCanvas/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
 ","Firelight Technologies Pty Ltd
 FMOD Studio를 사용하여 제작.
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (1)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (2)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (3)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text/Text Outline (4)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","Firelight Technologies Pty Ltd
-FMOD Studio를 사용하여 제작.
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text","Project Lead","프로젝트 리드","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (1)","Project Lead","프로젝트 리드","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (2)","Project Lead","프로젝트 리드","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (3)","Project Lead","프로젝트 리드","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (4)","Project Lead","프로젝트 리드","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text","Daniel Carr","Daniel Carr","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (1)","Daniel Carr","Daniel Carr","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (2)","Daniel Carr","Daniel Carr","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (3)","Daniel Carr","Daniel Carr","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (4)","Daniel Carr","Daniel Carr","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text","Programming 
+","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Audio tile/WorldCanvas/Text (1)","Additional sound from ZapSplat and SFXR","추가 사운드 
+from ZapSplat and SFXR","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text","Daniel Carr","Daniel Carr","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)","Project Lead","프로젝트 리드","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Chase Tile/WorldCanvas/Text","Chase O'Brien","Chase O'Brien","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)","Programming 
 Design
 Tech Art
 Marketing","프로그래밍 
 디자인
 아트 기술지원
-마케팅","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming 
-Design
-Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming 
-Design
-Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming 
-Design
-Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming 
-Design
-Tech Art
-Marketing","프로그래밍 
-디자인
-아트 기술지원
-마케팅","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text","Chase O'Brien","Chase O'Brien","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (1)","Chase O'Brien","Chase O'Brien","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (2)","Chase O'Brien","Chase O'Brien","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (3)","Chase O'Brien","Chase O'Brien","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (4)","Chase O'Brien","Chase O'Brien","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text","Music
+마케팅","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text","Eli Corley","Eli Corley","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)","Music
 Art","음악
-아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (1)","Music
-Art","음악
-아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (2)","Music
-Art","음악
-아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (3)","Music
-Art","음악
-아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)/Text Outline (4)","Music
-Art","음악
-아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text","Travis Bittel","Travis Bittel","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (1)","Travis Bittel","Travis Bittel","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (2)","Travis Bittel","Travis Bittel","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (3)","Travis Bittel","Travis Bittel","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)/Text Outline (4)","Travis Bittel","Travis Bittel","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text","Eli Corley","Eli Corley","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (1)","Eli Corley","Eli Corley","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (2)","Eli Corley","Eli Corley","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (3)","Eli Corley","Eli Corley","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text/Text Outline (4)","Eli Corley","Eli Corley","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text","Music","음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music","음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music","음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music","음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music","음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text","Alan Tao","Alan Tao","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (1)","Alan Tao","Alan Tao","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (2)","Alan Tao","Alan Tao","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (3)","Alan Tao","Alan Tao","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (4)","Alan Tao","Alan Tao","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
-Audio","프로그래밍
-오디오","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text","Ethan 
+아트","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)","Travis Bittel","Travis Bittel","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)","Programming","프로그래밍","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text","Ethan 
 Aristanto","Ethan 
-Aristanto","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (1)","Ethan 
-Aristanto","Ethan 
-Aristanto","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (2)","Ethan 
-Aristanto","Ethan 
-Aristanto","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (3)","Ethan 
-Aristanto","Ethan 
-Aristanto","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (4)","Ethan 
-Aristanto","Ethan 
-Aristanto","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text","Programming
+Aristanto","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)","Music","음악","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)","Alan Tao","Alan Tao","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)","Programming
+Audio","프로그래밍
+오디오","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text","Drew Busch","Drew Busch","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)","Programming
 Design
 Music","프로그래밍
-디자인
-음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
-Design
-Music","프로그래밍
-디자인
-음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
-Design
-Music","프로그래밍
-디자인
-음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
-Design
-Music","프로그래밍
-디자인
-음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
-Design
-Music","프로그래밍
-디자인
-음악","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text","Elliot Chen","Elliot Chen","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (1)","Elliot Chen","Elliot Chen","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (2)","Elliot Chen","Elliot Chen","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (3)","Elliot Chen","Elliot Chen","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (4)","Elliot Chen","Elliot Chen","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text","Drew Busch","Drew Busch","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (1)","Drew Busch","Drew Busch","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (2)","Drew Busch","Drew Busch","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (3)","Drew Busch","Drew Busch","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (4)","Drew Busch","Drew Busch","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text","Programming
+오디오","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)","Elliot Chen","Elliot Chen","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)","Programming","프로그래밍","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Logan Tile/WorldCanvas/Text","Logan Bowers","Logan Bowers","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)","Programming
 Tech Art","프로그래밍
-아트 기술지원","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
-Tech Art","프로그래밍
-아트 기술지원","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
-Tech Art","프로그래밍
-아트 기술지원","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
-Tech Art","프로그래밍
-아트 기술지원","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
-Tech Art","프로그래밍
-아트 기술지원","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text","Logan Bowers","Logan Bowers","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (1)","Logan Bowers","Logan Bowers","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (2)","Logan Bowers","Logan Bowers","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (3)","Logan Bowers","Logan Bowers","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (4)","Logan Bowers","Logan Bowers","family:PixelTitanOne;size:1;lineSpacing:-32;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text","Kate Tran 
+아트 기술지원","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Other Tile/WorldCanvas/Text","Additional Contributions","추가 기여","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)","Kate Tran 
 Jimmy Huang
 Maddie King
 Sudarshan Srinivasan
@@ -491,110 +114,14 @@ Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
 Rithvik Maladi
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (1)","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (2)","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (3)","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (4)","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","Kate Tran 
-Jimmy Huang
-Maddie King
-Sudarshan Srinivasan
-Vu Nguyen
-Rithvik Maladi
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text","Additional Contributions","추가 기여","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (1)","Additional Contributions","추가 기여","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (2)","Additional Contributions","추가 기여","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (3)","Additional Contributions","추가 기여","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (4)","Additional Contributions","추가 기여","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text","Jamie Lee","Jamie Lee","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (1)","Jamie Lee","Jamie Lee","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (2)","Jamie Lee","Jamie Lee","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (3)","Jamie Lee","Jamie Lee","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)/Text Outline (4)","Jamie Lee","Jamie Lee","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (1)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (2)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (3)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)/Text Outline (4)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (1)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (2)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (3)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)/Text Outline (4)","Programming","프로그래밍","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text","Pawan 
+","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text","Pawan 
 Jayakumar","Pawan 
-Jayakumar","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (1)","Pawan 
-Jayakumar","Pawan 
-Jayakumar","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (2)","Pawan 
-Jayakumar","Pawan 
-Jayakumar","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (3)","Pawan 
-Jayakumar","Pawan 
-Jayakumar","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text/Text Outline (4)","Pawan 
-Jayakumar","Pawan 
-Jayakumar","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text","Koushik Thiyagarajan
+Jayakumar","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)","Jamie Lee","Jamie Lee","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)","Art","아트","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)","Programming","프로그래밍","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
@@ -603,53 +130,9 @@ Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
 Muskaan Gupta
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (1)","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (2)","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (3)","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (4)","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta","Koushik Thiyagarajan
-Kristian Chappell
-Aneesh Boreda
-Kenneth Wang
-Muskaan Gupta
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","추가 프로그래밍","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text","Reinart Realina
+","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)","Additional Programming","추가 프로그래밍","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text","Reinart Realina
 Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
@@ -659,118 +142,85 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (1)","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (2)","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (3)","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (4)","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","Reinart Realina
-Thomas Dayton
-Nicolas Cai
-Tristan Ziegler
-Zhenyu Wu
-Steven Jia","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (1)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (2)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (3)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)/Text Outline (4)","Art","아트","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text","Max Zhang","Max Zhang","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (1)","Max Zhang","Max Zhang","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (2)","Max Zhang","Max Zhang","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (3)","Max Zhang","Max Zhang","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)/Text Outline (4)","Max Zhang","Max Zhang","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text","Design","디자인","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (1)","Design","디자인","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (2)","Design","디자인","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (3)","Design","디자인","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)/Text Outline (4)","Design","디자인","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text","Sara Inani","Sara Inani","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (1)","Sara Inani","Sara Inani","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (2)","Sara Inani","Sara Inani","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (3)","Sara Inani","Sara Inani","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text/Text Outline (4)","Sara Inani","Sara Inani","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue","","","family:TinyUnicode;size:1;lineSpacing:-45;",
-"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue BG Font","","","family:PixelUnicodeFill;size:1;lineSpacing:-66;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text","Mark Brown
+Steven Jia","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)","Additional Programming","추가 프로그래밍","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text","Sara Inani","Sara Inani","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)","Art","아트","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)","Max Zhang","Max Zhang","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)","Design","디자인","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text","Special Thanks","Special Thanks","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)","Mark Brown
 Beth O'Brien
 Playtesters
 ","Mark Brown
 Beth O'Brien
-플레이테스터
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (1)","Mark Brown
-Beth O'Brien
 Playtesters
-","Mark Brown
-Beth O'Brien
-플레이테스터
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (2)","Mark Brown
-Beth O'Brien
-Playtesters
-","Mark Brown
-Beth O'Brien
-플레이테스터
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (3)","Mark Brown
-Beth O'Brien
-Playtesters
-","Mark Brown
-Beth O'Brien
-플레이테스터
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (4)","Mark Brown
-Beth O'Brien
-Playtesters
-","Mark Brown
-Beth O'Brien
-플레이테스터
-","family:PixelTitanZero;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text","Special Thanks","Special Thanks","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (1)","Special Thanks","Special Thanks","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (2)","Special Thanks","Special Thanks","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (3)","Special Thanks","Special Thanks","family:PixelTitanOne;size:1;lineSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (4)","Special Thanks","Special Thanks","family:PixelTitanOne;size:1;lineSpacing:0;",
+","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",

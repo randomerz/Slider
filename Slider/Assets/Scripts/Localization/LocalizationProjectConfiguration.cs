@@ -79,7 +79,19 @@ public class LocalizationProjectConfiguration : ScriptableObject
             .Where(go =>
             {
                 var injector =  go.GetComponent<LocalizationInjector>();
-                return injector != null && injector.prefabVariantParent == null; // TODO: actually handle variants as parent-child files, this just skips over variants
+                if (injector != null)
+                {
+                    if (string.IsNullOrEmpty(injector.prefabName))
+                    {
+                        Debug.LogError($"Unnamed prefab: {go.name}");
+                    }
+                    
+                    // prefab variant = self means to localize this prefab
+                    // prefab variant = some other prefab means to base localization off of that other object's file
+                    // TODO: there is current no "in addition to parent" mode
+                    return injector.prefabName == go.name;
+                }
+                return false;
             });
     }
 
@@ -96,7 +108,7 @@ public class LocalizationProjectConfiguration : ScriptableObject
         }
     }
     
-    private IEnumerable<GameObject> relevantPrefabs = null;
+    internal IEnumerable<GameObject> relevantPrefabs = null;
     #endif
 
     public IEnumerable<LocaleConfiguration> InitialLocales => initialLocales;
@@ -133,15 +145,20 @@ public class LocalizationProjectConfigurationEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if (target == null || target is not LocalizationProjectConfiguration)
+        if (target == null || target is not LocalizationProjectConfiguration targetCasted)
         {
             return;
         }
 
         GUILayout.Label($"Project contains following prefabs with the LocalizationInjector component");
-        foreach (var prefab in (target as LocalizationProjectConfiguration).RelevantPrefabs)
+        foreach (var prefab in targetCasted.RelevantPrefabs)
         {
             GUILayout.Label($" - {prefab.name}");
+        }
+
+        if (GUILayout.Button("Scan project prefabs"))
+        {
+            targetCasted.relevantPrefabs = null;
         }
 
         if (GUILayout.Button("Generate"))

@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
-public class CameraDolly : MonoBehaviour, IDialogueTableProvider
+public class CameraDolly : MonoBehaviour
 {
     public System.EventHandler<System.EventArgs> OnRollercoasterEnd;
 
@@ -25,19 +25,6 @@ public class CameraDolly : MonoBehaviour, IDialogueTableProvider
     [SerializeField] private TextMeshProUGUI skipPromptText;
     [SerializeField] private float holdDurationToSkip = 1f;
     [SerializeField] private AnimationCurve holdAnimationCurve;
-
-    #region Localization    
-    enum SkipType
-    {
-        Default
-    }
-    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
-        IDialogueTableProvider.InitializeTable(
-            new Dictionary<SkipType, string>
-            {
-                { SkipType.Default, "Skip" }
-            });
-    #endregion
     
     protected void Awake()
     {
@@ -65,7 +52,7 @@ public class CameraDolly : MonoBehaviour, IDialogueTableProvider
     private void InitializeSkipPrompt()
     {
         // skipPromptText.text = $"Hold {Controls.GetBindingDisplayString(Controls.Bindings.Player.Action, onlyShowKey: true)} to Skip";
-        skipPromptText.text = this.GetLocalizedSingle(SkipType.Default);
+        // skipPromptText.text = this.GetLocalizedSingle(SkipType.Default);
         skipPromptSlider.value = 0;
         skipPromptSlider.gameObject.SetActive(true);
     }
