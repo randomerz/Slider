@@ -4,14 +4,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Toggle))]
 public class PixelFontToggleLogic : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject popup;
-    
-    private void OnEnable()
-    {
-        popup.SetActive(false);
-    }
-
     public void OnToggle(bool toggleIsOn)
     {
         if (!toggleIsOn)
