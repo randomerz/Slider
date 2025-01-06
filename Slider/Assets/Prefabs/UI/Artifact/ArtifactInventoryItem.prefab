@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 1672315345637136594}
   - component: {fileID: 9092794674722146241}
   - component: {fileID: 6252021077932262717}
+  - component: {fileID: 1547136286824135564}
   m_Layer: 5
   m_Name: ArtifactInventoryItem
   m_TagString: Untagged
@@ -298,3 +299,16 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1672315345637136594}
+--- !u!114 &1547136286824135564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4364494320633969430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  excludeFromTranslationOnly: 1

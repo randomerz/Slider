@@ -92,7 +92,7 @@ public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
 
         if (PlayerInventory.Contains("Legendary Cheese Burger", Area.MagiTech))
         {
-            breadgeCollectible.displayName = this.GetLocalizedSingle(ArtifactInventoryStrings.LegendaryCheeseburger);
+            breadgeCollectible.displayName = this.GetLocalizedSingle(breadgeCollectible.displayName);
             breadgeAnimator.SetBool("isOn", true);
         }
     }

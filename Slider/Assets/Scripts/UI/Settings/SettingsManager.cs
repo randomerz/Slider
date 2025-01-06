@@ -4,7 +4,6 @@ using System.Linq;
 using Localization;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// <para>
@@ -101,7 +100,9 @@ public class SettingsManager : MonoBehaviour
 
         RegisterAndLoadSetting(Settings.PixelFontEnabled,
             defaultValue: true,
-            onValueChanged: (pixelFontEnabled) => { });
+            onValueChanged: (pixelFontEnabled) =>
+            {
+            });
 
         RegisterAndLoadSetting(Settings.KeyboardOnly,
             defaultValue: false,

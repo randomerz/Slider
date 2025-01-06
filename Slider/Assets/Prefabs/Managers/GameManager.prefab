@@ -180,19 +180,15 @@ MonoBehaviour:
   UICanvasPrefab:
     prefab: {fileID: 5049116215420832315, guid: 898b250fe0c06464293cf5013d6eb685, type: 3}
     activeInMenuScenes: 0
-    containsLocalizable: 0
   UIEffectsPrefab:
     prefab: {fileID: 7648707882233313094, guid: 6246f5caa1e6cac46969239c5a944200, type: 3}
     activeInMenuScenes: 1
-    containsLocalizable: 0
   DebugCanvasPrefab:
     prefab: {fileID: 3240447105416965922, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
     activeInMenuScenes: 1
-    containsLocalizable: 0
   SceneTransitionOverlayPrefab:
     prefab: {fileID: 3600424238744718540, guid: 59e7490e38c44a74886316dac45c29fd, type: 3}
     activeInMenuScenes: 1
-    containsLocalizable: 0
 --- !u!114 &7033424637333634368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +273,25 @@ MonoBehaviour:
   localizationFontPixelSmall: {fileID: 11400000, guid: 8e981fa73b13c124fab49ef26c4bb8fc, type: 2}
   localizationFontNonPixelBig: {fileID: 11400000, guid: 48a3ac123a89f07439aca826eb713b5a, type: 2}
   localizationFontNonPixelSmall: {fileID: 11400000, guid: e595f55111b3c134e8482af17ce1e6b6, type: 2}
+  originalFonts:
+  - tmpFont: {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
+    isBig: 1
+  - tmpFont: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
+    isBig: 1
+  - tmpFont: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
+    isBig: 1
+  - tmpFont: {fileID: 11400000, guid: fdb7ca4523a2686409c6d5adb3a9da03, type: 2}
+    isBig: 1
+  - tmpFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    isBig: 1
+  - tmpFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+    isBig: 1
+  - tmpFont: {fileID: 11400000, guid: f060758f1d98c1249912bb6ec7edf385, type: 2}
+    isBig: 0
+  - tmpFont: {fileID: 11400000, guid: f46a94f8999c4a5438046a90dccf8a75, type: 2}
+    isBig: 0
+  - tmpFont: {fileID: 11400000, guid: c7029ecf3a2b2c44b8c14e89e54a7682, type: 2}
+    isBig: 0
   BigFonts:
   - {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
   - {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}

@@ -484,9 +484,8 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
             // Instead in FMOD Bob's voice has the spatializer turned off
             // vocalizer.transform.position = currentTyperText.transform.position;
 
-            int maxPhonemes = 5;
-            
-            float totalDuration = vocalizer.SetText(toVocalize, NPCEmotes.Emotes.None, maxPhonemes);
+            float totalDuration = vocalizer.SetText(
+                toVocalize, NPCEmotes.Emotes.None, textSpeedMultiplier: 1.0f, maxPhonemes: 5);
         
             currentTyperText.SetTextSpeed(totalDuration / typed.Length);
         

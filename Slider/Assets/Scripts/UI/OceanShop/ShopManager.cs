@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using TMPro;
 
@@ -470,5 +471,4 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     }
 
     #endregion
-
 }
