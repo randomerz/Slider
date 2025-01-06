@@ -6,6 +6,8 @@ namespace SliderVocalization
 {
     public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceVocalizer>
     {
+        private const string DEFAULT_VOCALIZER_PRESET_NAME = "Default Vocalizer Preset";
+
         public VocalizerPreset preset;
         [SerializeField, HideInInspector] private string text;
         [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
@@ -17,6 +19,14 @@ namespace SliderVocalization
 
         private SentenceVocalizer _Current;
         private VocalizerCompositeState _state;
+
+        private void Awake() 
+        {
+            if (name == "Vocalizer" && preset.name == DEFAULT_VOCALIZER_PRESET_NAME && transform.parent != null)
+            {
+                Debug.LogWarning($"{transform.parent.name} is using the default localizer!");
+            }
+        }
 
         public static bool SoloSpeaker(VocalizableParagraph target, int maxConcurrent)
         {
