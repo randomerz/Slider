@@ -17,6 +17,7 @@ public class Rocket : MonoBehaviour
     public Animator supportAnimator;
     public GameObject rocketFlamesParent;
     public List<ParticleSystem> rocketParticles;
+    public PlayerActionHints hints;
 
     public SpriteRenderer playerSprite;
     public SpriteRenderer chadSprite;
@@ -43,6 +44,7 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator RocketCutscene()
     {
+        hints.DisableAllHints();
         playerSprite.gameObject.SetActive(false);
         chadSprite.enabled = false;
 

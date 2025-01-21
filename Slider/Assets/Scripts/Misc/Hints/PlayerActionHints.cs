@@ -44,10 +44,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
 
     private void OnDisable()
     {
-        foreach (Hint h in hintsList)
-        {
-            h.DisableHint();
-        }
+        DisableAllHints();
     }
 
     void Update()
@@ -79,6 +76,15 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         foreach (Hint h in hintsList)
             if (string.Equals(h.hintData.hintName, hint) && h.canDisableHint)
                 h.DisableHint();
+    }
+
+    // Force Disable all hints
+    public void DisableAllHints() 
+    {
+        foreach (Hint h in hintsList)
+        {
+            h.DisableHint();
+        }
     }
 
     //C: Allows the given hint to be disabled. Needed because multiple hints can be tied to the same action/button

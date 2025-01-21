@@ -52,6 +52,11 @@ public class UIHints : Singleton<UIHints>
 
     public void _AddHint(HintData hintData)
     {
+        if (hintList.Contains(hintData))
+        {
+            Debug.LogError($"[Hints] Warning: Tried adding hint \"{hintData.hintName}\" was added to UI list but was already in the list. Skipping");
+            return;
+        }
         hintList.Add(hintData);
         UpdateHint();
     }
