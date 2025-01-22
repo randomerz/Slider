@@ -36,7 +36,6 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
 
     private bool tilesAdjacent;
     private Vector2 chadStartLocal;
-    private Vector2 endPoint;
     private State raceState;
     private float startTime;
     private int dialogueCurrentTime;
@@ -117,7 +116,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
     // Start is called before the first frame update
     void Start()
     {
-        if(raceState == State.PlayerWon || raceState == State.RaceEnded)
+        if (raceState == State.PlayerWon || raceState == State.RaceEnded)
             return; 
 
         // Setting all the starting params
@@ -187,7 +186,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
                     ActivateSpeedLines(false);
                     raceState = State.Cheated;
                 } 
-                else if (transform.position.y <= endPoint.y) 
+                else if (transform.position.y <= finishingLine.position.y) 
                 {
                     MoveChad();
                 }
@@ -412,7 +411,6 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
             raceState != State.PlayerWon && 
             raceState != State.RaceEnded)
         {
-            endPoint = finishingLine.position;
             transform.parent = startStileTransform;
             transform.localPosition = chadStartLocal;
             startTime = Time.time;
@@ -445,8 +443,8 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
     {
         // Chad goes all the way in the x direction before going in the y direction
         // Assume that the target location is up and to the right of the starting point
-        Vector3 targetDirection = transform.position.x >= endPoint.x ? Vector3.up : Vector3.right;
-        transform.position += npcScript.speed * Time.deltaTime * targetDirection;
+        Vector3 targetDirection = transform.position.x >= finishingLine.position.x ? Vector3.up : Vector3.right;
+        transform.localPosition += npcScript.speed * Time.deltaTime * targetDirection;
 
         // Assigns chad's current parent to the objects of the stile that he is currently over
         if (SGrid.GetSTileUnderneath(gameObject) != null)

@@ -112,7 +112,7 @@ public class PipeLiquid : MonoBehaviour
         }
         Fill(endState);
         isFilling = false;
-        if(endState == Vector2.up)
+        if (endState == Vector2.up)
         {
             isFull = true;
             OnIsFull?.Invoke();
