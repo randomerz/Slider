@@ -24,11 +24,14 @@ public class UIHints : Singleton<UIHints>
         InitializeSingleton(this);
     }
 
-    // AT: entire UIEffect prefab is force respawned on every scene transition, UIHints will be destroyed every time
-    //     and there is no need to clear
     private void OnEnable()
     {
-        // SceneManager.activeSceneChanged += Clear;
+        SceneManager.activeSceneChanged += Clear;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.activeSceneChanged -= Clear;
     }
 
     private void Update() 
@@ -54,7 +57,7 @@ public class UIHints : Singleton<UIHints>
     {
         if (hintList.Contains(hintData))
         {
-            Debug.LogError($"[Hints] Warning: Tried adding hint \"{hintData.hintName}\" was added to UI list but was already in the list. Skipping");
+            Debug.LogError($"[Hints] Warning: Tried adding hint \"{hintData.hintName}\" to UI list but was already in the list. Skipping");
             return;
         }
         hintList.Add(hintData);
@@ -76,20 +79,20 @@ public class UIHints : Singleton<UIHints>
 
     public void _RemoveHint(string hintID)
     {
-        if(hintID.Equals("") && hintRemovalQueue.Count > 0)
+        if (hintID.Equals("") && hintRemovalQueue.Count > 0)
         {
             hintID = hintRemovalQueue[0];
             hintRemovalQueue.Remove(hintID);
         }
         HintData hint = null;
-        for(int i = 0; i < hintList.Count; i++)
+        for (int i = 0; i < hintList.Count; i++)
         {
-            if(hintList[i].hintName == hintID) hint = hintList[i];
+            if (hintList[i].hintName == hintID) hint = hintList[i];
         }
         if (hint == null) 
             return; //C: This happens often and is okay
 
-        if(isFading)
+        if (isFading)
         {
             hintRemovalQueue.Add(hintID);
             StartCoroutine(WaitForRemoval());
@@ -100,8 +103,8 @@ public class UIHints : Singleton<UIHints>
                 Debug.LogWarning("Tried and failed to remove hint: " + hint.hintName); //C: This should not happen
                 return;
             }
-            if(hintList.Count == 0) {
-            StartCoroutine(FadeHintBox(1, 0, () => {
+            if (hintList.Count == 0) {
+                StartCoroutine(FadeHintBox(1, 0, () => {
                     activeHint = null;
                 }));
             }
@@ -113,7 +116,7 @@ public class UIHints : Singleton<UIHints>
    
     private void UpdateHint()
     {   
-        if(!isVisible)
+        if (!isVisible)
         {
             if (hintList.Count > 0)
             {
@@ -124,7 +127,7 @@ public class UIHints : Singleton<UIHints>
         }
         else
         {
-            if(hintRemovalQueue.Count > 0 && !isFading)
+            if (hintRemovalQueue.Count > 0 && !isFading)
             {
                 RemoveHint();
             }
@@ -194,7 +197,7 @@ public class UIHints : Singleton<UIHints>
 
     private IEnumerator WaitForRemoval()
     {
-        while(isFading)
+        while (isFading)
         {
             yield return null;
         }

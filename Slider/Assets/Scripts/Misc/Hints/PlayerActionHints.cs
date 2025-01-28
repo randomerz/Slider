@@ -42,10 +42,10 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Load(SaveSystem.Current);
     }
 
-    private void OnDisable()
-    {
-        DisableAllHints();
-    }
+    // private void OnDisable()
+    // {
+    //     DisableAllHints();
+    // }
 
     void Update()
     {
@@ -178,7 +178,7 @@ public class Hint
         SaveSystem.Current.SetBool("Hint " + hintData.hintName, shouldDisplay);
         SaveSystem.Current.SetBool("HintCountdown " +  hintData.hintName, isInCountdown);
         SaveSystem.Current.SetBool("HintComplete " +  hintData.hintName, hasBeenCompleted);
-        hasBeenAddedToDisplay = false;
+        // hasBeenAddedToDisplay = false;
     }
 
     public void Load(SaveProfile profile)

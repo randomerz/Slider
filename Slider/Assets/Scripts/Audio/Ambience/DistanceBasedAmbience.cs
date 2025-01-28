@@ -71,7 +71,7 @@ public class DistanceBasedAmbience : MonoBehaviour
         float minDistance = Mathf.Infinity;
         foreach (Transform t in distanceNodes)
         {
-            if (t.gameObject.activeInHierarchy)
+            if (playerTransform != null && t.gameObject.activeInHierarchy)
             {
                 minDistance = Mathf.Min(minDistance, Vector3.Distance(playerTransform.position, t.position));
             }

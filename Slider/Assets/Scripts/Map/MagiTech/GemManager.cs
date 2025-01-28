@@ -116,10 +116,10 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
         BuildSpriteDictionary();
         UpdateGemSprites();
 
-        if(profile.GetBool("MagitechHasGemTransporter"))
+        if (profile.GetBool("MagitechHasGemTransporter"))
             EnableGemTransporter();
         
-        if(profile.GetBool("MagitechGFuelFull"))
+        if (profile.GetBool("MagitechGFuelFull"))
             EnableGFuel(true);
         else if (profile.GetBool("MagitechGFuelFilling"))
             EnableGFuel(false);
@@ -373,6 +373,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
 
     public void EnableGFuel(bool fillImmediate = false)
     {
+        Debug.Log($"enable GFuel. fillImmediate {fillImmediate}, isFilling {pipeLiquid.isFilling}, isFull {pipeLiquid.isFull}");
         if (pipeLiquid.isFilling || pipeLiquid.isFull) return;
         if (fillImmediate)
             pipeLiquid.SetPipeFull();
