@@ -101,6 +101,10 @@ public class GemMachine : MonoBehaviour, ISavable
     // Called by NPC sara
     public void BreakGemMachineCutscene()
     {
+        if (gemMachineState != GemMachineState.INITIAL)
+        {
+            return;
+        }
         StartCoroutine(DoBreakGemMachineCutscene());
     }
 
@@ -262,7 +266,7 @@ public class GemMachine : MonoBehaviour, ISavable
     public void CheckIsBroken(Condition c) => c.SetSpec(gemMachineState == GemMachineState.BROKEN);
     public void CheckIsFixed(Condition c) => c.SetSpec(gemMachineState == GemMachineState.FIXED);
     public void CheckIsBrokenAndPowered(Condition c) => c.SetSpec(gemMachineState == GemMachineState.BROKEN && isPowered);
-    public void CheckIsFixedAndPowered(Condition c) => c.SetSpec(gemMachineState == GemMachineState.FIXED && isPowered);
+    public void CheckIsFixedAndPowered(Condition c) => c.SetSpec((gemMachineState == GemMachineState.FIXED || gemMachineState == GemMachineState.FULLY_GOOED) && isPowered);
     public void CheckHasFirstCrystal(Condition c) => c.SetSpec(numGems == 1 && gemMachineState == GemMachineState.INITIAL);
     public void CheckHasFirstGooCrystal(Condition c) => c.SetSpec(numGems == 2 && gemMachineState == GemMachineState.FIXED);
     public void CheckHasSecondGooCrystal(Condition c) => c.SetSpec(numGems >= 3 && (gemMachineState == GemMachineState.FIXED || gemMachineState == GemMachineState.FULLY_GOOED));
