@@ -190,7 +190,7 @@ namespace Localization
         public static string JungleShapeToPath(string shapeName) => $"__JungleShapes/{shapeName}";
 
         public static string CollectibleToPath(string collectible, Area area) =>
-            $"__Collectibles/{area.ToString()}/{collectible}";
+            $"__Collectibles/{collectible}";
 
         public static string AreaToDiscordNamePath(Area area) => $"__DiscordMessages/{area.ToString()}";
 
