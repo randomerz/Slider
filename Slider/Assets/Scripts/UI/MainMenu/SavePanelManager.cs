@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
@@ -11,6 +10,9 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
         Normal,
         Delete,
         Backup,
+        BackupFilesWarning,
+        ConfirmDefaultText,
+        ConfirmOpenFileVersion,
     }
 
     public class SaveModeArgs : System.EventArgs
@@ -34,6 +36,18 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
                 SaveMode.Backup,
                 "Restore a backup?"
             },
+            {
+                SaveMode.BackupFilesWarning,
+                "You have <num/>\nbackup saves!"
+            },
+            {
+                SaveMode.ConfirmDefaultText,
+                "Confirm"
+            },
+            {
+                SaveMode.ConfirmOpenFileVersion,
+                "Open Folder"
+            },
         }
     );
 
@@ -42,6 +56,10 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
     [SerializeField] private UIMenu newSavePanel;
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private GameObject confirmButtonGameObject;
+    [SerializeField] private TextMeshProUGUI confirmButtonText;
+    [SerializeField] private TextMeshProUGUI backupsWarningText;
+    [SerializeField] private RectTransform confirmDefaultPos;
+    [SerializeField] private RectTransform confirmBackUpPosition;
 
     // We skip save picking if there are no saves and go straight to the new save menu. When we hit escape, we want
     // to come back here and not immediately go *back* to the new save menu.
@@ -51,6 +69,7 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
     private float timeUntilSwap;
     private const float BASE_TIME_UNTIL_SWAP = 0.5f;
     private bool isHidingDescriptions;
+    private bool shouldShowBackUpWarning;
 
     public SaveMode CurrentMode { get; private set; } = SaveMode.Normal;
 
@@ -104,13 +123,42 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
 
         CurrentMode = mode;
         OnSaveModeChanged?.Invoke(this, new SaveModeArgs { mode = CurrentMode });
+        CheckBackUpsWarning();
+    }
+
+    private void CheckBackUpsWarning()
+    {
+        int numBackUpFiles = SaveSystem.GetNumberOfPermanentBackups();
+        shouldShowBackUpWarning = numBackUpFiles >= 100 && CurrentMode == SaveMode.Normal;
+
+        if (shouldShowBackUpWarning)
+        {
+            string text = IDialogueTableProvider.Interpolate(
+                this.GetLocalizedSingle(SaveMode.BackupFilesWarning),
+                new() {{ "num", numBackUpFiles.ToString() }}
+            );
+            backupsWarningText.text = text;
+        }
+
+        backupsWarningText.gameObject.SetActive(shouldShowBackUpWarning);
+        confirmButtonText.text = shouldShowBackUpWarning ? 
+            this.GetLocalizedSingle(SaveMode.ConfirmOpenFileVersion) :
+            this.GetLocalizedSingle(SaveMode.ConfirmDefaultText);
+        confirmButtonGameObject.SetActive(shouldShowBackUpWarning);
+        confirmButtonGameObject.GetComponent<RectTransform>().anchoredPosition = shouldShowBackUpWarning ?
+            confirmBackUpPosition.anchoredPosition :
+            confirmDefaultPos.anchoredPosition;
     }
 
     public void SetButtonToConfirm(MainMenuSaveButton button)
     {
+        if (buttonToConfirm != null)
+        {
+            buttonToConfirm.SetForceHideDescriptions(false);
+        }
         buttonToConfirm = button;
         timeUntilSwap = BASE_TIME_UNTIL_SWAP;
-        confirmButtonGameObject.SetActive(button != null);
+        confirmButtonGameObject.SetActive(button != null || shouldShowBackUpWarning);
     }
 
     public void ClearButtonToConfirm()
@@ -121,11 +169,16 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
         }
         buttonToConfirm = null;
         isHidingDescriptions = false;
-        confirmButtonGameObject.SetActive(false);
+        confirmButtonGameObject.SetActive(false || shouldShowBackUpWarning);
     }
 
     public void OnClickConfirm()
     {
+        if (shouldShowBackUpWarning && CurrentMode == SaveMode.Normal)
+        {
+            Application.OpenURL(Application.persistentDataPath);
+            return;
+        }
         if (buttonToConfirm == null)
         {
             Debug.LogError($"Clicked confirm but there was no button to confirm.");

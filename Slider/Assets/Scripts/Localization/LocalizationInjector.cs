@@ -32,7 +32,7 @@ public class LocalizationInjector : MonoBehaviour, ILocalizationTrackable
 
         if (strategy is { ShouldTranslate: false, StyleChange: LocalizableContext.StyleChange.Idle })
         {
-            Debug.Log($"[Localization] Skip localization of {this}");
+            // Debug.Log($"[Localization] Skip localization of {this}");
             _lastLocalizedState = LocalizationLoader.CurrentSetting;
             return;
         }

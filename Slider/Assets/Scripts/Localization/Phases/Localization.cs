@@ -37,7 +37,7 @@ namespace Localization
         
         public void Localize(LocalizationFile file, LocalizationAction strategy)
         {
-            Debug.Log($"[Localization] Localize {(MonoBehaviour) localizationRoot} with shouldTranslate {strategy.ShouldTranslate}, styleChange {strategy.StyleChange}");
+            // Debug.Log($"[Localization] Localize {(MonoBehaviour) localizationRoot} with shouldTranslate {strategy.ShouldTranslate}, styleChange {strategy.StyleChange}");
             
             foreach (var (type, instances) in localizables)
             {

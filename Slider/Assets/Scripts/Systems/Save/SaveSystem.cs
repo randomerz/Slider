@@ -42,6 +42,9 @@ public class SaveSystem
     }
     private static DeserializationTypeRemapBinder _assemblyRemapBinder;
 
+    // Roughly every ~3600 seconds, create a permanent backup
+    private const float TIME_BETWEEN_PERMANENT_BACKUPS_SECONDS = 3600;
+
     private static SaveProfile current;
     private static int currentIndex = -1; // if -1, then it's a temporary profile
 
@@ -116,18 +119,38 @@ public class SaveSystem
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(Current);
 
-        string path = GetFilePath(currentIndex);
-        SaveToFile(profile, path);
+        try 
+        {
+            SaveToFile(profile, GetFilePath(currentIndex), GetFilePathTemp(currentIndex));
+            Current.SetMovedToPermanent(false);
+
+            float timeSinceBackup = Current.GetPlayTimeInSeconds() - Current.GetLastPermanentBackupTimeInSeconds();
+            if (timeSinceBackup > TIME_BETWEEN_PERMANENT_BACKUPS_SECONDS)
+            {
+                MoveSaveToPermanentBackup(currentIndex);
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[Saves] Error when saving profile. {e.Message}. Moving most recent " +
+                $"save to backup: {GetPermanentBackupFilePath(currentIndex)}. Full Error:{e}");
+            MoveSaveToPermanentBackup(currentIndex);
+        }
     }
 
-    private static void SaveToFile(SerializableSaveProfile profile, string path)
+    private static void SaveToFile(SerializableSaveProfile profile, string path, string pathTemp=null)
     {
         // Debug.Log($"[File IO] Saving data to file {index}.");
 
+        // BinaryFormatter serialization is obsolete and should not be used. 
+        // See https://aka.ms/binaryformatter for more information.
+        // It might be worth considering a migration to probably JSON or XML bc 
+        // I don't think we mind if players peek at their save profiles.
         BinaryFormatter formatter = new();
         formatter.Binder = AssemblyRemapBinder;
 
-        FileStream stream = new FileStream(path, FileMode.Create);
+        string initialWritePath = string.IsNullOrEmpty(pathTemp) ? path : pathTemp;
+        FileStream stream = new FileStream(initialWritePath, FileMode.Create);
 
         formatter.Serialize(stream, profile);
 
@@ -144,14 +167,24 @@ public class SaveSystem
         }
 
         stream.Close();
+
+        // Copy temp to main file...
+        if (!string.IsNullOrEmpty(pathTemp))
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            File.Move(pathTemp, path);
+        }
     }
 
     /// <summary>
-    /// Saves a backup of each profile, to be called when you quit the application.
+    /// Saves a backup of each profile, to be called when you quit the application. These will be continuously overwritten.
     /// </summary>
     public static void SaveBackups()
     {
-        Debug.Log($"[Saves] Creating backups of save profiles...");
+        Debug.Log($"[File IO] Creating backups of save profiles...");
         for (int i = 0; i < 3; i++)
         {
             if (saveProfiles[i] != null)
@@ -165,17 +198,67 @@ public class SaveSystem
                         continue;
                     }
                     
-                    Debug.Log($"[Saves] Saving backup for profile {i}");
+                    Debug.Log($"[File IO] Saving backup for profile {i}");
                     SaveToFile(SerializableSaveProfile.FromSaveProfile(saveProfiles[i]), path);
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError($"Error when saving backups: {e.Message}");
+                    Debug.LogError($"[File IO] Error when saving backups: {e.Message}\n{e}");
                     Debug.Log(e.StackTrace);
                 }
             }
         }
-        Debug.Log($"[Saves] Done!");
+        Debug.Log($"[File IO] Done!");
+    }
+
+    /// <summary>
+    /// Copies a save to backup that will not be overwritten, marked with a date-time.
+    /// </summary>
+    public static void MoveSaveToPermanentBackup(int index)
+    {
+        if (Current.GetMovedToPermanent())
+        {
+            return;
+        }
+
+        SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(Current);
+        DoMoveSaveToPermanentBackup(profile, index);
+        Current.SetMovedToPermanent(true);
+        Current.SetLastPermanentBackupTimeInSeconds(Current.GetPlayTimeInSeconds());
+    }
+
+    
+    public static void DoMoveSaveToPermanentBackup(SerializableSaveProfile profile, int index)
+    {
+        string path = GetFilePath(index);
+        string tempPath = GetFilePathTemp(index);
+        string permanentBackupPath = GetPermanentBackupFilePath(index);
+        
+        // Create directory if it doesn't exist
+        FileInfo fileInfo = new FileInfo(permanentBackupPath);
+        fileInfo.Directory.Create();
+
+        if (File.Exists(permanentBackupPath))
+        {
+            Debug.LogError($"[File IO] Error: Tried saving permanent backup to {permanentBackupPath} but file already exists. Skipping...");
+            return;
+        }
+
+        if (!File.Exists(path))
+        {
+            if (File.Exists(tempPath))
+            {
+                Debug.LogWarning($"[File IO] Found file at temp path {tempPath}, using that for backup.");
+                File.Copy(tempPath, permanentBackupPath);
+                return;
+            }
+
+            Debug.LogError($"[File IO] Error: Tried saving permanent backup from {path} but file does not exists. Going to try to generate and copy file...");
+            SaveToFile(profile, path, tempPath);
+        }
+        
+        File.Copy(path, permanentBackupPath);
+        Debug.Log($"[File IO] Saved permanent backup to {permanentBackupPath}.");
     }
 
     public static void LoadSaveProfile(int index)
@@ -218,7 +301,7 @@ public class SaveSystem
 
     private static SerializableSaveProfile LoadFromFile(string path)
     {
-        // Debug.Log($"[File IO] Loading data from file {index}.");
+        // Debug.Log($"[File IO] Loading data from file {path}.");
 
         if (File.Exists(path))
         {
@@ -290,14 +373,36 @@ public class SaveSystem
         SetProfile(index, GetSerializableSaveProfile(index)?.ToSaveProfile());
     }
 
+    public static int GetNumberOfPermanentBackups()
+    {
+        string permanentBackupPath = GetPermanentBackupFilePath(0);
+        
+        // Create directory if it doesn't exist
+        FileInfo fileInfo = new FileInfo(permanentBackupPath);
+        fileInfo.Directory.Create();
+
+        return fileInfo.Directory.GetFiles().Length;
+    }
+
     public static string GetFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
     }
 
+    public static string GetFilePathTemp(int index)
+    {
+        return Application.persistentDataPath + string.Format("/slider{0}-TEMP.cat", index);
+    }
+
     public static string GetBackupFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/backup-slider{0}.cat", index);
+    }
+
+    public static string GetPermanentBackupFilePath(int index)
+    {
+        System.DateTime dt = System.DateTime.Now;
+        return Application.persistentDataPath + string.Format("/backup/slider{0}-{1}.cat", index, dt.ToString("yyyy-MM-dd_HH-mm-ss"));
     }
 
     public static string GetBackupReplacedFilePath(int index)

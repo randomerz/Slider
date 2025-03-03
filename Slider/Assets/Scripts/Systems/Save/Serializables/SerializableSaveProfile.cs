@@ -11,6 +11,8 @@ public class SerializableSaveProfile
     public bool completionStatus;
     public float playTimeInSeconds;
     public System.DateTime lastSaved;
+    public bool movedToPermanent;
+    public float lastPermanentBackupTimeInSeconds;
 
     public SerializablePlayer serializablePlayer;
     public Area lastArea;
@@ -41,6 +43,8 @@ public class SerializableSaveProfile
         ssp.completionStatus = saveProfile.GetCompletionStatus();
         ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
         ssp.lastSaved = saveProfile.GetLastSaved();
+        ssp.movedToPermanent = saveProfile.GetMovedToPermanent();
+        ssp.lastPermanentBackupTimeInSeconds = saveProfile.GetLastPermanentBackupTimeInSeconds();
 
         ssp.serializablePlayer = saveProfile.GetSerializablePlayer();
         ssp.lastArea = saveProfile.GetLastArea();
@@ -71,6 +75,8 @@ public class SerializableSaveProfile
         sp.SetCompletionStatus(completionStatus);
         sp.SetPlayTimeInSeconds(playTimeInSeconds);
         sp.SetLastSaved(lastSaved);
+        sp.SetMovedToPermanent(movedToPermanent);
+        sp.SetLastPermanentBackupTimeInSeconds(lastPermanentBackupTimeInSeconds);
 
         sp.SetSerializeablePlayer(serializablePlayer);
         sp.SetLastArea(lastArea);

@@ -11,6 +11,8 @@ public class SaveProfile
     private bool completionStatus;
     private float playTimeInSeconds;
     private System.DateTime lastSaved;
+    private bool movedToPermanent;
+    private float lastPermanentBackupTimeInSeconds;
 
     private SerializablePlayer serializablePlayer;
     private Area lastArea;
@@ -95,6 +97,26 @@ public class SaveProfile
     public void SetLastSaved(System.DateTime value)
     {
         lastSaved = value;
+    }
+
+    public bool GetMovedToPermanent()
+    {
+        return movedToPermanent;
+    }
+
+    public void SetMovedToPermanent(bool value)
+    {
+        movedToPermanent = value;
+    }
+
+    public float GetLastPermanentBackupTimeInSeconds()
+    {
+        return lastPermanentBackupTimeInSeconds;
+    }
+
+    public void SetLastPermanentBackupTimeInSeconds(float value)
+    {
+        lastPermanentBackupTimeInSeconds = value;
     }
 
     public Random.State GetRandomState()
