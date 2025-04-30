@@ -51,6 +51,8 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
         }
     );
 
+    private const int NUMBER_OF_BACKUPS_TO_SHOW_WARNING = 100;
+
     [SerializeField] private NewSavePanelManager newSavePanelManager;
     [SerializeField] private UIMenu savePanel;
     [SerializeField] private UIMenu newSavePanel;
@@ -129,7 +131,7 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
     private void CheckBackUpsWarning()
     {
         int numBackUpFiles = SaveSystem.GetNumberOfPermanentBackups();
-        shouldShowBackUpWarning = numBackUpFiles >= 100 && CurrentMode == SaveMode.Normal;
+        shouldShowBackUpWarning = numBackUpFiles >= NUMBER_OF_BACKUPS_TO_SHOW_WARNING && CurrentMode == SaveMode.Normal;
 
         if (shouldShowBackUpWarning)
         {

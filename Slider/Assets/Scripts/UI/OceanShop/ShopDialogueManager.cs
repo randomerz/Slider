@@ -190,7 +190,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
                     "Wish you could stay, but something tells me you have places to be.",
                     "> You watch as he leaves, with haste and his sharp axe.",
                     "> He takes large strides, his massive figure easily pushing the tavern doors open.",
-                    "> You sneak a peak through the window.",
+                    "> You sneak a peek through the window.",
                     "*CHOP, CHOP, CHOP*",
                     "> He cuts them down... so easily.",
                     "> Of course, he'd wipe some sweat from his brow. But this was of no effort to a man like Bob.",
