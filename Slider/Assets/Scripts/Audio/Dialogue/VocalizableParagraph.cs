@@ -22,7 +22,7 @@ namespace SliderVocalization
 
         private void Awake() 
         {
-            if (name == "Vocalizer" && preset.name == DEFAULT_VOCALIZER_PRESET_NAME && transform.parent != null)
+            if (name == "Vocalizer" && preset != null && preset.name == DEFAULT_VOCALIZER_PRESET_NAME && transform.parent != null)
             {
                 Debug.LogWarning($"{transform.parent.name} is using the default localizer!");
             }

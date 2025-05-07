@@ -28,6 +28,7 @@ public enum Settings
     PixelFontEnabled,
     KeyboardOnly,
     LargerControllerDeadzone,
+    HighFpsSmoothing, // Makes player sprite interpolate in drawn frames instead of just fixed update
 }
 
 static class SettingsMethods
@@ -55,6 +56,7 @@ static class SettingsMethods
         Settings.PixelFontEnabled => "pixelFontEnabled",
         Settings.KeyboardOnly => "keyboardOnly",
         Settings.LargerControllerDeadzone => "largerControllerDeadzone",
+        Settings.HighFpsSmoothing => "highFpsSmoothing",
         _ => ""
     };
 }

@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 380634037254267601}
+  m_Follow: {fileID: 380634036804812843}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 5.625
@@ -411,6 +411,7 @@ GameObject:
   - component: {fileID: 380634036804812840}
   - component: {fileID: 380634036804812841}
   - component: {fileID: 2576880413730165517}
+  - component: {fileID: 9141643048061685620}
   m_Layer: 8
   m_Name: Player Sprite
   m_TagString: Untagged
@@ -527,6 +528,20 @@ MonoBehaviour:
   onStep:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9141643048061685620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380634036804812842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781e9d1603bb4ac4b8c5cbe04d759c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionTruthTransform: {fileID: 380634037254267601}
+  dosmooth: 0
 --- !u!1 &380634037254267600
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,12 +1009,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!114 &6966801021179979627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1040,7 +1055,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 7
@@ -1290,12 +1305,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!114 &2405316411777736436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1526,12 +1541,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &6979722770161973284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,12 +1701,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!114 &6098135393154072134
 MonoBehaviour:
   m_ObjectHideFlags: 0

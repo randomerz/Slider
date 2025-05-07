@@ -18,7 +18,7 @@ public class TransformInterpolator : MonoBehaviour
     private Vector3 currentPosition;
     private bool isTransformInterpolated = false;
 
-    void OnEnable()     
+    void OnEnable()
     {
         prevPosition = transform.position;
         isTransformInterpolated = false;

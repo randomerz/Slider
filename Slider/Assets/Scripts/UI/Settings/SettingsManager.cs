@@ -93,16 +93,12 @@ public class SettingsManager : MonoBehaviour
         );
         
         RegisterAndLoadSetting(Settings.Locale,
-            defaultValue: LocalizationFile.DefaultLocale,
-            onValueChanged: (locale) =>
-            {
-            });
+            defaultValue: LocalizationFile.DefaultLocale
+        );
 
         RegisterAndLoadSetting(Settings.PixelFontEnabled,
-            defaultValue: true,
-            onValueChanged: (pixelFontEnabled) =>
-            {
-            });
+            defaultValue: true
+        );
 
         RegisterAndLoadSetting(Settings.KeyboardOnly,
             defaultValue: false,
@@ -114,6 +110,15 @@ public class SettingsManager : MonoBehaviour
             onValueChanged: (largerControllerDeadzone) => { 
                 InputSystem.settings.defaultDeadzoneMin = largerControllerDeadzone ? 0.75f : 0.25f;
             }
+        );
+
+        // this is probably just always true
+        bool shouldHighFpsSmoothing = (
+            Application.targetFrameRate == GraphicsSettingsManager.TARGET_FRAME_RATE_DISABLED || 
+            IsHighFPS(Application.targetFrameRate)
+        );
+        RegisterAndLoadSetting(Settings.HighFpsSmoothing,
+            defaultValue: shouldHighFpsSmoothing
         );
     }
 
@@ -162,5 +167,15 @@ public class SettingsManager : MonoBehaviour
     public static void ResetAllSettingsToDefaults()
     {
         settings.Values.ToList().ForEach(setting => setting.ResetToDefaultValue());
+    }
+
+
+    /// <summary>
+    /// Helper function to determine what we consider "high FPS"
+    /// </summary>
+    /// <returns></returns>
+    public static bool IsHighFPS(int fps)
+    {
+        return fps > 50;
     }
 }

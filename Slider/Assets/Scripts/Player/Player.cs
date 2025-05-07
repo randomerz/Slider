@@ -187,7 +187,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         foreach(Material m in ppMaterials)
         {
-            m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
+            Vector3 pos = playerSpriteRenderer.transform.position;
+            m.SetVector("_PlayerPosition", new Vector4(pos.x, pos.y, 0, 0));
         }
     }
 
