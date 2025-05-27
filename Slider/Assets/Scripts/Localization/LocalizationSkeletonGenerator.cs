@@ -6,6 +6,7 @@ using Localization;
 using UnityEngine;
 
 #if UNITY_EDITOR
+using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -243,7 +244,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                   ? new FileStream(dst1Path, FileMode.Truncate)
                   : new FileStream(dst1Path, FileMode.CreateNew))
        {
-           using (var tw = new StreamWriter(file))
+           using (var tw = new StreamWriter(file, Encoding.UTF8))
            {
                doWrite(tw);
            }
