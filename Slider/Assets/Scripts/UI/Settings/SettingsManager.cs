@@ -120,6 +120,9 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.HighFpsSmoothing,
             defaultValue: shouldHighFpsSmoothing
         );
+        RegisterAndLoadSetting(Settings.ShowTimer,
+            defaultValue: false
+        );
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)

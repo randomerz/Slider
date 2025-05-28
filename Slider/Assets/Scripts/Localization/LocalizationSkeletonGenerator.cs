@@ -6,6 +6,7 @@ using Localization;
 using UnityEngine;
 
 #if UNITY_EDITOR
+using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -215,8 +216,12 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        // If locale is English, don't bother migrating old translations
        // Otherwise, if an older translation exists, try migrate it
-       if (locale.name == LocalizationFile.DefaultLocale || locale.name == LocalizationFile.TestingLanguage || !File.Exists(path))
+       if (locale.name == LocalizationFile.DefaultLocale || locale.name == LocalizationFile.TestingLanguage) {
+            return null;
+       }
+       else if(!File.Exists(path))
        {
+           Debug.LogError($"{path} does not exist!");
            return null;
        }
 
@@ -239,11 +244,9 @@ public class LocalizationSkeletonGenerator : EditorWindow
    /// <param name="copyIf"></param>
    private static void WriteAndCopyIf(string dst1Path, string dst2Path, Action<TextWriter> doWrite, bool copyIf)
    {
-       using (var file = File.Exists(dst1Path)
-                  ? new FileStream(dst1Path, FileMode.Truncate)
-                  : new FileStream(dst1Path, FileMode.CreateNew))
+       using (var file = new FileStream(dst1Path, FileMode.OpenOrCreate))
        {
-           using (var tw = new StreamWriter(file))
+           using (var tw = new StreamWriter(file, Encoding.UTF8))
            {
                doWrite(tw);
            }
@@ -251,7 +254,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
        if (copyIf)
        {
-           File.Copy(dst1Path, dst2Path);
+           File.Copy(dst1Path, dst2Path, true);
        }
    }
 
@@ -273,23 +276,19 @@ public class LocalizationSkeletonGenerator : EditorWindow
        Dictionary<string, bool> localeIsValid = isDev ? 
            projectConfiguration.InitialLocales.ToDictionary((config) => config.name, _ => true) 
            : GetLocaleValidityMap(projectConfiguration);
+
+       void CleanCreate(string dir)
+       {
+           if (Directory.Exists(dir))
+           {
+               Directory.Delete(dir, true);
+           }
+
+           Directory.CreateDirectory(dir);
+       }
        
        string tempDirectory = Path.Combine(Path.GetTempPath(), "__slider_localization_external_save_dir__");
-       if (Directory.Exists(tempDirectory)) {
-           Directory.Delete(tempDirectory, true);
-       }
-       Directory.CreateDirectory(tempDirectory);
-
-       if (root == referenceRoot)
-       {
-           var resolvedReferenceRoot = LocalizationFile.LocalizationRootPath(root);
-           string tempDirectory2 = Path.Combine(Path.GetTempPath(), "__slider_localization_external_ref_dir__");
-           if (Directory.Exists(tempDirectory2)) {
-               Directory.Delete(tempDirectory2, true);
-           }
-           CopyDirectory(resolvedReferenceRoot, tempDirectory2, true);
-           referenceRoot = tempDirectory2;
-       }
+       CleanCreate(tempDirectory);
        
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
@@ -308,16 +307,6 @@ public class LocalizationSkeletonGenerator : EditorWindow
        foreach (var kv in Areas.DisplayNames)
        {
            globalStrings.Add(LocalizableContext.AreaToDisplayNamePath(kv.Key), kv.Value);
-       }
-
-       if (root == null)
-       {
-           var inProjectDirectory = LocalizationFile.LocalizationFolderPath();
-           if (Directory.Exists(inProjectDirectory))
-           {
-               Directory.Delete(inProjectDirectory, true);
-           }
-           Directory.CreateDirectory(inProjectDirectory);
        }
 
        foreach (var prefab in projectConfiguration.RelevantPrefabs)
@@ -401,6 +390,11 @@ public class LocalizationSkeletonGenerator : EditorWindow
            Debug.LogWarning(e);
        }
 
+       // this is before GameBuilder exports the builds, clear the streaming assets folder if it is being updated
+       if (root == null) {
+            CleanCreate(LocalizationFile.LocalizationFolderPath(root));
+       }
+
        return ForceCopyEverythingToDst2; // this is called after GameBuilder finishes exporting the builds,
                                          // and it's safe to edit the StreamingAssets folder inside the project again
 
@@ -408,22 +402,9 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            string dest = LocalizationFile.LocalizationFolderPath(root);
            string src = LocalizationFile.LocalizationFolderPath(tempDirectory);
-           if (Directory.Exists(dest))
-           {
-               Directory.Delete(dest, true);
-           }
-
+           CleanCreate(dest);
            // copy & delete will work across volumes whereas directory.move does not
            CopyDirectory(src, dest, true);
-           Directory.Delete(src, true);
-       }
-   }
-
-   private static void GuardedDeleteFile(string path)
-   {
-       if (File.Exists(path))
-       {
-           File.Delete(path);
        }
    }
 
