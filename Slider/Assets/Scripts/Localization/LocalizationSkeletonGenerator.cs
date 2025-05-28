@@ -244,9 +244,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
    /// <param name="copyIf"></param>
    private static void WriteAndCopyIf(string dst1Path, string dst2Path, Action<TextWriter> doWrite, bool copyIf)
    {
-       using (var file = File.Exists(dst1Path)
-                  ? new FileStream(dst1Path, FileMode.Truncate)
-                  : new FileStream(dst1Path, FileMode.CreateNew))
+       using (var file = new FileStream(dst1Path, FileMode.OpenOrCreate))
        {
            using (var tw = new StreamWriter(file, Encoding.UTF8))
            {
@@ -256,7 +254,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
        if (copyIf)
        {
-           File.Copy(dst1Path, dst2Path);
+           File.Copy(dst1Path, dst2Path, true);
        }
    }
 
@@ -283,7 +281,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            if (Directory.Exists(dir))
            {
-               Directory.Delete(dir);
+               Directory.Delete(dir, true);
            }
 
            Directory.CreateDirectory(dir);
@@ -291,15 +289,6 @@ public class LocalizationSkeletonGenerator : EditorWindow
        
        string tempDirectory = Path.Combine(Path.GetTempPath(), "__slider_localization_external_save_dir__");
        CleanCreate(tempDirectory);
-
-       if (root == referenceRoot)
-       {
-           var resolvedReferenceRoot = LocalizationFile.LocalizationRootPath(root);
-           string tempDirectory2 = Path.Combine(Path.GetTempPath(), "__slider_localization_external_ref_dir__");
-           CleanCreate(tempDirectory2);
-           CopyDirectory(resolvedReferenceRoot, tempDirectory2, true);
-           referenceRoot = tempDirectory2;
-       }
        
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
@@ -318,16 +307,6 @@ public class LocalizationSkeletonGenerator : EditorWindow
        foreach (var kv in Areas.DisplayNames)
        {
            globalStrings.Add(LocalizableContext.AreaToDisplayNamePath(kv.Key), kv.Value);
-       }
-
-       if (root == null)
-       {
-           var inProjectDirectory = LocalizationFile.LocalizationFolderPath();
-           if (Directory.Exists(inProjectDirectory))
-           {
-               Directory.Delete(inProjectDirectory, true);
-           }
-           Directory.CreateDirectory(inProjectDirectory);
        }
 
        foreach (var prefab in projectConfiguration.RelevantPrefabs)
@@ -418,22 +397,9 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            string dest = LocalizationFile.LocalizationFolderPath(root);
            string src = LocalizationFile.LocalizationFolderPath(tempDirectory);
-           if (Directory.Exists(dest))
-           {
-               Directory.Delete(dest, true);
-           }
-
+           CleanCreate(dest);
            // copy & delete will work across volumes whereas directory.move does not
            CopyDirectory(src, dest, true);
-           Directory.Delete(src, true);
-       }
-   }
-
-   private static void GuardedDeleteFile(string path)
-   {
-       if (File.Exists(path))
-       {
-           File.Delete(path);
        }
    }
 

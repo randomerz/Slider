@@ -1,4 +1,4 @@
-﻿Slider.v1.0.20,Unity.v2022.3.44f1,(file format explainer)->,"Localization files are formatted like CSV so they can be easily edited,
+﻿"Slider.v1.0.20","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -15,10 +15,11 @@ be corrupted, these rules may be helpful for debugging purposes...
     second row
 - Every following line can include any number of cells, but only the
   first four will be parsed (you can use the rest as comments if needed)
-  - The fourth column is an optional metadata column",,,
-IsValid,,NonDialogueFontScale,,DialogueFontScale,,Author
-"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback",,"Float value that scales font size of all non-dialogue text, 1.0 for full size.",,"Float value that scales font size of all dialogue text, 1.0 for full size.",,"The author(s) of this file, will appear in credits"
-Path,Orig,Translation,Metadata,,,
-MilitaryAlien Variant/NPCs/Flying Saucer@0:0,Baboom!,嘣!,,,,
-MilitaryAlien Variant/NPCs/Flying Saucer/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
-MilitaryAlien Variant/NPCs/Flying Saucer/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+  - The fourth column is an optional metadata column
+",
+"IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
+"Path","Orig","Translation","Metadata",
+"MilitaryAlien Variant/NPCs/Flying Saucer@0:0","Baboom!","Baboom!","",
+"MilitaryAlien Variant/NPCs/Flying Saucer/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
+"MilitaryAlien Variant/NPCs/Flying Saucer/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",

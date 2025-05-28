@@ -1,4 +1,4 @@
-﻿Slider.v1.0.20,Unity.v2022.3.44f1,(file format explainer)->,"Localization files are formatted like CSV so they can be easily edited,
+﻿"Slider.v1.0.20","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -15,25 +15,26 @@ be corrupted, these rules may be helpful for debugging purposes...
     second row
 - Every following line can include any number of cells, but only the
   first four will be parsed (you can use the rest as comments if needed)
-  - The fourth column is an optional metadata column",,,
-IsValid,,NonDialogueFontScale,,DialogueFontScale,,Author
-"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback",,"Float value that scales font size of all non-dialogue text, 1.0 for full size.",,"Float value that scales font size of all dialogue text, 1.0 for full size.",,"The author(s) of this file, will appear in credits"
-Path,Orig,Translation,Metadata,,,
-Canvas/SkipDialogue,Press any key to skip,按任意键跳过,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1.2;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
-Canvas/Texts/Text (1),"In ages past, man held the power to remake the world.","很久以前,人们用神器掌控万物.",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
-Canvas/Texts/Text (2),"Societies rose and fell, centered around a relic of unimaginable power.","历经一代代王朝兴衰,神器最终竟被遗失、忘记了.",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
-Canvas/Texts/Text (3),"A relic now lost 
-to the sands of time.","它就埋藏在
-漫漫黄沙之中.",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
-Canvas/Texts/Text (4),"The world has moved on, 
-into a brighter future.","作为一个探险家,
-你对神器一无所知...",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
-Canvas/Texts/Text (5),"But some things
-don't stay buried.","但你家猫猫意外
-把神器挖了出来!",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
-Canvas/Texts/Text (6),"And all thanks to 
-your little cat...","突然间,
-天旋地转!",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
-Canvas/Texts/Text (7),"The world faces 
-Cataclysm once more.","世界又重新
-陷入混乱...",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;,,,
+  - The fourth column is an optional metadata column
+",
+"IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
+"Path","Orig","Translation","Metadata",
+"Canvas/SkipDialogue","Press any key to skip","Press any key to skip","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1.2;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"Canvas/Texts/Text (1)","In ages past, man held the power to remake the world.","In ages past, man held the power to remake the world.","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
+"Canvas/Texts/Text (2)","Societies rose and fell, centered around a relic of unimaginable power.","Societies rose and fell, centered around a relic of unimaginable power.","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
+"Canvas/Texts/Text (3)","A relic now lost 
+to the sands of time.","A relic now lost 
+to the sands of time.","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
+"Canvas/Texts/Text (4)","The world has moved on, 
+into a brighter future.","The world has moved on, 
+into a brighter future.","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
+"Canvas/Texts/Text (5)","But some things
+don't stay buried.","But some things
+don't stay buried.","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
+"Canvas/Texts/Text (6)","And all thanks to 
+your little cat...","And all thanks to 
+your little cat...","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
+"Canvas/Texts/Text (7)","The world faces 
+Cataclysm once more.","The world faces 
+Cataclysm once more.","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:-15;overflowMode:Overflow;wordSpacing:-10;",
