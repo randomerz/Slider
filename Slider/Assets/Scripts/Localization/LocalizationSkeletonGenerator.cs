@@ -390,6 +390,11 @@ public class LocalizationSkeletonGenerator : EditorWindow
            Debug.LogWarning(e);
        }
 
+       // this is before GameBuilder exports the builds, clear the streaming assets folder if it is being updated
+       if (root == null) {
+            CleanCreate(LocalizationFile.LocalizationFolderPath(root));
+       }
+
        return ForceCopyEverythingToDst2; // this is called after GameBuilder finishes exporting the builds,
                                          // and it's safe to edit the StreamingAssets folder inside the project again
 
