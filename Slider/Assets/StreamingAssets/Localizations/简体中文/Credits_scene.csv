@@ -1,4 +1,4 @@
-"Slider.v1.0.20","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+﻿Slider.v1.0.20,Unity.v2022.3.44f1,(file format explainer)->,"Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -15,12 +15,11 @@ be corrupted, these rules may be helpful for debugging purposes...
     second row
 - Every following line can include any number of cells, but only the
   first four will be parsed (you can use the rest as comments if needed)
-  - The fourth column is an optional metadata column
-",
-"IsValid","","NonDialogueFontScale","","DialogueFontScale","","Author","",
-"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback","","Float value that scales font size of all non-dialogue text, 1.0 for full size.","","Float value that scales font size of all dialogue text, 1.0 for full size.","","The author(s) of this file, will appear in credits","",
-"Path","Orig","Translation","Metadata",
-"BG Text Daniel and VGDev/Text","A Game by 
+  - The fourth column is an optional metadata column",,,
+IsValid,,NonDialogueFontScale,,DialogueFontScale,,Author
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback",,"Float value that scales font size of all non-dialogue text, 1.0 for full size.",,"Float value that scales font size of all dialogue text, 1.0 for full size.",,"The author(s) of this file, will appear in credits"
+Path,Orig,Translation,Metadata,,,
+BG Text Daniel and VGDev/Text,"A Game by 
 
 Daniel Carr 
 
@@ -32,20 +31,20 @@ Daniel Carr
 
 以及 
 
-VGDev制作","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
-"BG Text Thank you/Text","Thank you
+VGDev制作",enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;,,,
+BG Text Thank you/Text,"Thank you
 
-for playing!","感谢游玩！","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text","Allison Lu","Allison Lu","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)","Art
+for playing!",感谢游玩!,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Allison Avery Tile/WorldCanvas/Text,Allison Lu,Allison Lu,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1),"Art
 Programming","美术
-程序","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)","Avery Greer","Avery Greer","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)","Programming
+程序",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2),Avery Greer,Avery Greer,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3),"Programming
 Audio","程序
-音效","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text","Additional Art","额外美术","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Art TIle/WorldCanvas/Text (1)","Nathaniel Koehler
+音效",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Art TIle/WorldCanvas/Text,Additional Art,额外美术,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Art TIle/WorldCanvas/Text (1),"Nathaniel Koehler
 Elizabeth Liu
 Cynthia Peng
 Gazal Mathur
@@ -57,80 +56,75 @@ Cynthia Peng
 Gazal Mathur
 Mike Wang
 Esther Moon
-Nia Bellamy","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
-","使用 FMOD Studio by Firelight 
-Technologies Pty Ltd.制作
-","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Audio tile/WorldCanvas/Text (1)","Additional sound from ZapSplat and SFXR","额外音效来源ZapSplat and SFXR","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text","Daniel Carr","Daniel Carr","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)","Project Lead","项目主导","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text","Chase O'Brien","Chase O'Brien","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Chase Tile/WorldCanvas/Text (1)","Programming 
+Nia Bellamy",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Audio tile/WorldCanvas/Text,Made using FMOD Studio by Firelight Technologies Pty Ltd.,"使用 FMOD Studio by Firelight 
+Technologies Pty Ltd.制作",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Audio tile/WorldCanvas/Text (1),Additional sound from ZapSplat and SFXR,额外音效来源ZapSplat与SFXR,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Boomo Tile/WorldCanvas/Text,Daniel Carr,Daniel Carr,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Boomo Tile/WorldCanvas/Text (1),Project Lead,项目主导,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Chase Tile/WorldCanvas/Text,Chase O'Brien,Chase O'Brien,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Chase Tile/WorldCanvas/Text (1),"Programming 
 Design
 Tech Art
 Marketing","程序
 策划
 技美
-宣发","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text","Eli Corley","Eli Corley","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1)","Music
+宣发",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Eli Travis Tile/WorldCanvas/Text,Eli Corley,Eli Corley,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Eli Travis Tile/WorldCanvas/Text (1),"Music
 Art","音乐
-美术","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2)","Travis Bittel","Travis Bittel","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3)","Programming","程序 ","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text","Ethan 
+美术",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Eli Travis Tile/WorldCanvas/Text (2),Travis Bittel,Travis Bittel,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Eli Travis Tile/WorldCanvas/Text (3),Programming,程序,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Ethan Alan Tile/WorldCanvas/Text,"Ethan 
 Aristanto","Ethan 
-Aristanto","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)","Music","音乐","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)","Alan Tao","Alan Tao","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)","Programming
+Aristanto",enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1),Music,音乐,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2),Alan Tao,Alan Tao,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3),"Programming
 Audio","程序 音效
-本地化","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text","Drew Busch","Drew Busch","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)","Programming
+本地化",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text,Drew Busch,Drew Busch,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1),"Programming
 Design
 Music","程序
 策划
-音乐","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)","Elliot Chen","Elliot Chen","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)","Programming","程序","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text","Logan Bowers","Logan Bowers","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Logan Tile/WorldCanvas/Text (1)","Programming
+音乐",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2),Elliot Chen,Elliot Chen,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3),Programming,程序,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Logan Tile/WorldCanvas/Text,Logan Bowers,Logan Bowers,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:-32;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Logan Tile/WorldCanvas/Text (1),"Programming
 Tech Art","程序
-技美","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text","Additional Contributions","额外协助","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Other Tile/WorldCanvas/Text (1)","Kate Tran 
+技美",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Other Tile/WorldCanvas/Text,Additional Contributions,额外协助,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Other Tile/WorldCanvas/Text (1),"Kate Tran 
 Jimmy Huang
 Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
-Rithvik Maladi
-","Kate Tran 
+Rithvik Maladi","Kate Tran 
 Jimmy Huang
 Maddie King
 Sudarshan Srinivasan
 Vu Nguyen
-Rithvik Maladi
-","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text","Pawan 
+Rithvik Maladi",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text,"Pawan 
 Jayakumar","Pawan 
-Jayakumar","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2)","Jamie Lee","Jamie Lee","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3)","Art","美术","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4)","Programming","程序","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text","Koushik Thiyagarajan
+Jayakumar",enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (2),Jamie Lee,Jamie Lee,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (3),Art,美术,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Pawan Jamie Tile/WorldCanvas/Text (4),Programming,程序,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Programming Tile 1/WorldCanvas/Text,"Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta","Koushik Thiyagarajan
+Muskaan Gupta","Koushik Thiyagarajan
 Kristian Chappell
 Aneesh Boreda
 Kenneth Wang
-Muskaan Gupta
-","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)","Additional Programming","额外程序","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text","Reinart Realina
+Muskaan Gupta",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Programming Tile 1/WorldCanvas/Text (1),Additional Programming,额外程序,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Programming Tile 2/WorldCanvas/Text,"Reinart Realina
 Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
@@ -140,85 +134,84 @@ Thomas Dayton
 Nicolas Cai
 Tristan Ziegler
 Zhenyu Wu
-Steven Jia","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)","Additional Programming","额外程序","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text","Sara Inani","Sara Inani","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (1)","Art","美术","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (2)","Max Zhang","Max Zhang","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Sara Max Tile/WorldCanvas/Text (3)","Design","策划","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text","Special Thanks","特别感谢","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)","Mark Brown
+Steven Jia",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Programming Tile 2/WorldCanvas/Text (1),Additional Programming,额外程序,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Sara Max Tile/WorldCanvas/Text,Sara Inani,Sara Inani,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Sara Max Tile/WorldCanvas/Text (1),Art,美术,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Sara Max Tile/WorldCanvas/Text (2),Max Zhang,Max Zhang,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Sara Max Tile/WorldCanvas/Text (3),Design,策划,enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Special Thanks Tile/WorldCanvas/Text,Special Thanks,特别感谢,enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1),"Mark Brown
 Beth O'Brien
 Tororo
 Playtesters","Mark Brown
 Beth O'Brien
-以及帮助测试的各位玩家
-","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
-"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
-"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue","","","enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;",
-"Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue BG Font","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;",
+以及帮助测试的各位玩家",enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:1;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;,,,
+Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Allison Avery Tile/Objects/Upstairs/Barron/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Art TIle/STile (6)/All Tile Maps/Housing Tile Map/Decorations/Catherine/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Art TIle/STile (6)/Objects/Choob/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Art TIle/STile (6)/Objects/Gene/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Audio tile/Objects/Chad Sr/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Chase Tile/Objects/Elevator Builder/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Chase Tile/West Side/Burt the Craftsman/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Eli Travis Tile/Objects/Bartender/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Eli Travis Tile/Objects/Clubber (1)/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice1/Dice Sprite/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice2/Dice Sprite/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/TavernKeep/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Jroo Elliot Tile/BirdNamedParty/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Jroo Elliot Tile/Crocodile/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Jroo Elliot Tile/Objects/VIPHolder/VIP/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Logan Tile/Objects/Warning Sign/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Fire Wizard Past/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Other Tile/Objects/WizardDuelPuzzle/Lightning Wizard Past/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Programming Tile 1/Objects/Alien Commander/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Programming Tile 1/Objects/Commander/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Programming Tile 1/Objects/Private/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Programming Tile 1/Objects/Robot/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Programming Tile 1/Objects/Sergeant/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Sara Max Tile/Sara/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Special Thanks Tile/Objects/Alchemist Muta/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Special Thanks Tile/Objects/Fezziwig/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Special Thanks Tile/Objects/House1 bot right/Carly/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,
+Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue,,,enableWordWrapping:1;extraPadding:0;family:TinyUnicode SDF;fontSize:1;lineSpacing:-45;overflowMode:Overflow;wordSpacing:-10;,,,
+Map/Tiles/Special Thanks Tile/Objects/Hungry Worker/Canvas/Dialogue BG Font,,,enableWordWrapping:1;extraPadding:0;family:PixelUnicodeFill;fontSize:1;lineSpacing:-66;overflowMode:Overflow;wordSpacing:5.6;,,,

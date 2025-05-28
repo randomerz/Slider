@@ -216,8 +216,12 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        // If locale is English, don't bother migrating old translations
        // Otherwise, if an older translation exists, try migrate it
-       if (locale.name == LocalizationFile.DefaultLocale || locale.name == LocalizationFile.TestingLanguage || !File.Exists(path))
+       if (locale.name == LocalizationFile.DefaultLocale || locale.name == LocalizationFile.TestingLanguage) {
+            return null;
+       }
+       else if(!File.Exists(path))
        {
+           Debug.LogError($"{path} does not exist!");
            return null;
        }
 
@@ -274,20 +278,25 @@ public class LocalizationSkeletonGenerator : EditorWindow
        Dictionary<string, bool> localeIsValid = isDev ? 
            projectConfiguration.InitialLocales.ToDictionary((config) => config.name, _ => true) 
            : GetLocaleValidityMap(projectConfiguration);
+
+       void CleanCreate(string dir)
+       {
+           if (Directory.Exists(dir))
+           {
+               Directory.Delete(dir);
+           }
+
+           Directory.CreateDirectory(dir);
+       }
        
        string tempDirectory = Path.Combine(Path.GetTempPath(), "__slider_localization_external_save_dir__");
-       if (Directory.Exists(tempDirectory)) {
-           Directory.Delete(tempDirectory, true);
-       }
-       Directory.CreateDirectory(tempDirectory);
+       CleanCreate(tempDirectory);
 
        if (root == referenceRoot)
        {
            var resolvedReferenceRoot = LocalizationFile.LocalizationRootPath(root);
            string tempDirectory2 = Path.Combine(Path.GetTempPath(), "__slider_localization_external_ref_dir__");
-           if (Directory.Exists(tempDirectory2)) {
-               Directory.Delete(tempDirectory2, true);
-           }
+           CleanCreate(tempDirectory2);
            CopyDirectory(resolvedReferenceRoot, tempDirectory2, true);
            referenceRoot = tempDirectory2;
        }
