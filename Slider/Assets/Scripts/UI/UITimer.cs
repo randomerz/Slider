@@ -1,0 +1,37 @@
+using System;
+using UnityEngine;
+
+public class UITimer : MonoBehaviour
+{
+    public GameObject timer;
+    public UIBigText text;
+    private bool showTimer = false;
+ 
+    void Update()
+    {
+        bool shouldShowTimer = !PauseManager.IsPaused 
+            && !GameUI.instance.isMenuScene 
+            && SettingsManager.Setting<bool>(Settings.ShowTimer).CurrentValue;
+        
+        if(shouldShowTimer != showTimer)
+        {
+            timer.SetActive(shouldShowTimer);
+            showTimer = shouldShowTimer;
+        }
+
+        if(!showTimer) return;
+
+        float time = 0f;
+        if (SaveSystem.Current != null)
+        {
+            time = SaveSystem.Current.GetPlayTimeInSeconds();
+        }
+        TimeSpan ts = TimeSpan.FromSeconds(time);
+        text.SetText(string.Format(
+            "{0:D2}:{1:D2}:{2:D2}",
+            ts.Hours,
+            ts.Minutes,
+            ts.Seconds
+        ));
+    }
+}
