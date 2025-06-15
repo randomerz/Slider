@@ -484,6 +484,13 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
                 DeselectSelectedButton();
+
+                if (Controls.UsingControllerOrKeyboardOnly())
+                {
+                    // If we auto-moved, we want to move the cursor to the button we swap with
+                    buttonSelected = moveOptionButtons[0];
+                    EventSystem.current.SetSelectedGameObject(buttonSelected.gameObject);
+                }
             }
             else
             {
