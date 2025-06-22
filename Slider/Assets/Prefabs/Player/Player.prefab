@@ -262,37 +262,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &196772175927956233
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4231884321243647961}
-  m_Layer: 8
-  m_Name: Boat Stile Underneath Transform
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4231884321243647961
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 196772175927956233}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.46875, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2327666521070968836}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &224774816551553932
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +510,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionTruthTransform: {fileID: 380634037254267601}
-  dosmooth: 0
 --- !u!1 &380634037254267600
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +577,7 @@ MonoBehaviour:
   colliderPlayerVers: {fileID: 380634037254267612}
   colliderBoatVers: {fileID: 3512278234758974931}
   boatGameObject: {fileID: 8233378363419931551}
-  boatGetSTileUnderneathTransform: {fileID: 4231884321243647961}
+  boatGetSTileUnderneathTransform: {fileID: 7862666723060419687}
   feetTransform: {fileID: 2698063896132148759}
   ppMaterials:
   - {fileID: 2100000, guid: 85eaa3c69664c4047a1ca5f137ae44f0, type: 2}
@@ -932,8 +900,8 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.010937501
-    y: 0.35462964
+    x: 0.056770835
+    y: 0.5009259
     width: 0.16666667
     height: 0.16666666
   near clip plane: 0.1
@@ -1572,7 +1540,7 @@ Transform:
   m_GameObject: {fileID: 6979722770161973284}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 0}
+  m_LocalPosition: {x: 0, y: -0.46875, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1794,7 +1762,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4231884321243647961}
   - {fileID: 371208099197395284}
   m_Father: {fileID: 380634036804812843}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
