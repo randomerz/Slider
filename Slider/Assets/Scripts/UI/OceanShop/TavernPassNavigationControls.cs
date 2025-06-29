@@ -6,25 +6,24 @@ public class TavernPassNavigationControls : MonoBehaviour
 {
     public TavernPassManager tavernPassManager;
 
-    private BindingBehavior leftBindingBehavior;
-    private BindingBehavior rightBindingBehavior;
+    private Vector2 lastInput;
+    private BindingBehavior bindingBehavior;
 
     private void OnEnable() {
-        leftBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => {
-            if (context.ReadValue<Vector2>().x < 0)
+        bindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context => {
+            Vector2 input = context.ReadValue<Vector2>();
+            if (input == lastInput) return; // Ignore if input hasn't changed
+            lastInput = input;
+            
+            if (input.x < 0)
                 tavernPassManager.DecrementButton();
-        });
-
-        rightBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => {
-            if (context.ReadValue<Vector2>().x > 0)
+            else if (input.x > 0)
                 tavernPassManager.IncrementButton();
         });
-
     }
 
     private void OnDisable() {
         // According to lord of movement travis these happen for free when disabled
-        Controls.UnregisterBindingBehavior(leftBindingBehavior);
-        Controls.UnregisterBindingBehavior(rightBindingBehavior);
+        Controls.UnregisterBindingBehavior(bindingBehavior);
     }
 }
