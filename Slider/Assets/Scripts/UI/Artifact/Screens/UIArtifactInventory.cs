@@ -139,7 +139,7 @@ public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
         float smallestX = float.MaxValue;
         foreach(ArtifactInventoryCollectible c in collectibles)
         {
-            if(c.controllerSelectible.enabled && c.transform.position.x < smallestX)
+            if(c.controllerSelectible.enabled && c.isVisible && c.transform.position.x < smallestX)
             {
                 leftmost = c;
                 smallestX = c.transform.position.x;
@@ -159,7 +159,7 @@ public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
         float largestX = float.MinValue;
         foreach(ArtifactInventoryCollectible c in collectibles)
         {
-            if(c.controllerSelectible.enabled && c.transform.position.x > largestX)
+            if(c.controllerSelectible.enabled && c.isVisible && c.transform.position.x > largestX)
             {
                 rightMost = c;
                 largestX = c.transform.position.x;
