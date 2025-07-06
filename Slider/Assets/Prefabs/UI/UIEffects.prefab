@@ -1089,6 +1089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065710a35fd66de4c9a7a99f623ae43d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followPlayerSpriteInstead: 1
 --- !u!1 &7648707882233313094
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,7 +1141,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: UIEffects
-  autoRefreshOnSpawn: 0
 --- !u!1 &7648707882290023317
 GameObject:
   m_ObjectHideFlags: 0

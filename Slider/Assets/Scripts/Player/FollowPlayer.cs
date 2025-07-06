@@ -4,21 +4,15 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-    //private Player player;
+    [SerializeField] private bool followPlayerSpriteInstead;
 
-    void Start()
+    void LateUpdate()
     {
-        //player = GameObject.FindObjectOfType<Player>();
-
-        //if (player == null)
-        //{
-        //    Debug.LogError("Couldn't find player!");
-        //}
-    }
-
-    void Update()
-    {
-        transform.position = Player.GetPosition();
-        //transform.position = player.transform.position;
+        Vector3 position = Player.GetPosition();
+        if (followPlayerSpriteInstead && !GameUI.instance.isMenuScene)
+        {
+            position = Player.GetSpriteRenderer().transform.position;
+        }
+        transform.position = position;
     }
 }
