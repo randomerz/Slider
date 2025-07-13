@@ -105,10 +105,15 @@ namespace Localization
                 if (!string.IsNullOrWhiteSpace(text))
                 {
                     if (referenceFile != null 
-                        && referenceFile.TryGetRecord(path.key, out var entry) 
+                        && referenceFile.TryGetRecord(path.key, out var entry)
                         && entry.TryGetTranslated(out var translated)
                         )
                     {
+                        if (!entry.original.Equals(orig.text))
+                        {
+                            Debug.LogWarning($"Original text differs at key={path.key}, which may indicate index shift / out of sync.\nReference original: {entry.original}\nSerialized Origional: {orig.text}");
+                        }
+                        
                         text = translated;
                     }
 
