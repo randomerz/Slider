@@ -76,6 +76,13 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
            referenceLocales = null;
        }
+       else if (GUILayout.Button("Use project streaming asset folder as reference"))
+       {
+
+           referenceLocalizationPath = LocalizationFile.LocalizationRootPath();
+           EditorPrefs.SetString(referenceLocalizationPathPreference, referenceLocalizationPath);
+           referenceLocales = null;
+       }
        GUILayout.Label("^ Reference localization includes old translations that will be migrated into newly generated localization CSV files");
        
        string referenceDescription = "(No reference translation selected)";
