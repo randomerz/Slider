@@ -29,6 +29,7 @@ public enum Settings
     KeyboardOnly,
     LargerControllerDeadzone,
     HighFpsSmoothing, // Makes player sprite interpolate in drawn frames instead of just fixed update
+    ShowTimer,
 }
 
 static class SettingsMethods
@@ -57,6 +58,7 @@ static class SettingsMethods
         Settings.KeyboardOnly => "keyboardOnly",
         Settings.LargerControllerDeadzone => "largerControllerDeadzone",
         Settings.HighFpsSmoothing => "highFpsSmoothing",
+        Settings.ShowTimer => "showTimer",
         _ => ""
     };
 }

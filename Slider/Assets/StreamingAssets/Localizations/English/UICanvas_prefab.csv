@@ -1,4 +1,4 @@
-"Slider.v1.0.20","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
+﻿"Slider.v1.0.20","Unity.v2022.3.44f1","(file format explainer)->","Localization files are formatted like CSV so they can be easily edited,
 however formatting has strict rules for easy parsing. Most of these rules
 are already handled by Excel / Libre / etc., so you don't have to worry
 about them in normal usage. However, if your localization file seems to
@@ -96,6 +96,7 @@ Feel free to use these if you get stuck.","enableWordWrapping:1;extraPadding:0;f
 "UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/FeedbackButtonHolder/Feedback Button/Text","Give Feedback (web)","Give Feedback (web)","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
 "UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Colorblind Mode/Label","Colorblind Mode","Colorblind Mode","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:16;lineSpacing:0;overflowMode:Truncate;wordSpacing:-15;",
 "UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Mini Player Icon/Label","Mini Player Icon","Mini Player Icon","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:16;lineSpacing:0;overflowMode:Truncate;wordSpacing:-15;",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Show Timer/Label","Show Timer","Show Timer","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:16;lineSpacing:0;overflowMode:Truncate;wordSpacing:-15;",
 "UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/Misc Options Text","Miscellaneous","Miscellaneous","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:24;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
 "UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/ResetButtonHolder/Reset to Defaults Button/Text","Reset All Settings","Reset All Settings","enableWordWrapping:1;extraPadding:0;family:PixelTitanZero;fontSize:16;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
 "UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Ambience Slider/Label","Ambience","Ambience","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:16;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
@@ -128,3 +129,9 @@ Unfocused","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize
 "UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Binding/Text","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:14;lineSpacing:-45;overflowMode:Overflow;wordSpacing:0;",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:16;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
 "UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown","","","enableWordWrapping:1;extraPadding:0;family:PixelUnicode SDF;fontSize:16;lineSpacing:0;overflowMode:Overflow;wordSpacing:0;",
+"UICanvas/Timer/TimerText","","","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:16;lineSpacing:-2.8;overflowMode:Overflow;wordSpacing:0;",
+"UICanvas/Timer/TimerText/Text","","","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:16;lineSpacing:-2.8;overflowMode:Overflow;wordSpacing:0;",
+"UICanvas/Timer/TimerText/Text Outline (1)","","","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:16;lineSpacing:-2.8;overflowMode:Overflow;wordSpacing:0;",
+"UICanvas/Timer/TimerText/Text Outline (2)","","","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:16;lineSpacing:-2.8;overflowMode:Overflow;wordSpacing:0;",
+"UICanvas/Timer/TimerText/Text Outline (3)","","","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:16;lineSpacing:-2.8;overflowMode:Overflow;wordSpacing:0;",
+"UICanvas/Timer/TimerText/Text Outline (4)","","","enableWordWrapping:1;extraPadding:0;family:PixelTitanOne;fontSize:16;lineSpacing:-2.8;overflowMode:Overflow;wordSpacing:0;",
