@@ -5,7 +5,6 @@ public class UITimer : MonoBehaviour
 {
     public GameObject timer;
     public UIBigText text;
-    private bool showTimer = false;
  
     void Update()
     {
@@ -13,19 +12,19 @@ public class UITimer : MonoBehaviour
             && !GameUI.instance.isMenuScene 
             && SettingsManager.Setting<bool>(Settings.ShowTimer).CurrentValue;
         
-        if(shouldShowTimer != showTimer)
+        if (shouldShowTimer != timer.activeSelf)
         {
             timer.SetActive(shouldShowTimer);
-            showTimer = shouldShowTimer;
         }
 
-        if(!showTimer) return;
+        if (!shouldShowTimer) return;
 
         float time = 0f;
         if (SaveSystem.Current != null)
         {
             time = SaveSystem.Current.GetPlayTimeInSeconds();
         }
+        Debug.Log($"UITimer Update called : {time}");
         TimeSpan ts = TimeSpan.FromSeconds(time);
         text.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}",
