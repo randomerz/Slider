@@ -93,6 +93,7 @@ namespace Localization
 
     internal sealed class ParsedLocalizable : Localizable
     {
+        public string original;
         private readonly SerializedLocalizableData _data;
         
         public bool TryGetTranslated(out string translated)
@@ -110,14 +111,15 @@ namespace Localization
 
         public string Metadata => _data.metadata;
 
-        private ParsedLocalizable(string hierarchyPath, string index, SerializedLocalizableData data)
+        private ParsedLocalizable(string hierarchyPath, string index, string original, SerializedLocalizableData data)
         {
             this.index = index;
             this.hierarchyPath = hierarchyPath;
+            this.original = original;
             _data = data;
         }
 
-        internal static ParsedLocalizable ParsePath(string fullPath, SerializedLocalizableData data)
+        internal static ParsedLocalizable ParsePath(string fullPath, string original, SerializedLocalizableData data)
         {
             string[] pathAndIndex = fullPath.Split(indexSeparator);
 
@@ -128,12 +130,12 @@ namespace Localization
 
             if (pathAndIndex.Length == 1)
             {
-                return new ParsedLocalizable(pathAndIndex[0], null, data);
+                return new ParsedLocalizable(pathAndIndex[0], null, original, data);
             }
 
             try
             {
-                return new ParsedLocalizable(pathAndIndex[0], pathAndIndex[1], data);
+                return new ParsedLocalizable(pathAndIndex[0], pathAndIndex[1], original, data);
             }
             catch (FormatException)
             {
@@ -524,6 +526,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             var path = reader.GetString(0);
             var newRecord = ParsedLocalizable.ParsePath(path,
+                reader.GetString(1),
                 new SerializedLocalizableData
                 {
                     text = reader.GetString(2),
