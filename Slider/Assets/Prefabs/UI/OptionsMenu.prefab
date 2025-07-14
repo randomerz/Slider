@@ -3832,6 +3832,10 @@ PrefabInstance:
       value: -26
       objectReference: {fileID: 0}
     - target: {fileID: 5303905783112152059, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 2905154067163065431}
+    - target: {fileID: 5303905783112152059, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}

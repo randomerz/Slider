@@ -168,7 +168,7 @@ public class BaboonTree : MonoBehaviour, IDialogueTableProvider
         }
 
         SaveSystem.Current.SetString("desertRemainingShakeDirection", this.GetLocalized(
-            didHorizontal ? BaboonDialogueCode.Horizontally : BaboonDialogueCode.Vertically).TranslatedFallbackToOriginal
+            didHorizontal ? BaboonDialogueCode.Vertically : BaboonDialogueCode.Horizontally).TranslatedFallbackToOriginal
         );
 
         if (isWalking && !isFalling)
