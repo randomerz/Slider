@@ -11,6 +11,7 @@ public class PlayerAction : Singleton<PlayerAction>
     [SerializeField] private Transform pickedItemLocation;
     [SerializeField] private Transform pickedItemReflectionLocation;
     [SerializeField] private Transform boatDropItemBaseTransform;
+    [SerializeField] private Transform updateFrameCorrectTransform; // probably player sprite
     [SerializeField] private GameObject itemDropIndicator;
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
@@ -47,14 +48,17 @@ public class PlayerAction : Singleton<PlayerAction>
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking)
         {
-            Vector2 closestValidDropPosition = GetClosestValidDropPosition();
-            
             // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
             Vector3 basePosition = GetPlayerTransformRaycastPosition();
+            Vector2 closestValidDropPosition = GetClosestValidDropPosition(basePosition);
 
             canDrop = Vector2.Distance(basePosition, closestValidDropPosition) > MIN_DROP_DISTANCE;
             itemDropIndicator.SetActive(canDrop);
-            itemDropIndicator.transform.position = closestValidDropPosition;
+
+            // With high FPS smoothing, the player position updates on Fixed time but indicator 
+            // should move on Update time.
+            Vector3 displayBasePosition = GetUpdateFrameCorrectRaycastPosition();
+            itemDropIndicator.transform.position = GetClosestValidDropPosition(displayBasePosition);
         }
         else if (pickedItem == null)
         {
@@ -62,12 +66,11 @@ public class PlayerAction : Singleton<PlayerAction>
         }
     }
 
-    private Vector2 GetClosestValidDropPosition()
+    private Vector2 GetClosestValidDropPosition(Vector3 basePosition)
     {
         Vector3 raycastDirection = Player.GetLastMoveDirection().normalized;
 
         // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
-        Vector3 basePosition = GetPlayerTransformRaycastPosition();
 
         LayerMask lm = pickedItem is Anchor ? anchorDropCollidingMask : dropCollidingMask;
         lm |= noDropItemsLayerMask;
@@ -119,6 +122,20 @@ public class PlayerAction : Singleton<PlayerAction>
         else
         {
             return boatDropItemBaseTransform.transform.position;
+        }
+    }
+
+    public Vector3 GetUpdateFrameCorrectRaycastPosition()
+    {
+        if (!Player.GetInstance().GetIsOnWater())
+        {
+            return updateFrameCorrectTransform.position;
+        }
+        else
+        {
+            // Add offset between this and correct position to boat base position
+            Vector3 offset = updateFrameCorrectTransform.position - transform.position;
+            return boatDropItemBaseTransform.transform.position + offset;
         }
     }
 

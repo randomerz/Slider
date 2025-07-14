@@ -36,7 +36,6 @@ RectTransform:
   m_Children:
   - {fileID: 1388496678601117589}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -112,7 +111,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: -6841160333406063026, guid: d82b1e1e0d4e6874f866004f3d0178ed, type: 3}
     m_PressedSprite: {fileID: -8558253651739117399, guid: d82b1e1e0d4e6874f866004f3d0178ed, type: 3}
-    m_SelectedSprite: {fileID: 8744573768773628031, guid: d82b1e1e0d4e6874f866004f3d0178ed, type: 3}
+    m_SelectedSprite: {fileID: -6841160333406063026, guid: d82b1e1e0d4e6874f866004f3d0178ed, type: 3}
     m_DisabledSprite: {fileID: 8909370006870540461, guid: d82b1e1e0d4e6874f866004f3d0178ed, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -239,7 +238,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1388496677168054970}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

@@ -109,14 +109,9 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    protected virtual void HandleControllerCheck(object sender, System.EventArgs e)
+    // Selects a default button when you open the artifact screen
+    protected void HandleControllerCheck(object sender, System.EventArgs e)
     {
-        /*
-        if (!UIArtifactMenus.IsArtifactOpen())
-        {
-            return;
-        }
-        */
         GameObject buttonToSelect = EventSystem.current.currentSelectedGameObject;
         // Controller check if nothing is selected, then select the tile 1 or left arrow or right arrow
         if (!IsButtonValidForSelection(buttonToSelect))
@@ -489,6 +484,13 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
                 DeselectSelectedButton();
+
+                if (Controls.UsingControllerOrKeyboardOnly())
+                {
+                    // If we auto-moved, we want to move the cursor to the button we swap with
+                    buttonSelected = moveOptionButtons[0];
+                    EventSystem.current.SetSelectedGameObject(buttonSelected.gameObject);
+                }
             }
             else
             {

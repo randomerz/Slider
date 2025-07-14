@@ -17,7 +17,7 @@ public class DesertSafe : MonoBehaviour
     private float laseredStartTime;
     public GameObject laseredSafeUI;
 
-    private void Start() 
+    private void Start()
     {
         if (SaveSystem.Current.GetBool("desertSafeMelted"))
         {
@@ -33,7 +33,7 @@ public class DesertSafe : MonoBehaviour
 
     public void OnUnLasered()
     {
-       // Debug.Log("Safe Unlasered!");
+        // Debug.Log("Safe Unlasered!");
         currentlyLasered = false;
     }
 
@@ -41,7 +41,7 @@ public class DesertSafe : MonoBehaviour
     {
         if (!melted)
         {
-            if (currentlyLasered && !laseredLastUpdate) 
+            if (currentlyLasered && !laseredLastUpdate)
             {
                 laseredLastUpdate = true;
                 laseredStartTime = Time.time;
@@ -66,10 +66,27 @@ public class DesertSafe : MonoBehaviour
         melted = true;
 
         mirageSpriteRenderer.sprite = meltedMirageSprite;
+        if (!SaveSystem.Current.GetBool("desertSafeMelted"))
+        {
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position + Vector3.up * 0.5f);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position + Vector3.right * 0.5f);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position + Vector3.left * 0.5f);
+            StartCoroutine(MeltSafeAudio());
+        }
 
         SaveSystem.Current.SetBool("desertSafeMelted", true);
 
         dinoLasersManager.RemoveAllLasersPermanently();
         laseredSafeUI.SetActive(true);
+    }
+
+    private IEnumerator MeltSafeAudio()
+    {
+        AudioManager.PlayWithVolume("Ice Melt", 1f);
+        yield return new WaitForSeconds(1f);
+        AudioManager.PlayWithVolume("Ice Melt", 0.75f);
+        yield return new WaitForSeconds(1f);
+        AudioManager.PlayWithVolume("Ice Melt", 0.5f);
     }
 }
