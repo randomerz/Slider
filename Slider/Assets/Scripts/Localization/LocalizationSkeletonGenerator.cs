@@ -316,10 +316,23 @@ public class LocalizationSkeletonGenerator : EditorWindow
            globalStrings.Add(LocalizableContext.AreaToDisplayNamePath(kv.Key), kv.Value);
        }
 
+       void AddToGlobalStrings(LocalizableContext skeleton)
+       {
+           foreach (var kv in skeleton.GlobalStringsToExport)
+           {
+               if (!globalStrings.TryAdd(kv.Key, kv.Value))
+               {
+                   Debug.LogWarning($"Duplicate global export string {kv.Key}: {kv.Value}, all occurrences will use shared translation");
+               }
+           }
+       }
+
        foreach (var prefab in projectConfiguration.RelevantPrefabs)
        {
            var injector = prefab.GetComponent<LocalizationInjector>();
            var skeleton = LocalizableContext.ForInjector(injector);
+           AddToGlobalStrings(skeleton);
+           
            
            foreach (var locale in projectConfiguration.InitialLocales)
            {
@@ -345,14 +358,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            
            var scene = EditorSceneManager.OpenScene(editorBuildSettingsScene.path);
            var skeleton = LocalizableContext.ForSingleScene(scene);
-
-           foreach (var kv in skeleton.GlobalStringsToExport)
-           {
-               if (!globalStrings.TryAdd(kv.Key, kv.Value))
-               {
-                   Debug.LogWarning($"Duplicate global export string {kv.Key}: {kv.Value}, all occurrences will use shared translation");
-               }
-           }
+           AddToGlobalStrings(skeleton);
            
            // Default locale is covered in locale list
            // WriteFileAndForceParentPath(LocalizationFile.DefaultLocaleAssetPath(scene, root), serializedSkeleton);
