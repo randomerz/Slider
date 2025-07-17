@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Localization;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class UIArtifactInventory : MonoBehaviour, IDialogueTableProvider
 {

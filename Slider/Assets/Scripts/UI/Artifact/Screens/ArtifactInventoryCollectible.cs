@@ -12,6 +12,8 @@ public class ArtifactInventoryCollectible : MonoBehaviour
     public Selectable controllerSelectible;
     public Image controllerSelectionImage;
 
+    public bool isSpecialItem = false;
+    
     public UIArtifactInventory inventory;
 
     [HideInInspector] public bool isVisible;
@@ -24,7 +26,11 @@ public class ArtifactInventoryCollectible : MonoBehaviour
 
     public void UpdateInventoryName()
     {
-        inventory.UpdateText(LocalizationLoader.LoadCollectibleTranslation(collectibleName, SGrid.Current.GetArea()));
+        var locName = isSpecialItem
+            ? LocalizationLoader.LoadSpecialItemTranslation(collectibleName)
+            : LocalizationLoader.LoadCollectibleTranslation(collectibleName, SGrid.Current.GetArea());
+        
+        inventory.UpdateText(locName);
     }
 
     private void OnEnable()

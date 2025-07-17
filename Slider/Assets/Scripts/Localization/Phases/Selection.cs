@@ -192,10 +192,12 @@ namespace Localization
         public static string CollectibleToPath(string collectible, Area area) =>
             $"__Collectibles/{collectible}";
 
+        public static string SpecialItemToPath(string specialItem) => $"__SpecialItem/{specialItem}";
+
         public static string AreaToDiscordNamePath(Area area) => $"__DiscordMessages/{area.ToString()}";
 
         public static string AreaToDisplayNamePath(Area area) => $"__AreaDisplayName/{area.ToString()}";
-
+        
         private IEnumerable<TrackedLocalizable> ExportCollectibleString(Collectible collectible)
         {
             // Debug.LogError(SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area));
@@ -205,6 +207,19 @@ namespace Localization
                         collectible.GetCollectibleData().name,
                         collectible.GetCollectibleData().area),
                     collectible.GetCollectibleData().name))
+            {
+                // Debug.LogWarning(
+                //     $"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}");
+            }
+
+            return new TrackedLocalizable[] { };
+        }
+
+        private IEnumerable<TrackedLocalizable> ExportAICString(ArtifactInventoryCollectible aic)
+        {
+            if (aic.isSpecialItem && !GlobalStringsToExport.TryAdd(
+                    SpecialItemToPath(aic.collectibleName),
+                    aic.collectibleName))
             {
                 // Debug.LogWarning(
                 //     $"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}");

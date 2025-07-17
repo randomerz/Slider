@@ -139,6 +139,9 @@ public class LocalizationLoader : Singleton<LocalizationLoader>, ILocalizationTr
     public static string LoadCollectibleTranslation(string name, Area area)
         => _instance.LoadTranslatedString(LocalizableContext.CollectibleToPath(name, area), name);
 
+    public static string LoadSpecialItemTranslation(string name) =>
+        _instance.LoadTranslatedString(LocalizableContext.SpecialItemToPath(name), name);
+
     private string LoadTranslatedString(string path, string fallback)
     {
         var file = _instance.LocaleGlobalFile;

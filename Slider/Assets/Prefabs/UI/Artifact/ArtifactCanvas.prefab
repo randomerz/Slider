@@ -417,7 +417,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2590903364839502370}
-  - component: {fileID: 3334539397020280958}
   m_Layer: 5
   m_Name: Special Items
   m_TagString: Untagged
@@ -449,19 +448,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3334539397020280958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905927120452045696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  excludeFromTranslationOnly: 1
 --- !u!1 &1943054365049430691
 GameObject:
   m_ObjectHideFlags: 0
@@ -3786,10 +3772,15 @@ PrefabInstance:
       value: Boots+
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: isSpecialItem
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
       value: Boots Upgrade
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1547136286824135564, guid: b1443db5380833d48b886452d308d54c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -4382,10 +4373,15 @@ PrefabInstance:
       value: Anchor
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: isSpecialItem
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
       value: Anchor
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1547136286824135564, guid: b1443db5380833d48b886452d308d54c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -4914,10 +4910,15 @@ PrefabInstance:
       value: Boots
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: isSpecialItem
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
       value: Boots
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1547136286824135564, guid: b1443db5380833d48b886452d308d54c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -10663,10 +10664,15 @@ PrefabInstance:
       value: Scroll of Realigning
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: isSpecialItem
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
       value: Scroll of Realigning
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1547136286824135564, guid: b1443db5380833d48b886452d308d54c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -11573,10 +11579,15 @@ PrefabInstance:
       value: Scroll Scap
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: isSpecialItem
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
       value: Scroll Scap
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1547136286824135564, guid: b1443db5380833d48b886452d308d54c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
