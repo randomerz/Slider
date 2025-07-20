@@ -131,7 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: MilitaryAlly
-  autoRefreshOnSpawn: 1
 --- !u!1001 &425169645042214699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -216,6 +215,10 @@ PrefabInstance:
       propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].dialogue
       value: Defend our land!
       objectReference: {fileID: 0}
+    - target: {fileID: 4361967530816430225, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: preset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c8b4bbf42ec25541bfb732170805765, type: 2}
     - target: {fileID: 6295134179173694675, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Size.x
       value: 0.75
@@ -381,6 +384,10 @@ PrefabInstance:
       propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].editorIsAnimatorUnfolded
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361967530816430225, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: preset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c8b4bbf42ec25541bfb732170805765, type: 2}
     - target: {fileID: 6295134179173694675, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Size.x
       value: 0.75
@@ -530,6 +537,10 @@ PrefabInstance:
       propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].dialogue
       value: Defend our land!
       objectReference: {fileID: 0}
+    - target: {fileID: 4361967530816430225, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: preset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c8b4bbf42ec25541bfb732170805765, type: 2}
     - target: {fileID: 6295134179173694675, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Size.x
       value: 0.75
@@ -784,6 +795,10 @@ PrefabInstance:
       propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].dialogue
       value: Defend our land!
       objectReference: {fileID: 0}
+    - target: {fileID: 4361967530816430225, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: preset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c8b4bbf42ec25541bfb732170805765, type: 2}
     - target: {fileID: 6295134179173694675, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Size.x
       value: 0.75

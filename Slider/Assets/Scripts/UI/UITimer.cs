@@ -24,7 +24,7 @@ public class UITimer : MonoBehaviour
         {
             time = SaveSystem.Current.GetPlayTimeInSeconds();
         }
-        Debug.Log($"UITimer Update called : {time}");
+        
         TimeSpan ts = TimeSpan.FromSeconds(time);
         text.SetText(string.Format(
             "{0:D2}:{1:D2}:{2:D2}",

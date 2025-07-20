@@ -25,12 +25,24 @@ public class FactoryTimeCalibratorTurnIn : MonoBehaviour
         }
         SaveSystem.Current.SetBool(CALIBRATOR_SAVE_STRING, true);
 
-        PlayerInventory.RemoveItem();
+        RemoveTimeCalibrator();
 
         MoveCalibratorToCorrectPosition();
 
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, timeCalibratorFinalPosition.position, timeCalibratorFinalPosition);
         AudioManager.Play("UI Click", timeCalibratorFinalPosition);
+    }
+
+    private void RemoveTimeCalibrator()
+    {
+        if (PlayerInventory.GetCurrentItem() == timeCalibratorItem)
+        {
+            PlayerInventory.RemoveAndDestroyItem();
+        }
+        else
+        {
+            Debug.LogError("Trying to remove time calibrator, but it is not the current item in inventory!");
+        }
     }
 
     private void MoveCalibratorToCorrectPosition()

@@ -74,6 +74,15 @@ public class Item : MonoBehaviour, ISavable
             gameObject.SetActive(false);
     }
 
+    void OnDisable()
+    {
+        if (callbackIfDestroyed != null)
+        {
+            Debug.LogWarning("Warning. Item was disabled but 'callbackIfDestroyed' was set." +
+                "This is fine if item is actually being destroyed.");
+        }
+    }
+
     private void OnDestroy()
     {
         isQueuedForDestruction = true;
@@ -228,6 +237,8 @@ public class Item : MonoBehaviour, ISavable
                 reflEnd.localPosition = Vector3.zero;
             }
         }
+        
+        Debug.Log("starting pick up animation");
 
         while (t < pickUpDuration)
         {
@@ -235,9 +246,9 @@ public class Item : MonoBehaviour, ISavable
             float y = yPickUpMotion.Evaluate(t / pickUpDuration);
             Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.position.x, x),
                                       Mathf.Lerp(start.y, target.transform.position.y, y));
-            
+
             spriteRenderer.transform.position = pos + spriteOffset;
-            
+
             if (doReflectionCalculations && reflectionPivot != null)
             {
                 Vector3 reflectionPos = new Vector3(pos.x, Mathf.Lerp(reflStart.position.y, reflEnd.position.y, x));
@@ -247,6 +258,7 @@ public class Item : MonoBehaviour, ISavable
             yield return null;
             t += Time.deltaTime;
         }
+        Debug.Log("finish pick up animation");
 
         if (doReflectionCalculations)
         {
