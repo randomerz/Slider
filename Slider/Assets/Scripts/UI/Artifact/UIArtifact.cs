@@ -65,6 +65,13 @@ public class UIArtifact : Singleton<UIArtifact>
         OnButtonInteract += UpdatePushedDowns;
     }
 
+    void OnDestroy()
+    {
+        // Maybe we should clean up the others too??
+        UIArtifactMenus.OnArtifactOpened -= HandleControllerCheck;
+        ArtifactScreenAnimator.OnScreenChange -= OnArtifactScreenChanged;
+    }
+
     public virtual void Init()
     {
         didInit = true;
@@ -112,29 +119,59 @@ public class UIArtifact : Singleton<UIArtifact>
     // Selects a default button when you open the artifact screen
     protected void HandleControllerCheck(object sender, System.EventArgs e)
     {
-        GameObject buttonToSelect = EventSystem.current.currentSelectedGameObject;
-        // Controller check if nothing is selected, then select the tile 1 or left arrow or right arrow
-        if (!IsButtonValidForSelection(buttonToSelect))
-        {
-            foreach (GameObject button in fallbackButtonsToSelect)
-            {
-                if (IsButtonValidForSelection(button))
-                {
-                    buttonToSelect = button;
-                    break;
-                }
-            }
-        }
+        GameObject buttonToSelect = GetValidButtonForSelection();
         EventSystem.current.SetSelectedGameObject(null);
-
         EventSystem.current.SetSelectedGameObject(buttonToSelect);
     }
+
+    private GameObject GetValidButtonForSelection()
+    {
+        GameObject buttonToSelect = EventSystem.current.currentSelectedGameObject;
+        // If nothing is selected, try selecting:
+        // - current selected button
+        // - tile the player is under 
+        // - tile 1
+        // - left/right arrow
+
+        if (IsButtonValidForSelection(buttonToSelect))
+        {
+            Debug.Log("skipping because button was already valid: " + buttonToSelect.name);
+            return buttonToSelect;
+        }
+
+        STile stileUnderPlayer = Player.GetInstance().GetSTileUnderneath();
+        if (stileUnderPlayer != null)
+        {
+            Debug.Log("tile under player: " + stileUnderPlayer.islandId);
+            ArtifactTileButton button = GetButton(stileUnderPlayer.islandId);
+            if (IsButtonValidForSelection(button.gameObject))
+            {
+                return button.gameObject;
+            }
+            Debug.Log("NOT VALID!!!");
+        }
+
+        Debug.Log("checking fallback buttons to select. first button is " + fallbackButtonsToSelect[0].name);
+        foreach (GameObject button in fallbackButtonsToSelect)
+        {
+            if (IsButtonValidForSelection(button))
+            {
+                return button;
+            }
+        }
+
+        Debug.LogError("Could not find a valid button to select on artifact screen!" +
+            "This is probably because the buttons are not set up correctly in the inspector.");
+        return null;
+    }
+
 
     protected bool IsButtonValidForSelection(GameObject g)
     {
         // If selected object is null or deactivated
         if (g == null || !g.activeInHierarchy)
         {
+            Debug.Log("Selected object is null or deactivated: " + g);
             return false;
         }
 
@@ -146,6 +183,7 @@ public class UIArtifact : Singleton<UIArtifact>
             UIClick uiClick = g.GetComponent<UIClick>();
             if (uiClick != null && !uiClick.IsTemporarilyDisabled)
             {
+                Debug.Log("uiclick did not disable button: " + g.name);
                 return false;
             }
         }
