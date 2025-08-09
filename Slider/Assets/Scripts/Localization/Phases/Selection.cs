@@ -216,7 +216,7 @@ namespace Localization
         private IEnumerable<TrackedLocalizable> ExportMilitaryCollectibleString(MilitaryCollectibleController mcc)
         {
             var c = mcc.collectiblePrefab.GetComponent<Collectible>();
-            GlobalStringsToExport.TryAdd(CollectibleToPath(c.GetCollectibleData().name, c.GetCollectibleData().area),
+            GlobalStringsToExport.TryAdd(CollectibleToPath(c.GetCollectibleData().name, Area.Military),
                 c.GetCollectibleData().name);
 
             return new TrackedLocalizable[] { };
