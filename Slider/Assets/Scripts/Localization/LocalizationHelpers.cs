@@ -628,6 +628,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             ////////////////////// STRING EXPORT FUNCTIONS /////////////////////////////////////////////////////////////
             _selectorFunctionMap.TryAdd(typeof(Collectible), c => ExportCollectibleString(c as Collectible));
+            _selectorFunctionMap.TryAdd(typeof(MilitaryCollectibleController),
+                c => ExportMilitaryCollectibleString(c as MilitaryCollectibleController));
             _selectorFunctionMap.TryAdd(typeof(ArtifactInventoryCollectible),
                 c => ExportAICString(c as ArtifactInventoryCollectible));
 
