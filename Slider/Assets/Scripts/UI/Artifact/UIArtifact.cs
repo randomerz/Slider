@@ -506,7 +506,7 @@ public class UIArtifact : Singleton<UIArtifact>
                 return;
             }
 
-            List<ArtifactTileButton> moveOptionButtons = GetMoveOptions(button);
+            moveOptionButtons = GetMoveOptions(button);
             bool buttonWithLockedMovement = moveOptionButtons.Count == 0 || button.MyStile.hasAnchor
                 || (button.LinkButton != null && button.LinkButton.MyStile.hasAnchor);
             if (buttonWithLockedMovement)
@@ -521,13 +521,17 @@ public class UIArtifact : Singleton<UIArtifact>
             if (autoMove)
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
-                DeselectSelectedButton();
 
                 if (Controls.UsingControllerOrKeyboardOnly())
                 {
                     // If we auto-moved, we want to move the cursor to the button we swap with
                     buttonSelected = moveOptionButtons[0];
                     EventSystem.current.SetSelectedGameObject(buttonSelected.gameObject);
+                    ClearMoveOptions();
+                }
+                else
+                {
+                    DeselectSelectedButton();
                 }
             }
             else
