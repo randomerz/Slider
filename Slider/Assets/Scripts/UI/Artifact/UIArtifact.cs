@@ -135,23 +135,19 @@ public class UIArtifact : Singleton<UIArtifact>
 
         if (IsButtonValidForSelection(buttonToSelect))
         {
-            Debug.Log("skipping because button was already valid: " + buttonToSelect.name);
             return buttonToSelect;
         }
 
         STile stileUnderPlayer = Player.GetInstance().GetSTileUnderneath();
         if (stileUnderPlayer != null)
         {
-            Debug.Log("tile under player: " + stileUnderPlayer.islandId);
             ArtifactTileButton button = GetButton(stileUnderPlayer.islandId);
             if (IsButtonValidForSelection(button.gameObject))
             {
                 return button.gameObject;
             }
-            Debug.Log("NOT VALID!!!");
         }
 
-        Debug.Log("checking fallback buttons to select. first button is " + fallbackButtonsToSelect[0].name);
         foreach (GameObject button in fallbackButtonsToSelect)
         {
             if (IsButtonValidForSelection(button))
@@ -171,7 +167,7 @@ public class UIArtifact : Singleton<UIArtifact>
         // If selected object is null or deactivated
         if (g == null || !g.activeInHierarchy)
         {
-            Debug.Log("Selected object is null or deactivated: " + g);
+            // Debug.Log("Selected object is null or deactivated: " + g);
             return false;
         }
 
@@ -183,7 +179,7 @@ public class UIArtifact : Singleton<UIArtifact>
             UIClick uiClick = g.GetComponent<UIClick>();
             if (uiClick != null && !uiClick.IsTemporarilyDisabled)
             {
-                Debug.Log("uiclick did not disable button: " + g.name);
+                // Debug.Log("uiclick did not disable button: " + g.name);
                 return false;
             }
         }

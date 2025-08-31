@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class MagiTechArtifact : UIArtifact
 {
+    public ArtifactTabManager artifactTabManager;
+
     /*C: Note that this is on the *opposite* side of the grid from the anchor.
     *   IE if the anchor is dropped at (2,1), in the present, this vector will be (5, 1),
     *   the corresponding location in the past, since this is the location we need
@@ -110,7 +112,7 @@ public class MagiTechArtifact : UIArtifact
             }
             else
             {
-                if (isDesyncSoundPlaying)
+                if (isDesyncSoundPlaying && !artifactTabManager.InPreview)
                 {
                     // Likely not needed but its good to be safe?
                     isDesyncSoundPlaying = false;

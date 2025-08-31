@@ -238,7 +238,7 @@ public class Item : MonoBehaviour, ISavable
             }
         }
         
-        Debug.Log("starting pick up animation");
+        // Debug.Log("starting pick up animation");
 
         while (t < pickUpDuration)
         {
@@ -258,7 +258,7 @@ public class Item : MonoBehaviour, ISavable
             yield return null;
             t += Time.deltaTime;
         }
-        Debug.Log("finish pick up animation");
+        // Debug.Log("finish pick up animation");
 
         if (doReflectionCalculations)
         {
