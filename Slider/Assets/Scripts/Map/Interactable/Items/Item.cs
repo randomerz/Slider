@@ -237,15 +237,13 @@ public class Item : MonoBehaviour, ISavable
                 reflEnd.localPosition = Vector3.zero;
             }
         }
-        
-        // Debug.Log("starting pick up animation");
 
         while (t < pickUpDuration)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);
             float y = yPickUpMotion.Evaluate(t / pickUpDuration);
-            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.position.x, x),
-                                      Mathf.Lerp(start.y, target.transform.position.y, y));
+            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.position.x, x),
+                                      Mathf.Lerp(start.y, target.position.y, y));
 
             spriteRenderer.transform.position = pos + spriteOffset;
 
@@ -255,10 +253,10 @@ public class Item : MonoBehaviour, ISavable
                 reflectionPivot.position = reflectionPos;
             }
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
+
             t += Time.deltaTime;
         }
-        // Debug.Log("finish pick up animation");
 
         if (doReflectionCalculations)
         {
