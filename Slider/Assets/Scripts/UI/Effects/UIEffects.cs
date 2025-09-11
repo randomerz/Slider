@@ -31,6 +31,10 @@ public class UIEffects : Singleton<UIEffects>
     private static System.Action previousMidCallback;
     private Texture2D screenshot;
 
+    private static float ScreenVisualEffectsAmount =>
+            SettingsManager.Setting<float>(Settings.ScreenVisualEffects).CurrentValue;
+            
+
     public enum ScreenshotEffectType
     {
         PORTAL,
@@ -84,13 +88,15 @@ public class UIEffects : Singleton<UIEffects>
 
     public static void FadeFromWhite(System.Action callback=null, float speed=1)
     {
+        float startAlpha = 0.9f * ScreenVisualEffectsAmount;
         StartEffectCoroutine(
-            _instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed), callback: callback
+            _instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, startAlpha, 0, callback, speed), callback: callback
         );
     }
 
     public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1, bool useUnscaledTime = false)
     {
+        alpha *= ScreenVisualEffectsAmount;
         StartEffectCoroutine(
             _instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd, useUnscaledTime), callback: callback
         );
@@ -98,6 +104,7 @@ public class UIEffects : Singleton<UIEffects>
 
     public static void FadeToWhiteExtra(System.Action callbackHalf=null, System.Action callbackThreeFourth=null, System.Action callbackEnd=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
     {
+        alpha *= ScreenVisualEffectsAmount;
         StartEffectCoroutine(
             _instance.FadeMoreCallbacksCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callbackHalf, callbackThreeFourth, callbackEnd, speed, disableAtEnd),
             midCallback: callbackHalf, 
@@ -243,10 +250,12 @@ public class UIEffects : Singleton<UIEffects>
         float t = 0;
         whitePanel.SetActive(true);
         whitePanelCanvasGroup.alpha = 0;
+        float alpha_low = 0; // full transparent
+        float alpha_high = 1 * ScreenVisualEffectsAmount; // full white
 
         while (t < flashDuration / 2)
         {
-            whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
+            whitePanelCanvasGroup.alpha = Mathf.Lerp(alpha_low, alpha_high, t / (flashDuration / 2));
 
             yield return null;
             t += (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
@@ -257,7 +266,7 @@ public class UIEffects : Singleton<UIEffects>
 
         while (t >= 0)
         {
-            whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
+            whitePanelCanvasGroup.alpha = Mathf.Lerp(alpha_low, alpha_high, t / (flashDuration / 2));
 
             yield return null;
             t -= (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
@@ -284,7 +293,7 @@ public class UIEffects : Singleton<UIEffects>
         Sprite sprite = Sprite.Create(screenshot, new Rect(0, 0, Screen.width, Screen.height), new Vector2(0, 0));
         screenshotImage.sprite = sprite;
         screenshotPanel.SetActive(true);
-        screenshotCanvasGroup.alpha = 0.5f;
+        screenshotCanvasGroup.alpha = 0.5f * ScreenVisualEffectsAmount; // Goes from 0.5 to 0
         screenshotPanel.transform.localScale = Vector3.one;
         screenshotPanel.transform.localRotation = Quaternion.identity;
         screenshotCallback?.Invoke();

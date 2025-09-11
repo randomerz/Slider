@@ -106,12 +106,14 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     {
         SGridAnimator.OnSTileMoveStart += RemovePlayerOnMirageSTile;
         SGridAnimator.OnSTileMoveEndLate += EnableMirageTilesAfterSMove;
+        SettingsManager.OnSettingChanged[Settings.ScreenVisualEffects] += OnScreenVisualEffectsChanged;
     }
 
     private void UnSubscribeMirageEvents()
     {
         SGridAnimator.OnSTileMoveStart -= RemovePlayerOnMirageSTile;
         SGridAnimator.OnSTileMoveEndLate -= EnableMirageTilesAfterSMove;
+        SettingsManager.OnSettingChanged[Settings.ScreenVisualEffects] -= OnScreenVisualEffectsChanged;
     }
     
     private void Start()
@@ -156,7 +158,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     {
         if (fromSave)
         {
-            volume.weight = 1;
+            float mirageWeight = SettingsManager.Setting<float>(Settings.ScreenVisualEffects).CurrentValue;
+            volume.weight = mirageWeight;
         }
         else
         {
@@ -200,6 +203,10 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     private IEnumerator MirageVFXCoroutine(float start, float end)
     {
+        // lessen effect if visual effects are set to low
+        start *= SettingsManager.Setting<float>(Settings.ScreenVisualEffects).CurrentValue;
+        end *= SettingsManager.Setting<float>(Settings.ScreenVisualEffects).CurrentValue;
+
         float duration = 2;
         float t = 0;
         while(t < duration)
@@ -292,6 +299,15 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private void RemovePlayerOnMirageSTile(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         RemovePlayerOnMirageSTile();
+    }
+
+    private void OnScreenVisualEffectsChanged(object newScreenEffectsAmount)
+    {
+        if (!mirageEnabled)
+        {
+            return;
+        }
+        volume.weight = (float)newScreenEffectsAmount;
     }
 
     private void RemovePlayerOnMirageSTile()
