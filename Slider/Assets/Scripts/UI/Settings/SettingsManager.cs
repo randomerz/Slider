@@ -117,11 +117,17 @@ public class SettingsManager : MonoBehaviour
             Application.targetFrameRate == GraphicsSettingsManager.TARGET_FRAME_RATE_DISABLED || 
             IsHighFPS(Application.targetFrameRate)
         );
+
         RegisterAndLoadSetting(Settings.HighFpsSmoothing,
             defaultValue: shouldHighFpsSmoothing
         );
+
         RegisterAndLoadSetting(Settings.ShowTimer,
             defaultValue: false
+        );
+
+        RegisterAndLoadSetting(Settings.ScreenVisualEffects,
+            defaultValue: 1.0f
         );
     }
 

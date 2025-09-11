@@ -30,6 +30,7 @@ public enum Settings
     LargerControllerDeadzone,
     HighFpsSmoothing, // Makes player sprite interpolate in drawn frames instead of just fixed update
     ShowTimer,
+    ScreenVisualEffects, // Flash, Shaders
 }
 
 static class SettingsMethods
@@ -59,6 +60,7 @@ static class SettingsMethods
         Settings.LargerControllerDeadzone => "largerControllerDeadzone",
         Settings.HighFpsSmoothing => "highFpsSmoothing",
         Settings.ShowTimer => "showTimer",
+        Settings.ScreenVisualEffects => "screenVisualEffects",
         _ => ""
     };
 }
