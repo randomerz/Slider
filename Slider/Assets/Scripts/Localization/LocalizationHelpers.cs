@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using TMPro;
 using Sylvan.Data.Csv;
 using UnityEngine.SceneManagement;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace Localization
 {
@@ -279,8 +281,24 @@ namespace Localization
         public static string LocaleGlobalFilePath(string locale, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
 
-        public static string DefaultLocale => "English";
+        public static string DefaultLocale => defaultLocale;
+        private static string defaultLocale = "English";
         public static string TestingLanguage => "Debug";
+
+        // Unity's GetStartupLocale should only be called in Start() or Awake() according to docs
+        public static void UpdateDefaultLocaleOnAwake() =>
+                defaultLocale = LocaleUtils.LocaleShortToLong(GetDefaultLocale().Identifier.Code);
+        
+        private static Locale GetDefaultLocale()
+        {
+            foreach (var selector in LocalizationSettings.StartupLocaleSelectors)
+            {
+                var locale = selector.GetStartupLocale(LocalizationSettings.AvailableLocales);
+                if (locale != null)
+                    return locale;
+            }
+            return LocalizationSettings.AvailableLocales.Locales[0]; // english
+        }
 
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));

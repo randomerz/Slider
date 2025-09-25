@@ -12,7 +12,7 @@ public class GraphicsSettingsManager : MonoBehaviour
 
     private bool oldFullScreen;
     private Resolution oldResolution;
-    private bool skipConfirmingChanges;
+    public static bool skipConfirmingChanges;
 
     private void Awake()
     {

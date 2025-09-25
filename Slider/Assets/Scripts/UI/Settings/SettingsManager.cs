@@ -92,6 +92,7 @@ public class SettingsManager : MonoBehaviour
             onValueChanged: (value) => Application.runInBackground = value
         );
         
+        LocalizationFile.UpdateDefaultLocaleOnAwake();
         RegisterAndLoadSetting(Settings.Locale,
             defaultValue: LocalizationFile.DefaultLocale
         );
@@ -175,7 +176,9 @@ public class SettingsManager : MonoBehaviour
 
     public static void ResetAllSettingsToDefaults()
     {
+        GraphicsSettingsManager.skipConfirmingChanges = true;
         settings.Values.ToList().ForEach(setting => setting.ResetToDefaultValue());
+        GraphicsSettingsManager.skipConfirmingChanges = false;
     }
 
 

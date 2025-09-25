@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using TMPro;
+using UnityEngine;
 
 namespace Localization
 {
@@ -16,6 +17,56 @@ namespace Localization
         public float lineSpacing;
         public bool enableWordWrapping;
         public bool extraPadding;
+    }
+
+    internal static class LocaleUtils
+    {
+        public static string LocaleLongToShort(string locale)
+        {
+            switch (locale.ToLowerInvariant())
+            {
+            case "english":
+            case "en":
+                return "en";
+            case "korean":
+            case "한국어":
+            case "ko":
+                return "kr";
+            case "simplified chinese":
+            case "chinese":
+            case "简体中文":
+            case "zh-cn":
+            case "zh-hans":
+                return "zh-Hans";
+            case "debug":
+            case "dev":
+                return "debug";
+            default:
+                Debug.LogError($"[Locale] Could not find key for long version: {locale}"); 
+                return locale;
+            }
+        }
+
+        public static string LocaleShortToLong(string locale)
+        {
+            switch (locale.ToLowerInvariant())
+            {
+            case "en":
+                return "English";
+            case "kr":
+            case "ko":
+                return "한국어";
+            case "zh-cn":
+            case "zh":
+            case "zh-hans":
+                return "简体中文";
+            case "debug":
+                return "Debug";
+            default:
+                Debug.LogError($"[Locale] Could not find key for short version: {locale}"); 
+                return locale;
+            }
+        }
     }
 
     internal static class TmpTextExtensions
