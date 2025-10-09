@@ -17,6 +17,7 @@ using Localization;
 public class ControlsMenuPanelHandler : MonoBehaviour, IDialogueTableProvider
 {
     [SerializeField] private GameObject[] panels;
+    [SerializeField] private GameObject[] nextPrevButtons;
     [SerializeField] private TextMeshProUGUI titleText;
     
     public const int KEYBOARD_PANEL = 0;
@@ -44,8 +45,14 @@ public class ControlsMenuPanelHandler : MonoBehaviour, IDialogueTableProvider
 
     private void OnEnable()
     {
-        bool currentControlSchemeIsController = Controls.UsingController();
+        bool controllerOnly = Controls.IsCurrentPlatformControllerOnly();
+        bool currentControlSchemeIsController = Controls.UsingController() || controllerOnly;
         currentPanel = currentControlSchemeIsController ? CONTROLLER_PANEL : KEYBOARD_PANEL;
+
+        foreach (GameObject g in nextPrevButtons)
+        {
+            g.SetActive(!controllerOnly);
+        }
 
         SetCurrentPanel(currentPanel);
     }

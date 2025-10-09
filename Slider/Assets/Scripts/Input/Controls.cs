@@ -50,6 +50,11 @@ public class Controls : Singleton<Controls>
         return CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_MOUSE || CurrentControlScheme == CONTROL_SCHEME_KEYBOARD_ONLY;
     }
 
+    public static bool IsCurrentPlatformControllerOnly()
+    {
+        return GameManager.CurrentPlatform == GameManager.Platform.Xbox;
+    }
+
     public static void OnKeyboardOnlyMenuSettingChanged(bool keyboardOnlySettingTurnedOn)
     {
         if (keyboardOnlySettingTurnedOn)

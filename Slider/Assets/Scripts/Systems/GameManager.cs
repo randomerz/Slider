@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public enum Platform 
+    {
+        PC,
+        Xbox,
+    }
+
     public static GameManager instance { get; private set; }
+    public static Platform CurrentPlatform;
 
     private static SaveSystem saveSystem;
     public GameUI gameUI;
@@ -13,11 +20,9 @@ public class GameManager : MonoBehaviour
 
     private void Awake() {
         if (instance == null) {
-            Debug.Log($"[Start] Starting game on version {Application.version}. Running on {SystemInfo.operatingSystem}. Time is {System.DateTime.Now}.");
-
             instance = this;
             DontDestroyOnLoad(gameObject);
-            saveSystem = new SaveSystem();
+            StartGame();
         }
         else
         {
@@ -27,6 +32,15 @@ public class GameManager : MonoBehaviour
 
         gameUI.Init();
         sceneInitializer?.Init();
+    }
+
+    private void StartGame()
+    {
+        Debug.Log($"[Start] Starting game on version {Application.version}. Running on {SystemInfo.operatingSystem}. Time is {System.DateTime.Now}.");
+
+        CurrentPlatform = Platform.PC; // default to PC for now
+
+        saveSystem = new SaveSystem();
     }
 
     public static SaveSystem GetSaveSystem() 
