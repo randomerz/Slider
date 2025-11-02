@@ -800,7 +800,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: STEAMWORKS_NET
+    Standalone: STEAMWORKS_NET;MICROSOFT_GDK_SUPPORT
     WebGL: STEAMWORKS_NET
   additionalCompilerArguments: {}
   platformArchitecture: {}
