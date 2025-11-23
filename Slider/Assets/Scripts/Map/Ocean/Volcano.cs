@@ -114,6 +114,7 @@ public class Volcano : MonoBehaviour
 
         if (!PlayerInventory.Contains("Rock", Area.Ocean))
         {
+            rockCollectible.gameObject.SetActive(true);
             rockCollectible.transform.position = rockTarget.transform.position;
             rockCollectible.GetComponent<Collider2D>().enabled = true;
         }

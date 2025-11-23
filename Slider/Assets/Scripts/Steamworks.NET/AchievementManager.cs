@@ -46,7 +46,31 @@ public class AchievementManager : Singleton<AchievementManager>
         {
             _instance.achievementStats[statName] = value;
             Debug.Log($"[AchievementManager] Updating {statName} to {value}.");
-            _instance.SendAchievementStatsToSteam();
+
+            try
+            {
+                _instance.SendAchievementStatsToSteam();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[AchievementManager] Failed to send achievement stats to Steam: {e.Message}");
+            }
+
+            try
+            {
+                _instance.SendAchievementToXbox(statName, value);
+
+                if (statName == "collectedBreadge")
+                {
+                    _instance.SendAchievementToXbox("oneBreadge", value);
+                    _instance.SendAchievementToXbox("threeBreadge", value);
+                    _instance.SendAchievementToXbox("nineBreadge", value);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[AchievementManager] Failed to send achievement stats to Xbox: {e.Message}");
+            }
         }
         
     }
@@ -129,6 +153,32 @@ public class AchievementManager : Singleton<AchievementManager>
             }
             SteamUserStats.StoreStats();
         }
+    }
+
+    private void SendAchievementToXbox(string achievementId, int statisiticValue)
+    {
+        uint percentComplete = GetPercentFromStat(achievementId, statisiticValue);
+        GDKProxy.UnlockAchievement(achievementId, percentComplete);
+    }
+
+    private uint GetPercentFromStat(string achievementId, int statisticValue)
+    {
+        // All stats are "all or nothing" except for the breadge ones
+
+        if (achievementId == "oneBreadge")
+        {
+            return (uint)(statisticValue * 100);
+        }
+        if (achievementId == "threeBreadge")
+        {
+            return (uint)(statisticValue * 100 / 3);
+        }
+        if (achievementId == "nineBreadge")
+        {
+            return (uint)(statisticValue * 100 / 9);
+        }
+
+        return (uint)statisticValue * 100;
     }
 }
 

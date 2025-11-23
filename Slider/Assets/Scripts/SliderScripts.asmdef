@@ -14,7 +14,10 @@
         "GUID:3eae0364be2026648bf74846acb8a731",
         "GUID:15fc0a57446b3144c949da3e2b9737a9",
         "GUID:df380645f10b7bc4b97d4f5eb6303d95",
-        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5"
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:5ee1933b8c8d484ea7cb408c3d679e50",
+        "GUID:62a1c9e4730eb71469ffd94a6e355dd9",
+        "GUID:5010451de5758df43b9f08b216c449ed"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -22,7 +25,8 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
-        "Sylvan.Data.Csv.dll"
+        "Sylvan.Data.Csv.dll",
+        "XblPCSandbox.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],
