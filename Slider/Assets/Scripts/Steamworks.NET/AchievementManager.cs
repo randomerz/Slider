@@ -1,8 +1,14 @@
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Steamworks;
 using System;
+#if !DISABLESTEAMWORKS
+using Steamworks;
+#endif
 
 /// <summary>
 /// This class handles storing achievement data and sending it to steam. Use <see cref="SetAchievementStat(string, int)"/> to set/update a particular achievement stat.
@@ -58,13 +64,15 @@ public class AchievementManager : Singleton<AchievementManager>
 
             try
             {
-                _instance.SendAchievementToXbox(statName, value);
-
                 if (statName == "collectedBreadge")
                 {
-                    _instance.SendAchievementToXbox("oneBreadge", value);
+                    _instance.SendAchievementToXbox("collectFirstBreadge", value);
                     _instance.SendAchievementToXbox("threeBreadge", value);
-                    _instance.SendAchievementToXbox("nineBreadge", value);
+                    _instance.SendAchievementToXbox("allbreadge", value);
+                }
+                else
+                {
+                    _instance.SendAchievementToXbox(statName, value);
                 }
             }
             catch (Exception e)
@@ -135,6 +143,7 @@ public class AchievementManager : Singleton<AchievementManager>
 
     private void SendAchievementStatsToSteam()
     {
+#if !DISABLESTEAMWORKS
         if (SteamManager.Initialized && SteamUser.BLoggedOn())
         {
             // SteamUserStats.RequestCurrentStats(); // this is an async call it probably doesnt do anything here
@@ -153,27 +162,32 @@ public class AchievementManager : Singleton<AchievementManager>
             }
             SteamUserStats.StoreStats();
         }
+#endif
     }
 
-    private void SendAchievementToXbox(string achievementId, int statisiticValue)
+    private void SendAchievementToXbox(string achievementName, int statisiticValue)
     {
-        uint percentComplete = GetPercentFromStat(achievementId, statisiticValue);
+#if MICROSOFT_GDK_SUPPORT
+        uint percentComplete = GetPercentFromStat(achievementName, statisiticValue);
+        string achievementId = XBoxAchievementData.GetIdFromName(achievementName);
+        Debug.Log($"[AchievementManager] Unlocking Xbox achievement {achievementName} ({achievementId}) with {percentComplete}% complete.");
         GDKProxy.UnlockAchievement(achievementId, percentComplete);
+#endif
     }
 
-    private uint GetPercentFromStat(string achievementId, int statisticValue)
+    private uint GetPercentFromStat(string achievementName, int statisticValue)
     {
         // All stats are "all or nothing" except for the breadge ones
 
-        if (achievementId == "oneBreadge")
+        if (achievementName == "collectFirstBreadge")
         {
             return (uint)(statisticValue * 100);
         }
-        if (achievementId == "threeBreadge")
+        if (achievementName == "threeBreadge")
         {
             return (uint)(statisticValue * 100 / 3);
         }
-        if (achievementId == "nineBreadge")
+        if (achievementName == "allbreadge")
         {
             return (uint)(statisticValue * 100 / 9);
         }

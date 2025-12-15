@@ -47,6 +47,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+*.slnx
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -119,4 +120,20 @@ fmod_editor.log
 /Slider/[Aa]ssets/StreamingAssets/**/*.meta
 
 # Misc Microsoft folder
-/Slider/[Aa]ssets/Misc/[Mm]icrosoft/Config/*
+/Slider/[Aa]ssets/Misc/[Mm]icrosoft/GDKSettings*
+/Slider/[Aa]ssets/Misc/[Mm]icrosoft/MicrosoftGameConfig*
+
+# Microsoft GDK / UWP build artifacts
+*.pri
+*.pri.meta
+*.resfiles
+*.resfiles.meta
+*.resw
+*.resw.meta
+Priconfig.xml
+Priconfig.xml.meta
+Layout.resfiles
+Layout.resfiles.meta
+Resources.pri
+Resources.pri.meta
+

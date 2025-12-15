@@ -2,14 +2,22 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.UI;
 #if MICROSOFT_GDK_SUPPORT
 using Unity.XGamingRuntime;
 #endif
 
 // This code is derived from Microsoft GDK samples and adapted for this project.
 
-public class GDKProxy : Singleton<GDKProxy>
+public class CloudSavesSceneManager : MonoBehaviour
 {
+    public Text output;
+
+    public Text textGamertag;
+    public Text textSandboxId;
+    public Text textTitleId;
+    public Text textScid;
+
 #if MICROSOFT_GDK_SUPPORT
     private XUserHandle _userHandle;
     private XblContextHandle _xblContextHandle;
@@ -17,10 +25,19 @@ public class GDKProxy : Singleton<GDKProxy>
     private XUserChangeRegistrationToken _registrationToken;
     private bool _xGameSaveInitialized;
 
-    private const string _GameSaveContainerName = "x_slider_container";
-    private const string _GameSaveBlobName = "x_slider_blob";
+    private const string _GameSaveContainerName = "x_game_save_default_container";
+    private const string _GameSaveBlobName = "x_game_save_default_blob";
 
-    private SerializableSaveProfile saveProfile;
+    private string _helperText;
+
+    [Serializable]
+    private class PlayerSaveData
+    {
+        public string name;
+        public int level;
+    }
+
+    private PlayerSaveData playerSaveData;
 
     public class GameSaveLoadedArgs : System.EventArgs
     {
@@ -40,15 +57,23 @@ public class GDKProxy : Singleton<GDKProxy>
 
 #pragma warning restore 0067
 
-    void Awake()
-    {
-        InitializeSingleton();
-    }
-
+    // Start is called before the first frame update
     private void Start()
     {
+        _helperText = output.text;
+
+        // Create some data
+        playerSaveData = new PlayerSaveData();
+        playerSaveData.name = "Jane Doe";
+        playerSaveData.level = 2;
+
+        // Do initialization
         if (GDKGameRuntime.TryInitialize())
         {
+            textSandboxId.text = GDKGameRuntime.GameConfigSandbox;
+            textTitleId.text = string.Format($"0x{GDKGameRuntime.GameConfigTitleId}");
+            textScid.text = GDKGameRuntime.GameConfigScid;
+
             InitializeAndAddUser();
             SDK.XUserRegisterForChangeEvent(UserChangeEventCallback, out _registrationToken);
 
@@ -71,11 +96,7 @@ public class GDKProxy : Singleton<GDKProxy>
             _userHandle = null;
         }
 
-        if (_registrationToken != null)
-        {
-            SDK.XUserUnregisterForChangeEvent(_registrationToken);
-            _registrationToken = null;
-        }
+        SDK.XUserUnregisterForChangeEvent(_registrationToken);
     }
 
     private void InitializeAndAddUser()
@@ -83,11 +104,26 @@ public class GDKProxy : Singleton<GDKProxy>
         SDK.XUserAddAsync(XUserAddOptions.AddDefaultUserAllowingUI, AddUserComplete);
     }
 
+    private void AddUserComplete(int hResult, XUserHandle userHandle)
+    {
+        if (HR.FAILED(hResult))
+        {
+            Debug.LogWarning($"FAILED: Could not signin a user, hResult={hResult:X} ({HR.NameOf(hResult)})");
+            return;
+        }
+
+        _userHandle = userHandle;
+
+        CompletePostSignInInitialization();
+    }
+
     private void UserChangeEventCallback(IntPtr _, XUserLocalId userLocalId, XUserChangeEvent eventType)
     {
         if (eventType == XUserChangeEvent.SignedOut)
         {
-            Debug.LogWarning("[GDK] User logging out");
+            Debug.LogWarning("User logging out");
+            textGamertag.text = "User logged out";
+            output.text = _helperText;
 
             if (_xblContextHandle != null)
             {
@@ -108,42 +144,56 @@ public class GDKProxy : Singleton<GDKProxy>
         }
     }
 
-    private void AddUserComplete(int hResult, XUserHandle userHandle)
-    {
-        if (HR.FAILED(hResult))
-        {
-            Debug.LogWarning($"[GDK] FAILED: Could not signin a user, hResult={hResult:X} ({HR.NameOf(hResult)})");
-            return;
-        }
-
-        _userHandle = userHandle;
-
-        CompletePostSignInInitialization();
-    }
-
     private void CompletePostSignInInitialization()
     {
         string gamertag = string.Empty;
 
-        int hResult = SDK.XUserGetGamertag(_userHandle, XUserGamertagComponent.UniqueModern, out gamertag);
-        if (HR.FAILED(hResult))
+        if (textGamertag == null)
         {
-            Debug.LogError($"[GDK] FAILED: Could not get user tag, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
+            Debug.LogError($"textGamertag is null, set Game Object.");
             return;
         }
 
-        Debug.Log($"[GDK] SUCCESS: XUserGetGamertag() returned: '{gamertag}'");
+        int hResult = SDK.XUserGetGamertag(_userHandle, XUserGamertagComponent.UniqueModern, out gamertag);
+        if (HR.FAILED(hResult))
+        {
+            Debug.LogWarning($"FAILED: Could not get user tag, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
+            return;
+        }
+
+        Debug.Log($"SUCCESS: XUserGetGamertag() returned: '{gamertag}'");
+        textGamertag.text = gamertag;
 
         hResult = SDK.XBL.XblContextCreateHandle(_userHandle, out _xblContextHandle);
         if (HR.FAILED(hResult))
         {
-            Debug.LogError($"[GDK] FAILED: Could not create context handle, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
+            Debug.LogError($"FAILED: Could not create context handle, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
         }
-        
-        // _gameSaveHelper.InitializeAsync(
-        //     _userHandle,
-        //     GDKGameRuntime.GameConfigScid,
-        //     XGameSaveInitializeCompleted);
+
+        Debug.Log("scid GDKGameRuntime.GameConfigScid: " + GDKGameRuntime.GameConfigScid);
+        _gameSaveHelper.InitializeAsync(
+            _userHandle,
+            GDKGameRuntime.GameConfigScid,
+            XGameSaveInitializeCompleted);
+    }
+
+    public void SaveClicked()
+    {
+        if (_userHandle == null || _xGameSaveInitialized == false)
+        {
+            return;
+        }
+
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            binaryFormatter.Serialize(memoryStream, playerSaveData);
+            SaveData(memoryStream.ToArray());
+            output.text = "\n Saved game data:" +
+                            "\n Name: " + playerSaveData.name +
+                            "\n Level: " + playerSaveData.level;
+        }
     }
 
     private void OnGameSaveLoadedCallback(object sender, GameSaveLoadedArgs saveData)
@@ -151,7 +201,11 @@ public class GDKProxy : Singleton<GDKProxy>
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         using (MemoryStream memoryStream = new MemoryStream(saveData.Data))
         {
-            saveProfile = binaryFormatter.Deserialize(memoryStream) as SerializableSaveProfile;
+            object playerSaveDataObj = binaryFormatter.Deserialize(memoryStream);
+            playerSaveData = playerSaveDataObj as PlayerSaveData;
+            output.text = "\n Loaded save game:" +
+                            "\n Name: " + playerSaveData.name +
+                            "\n Level: " + playerSaveData.level;
         }
     }
 
@@ -164,49 +218,6 @@ public class GDKProxy : Singleton<GDKProxy>
         }
 
         _xGameSaveInitialized = true;
-    }
-
-#region Achievements and Saves
-
-    public static void UnlockAchievement(string achievementId, uint achievementProgress)
-    {
-        ulong xuid;
-
-        int hResult = SDK.XUserGetId(_instance._userHandle, out xuid);
-        if (HR.FAILED(hResult))
-        {
-            Debug.LogError($"[GDK] FAILED: Could not get user ID, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
-            return;
-        }
-
-        // This API will work even when offline.  Offline updates will be posted by the system when connection is
-        // re-established even if the title isn’t running. If the achievement has already been unlocked or the progress
-        // value is less than or equal to what is currently recorded on the server HTTP_E_STATUS_NOT_MODIFIED (0x80190130L)
-        // will be returned.
-        SDK.XBL.XblAchievementsUpdateAchievementAsync(
-            _instance._xblContextHandle,
-            xuid,
-            achievementId,
-            achievementProgress,
-            UnlockAchievementComplete
-        );
-    }
-
-    private static void UnlockAchievementComplete(int hResult)
-    {
-        string message = "Achievement Unlocked!";
-
-        if (hResult == HR.HTTP_E_STATUS_NOT_MODIFIED)
-        {
-            message = "Achievement ALREADY Unlocked!";
-        }
-        else if (HR.FAILED(hResult))
-        {
-            Debug.LogError($"[GDK] FAILED: Achievement Update, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
-            return;
-        }
-
-        Debug.Log($"[GDK] SUCCESS: {message}");
     }
 
     public void SaveData(byte[] data)
@@ -236,7 +247,7 @@ public class GDKProxy : Singleton<GDKProxy>
         Debug.Log($"SUCCESS: Game save submit update complete");
     }
 
-    public void Load()
+    public void LoadClicked()
     {
         if (_userHandle == null || _xGameSaveInitialized == false)
         {
@@ -246,10 +257,10 @@ public class GDKProxy : Singleton<GDKProxy>
         _gameSaveHelper.Load(
             _GameSaveContainerName,
             _GameSaveBlobName,
-            GameLoadCompleted);
+            GameSaveLoadCompleted);
     }
 
-    private void GameLoadCompleted(int hResult, byte[] savedData)
+    private void GameSaveLoadCompleted(int hResult, byte[] savedData)
     {
         if (HR.FAILED(hResult))
         {
@@ -271,7 +282,5 @@ public class GDKProxy : Singleton<GDKProxy>
 
         Debug.Log($"SUCCESS: Game save load complete");
     }
-
-#endregion
 #endif
 }

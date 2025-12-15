@@ -535,8 +535,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1267200810}
-        m_TargetAssemblyTypeName: CloudSavesSceneManager, Assembly-CSharp
+      - m_Target: {fileID: 1267200812}
+        m_TargetAssemblyTypeName: CloudSavesSceneManager, SliderScripts
         m_MethodName: SaveClicked
         m_Mode: 1
         m_Arguments:
@@ -668,8 +668,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1267200810}
-        m_TargetAssemblyTypeName: CloudSavesSceneManager, Assembly-CSharp
+      - m_Target: {fileID: 1267200812}
+        m_TargetAssemblyTypeName: CloudSavesSceneManager, SliderScripts
         m_MethodName: LoadClicked
         m_Mode: 1
         m_Arguments:
@@ -808,7 +808,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1267200811}
-  - component: {fileID: 1267200810}
+  - component: {fileID: 1267200812}
   m_Layer: 0
   m_Name: CloudSavesSceneManager
   m_TagString: Untagged
@@ -816,23 +816,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1267200810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1267200809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75f5de1be5887d04b905e10c33aa6659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  output: {fileID: 1307654872}
-  textGamertag: {fileID: 1885736343}
-  textSandboxId: {fileID: 692528685}
-  textTitleId: {fileID: 1249259767}
-  textScid: {fileID: 268706696}
 --- !u!4 &1267200811
 Transform:
   m_ObjectHideFlags: 0
@@ -848,6 +831,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1267200812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267200809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a70add620ef95545a594e2a9bf77b1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  output: {fileID: 1307654872}
+  textGamertag: {fileID: 1885736343}
+  textSandboxId: {fileID: 692528685}
+  textTitleId: {fileID: 1249259767}
+  textScid: {fileID: 268706696}
 --- !u!1 &1293049088
 GameObject:
   m_ObjectHideFlags: 0

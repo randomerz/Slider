@@ -1,9 +1,11 @@
 using System.Threading;
+using UnityEngine;
 #if !UNITY_6000_0_OR_NEWER
 using System.Threading.Tasks;
 #endif
+#if MICROSOFT_GDK_SUPPORT
 using Unity.XGamingRuntime;
-using UnityEngine;
+#endif
 
 // This is a copy from the Microsoft GDK Samples
 public class GDKGameRuntime : MonoBehaviour
@@ -23,6 +25,7 @@ public class GDKGameRuntime : MonoBehaviour
 
     private CancellationTokenSource m_CancellationTokenSource;
 
+#if MICROSOFT_GDK_SUPPORT
     public static bool TryInitialize()
     {
         if (Instance == null)
@@ -41,6 +44,8 @@ public class GDKGameRuntime : MonoBehaviour
         Debug.Log($"[GDK] GDK TitleId: {GameConfigTitleId}");
         Debug.Log($"[GDK] GDK Sandbox: {GameConfigSandbox}");
         return Initialized;
+        Debug.LogWarning("[GDK] GDK XGameRuntime Library not supported in this build.");
+        return false;
     }
 
     private void Awake()
@@ -233,5 +238,6 @@ public class GDKGameRuntime : MonoBehaviour
         Debug.Log("[GDK] Closing default XTaskQueue.");
         SDK.CloseDefaultXTaskQueue();
     }
+#endif
 #endif
 }

@@ -1,11 +1,16 @@
-using Steamworks;
-using System.Collections;
-using System.Collections.Generic;
+#if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
+#define DISABLESTEAMWORKS
+#endif
+
 using UnityEngine;
+
+#if !DISABLESTEAMWORKS
+using Steamworks;
+#endif
 
 public class SteamCheck : MonoBehaviour
 {
-    // Start is called before the first frame update
+    #if !DISABLESTEAMWORKS
     void Start()
     {
         if (!SteamManager.Initialized)
@@ -17,5 +22,5 @@ public class SteamCheck : MonoBehaviour
             Debug.Log("[Steam] Hello Steam user " + SteamFriends.GetPersonaName());
         }
     }
-
+    #endif
 }

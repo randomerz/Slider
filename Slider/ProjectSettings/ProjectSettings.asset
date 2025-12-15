@@ -804,6 +804,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     Standalone: STEAMWORKS_NET;MICROSOFT_GDK_SUPPORT
     WebGL: STEAMWORKS_NET
+    Windows Store Apps: STEAMWORKS_NET
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

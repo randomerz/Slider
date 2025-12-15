@@ -1,7 +1,11 @@
 using System;
-using Unity.XGamingRuntime;
 using UnityEngine;
 using UnityEngine.UI;
+#if MICROSOFT_GDK_SUPPORT
+using Unity.XGamingRuntime;
+#endif
+
+// This code is derived from Microsoft GDK samples and adapted for this project.
 
 public class AchievementsSceneManager : MonoBehaviour
 {
@@ -13,11 +17,14 @@ public class AchievementsSceneManager : MonoBehaviour
     public Text textScid;
     public Button buttonUnlockAchievement;
 
+#if MICROSOFT_GDK_SUPPORT
     private XUserHandle _userHandle;
     private XblContextHandle _xblContextHandle;
     private XUserChangeRegistrationToken _registrationToken;
 
     private const int _100PercentAchievementProgress = 100;
+
+    public bool showAllAchievementsOnStart = false;
 
     // Start is called before the first frame update
     private void Start()
@@ -121,6 +128,16 @@ public class AchievementsSceneManager : MonoBehaviour
         {
             Debug.LogError($"FAILED: Could not create context handle, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
         }
+
+        AfterStartAndInitialized();
+    }
+
+    private void AfterStartAndInitialized()
+    {
+        if (showAllAchievementsOnStart)
+        {
+            GetAllAchievementsStatus();
+        }
     }
 
     public void UnlockAchievement()
@@ -169,9 +186,58 @@ public class AchievementsSceneManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"SUCCESS: {message}");
+        Debug.Log($"[GDK] SUCCESS: {message}");
 
         if (output != null)
             output.text = message;
     }
+
+    public void GetAllAchievementsStatus()
+    {
+        ulong xuid;
+
+        int hResult = SDK.XUserGetId(_userHandle, out xuid);
+        if (HR.FAILED(hResult))
+        {
+            Debug.LogError($"FAILED: Could not get user ID, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
+            return;
+        }
+
+        SDK.XBL.XblAchievementsGetAchievementsForTitleIdAsync(
+            _xblContextHandle,
+            xuid,
+            uint.Parse(GDKGameRuntime.GameConfigTitleId, System.Globalization.NumberStyles.HexNumber),
+            XblAchievementType.All,
+            false,
+            XblAchievementOrderBy.DefaultOrder,
+            0,
+            32,
+            GetAchievementComplete
+        );
+    }
+
+    private void GetAchievementComplete(int hResult, XblAchievementsResultHandle result)
+    {
+        if (HR.FAILED(hResult))
+        {
+            Debug.LogError($"FAILED: Could not get achievement, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
+            return;
+        }
+
+        hResult = SDK.XBL.XblAchievementsResultGetAchievements(result, out XblAchievement[] achievements);
+
+        if (HR.FAILED(hResult))
+        {
+            Debug.LogError($"FAILED: Could not get achievement, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
+            return;
+        }
+        
+        foreach (XblAchievement achievement in achievements)
+        {
+            Debug.Log($"Achievement {achievement.Id} {achievement.Name} Unlocked = {achievement.ProgressState == XblAchievementProgressState.Achieved}");
+        }
+
+        SDK.XBL.XblAchievementsResultCloseHandle(result);
+    }
+#endif
 }
