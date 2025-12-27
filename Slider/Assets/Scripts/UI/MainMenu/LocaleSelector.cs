@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Localization;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine;
 public class LocaleSelector : MonoBehaviour
 {
     private SettingRetriever retriever;
+    private List<LocaleEntry> entries;
     
     private void Start()
     {
@@ -15,29 +17,31 @@ public class LocaleSelector : MonoBehaviour
         Dropdown.ClearOptions();
         
         bool isDebugMode = (bool)SettingsManager.Setting(Settings.DevConsole).GetCurrentValue();
-        var sortedOptions = LocalizationFile.LocaleList(retriever.ReadSettingValue() as string)
-                .Where(locale => locale != "Debug" || Application.isEditor || isDebugMode)
-                .Select(locale => {
-                    TMP_Dropdown.OptionData data = new()
-                    {
-                        text = locale
-                    };
-                    return data;
-                })
-                .ToList();
+        entries = LocalizationFile.LocaleList(retriever.ReadSettingValue() as string);
+            
+        var optionData = entries
+            .Where(locale => locale.CanonicalName != "Debug" || Application.isEditor || isDebugMode)
+            .Select(locale => {
+                TMP_Dropdown.OptionData data = new()
+                {
+                    text = locale.DisplayName
+                };
+                return data;
+            })
+            .ToList();
         
-        Dropdown.options.AddRange(sortedOptions);
+        Dropdown.options.AddRange(optionData);
         Dropdown.value = 0;
         Dropdown.RefreshShownValue();
 
         // if previously configured locale is no longer valid (not present as a mod, etc.), then the next most prominent
         // locale will be selected instead. this is just English because of how locales are sorted
-        if (!sortedOptions[0].text.Equals(retriever.ReadSettingValue() as string))
+        if (!optionData[0].text.Equals(retriever.ReadSettingValue() as string))
         {
-            retriever.WriteSettingValue(sortedOptions[0].text);
+            retriever.WriteSettingValue(entries[0].CanonicalName);
         }
 
-        if (sortedOptions.Count == 1)
+        if (entries.Count == 1)
         {
             gameObject.SetActive(false);
         }
@@ -59,21 +63,21 @@ public class LocaleSelector : MonoBehaviour
 
     public void OnSelectionValueChanged()
     {
-        string originalLocale = retriever.ReadSettingValue() as string ?? LocalizationFile.DefaultLocale;
-        string selection = Dropdown.options[Dropdown.value].text;
+        var originalLocale = retriever.ReadSettingValue() as string ?? LocalizationFile.DefaultLocale;
+        var selection = entries[Dropdown.value];
 
         // don't change anything if "switching" to the same language
-        if (originalLocale.Equals(selection))
+        if (originalLocale.Equals(selection.CanonicalName))
         {
             return;
         }
         
-        retriever.WriteSettingValue(selection);
+        retriever.WriteSettingValue(selection.CanonicalName);
         
         // non English font does not have outline (TMP has outline but it seems to be UI text only)
         // instead of messing with outlines just force text background to be on, player can toggle
         // it back if they want to
-        if (!selection.Equals(LocalizationFile.DefaultLocale))
+        if (!selection.CanonicalName.Equals(LocalizationFile.DefaultLocale))
         {
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
