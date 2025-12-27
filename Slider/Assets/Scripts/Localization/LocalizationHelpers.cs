@@ -221,21 +221,23 @@ namespace Localization
                 var localeNames = Directory.GetDirectories(LocalizationFolderPath(root))
                     .Select(path => new FileInfo(path).Name)
                     // very expensive check, makes sure that only the legit locales are selected
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-#else
-                    .Where(localeName =>
+                    .Select(localeNameCanonical =>
                     {
-                        var filePath = LocaleGlobalFilePath(localeName, root);
-                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeName, filePath).Result;
+                        var filePath = LocaleGlobalFilePath(localeNameCanonical, root);
+                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeNameCanonical, filePath).Result;
                         if (parsedGlobalFile != null)
                         {
-                            return true;
+                            if (parsedGlobalFile.configs.TryGetValue(Config.DisplayName, out var displayName) && !displayName.Value.Equals(""))
+                            {
+                                return displayName.Value;
+                            }
+                            return localeNameCanonical;
                         } else {
                             PrintParserError(err, filePath);
-                            return false;
+                            return null;
                         }
                     })
-#endif
+                    .Where(localeDisplayName => localeDisplayName != null)
                     .ToList();
 
                 localeNames.Sort(
@@ -337,7 +339,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             IsValid,
             NonDialogueFontScale,
             DialogueFontScale,
-            Author
+            Author,
+            DisplayName
         }
 
         public static readonly Dictionary<Config, string> ConfigToName =
