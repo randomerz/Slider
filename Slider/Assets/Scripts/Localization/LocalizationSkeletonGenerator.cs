@@ -92,7 +92,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            if (referenceLocales == null)
            {
                referenceLocales =
-                   LocalizationFile.LocaleList(LocalizationFile.DefaultLocale, referenceLocalizationPath);
+                   LocalizationFile.LocaleList(LocalizationFile.DefaultLocale, referenceLocalizationPath).Select(entry => entry.CanonicalName);
            }
            else
            {

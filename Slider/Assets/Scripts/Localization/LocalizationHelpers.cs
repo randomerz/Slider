@@ -12,6 +12,12 @@ using UnityEngine.Localization.Settings;
 
 namespace Localization
 {
+    public struct LocaleEntry
+    {
+        public string CanonicalName;
+        public string DisplayName;
+    }
+    
     public struct LocalizationPair
     {
         public static explicit operator LocalizationPair(string input)
@@ -214,62 +220,76 @@ namespace Localization
         public static string LocalizationFolderPath(string root = null) =>
             Path.Join(LocalizationRootPath(root), "Localizations");
 
-        public static List<string> LocaleList(string playerPrefLocale, string root = null)
+        public static List<LocaleEntry> LocaleList(string playerPrefLocale, string root = null)
         {
             if (Directory.Exists(LocalizationFolderPath(root)))
             {
-                var localeNames = Directory.GetDirectories(LocalizationFolderPath(root))
+                var localeEntries = Directory.GetDirectories(LocalizationFolderPath(root))
                     .Select(path => new FileInfo(path).Name)
                     // very expensive check, makes sure that only the legit locales are selected
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-#else
-                    .Where(localeName =>
+                    .Select(localeNameCanonical =>
                     {
-                        var filePath = LocaleGlobalFilePath(localeName, root);
-                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeName, filePath).Result;
+                        var filePath = LocaleGlobalFilePath(localeNameCanonical, root);
+                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeNameCanonical, filePath).Result;
                         if (parsedGlobalFile != null)
                         {
-                            return true;
+                            if (parsedGlobalFile.configs.TryGetValue(Config.DisplayName, out var displayName) && !displayName.Value.Equals(""))
+                            {
+                                return new LocaleEntry
+                                {
+                                    DisplayName = localeNameCanonical,
+                                    CanonicalName = localeNameCanonical
+                                };
+                            }
+                            return new LocaleEntry
+                            {
+                                DisplayName = displayName.Value,
+                                CanonicalName = localeNameCanonical
+                            };
                         } else {
                             PrintParserError(err, filePath);
-                            return false;
+                            return new LocaleEntry
+                            {
+                                DisplayName = null,
+                                CanonicalName = null
+                            };
                         }
                     })
-#endif
+                    .Where(entry => entry.CanonicalName != null)
                     .ToList();
 
-                localeNames.Sort(
+                localeEntries.Sort(
                     (localeA, localeB) =>
                     {
-                        if (localeA.Equals(playerPrefLocale))
+                        if (localeA.CanonicalName.Equals(playerPrefLocale))
                         {
                             return -1;
                         }
 
-                        if (localeB.Equals(playerPrefLocale))
+                        if (localeB.CanonicalName.Equals(playerPrefLocale))
                         {
                             return 1;
                         }
 
-                        if (localeA.Equals(DefaultLocale))
+                        if (localeA.CanonicalName.Equals(DefaultLocale))
                         {
                             return -1;
                         }
 
-                        if (localeB.Equals(DefaultLocale))
+                        if (localeB.CanonicalName.Equals(DefaultLocale))
                         {
                             return 1;
                         }
 
                         // ReSharper disable once StringCompareToIsCultureSpecific
-                        return localeA.ToLower().CompareTo(localeB.ToLower());
+                        return localeA.CanonicalName.ToLower().CompareTo(localeB.CanonicalName.ToLower());
                     });
 
-                return localeNames;
+                return localeEntries;
             }
             else
             {
-                return new List<string>();
+                return new List<LocaleEntry>();
             }
         }
 
@@ -337,7 +357,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             IsValid,
             NonDialogueFontScale,
             DialogueFontScale,
-            Author
+            Author,
+            DisplayName
         }
 
         public static readonly Dictionary<Config, string> ConfigToName =
@@ -353,6 +374,11 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         internal static SortedDictionary<Config, LocalizationConfig> defaultConfigs = new()
         {
+            {
+              Config.DisplayName, new LocalizationConfig(
+                  "Use as the display name when the locale is being selected from the main menu. Note the folder name must be ASCII or else XBox will be very angry.",
+                  "")  
+            },
             {
                 Config.IsValid, new LocalizationConfig(
                     "Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback",
@@ -391,10 +417,6 @@ be corrupted, these rules may be helpful for debugging purposes...
             FileNotFound,
             ExplicitlyDisabled
         }
-        
-        #if UNITY_EDITOR
-        private string _debug_path;
-        #endif
 
         public static void PrintParserError(ParserError error, string path)
         {
@@ -439,10 +461,6 @@ be corrupted, these rules may be helpful for debugging purposes...
         private LocalizationFile(string locale, string filePath, LocalizationFile localeConfig = null)
         {
             this.locale = locale;
-                  
-#if UNITY_EDITOR
-            _debug_path = filePath;
-#endif
 
             records = new();
             configs = new();
