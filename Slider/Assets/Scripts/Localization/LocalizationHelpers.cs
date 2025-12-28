@@ -237,13 +237,14 @@ namespace Localization
                             {
                                 return new LocaleEntry
                                 {
-                                    DisplayName = localeNameCanonical,
+                                    DisplayName = displayName.Value,
                                     CanonicalName = localeNameCanonical
                                 };
                             }
+                            Debug.LogWarning($"[Localization] Locale {localeNameCanonical} has empty display name ({displayName.Value}) in global config at {filePath}, using canonical name instead.");
                             return new LocaleEntry
                             {
-                                DisplayName = displayName.Value,
+                                DisplayName = localeNameCanonical,
                                 CanonicalName = localeNameCanonical
                             };
                         } else {
@@ -282,7 +283,7 @@ namespace Localization
                         }
 
                         // ReSharper disable once StringCompareToIsCultureSpecific
-                        return localeA.CanonicalName.ToLower().CompareTo(localeB.CanonicalName.ToLower());
+                        return localeA.DisplayName.ToLower().CompareTo(localeB.DisplayName.ToLower());
                     });
 
                 return localeEntries;
