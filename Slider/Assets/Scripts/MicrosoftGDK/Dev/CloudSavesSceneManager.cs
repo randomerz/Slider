@@ -37,7 +37,8 @@ public class CloudSavesSceneManager : MonoBehaviour
         public int level;
     }
 
-    private PlayerSaveData playerSaveData;
+    // private PlayerSaveData playerSaveData;
+    private SerializableSaveProfile playerSaveData;
 
     public class GameSaveLoadedArgs : System.EventArgs
     {
@@ -62,10 +63,12 @@ public class CloudSavesSceneManager : MonoBehaviour
     {
         _helperText = output.text;
 
-        // Create some data
-        playerSaveData = new PlayerSaveData();
-        playerSaveData.name = "Jane Doe";
-        playerSaveData.level = 2;
+        // // Create some data
+        // playerSaveData = new PlayerSaveData();
+        // playerSaveData.name = "Jane Doe";
+        // playerSaveData.level = 2;
+
+        playerSaveData = SerializableSaveProfile.FromSaveProfile(new SaveProfile("TestProfile"));
 
         // Do initialization
         if (GDKGameRuntime.TryInitialize())
@@ -190,9 +193,12 @@ public class CloudSavesSceneManager : MonoBehaviour
         {
             binaryFormatter.Serialize(memoryStream, playerSaveData);
             SaveData(memoryStream.ToArray());
+            // output.text = "\n Saved game data:" +
+            //                 "\n Name: " + playerSaveData.name +
+            //                 "\n Level: " + playerSaveData.level;
             output.text = "\n Saved game data:" +
-                            "\n Name: " + playerSaveData.name +
-                            "\n Level: " + playerSaveData.level;
+                            "\n Name: " + playerSaveData.profileName +
+                            "\n Play Time: " + playerSaveData.playTimeInSeconds;
         }
     }
 
@@ -202,10 +208,14 @@ public class CloudSavesSceneManager : MonoBehaviour
         using (MemoryStream memoryStream = new MemoryStream(saveData.Data))
         {
             object playerSaveDataObj = binaryFormatter.Deserialize(memoryStream);
-            playerSaveData = playerSaveDataObj as PlayerSaveData;
-            output.text = "\n Loaded save game:" +
-                            "\n Name: " + playerSaveData.name +
-                            "\n Level: " + playerSaveData.level;
+            // playerSaveData = playerSaveDataObj as PlayerSaveData;
+            // output.text = "\n Saved game data:" +
+            //                 "\n Name: " + playerSaveData.name +
+            //                 "\n Level: " + playerSaveData.level;
+            playerSaveData = playerSaveDataObj as SerializableSaveProfile;
+            output.text = "\n Saved game data:" +
+                            "\n Name: " + playerSaveData.profileName +
+                            "\n Play Time: " + playerSaveData.playTimeInSeconds;
         }
     }
 

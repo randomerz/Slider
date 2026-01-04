@@ -26,7 +26,7 @@ public class LocaleSelector : MonoBehaviour
                 {
                     text = locale.DisplayName
                 };
-                Debug.Log("Locale option added: " + locale.DisplayName + "(" + locale.CanonicalName + ")");
+                Debug.Log("[Localization] Locale option added: " + locale.DisplayName + "(" + locale.CanonicalName + ")");
                 return data;
             })
             .ToList();
