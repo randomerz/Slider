@@ -181,18 +181,18 @@ public class AchievementManager : Singleton<AchievementManager>
 
         if (achievementName == "collectFirstBreadge")
         {
-            return (uint)(statisticValue * 100);
+            return (uint)Mathf.Clamp(statisticValue * 100, 0, 100);
         }
         if (achievementName == "threeBreadge")
         {
-            return (uint)(statisticValue * 100 / 3);
+            return (uint)Mathf.Clamp(statisticValue * 100 / 3, 0, 100);
         }
         if (achievementName == "allbreadge")
         {
-            return (uint)(statisticValue * 100 / 9);
+            return (uint)Mathf.Clamp(statisticValue * 100 / 9, 0, 100);
         }
 
-        return (uint)statisticValue * 100;
+        return (uint)Mathf.Clamp(statisticValue * 100, 0, 100);
     }
 }
 

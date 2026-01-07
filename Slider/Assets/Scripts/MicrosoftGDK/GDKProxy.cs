@@ -13,32 +13,13 @@ public class GDKProxy : Singleton<GDKProxy>
 #if MICROSOFT_GDK_SUPPORT
     private XUserHandle _userHandle;
     private XblContextHandle _xblContextHandle;
-    private XGameSaveWrapper _gameSaveHelper;
+    private XGameSaveFilesWrapper _gameSaveHelper;
     private XUserChangeRegistrationToken _registrationToken;
     private bool _xGameSaveInitialized;
 
-    private const string _GameSaveContainerName = "x_slider_container";
-    private const string _GameSaveBlobName = "x_slider_blob";
+    private const string GAME_SAVE_CONTAINER_NAME = "x_slider_container";
 
-    private SerializableSaveProfile saveProfile;
-
-    public class GameSaveLoadedArgs : System.EventArgs
-    {
-        public byte[] Data { get; private set; }
-
-        public GameSaveLoadedArgs(byte[] data)
-        {
-            this.Data = data;
-        }
-    }
-
-    public delegate void OnGameSaveLoadedHandler(object sender, GameSaveLoadedArgs e);
-
-#pragma warning disable 0067 // Called when MICROSOFT_GAME_CORE is defined
-
-    public event OnGameSaveLoadedHandler OnGameSaveLoaded;
-
-#pragma warning restore 0067
+    public static EventHandler OnGameSaveLoaded;
 
     void Awake()
     {
@@ -52,8 +33,7 @@ public class GDKProxy : Singleton<GDKProxy>
             InitializeAndAddUser();
             SDK.XUserRegisterForChangeEvent(UserChangeEventCallback, out _registrationToken);
 
-            _gameSaveHelper = new XGameSaveWrapper();
-            OnGameSaveLoaded += OnGameSaveLoadedCallback;
+            _gameSaveHelper = new XGameSaveFilesWrapper();
         }
     }
 
@@ -140,19 +120,10 @@ public class GDKProxy : Singleton<GDKProxy>
             Debug.LogError($"[GDK] FAILED: Could not create context handle, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
         }
         
-        // _gameSaveHelper.InitializeAsync(
-        //     _userHandle,
-        //     GDKGameRuntime.GameConfigScid,
-        //     XGameSaveInitializeCompleted);
-    }
-
-    private void OnGameSaveLoadedCallback(object sender, GameSaveLoadedArgs saveData)
-    {
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        using (MemoryStream memoryStream = new MemoryStream(saveData.Data))
-        {
-            saveProfile = binaryFormatter.Deserialize(memoryStream) as SerializableSaveProfile;
-        }
+        _gameSaveHelper.InitializeAsync(
+            _userHandle,
+            GDKGameRuntime.GameConfigScid,
+            XGameSaveInitializeCompleted);
     }
 
     private void XGameSaveInitializeCompleted(int hResult)
@@ -163,7 +134,11 @@ public class GDKProxy : Singleton<GDKProxy>
             return;
         }
 
+        Debug.Log($"[GDK] SUCCESS: Folder initialized: {_gameSaveHelper.FolderResult}");
+
         _xGameSaveInitialized = true;
+
+        OnGameSaveLoaded?.Invoke(this, EventArgs.Empty);
     }
 
 #region Achievements and Saves
@@ -206,70 +181,21 @@ public class GDKProxy : Singleton<GDKProxy>
             return;
         }
 
-        Debug.Log($"[GDK] SUCCESS: {message}");
+        // Debug.Log($"[GDK] SUCCESS: {message}");
     }
 
-    public void SaveData(byte[] data)
+    public static bool AreSavesReady()
     {
-        _gameSaveHelper.Save(
-            _GameSaveContainerName,
-            _GameSaveBlobName,
-            data,
-            GameSaveSaveCompleted);
+        return !string.IsNullOrEmpty(GetSaveFilePath()) && _instance._xGameSaveInitialized;
     }
 
-    private void GameSaveSaveCompleted(int hResult)
+    public static string GetSaveFilePath()
     {
-        if (HR.FAILED(hResult))
+        if (_instance._gameSaveHelper != null && _instance._xGameSaveInitialized)
         {
-            if (hResult == HR.E_GS_USER_NOT_REGISTERED_IN_SERVICE)
-            {
-                Debug.LogError($"FAILED: User may be logging out x{hResult:X} ({HR.NameOf(hResult)})");
-            }
-            else
-            {
-                Debug.LogError($"FAILED: Game save submit, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
-            }
-            return;
+            return _instance._gameSaveHelper.FolderResult;
         }
-
-        Debug.Log($"SUCCESS: Game save submit update complete");
-    }
-
-    public void Load()
-    {
-        if (_userHandle == null || _xGameSaveInitialized == false)
-        {
-            return;
-        }
-
-        _gameSaveHelper.Load(
-            _GameSaveContainerName,
-            _GameSaveBlobName,
-            GameLoadCompleted);
-    }
-
-    private void GameLoadCompleted(int hResult, byte[] savedData)
-    {
-        if (HR.FAILED(hResult))
-        {
-            if (hResult == HR.E_GS_USER_NOT_REGISTERED_IN_SERVICE)
-            {
-                Debug.LogError($"FAILED: User may be logging out x{hResult:X} ({HR.NameOf(hResult)})");
-            }
-            else
-            {
-                Debug.LogError($"FAILED: Game load, hResult=0x{hResult:X} ({HR.NameOf(hResult)})");
-            }
-            return;
-        }
-
-        if (OnGameSaveLoaded != null)
-        {
-            OnGameSaveLoaded(this, new GameSaveLoadedArgs(savedData));
-        }
-
-        Debug.Log($"SUCCESS: Game save load complete");
+        return string.Empty;
     }
 
 #endregion

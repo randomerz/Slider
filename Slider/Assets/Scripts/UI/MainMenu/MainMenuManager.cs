@@ -60,9 +60,16 @@ public class MainMenuManager : Singleton<MainMenuManager>
         return _instance;
     }
 
+    void OnEnable()
+    {
+        SaveSystem.OnGameSaveLoaded += OnSavesReady;
+    }
+
     private void OnDisable() 
     {
         listener?.Dispose();
+
+        SaveSystem.OnGameSaveLoaded -= OnSavesReady;
     }
 
     private void Update() 
@@ -74,6 +81,11 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         listener.Dispose();
         StartMainMenu();
+    }
+
+    public void OnSavesReady(object sender, System.EventArgs e)
+    {
+        CheckContinueButton();
     }
 
     private bool AreAnyProfilesLoaded()

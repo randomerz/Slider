@@ -6436,6 +6436,10 @@ MonoBehaviour:
   backupsWarningText: {fileID: 1227822481}
   confirmDefaultPos: {fileID: 1192994634}
   confirmBackUpPosition: {fileID: 1141074811}
+  saveButtons:
+  - {fileID: 196640732}
+  - {fileID: 1023934775}
+  - {fileID: 1338343437}
 --- !u!1 &735333817
 GameObject:
   m_ObjectHideFlags: 0
@@ -10611,14 +10615,13 @@ GameObject:
   - component: {fileID: 1227822480}
   - component: {fileID: 1227822482}
   - component: {fileID: 1227822481}
-  - component: {fileID: 1227822483}
   m_Layer: 5
   m_Name: Backups Warning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1227822480
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10735,19 +10738,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1227822479}
   m_CullTransparentMesh: 1
---- !u!114 &1227822483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1227822479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e2ac83ade31c64a8d7704ed8b24b53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  excludeFromTranslationOnly: 1
 --- !u!224 &1243541584 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1388496677168054970, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}

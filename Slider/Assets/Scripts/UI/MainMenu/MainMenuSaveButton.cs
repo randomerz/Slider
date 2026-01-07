@@ -24,11 +24,13 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
     private SaveProfile profileBackup;
 
     private bool forceHidingDescriptions;
+    private bool isLoading;
     
     public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
         new Dictionary<string, string>
         {
-            { "ProfileEmpty", "[ Empty ]"}
+            { "ProfileEmpty", "[ Empty ]" },
+            { "ProfileLoading", "Loading..." },
         });
 
     private const string RAINBOW_BREADGE_ACQUIRED = "MagiTechRainbowBreadgeAcquired";
@@ -51,11 +53,13 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
     {
         profileNameText.text = GetDisplayName(e.mode);
         SetTextColorGray(e.mode != SavePanelManager.SaveMode.Normal);
+        isLoading = e.mode == SavePanelManager.SaveMode.Loading;
 
         switch (savePanelManager.CurrentMode)
         {
             case SavePanelManager.SaveMode.Normal:
             case SavePanelManager.SaveMode.Delete:
+            case SavePanelManager.SaveMode.Loading: // can be any
                 SetButtonDescriptions(profile);
                 break;
 
@@ -77,7 +81,7 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
 
     private void SetButtonDescriptions(SaveProfile prof)
     {
-        bool isNullOrForceHide = prof == null || forceHidingDescriptions;
+        bool isNullOrForceHide = prof == null || forceHidingDescriptions || isLoading;
 
         profileNameText.gameObject.SetActive(!forceHidingDescriptions);
 
@@ -111,6 +115,7 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
             SavePanelManager.SaveMode.Normal => profile != null ? profile.GetProfileName() : this.GetLocalizedSingle("ProfileEmpty"),
             SavePanelManager.SaveMode.Delete => profile != null ? $"{profile.GetProfileName()}?" : this.GetLocalizedSingle("ProfileEmpty"),
             SavePanelManager.SaveMode.Backup => profileBackup != null ? $"{profileBackup.GetProfileName()}?" : this.GetLocalizedSingle("ProfileEmpty"),
+            SavePanelManager.SaveMode.Loading => this.GetLocalizedSingle("ProfileLoading"),
             _ => this.GetLocalizedSingle("ProfileEmpty"),
         };
     }
@@ -147,6 +152,12 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
 
     public void ReadProfileFromSave()
     {
+        if (!SaveSystem.AreSavesReady())
+        {
+            Debug.Log("[Saves] Saves are not ready yet, cannot read profile.");
+            return;
+        }
+
         SerializableSaveProfile ssp = SaveSystem.GetSerializableSaveProfile(profileIndex);
         if (ssp != null)
             profile = ssp.ToSaveProfile();
@@ -190,6 +201,10 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
                 savePanelManager.SetButtonToConfirm(this);
                 break;
 
+            case SavePanelManager.SaveMode.Loading:
+                Debug.Log("[Saves] Saves are still loading, doing nothing...");
+                break;
+
             default:
                 Debug.LogError($"Save mode was not recognized.");
                 break;
@@ -218,6 +233,10 @@ public class MainMenuSaveButton : MonoBehaviour, IDialogueTableProvider
 
                 DeleteThisProfile();
                 savePanelManager.ClearButtonToConfirm();
+                break;
+
+            case SavePanelManager.SaveMode.Loading:
+                Debug.Log("[Saves] Saves are still loading, doing nothing...");
                 break;
 
             default:

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System;
 
 // There's probably a better way of doing this: https://gamedev.stackexchange.com/questions/110958/what-is-the-proper-way-to-handle-data-between-scenes
 // See Inversion of Control / Dependency Injection frameworks
@@ -50,18 +51,63 @@ public class SaveSystem
 
     private static SaveProfile[] saveProfiles = new SaveProfile[3];
 
+    private const string GDK_GAME_SAVE_CONTAINER_NAME = "slider_container";
+
+    private enum SaveSystemType
+    {
+        STEAM,
+        GDK,
+    }
+    private const SaveSystemType SAVE_SYSTEM_TYPE = (
+        #if MICROSOFT_GDK_SUPPORT
+        SaveSystemType.GDK
+        #else
+        SaveSystemType.STEAM
+        #endif
+    );
+    
+    public static EventHandler OnGameSaveLoaded;
+
     public SaveSystem()
     {
+        if (SAVE_SYSTEM_TYPE == SaveSystemType.GDK)
+        {
+            // Saves are async...
+            PollForSaves();
+            GDKProxy.OnGameSaveLoaded += OnGDKSavesReady;
+        }
+        else
+        {
+            SetProfile(0, GetSerializableSaveProfile(0)?.ToSaveProfile());
+            SetProfile(1, GetSerializableSaveProfile(1)?.ToSaveProfile());
+            SetProfile(2, GetSerializableSaveProfile(2)?.ToSaveProfile());
+
+            if (Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                CreateLinuxSpecificBackups(0);
+                CreateLinuxSpecificBackups(1);
+                CreateLinuxSpecificBackups(2);
+            }
+        }
+    }
+
+    private async void PollForSaves()
+    {
+        Debug.Log("[Saves] Polling for saves...");
+        while (!AreSavesReady())
+        {
+            await System.Threading.Tasks.Task.Yield();
+        }
+        Debug.Log("[Saves] Saves are ready!");
+
         SetProfile(0, GetSerializableSaveProfile(0)?.ToSaveProfile());
         SetProfile(1, GetSerializableSaveProfile(1)?.ToSaveProfile());
         SetProfile(2, GetSerializableSaveProfile(2)?.ToSaveProfile());
+    }
 
-        if (Application.platform == RuntimePlatform.LinuxPlayer)
-        {
-            CreateLinuxSpecificBackups(0);
-            CreateLinuxSpecificBackups(1);
-            CreateLinuxSpecificBackups(2);
-        }
+    private void OnGDKSavesReady(object sender, System.EventArgs e)
+    {
+        OnGameSaveLoaded?.Invoke(this, e);
     }
 
     public static SaveProfile GetProfile(int index)
@@ -101,6 +147,15 @@ public class SaveSystem
         Debug.Log($"[Saves] Setting current profile to {index}");
         currentIndex = index;
         Current = GetProfile(index);
+    }
+
+    public static bool AreSavesReady()
+    {
+        if (SAVE_SYSTEM_TYPE == SaveSystemType.GDK)
+        {
+            return GDKProxy.AreSavesReady();
+        }
+        return true;
     }
 
 
@@ -384,34 +439,48 @@ public class SaveSystem
         return fileInfo.Directory.GetFiles().Length;
     }
 
+    private static string GetRootPath()
+    {
+        if (SAVE_SYSTEM_TYPE == SaveSystemType.GDK)
+        {
+            string path = GDKProxy.GetSaveFilePath();
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new System.Exception("GDK Save File Path is empty!");
+            }
+            return Path.Join(GDKProxy.GetSaveFilePath(), GDK_GAME_SAVE_CONTAINER_NAME);
+        }
+        return Application.persistentDataPath;
+    }
+
     public static string GetFilePath(int index)
     {
-        return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
+        return GetRootPath() + string.Format("/slider{0}.cat", index);
     }
 
     public static string GetFilePathTemp(int index)
     {
-        return Application.persistentDataPath + string.Format("/slider{0}-TEMP.cat", index);
+        return GetRootPath() + string.Format("/slider{0}-TEMP.cat", index);
     }
 
     public static string GetBackupFilePath(int index)
     {
-        return Application.persistentDataPath + string.Format("/backup-slider{0}.cat", index);
+        return GetRootPath() + string.Format("/backup-slider{0}.cat", index);
     }
 
     public static string GetPermanentBackupFilePath(int index)
     {
         System.DateTime dt = System.DateTime.Now;
-        return Application.persistentDataPath + string.Format("/backup/slider{0}-{1}.cat", index, dt.ToString("yyyy-MM-dd_HH-mm-ss"));
+        return GetRootPath() + string.Format("/backup/slider{0}-{1}.cat", index, dt.ToString("yyyy-MM-dd_HH-mm-ss"));
     }
 
     public static string GetBackupReplacedFilePath(int index)
     {
-        return Application.persistentDataPath + string.Format("/replaced-slider{0}.cat", index);
+        return GetRootPath() + string.Format("/replaced-slider{0}.cat", index);
     }
 
     public static string GetBackupLinuxSpecificBackupFilePath(int index)
     {
-        return Application.persistentDataPath + string.Format("/backup-LINUX-slider{0}.cat", index);
+        return GetRootPath() + string.Format("/backup-LINUX-slider{0}.cat", index);
     }
 }

@@ -13,6 +13,7 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
         BackupFilesWarning,
         ConfirmDefaultText,
         ConfirmOpenFileVersion,
+        Loading,
     }
 
     public class SaveModeArgs : System.EventArgs
@@ -48,6 +49,10 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
                 SaveMode.ConfirmOpenFileVersion,
                 "Open Folder"
             },
+            {
+                SaveMode.Loading,
+                "Loading Saves..."
+            },
         }
     );
 
@@ -62,6 +67,7 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
     [SerializeField] private TextMeshProUGUI backupsWarningText;
     [SerializeField] private RectTransform confirmDefaultPos;
     [SerializeField] private RectTransform confirmBackUpPosition;
+    [SerializeField] private MainMenuSaveButton[] saveButtons;
 
     // We skip save picking if there are no saves and go straight to the new save menu. When we hit escape, we want
     // to come back here and not immediately go *back* to the new save menu.
@@ -77,7 +83,7 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
 
     public void OpenSaves()
     {
-        if (!AreAnyProfilesLoaded() && !hasAlreadySkippedSavePicking)
+        if (!AreAnyProfilesLoaded() && !hasAlreadySkippedSavePicking && SaveSystem.AreSavesReady())
         {
             hasAlreadySkippedSavePicking = true;
             OpenNewSave(0);
@@ -87,10 +93,17 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
         SetMode(SaveMode.Normal);
     }
 
+    void OnEnable()
+    {
+        SaveSystem.OnGameSaveLoaded += OnSavesReady;
+    }
+
     private void OnDisable()
     {
         hasAlreadySkippedSavePicking = false;
         ClearButtonToConfirm();
+
+        SaveSystem.OnGameSaveLoaded -= OnSavesReady;
     }
     
     private void Update()
@@ -123,13 +136,37 @@ public class SavePanelManager : MonoBehaviour, IDialogueTableProvider
 
         titleText.text = this.GetLocalized(mode).TranslatedFallbackToOriginal;
 
+        if (!SaveSystem.AreSavesReady())
+        {
+            mode = SaveMode.Loading;
+        }
+
         CurrentMode = mode;
         OnSaveModeChanged?.Invoke(this, new SaveModeArgs { mode = CurrentMode });
         CheckBackUpsWarning();
     }
 
+    public void OnSavesReady(object sender, System.EventArgs e)
+    {
+        foreach (MainMenuSaveButton button in saveButtons)
+        {
+            button.ReadProfileFromSave();
+        }
+
+        if (CurrentMode == SaveMode.Loading)
+        {
+            SetMode(SaveMode.Normal);
+        }
+    }
+
     private void CheckBackUpsWarning()
     {
+        if (!SaveSystem.AreSavesReady())
+        {
+            Debug.Log("[Saves] Saves are not ready yet, cannot read profile.");
+            return;
+        }
+
         int numBackUpFiles = SaveSystem.GetNumberOfPermanentBackups();
         shouldShowBackUpWarning = numBackUpFiles >= NUMBER_OF_BACKUPS_TO_SHOW_WARNING && CurrentMode == SaveMode.Normal;
 
