@@ -14,14 +14,18 @@ public class SteamPresenceController : IPresenceProxy
 #if !DISABLESTEAMWORKS
         if (SGrid.Current != null)
         {
-            if (!Steamworks.SteamFriends.SetRichPresence(SGrid.Current.MyArea.ToString(), ""))
+            if (!Steamworks.SteamFriends.SetRichPresence("steam_display", $"#{SGrid.Current.MyArea}"))
+            {
+                Debug.LogError("[Steam] Failed to set Steam Rich Presence");
+            }
+            if (!Steamworks.SteamFriends.SetRichPresence("SLIDERS", SGrid.Current.GetNumTilesCollected().ToString()))
             {
                 Debug.LogError("[Steam] Failed to set Steam Rich Presence");
             }
         }
         else
         {
-            if (!Steamworks.SteamFriends.SetRichPresence("Menus", ""))
+            if (!Steamworks.SteamFriends.SetRichPresence("steam_display", "#Menus"))
             {
                 Debug.LogError("[Steam] Failed to set Steam Rich Presence");
             }

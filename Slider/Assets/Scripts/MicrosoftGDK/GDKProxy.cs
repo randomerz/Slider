@@ -10,6 +10,8 @@ using Unity.XGamingRuntime;
 
 public class GDKProxy : Singleton<GDKProxy>
 {
+    public static EventHandler OnGameSaveLoaded;
+
 #if MICROSOFT_GDK_SUPPORT
     private XUserHandle _userHandle;
     private XblContextHandle _xblContextHandle;
@@ -19,7 +21,6 @@ public class GDKProxy : Singleton<GDKProxy>
 
     private const string GAME_SAVE_CONTAINER_NAME = "x_slider_container";
 
-    public static EventHandler OnGameSaveLoaded;
 
     void Awake()
     {
@@ -227,6 +228,11 @@ public class GDKProxy : Singleton<GDKProxy>
         // Debug.Log("[GDK] SUCCESS: Rich presence updated.");
     }
 #endregion
+
+#else
+
+    public static bool AreSavesReady() => false;
+    public static string GetSaveFilePath() => string.Empty;
 
 #endif
 }

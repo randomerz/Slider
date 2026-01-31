@@ -24,8 +24,6 @@ public class AchievementsSceneManager : MonoBehaviour
 
     private const int _100PercentAchievementProgress = 100;
 
-    public bool showAllAchievementsOnStart = false;
-
     // Start is called before the first frame update
     private void Start()
     {
@@ -134,10 +132,8 @@ public class AchievementsSceneManager : MonoBehaviour
 
     private void AfterStartAndInitialized()
     {
-        if (showAllAchievementsOnStart)
-        {
-            GetAllAchievementsStatus();
-        }
+        // Optionally show all achievements on start
+        // GetAllAchievementsStatus();
     }
 
     public void UnlockAchievement()

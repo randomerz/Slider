@@ -802,7 +802,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: STEAMWORKS_NET;MICROSOFT_GDK_SUPPORT;CONSOLE_BUILD
+    Standalone: STEAMWORKS_NET
     WebGL: STEAMWORKS_NET
     Windows Store Apps: STEAMWORKS_NET
   additionalCompilerArguments: {}

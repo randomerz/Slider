@@ -63,23 +63,28 @@ public class GameBuilder
             return;
         }
         
-        var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
-        var copyFullyUpdatedCsvBackToProj = LocalizationSkeletonGenerator.GenerateSkeleton(
-            config, isDev: !isRelease,
-            referenceRoot: null);
+        // var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
+        // var copyFullyUpdatedCsvBackToProj = LocalizationSkeletonGenerator.GenerateSkeleton(
+        //     config, isDev: !isRelease,
+        //     referenceRoot: null);
 
         string filename = GetProjectName();
+        BuildTarget originalBuildTarget = EditorUserBuildSettings.activeBuildTarget;
 
         BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
         BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
         BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename, isRelease ? null : BuildOptions.Development);
 
-        copyFullyUpdatedCsvBackToProj();
+        // copyFullyUpdatedCsvBackToProj();
+
+        // Switch back to original build target
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildPipeline.GetBuildTargetGroup(originalBuildTarget), originalBuildTarget);
     }
 
     // this is the main player builder function
     private static void BuildPlayer(BuildTarget buildTarget, string buildRootPath, string filename, BuildOptions? buildOptions)
     {
+        Debug.Log("build player called");
         if (buildRootPath == null || buildRootPath.Length == 0)
         {
             Debug.LogError("[Builds] Path must be provided!");
@@ -115,6 +120,20 @@ public class GameBuilder
         string buildPath = System.IO.Path.Join(buildRootPath, modifier); // path/to/build/windows
         string finalPath = System.IO.Path.Join(buildPath, filename + fileExtension); // path/to/build/windows/Game.exe
 
+        // Delete the build path if it already exists
+        if (Directory.Exists(buildPath))
+        {
+            Debug.Log($"[Builds] Deleting existing build folder at '{buildPath}'...");
+            Directory.Delete(buildPath, true);
+        }
+        else
+        {
+            Debug.Log($"[Builds] No existing build folder found at '{buildPath}'.");
+        }
+
+        // Create the build directory
+        Directory.CreateDirectory(buildPath);
+
         BuildPlayerOptions options = new BuildPlayerOptions
         {
             scenes = GetScenePaths(),
@@ -128,6 +147,7 @@ public class GameBuilder
 
         Debug.Log($"[Builds] Building: {buildTarget.ToString()} ======");
 
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildPipeline.GetBuildTargetGroup(buildTarget), buildTarget);
         BuildReport report = BuildPipeline.BuildPlayer(options);
 
         if (report.summary.result == BuildResult.Succeeded)
