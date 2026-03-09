@@ -18,6 +18,26 @@ public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
     private const float MAX_MASK_SIZE = 480;
     private const float SOUND_DAMPEN_LENGTH = 2;
 
+    private Coroutine currentEffectCoroutine;
+    private System.Action currentOnTextVisibleCallback;
+    private System.Action currentOnEndEffectCallback;
+
+    void OnDisable()
+    {
+        if (currentEffectCoroutine != null)
+        {
+            StopCoroutine(currentEffectCoroutine);
+            float width = MAX_MASK_SIZE * animationCurve.Evaluate(0);
+            maskRectTransform.sizeDelta = width * Vector2.one;
+
+            currentEffectCoroutine = null;
+        }
+        currentOnTextVisibleCallback?.Invoke();
+        currentOnTextVisibleCallback = null;
+        currentOnEndEffectCallback?.Invoke();
+        currentOnEndEffectCallback = null;
+    }
+
     enum TavernPassRewardEffectStrings
     {
         Acquired
@@ -31,7 +51,9 @@ public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
     public void StartEffect(string name, Sprite sprite, System.Action onTextVisibleCallback=null, System.Action onEndEffectCallback=null)
     {
         InitEffect(name, sprite);
-        StartCoroutine(Effect(onTextVisibleCallback, onEndEffectCallback));
+        currentEffectCoroutine = StartCoroutine(Effect(onTextVisibleCallback, onEndEffectCallback));
+        currentOnEndEffectCallback = onEndEffectCallback;
+        currentOnTextVisibleCallback = onTextVisibleCallback;
     }
 
     public IEnumerator StartEffectCoroutine(string name, Sprite sprite, System.Action onTextVisibleCallback=null, System.Action onEndEffectCallback=null)
@@ -48,7 +70,7 @@ public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
         displayText.text = IDialogueTableProvider.Interpolate(
             this.GetLocalizedSingle(TavernPassRewardEffectStrings.Acquired),
             new (){
-                { "item", LocalizationLoader.LoadCollectibleTranslation(itemName, SGrid.Current.GetArea()) }
+                { "item", itemName }
             });
         collectibleImage.sprite = sprite;
 
@@ -74,6 +96,7 @@ public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
 
         displayText.gameObject.SetActive(true);
         onTextVisibleCallback?.Invoke();
+        currentOnTextVisibleCallback = null;
 
         yield return new WaitForSeconds(stayDuration - 0.25f);
 
@@ -88,6 +111,9 @@ public class TavernPassRewardEffect : MonoBehaviour, IDialogueTableProvider
         }
         
         onEndEffectCallback?.Invoke();
+        currentOnEndEffectCallback = null;
+        currentEffectCoroutine = null;
+
         gameObject.SetActive(false);
     }
 }

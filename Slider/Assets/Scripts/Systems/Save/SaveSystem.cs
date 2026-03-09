@@ -239,6 +239,12 @@ public class SaveSystem
     /// </summary>
     public static void SaveBackups()
     {
+        if (!AreSavesReady())
+        {
+            Debug.Log($"[File IO] Saves are still loading, skipping backups...");
+            return;
+        }
+
         Debug.Log($"[File IO] Creating backups of save profiles...");
         for (int i = 0; i < 3; i++)
         {
@@ -448,7 +454,7 @@ public class SaveSystem
             {
                 throw new System.Exception("GDK Save File Path is empty!");
             }
-            return Path.Join(GDKProxy.GetSaveFilePath(), GDK_GAME_SAVE_CONTAINER_NAME);
+            return Path.Join(path, GDK_GAME_SAVE_CONTAINER_NAME);
         }
         return Application.persistentDataPath;
     }

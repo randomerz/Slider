@@ -190,7 +190,7 @@ public class GDKProxy : Singleton<GDKProxy>
 
     public static string GetSaveFilePath()
     {
-        if (_instance._gameSaveHelper != null && _instance._xGameSaveInitialized)
+        if (_instance != null && _instance._gameSaveHelper != null && _instance._xGameSaveInitialized)
         {
             return _instance._gameSaveHelper.FolderResult;
         }
@@ -202,6 +202,11 @@ public class GDKProxy : Singleton<GDKProxy>
     // presenceId is Area.ToString() or "Menus"
     public static void UpdateRichPresence(string presenceId)
     {
+        if (_instance == null || _instance._xblContextHandle == null)
+        {
+            return;
+        }
+
         XblPresenceRichPresenceIds.Create(
             GDKGameRuntime.GameConfigScid,
             presenceId,

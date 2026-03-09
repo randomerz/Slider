@@ -44,6 +44,8 @@ public class XGameSaveFilesWrapper
             return;
         }
 
+        Debug.Log($"[GDK] Calling XGameSaveFilesGetFolderWithUiAsync...");
+
         SDK.XGameSaveFilesGetFolderWithUiAsync(m_userHandle, scid,
             (Int32 hresult, string folderResult) =>
             {

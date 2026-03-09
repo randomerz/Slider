@@ -82,7 +82,6 @@ public class TavernPassManager : MonoBehaviour, ISavable
             return;
         didInitialize = true;
 
-        int currentNumCredits = shopManager.GetCredits();
         float progress = CalculateProgressPercent(displayedCredits);
         progressBar.value = progress;
 

@@ -3,12 +3,20 @@ using System.Linq;
 using Localization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(SettingRetriever))]
 public class LocaleSelector : MonoBehaviour
 {
     private SettingRetriever retriever;
     private List<LocaleEntry> entries;
+
+    // 0 - Unkown
+    // 1 - English
+    // 2 - Korean
+    // 3 - Chinese
+    public List<Sprite> flags;
+    public Image flagImage;
     
     private void Start()
     {
@@ -42,6 +50,13 @@ public class LocaleSelector : MonoBehaviour
             retriever.WriteSettingValue(entries[0].CanonicalName);
         }
 
+        flagImage.sprite = entries[0].CanonicalName switch
+        {
+            "English" => flags[1],
+            "Korean" => flags[2],
+            "Chinese" => flags[3],
+            _ => flags[0],
+        };
         if (entries.Count == 1)
         {
             gameObject.SetActive(false);

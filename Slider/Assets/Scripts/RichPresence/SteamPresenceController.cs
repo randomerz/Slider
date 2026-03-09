@@ -12,6 +12,12 @@ public class SteamPresenceController : IPresenceProxy
     public void UpdateActivity()
     {
 #if !DISABLESTEAMWORKS
+
+        if (!SteamManager.Initialized)
+        {
+            return;
+        }
+        
         if (SGrid.Current != null)
         {
             if (!Steamworks.SteamFriends.SetRichPresence("steam_display", $"#{SGrid.Current.MyArea}"))

@@ -31,7 +31,7 @@ public class RichPresence : Singleton<RichPresence>
         SGrid.OnSTileCollected += (object sender, SGrid.OnSTileEnabledArgs args) => UpdateActivity();
         SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => UpdateActivity();
 
-        UpdateActivity();            
+        // UpdateActivity();            
         
         //Debug.Log("Starting Rich Presence");
     }
