@@ -54,6 +54,11 @@ public class DiscordController : IPresenceProxy
     /// </summary>
     public void UpdateActivity()
     {
+        if (discord == null)
+        {
+            return;
+        }
+
         var activityManager = discord.GetActivityManager();
 
         var activity = new Discord.Activity
