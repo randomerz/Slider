@@ -293,6 +293,10 @@ public class Controls : Singleton<Controls>
         {
             return Bindings.FindAction("Navigate");
         }
+        if (controlActionSearchString == "Action")
+        {
+            return Bindings.FindAction("Submit");
+        }
         return null;
     }
 

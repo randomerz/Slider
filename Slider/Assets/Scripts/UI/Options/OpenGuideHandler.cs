@@ -12,6 +12,7 @@ public class OpenGuideHandler : MonoBehaviour
                 url = "https://www.boomo.me/walkthroughs/slider-kr.html";
                 break;
             case "简体中文":
+                url = "https://www.boomo.me/walkthroughs/slider-cn.html";
                 break;
         }
         Application.OpenURL(url);

@@ -56,6 +56,20 @@ public class InputRebinding
                         //     Controls.Bindings.Enable();
                         // }
 
+                        // // Also rebind the Submit button options if Action is rebound
+                        // if (controlToRebind.ToString().Contains("Action"))
+                        // {
+                        //     Controls.Bindings.Disable();
+
+                        //     InputAction alternateActionToRebind = Controls.AlternateInputActionForControl(controlToRebind);
+                        //     alternateActionToRebind.ApplyBindingOverride(
+                        //         1, // 1 is the index for 'E'
+                        //         actionToRebind.bindings[0]
+                        //     );
+                            
+                        //     Controls.Bindings.Enable();
+                        // }
+
                         WriteCurrentBindingsToPlayerPrefs(); // should this be moved to the front of these few?
                         OnRebindCompleted?.Invoke(); // so that if you copy another one it will properly update
                     })

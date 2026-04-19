@@ -1163,10 +1163,6 @@ PrefabInstance:
       value: EventSystem
       objectReference: {fileID: 0}
     - target: {fileID: 4476111964976586666, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4476111964976586666, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1205,22 +1201,6 @@ PrefabInstance:
     - target: {fileID: 4476111964976586666, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4476111964976586677, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
-      propertyPath: selectableSets.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4476111964976586677, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
-      propertyPath: selectableSets.Array.data[0].selectables.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4476111964976586677, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
-      propertyPath: selectableSets.Array.data[1].selectables.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4476111964976586677, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
-      propertyPath: selectableSets.Array.data[2].selectables.Array.size
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
