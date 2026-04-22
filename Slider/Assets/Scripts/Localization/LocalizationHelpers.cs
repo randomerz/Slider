@@ -9,6 +9,7 @@ using Sylvan.Data.Csv;
 using UnityEngine.SceneManagement;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using System.Globalization;
 
 namespace Localization
 {
@@ -619,8 +620,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                 value = cached;
                 return true;
             }
-
-            if (configs.TryGetValue(key, out LocalizationConfig valStr) && float.TryParse(valStr.Value, out var parsed))
+            
+            if (configs.TryGetValue(key, out LocalizationConfig valStr) && float.TryParse(valStr.Value.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
             {
                 value = parsed;
                 return true;
