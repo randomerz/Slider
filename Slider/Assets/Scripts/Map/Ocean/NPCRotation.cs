@@ -34,6 +34,8 @@ public class NPCRotation : MonoBehaviour
     public bool gotBreadge = false; //saved in oceangrid.cs maybe need to update to Savable in the future
     public bool unlockedAllSliders = false;
 
+    private int merchantPity;
+
     public void OnEnable()
     {
         ShopManager.OnTurnedItemIn += ChangeNPCS;
@@ -122,13 +124,15 @@ public class NPCRotation : MonoBehaviour
 
     public void UpdateTavern()
     {
-        float rng = UnityEngine.Random.Range(0f, 1f);
-        if (rng < .1f && !gotBreadge && unlockedAllSliders)
+        float rng = Random.Range(0f, 1f);
+        if (rng < 0.1f * merchantPity && !gotBreadge && unlockedAllSliders)
         {
+            merchantPity = 0;
             traveling_merchant.Teleport(leftEntrance, false);
         }
         else
         {
+            merchantPity += 1;
             traveling_merchant.Teleport(off_camera, false);
         }
 

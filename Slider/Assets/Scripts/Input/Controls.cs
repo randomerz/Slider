@@ -264,7 +264,8 @@ public class Controls : Singleton<Controls>
         InputAction inputActionForControl = InputActionForControl(control);
         if (control.ToString().Contains("Move"))
         {
-            return InputActionRebindingExtensions.GetBindingDisplayString(inputActionForControl, BindingIndex(control));
+            return GetCleanedBindingName(InputActionRebindingExtensions
+                    .GetBindingDisplayString(inputActionForControl, BindingIndex(control)));
         }
         else
         {
@@ -275,8 +276,22 @@ public class Controls : Singleton<Controls>
                 controlScheme = CONTROL_SCHEME_KEYBOARD_MOUSE;
             }
             
-            return inputActionForControl?.GetBindingDisplayString(group: controlScheme);
+            return GetCleanedBindingName(inputActionForControl?.GetBindingDisplayString(group: controlScheme));
         }
+    }
+
+    public static string GetCleanedBindingName(string bindingName)
+    {
+        return bindingName
+            .ToUpper()
+            .Replace("PRESS ", "")
+            .Replace(" ARROW", "")
+            .Replace("LEFT SHIFT", "L-SHIFT")
+            .Replace("LEFT ALT", "L-ALT")
+            .Replace("LEFT CTRL", "L-CTRL")
+            .Replace("RIGHT SHIFT", "R-SHIFT")
+            .Replace("RIGHT ALT", "R-ALT")
+            .Replace("RIGHT CTRL", "R-CTRL");
     }
 
     public static InputAction InputActionForControl(Control control)

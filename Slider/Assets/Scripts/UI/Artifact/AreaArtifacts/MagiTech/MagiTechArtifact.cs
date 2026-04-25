@@ -372,7 +372,7 @@ public class MagiTechArtifact : UIArtifact
 
         background.sprite = past ? pastBackgroundSprite : presentBackgroundSprite;
 
-        if (currentControllerPos != new Vector2Int(-1, -1))
+        if (currentControllerPos != new Vector2Int(-1, -1) && Controls.UsingControllerOrKeyboardOnly())
         {
             ArtifactTileButton artifactButton = GetButton(currentControllerPos.x, currentControllerPos.y);
             

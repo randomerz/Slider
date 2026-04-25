@@ -11,6 +11,7 @@ public class MagiLaser : MonoBehaviour, ISavable
     public bool isEnabled;
     public string SaveString;
     public List<LineRenderer> lineRenderers;
+    public List<bool> drewLine;
     private RaycastHit2D hit;
     private Laserable laserable;
     // private Vector2 curDir, curDir2;
@@ -50,6 +51,11 @@ public class MagiLaser : MonoBehaviour, ISavable
         SetEnabled(isEnabled);
         
         AudioManager.PlayAmbience("Laser Ambience");
+
+        drewLine = new List<bool>();
+        for (int i = 0; i < lineRenderers.Count; i++) {
+            drewLine.Add(false);
+        }
     }
 
     private void OnDestroy()
@@ -79,12 +85,20 @@ public class MagiLaser : MonoBehaviour, ISavable
     {
         thisFramePlayerPos = Player.GetPosition();
         thisFrameDistToLasers = float.MaxValue;
+
+        // ClearAssets();
+        // MakeFirstLaser();
+        // ClearLasers();
+        // UpdateLaserables();
+
+        // AudioManager.SetGlobalParameter("AmbienceDistToLaser", thisFrameDistToLasers);
     }
 
     private void LateUpdate()
     {
-        ClearLasers();
+        ClearAssets();
         MakeFirstLaser();
+        ClearLasers();
         UpdateLaserables();
 
         AudioManager.SetGlobalParameter("AmbienceDistToLaser", thisFrameDistToLasers);
@@ -100,23 +114,35 @@ public class MagiLaser : MonoBehaviour, ISavable
         SetEnabled(false);
     }
 
+    public void ClearAssets()
+    {
+        magiLaserFlashManager.ResetPool();
+
+        for (int i = 0; i < drewLine.Count; i++)
+        {
+            drewLine[i] = false;
+        }
+    }
+
     public void ClearLasers()
     {
-        //canShoot = false;
-        foreach (LineRenderer lr in lineRenderers)
+        for (int i = 0; i < lineRenderers.Count; i++)
         {
-            lr.positionCount = 0;
+            if (!drewLine[i])
+            {
+                lineRenderers[i].positionCount = 0;
+            }
         }
-
-        magiLaserFlashManager.ResetPool();
     }
 
     private void MakeFirstLaser()
     {
+        Physics2D.SyncTransforms();
+
         Vector2 curDir = initDir;
         Vector2 curPos = emitPos.position;
         // lineRenderer2.positionCount = 0;
-        DrawLaser(curDir, curPos, lineRenderers[0]);
+        drewLine[0] = DrawLaser(curDir, curPos, lineRenderers[0]);
     }
 
     private void MakePastLaser(Vector3 hitPosition, Vector2 initDir)
@@ -124,6 +150,7 @@ public class MagiLaser : MonoBehaviour, ISavable
         Vector3 offset = hitPosition - presentPortalLaserable.transform.position;
         Vector3 initPos = pastPortalLaserable.transform.position + offset + (Vector3)(initDir * PORTAL_LASER_OFFSET);
         DrawLaser(initDir, initPos, lineRenderers[1]);
+        drewLine[1] = true;
     }
 
     private void MakeNewPresentLaser(Vector3 hitPosition, Vector2 initDir)
@@ -131,6 +158,7 @@ public class MagiLaser : MonoBehaviour, ISavable
         Vector3 offset = hitPosition - pastPortalLaserable.transform.position;
         Vector3 initPos = presentPortalLaserable.transform.position + offset + (Vector3)(initDir * PORTAL_LASER_OFFSET);
         DrawLaser(initDir, initPos, lineRenderers[2]);
+        drewLine[2] = true;
     }
     
     /// <summary>
@@ -140,9 +168,13 @@ public class MagiLaser : MonoBehaviour, ISavable
     /// <param name="dir"> direction to raycast</param>
     /// <param name="pos"> starting position to raycast from</param>
     /// <param name="lr"> LineRenderer to set positions for</param>
-    private void DrawLaser(Vector2 dir, Vector2 pos, LineRenderer lr) 
+    /// <returns> whether the laser was drawn successfully </returns>
+    private bool DrawLaser(Vector2 dir, Vector2 pos, LineRenderer lr) 
     {
-        if (!isEnabled) return;
+        if (!isEnabled)
+        {
+            return false;
+        }
 
         // Set origin point
         lr.positionCount = 1;
@@ -165,7 +197,7 @@ public class MagiLaser : MonoBehaviour, ISavable
             if (!laserable)
             {
                 Debug.LogWarning(hit.collider.gameObject.name + " does not have a Laserable component! Doing nothing");
-                return;
+                return true;
             }
 
             thisFrameLaserables.Add(laserable);
@@ -211,6 +243,7 @@ public class MagiLaser : MonoBehaviour, ISavable
             }
             break;
         }
+        return true;
     }
 
     private void UpdateLaserables()
@@ -251,7 +284,7 @@ public class MagiLaser : MonoBehaviour, ISavable
         isEnabled = value;
         if (!value)
         {
-            ClearLasers();
+            ClearAssets();
             AudioManager.SetGlobalParameter("AmbienceDistToLaser", float.MaxValue);
         }
 

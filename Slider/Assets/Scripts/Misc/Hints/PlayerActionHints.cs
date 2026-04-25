@@ -147,10 +147,7 @@ public class HintData
             int endOfPlaceholder = message.IndexOf(">");
             string placeholder = message.Substring(startOfPlaceholder, endOfPlaceholder - startOfPlaceholder + 1);
 
-            string controlBinding = Controls.BindingDisplayString(bindingsToPlace.Dequeue())
-                                            .ToUpper()
-                                            .Replace("PRESS ", "")
-                                            .Replace(" ARROW", "");
+            string controlBinding = Controls.BindingDisplayString(bindingsToPlace.Dequeue());
 
             message = message.Replace(placeholder, controlBinding);
         }

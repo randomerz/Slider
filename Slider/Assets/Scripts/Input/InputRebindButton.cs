@@ -91,8 +91,7 @@ public class InputRebindButton : MonoBehaviour
             */
             var action = Controls.Bindings.FindAction("Move");
             buttonText.text = ShrinkFontSizeIfNeeded(keybind.ToString().ToUpper().Replace("_", " ") 
-                + ": " , action.bindings[1 + (int)keybind].ToDisplayString()
-                .ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
+                + ": " , Controls.GetCleanedBindingName(action.bindings[1 + (int)keybind].ToDisplayString()));
         }
         else
         {
@@ -109,7 +108,7 @@ public class InputRebindButton : MonoBehaviour
             }
 
             buttonText.text = ShrinkFontSizeIfNeeded(display.ToUpper() 
-                + ": " , Controls.BindingDisplayString(keybind).ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
+                + ": " , Controls.BindingDisplayString(keybind));
         }
 
         PlayerPrefs.SetString(Controls.PLAYER_PREFS_REBINDS_KEY, Controls.Bindings.SaveBindingOverridesAsJson());

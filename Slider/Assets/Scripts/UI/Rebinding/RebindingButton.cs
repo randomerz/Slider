@@ -39,10 +39,7 @@ public class RebindingButton : MonoBehaviour
 
     private string GetBindingDisplayStringForControl(Control control)
     {
-        return Controls.BindingDisplayString(control, forSpecificScheme: Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
-                       .ToUpper()
-                       .Replace("PRESS ", "")
-                       .Replace(" ARROW", "");
+        return Controls.BindingDisplayString(control, forSpecificScheme: Controls.CONTROL_SCHEME_KEYBOARD_MOUSE);
     }
 
     private bool WasPressedUsingController()

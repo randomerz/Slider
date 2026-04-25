@@ -894,7 +894,10 @@ public class UIArtifact : Singleton<UIArtifact>
             return;
         }
         _instance.lightningImage.gameObject.SetActive(false);
-        if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+        if (disableHighlight && _instance.lightning != null)
+        {
+            _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+        }
     }
     #endregion
 
