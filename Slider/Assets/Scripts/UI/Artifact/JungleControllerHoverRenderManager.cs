@@ -17,6 +17,11 @@ public class JungleControllerHoverRenderManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!ShouldBeActive())
+        {
+            return;
+        }
+        
         bool hasSlider = PlayerInventory.Contains(SLIDER_COLLECTIBLE);
 
         button2Default.enabled = !hasSlider;
@@ -31,6 +36,11 @@ public class JungleControllerHoverRenderManager : MonoBehaviour
 
     public void SetTile2Selected()
     {
+        if (!ShouldBeActive())
+        {
+            return;
+        }
+        
         bool hasSlider = PlayerInventory.Contains(SLIDER_COLLECTIBLE);
         
         button2Default.enabled = !hasSlider;
@@ -52,6 +62,11 @@ public class JungleControllerHoverRenderManager : MonoBehaviour
 
     public void SetTile3Selected()
     {
+        if (!ShouldBeActive())
+        {
+            return;
+        }
+
         bool hasSlider = PlayerInventory.Contains(SLIDER_COLLECTIBLE);
         
         button2Default.enabled = !hasSlider;
@@ -75,5 +90,10 @@ public class JungleControllerHoverRenderManager : MonoBehaviour
     {
         button2Default.gameObject.SetActive(false);
         button3Default.gameObject.SetActive(false);
+    }
+
+    private bool ShouldBeActive()
+    {
+        return Controls.UsingControllerOrKeyboardOnly();
     }
 }

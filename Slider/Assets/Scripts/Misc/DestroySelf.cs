@@ -7,7 +7,7 @@ public class DestroySelf : MonoBehaviour
     public bool destroyInsteadOfDisable;
     public float timeToDestroy = 5;
 
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(DestroyMe(timeToDestroy));
     }

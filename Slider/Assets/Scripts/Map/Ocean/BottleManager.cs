@@ -158,13 +158,23 @@ public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
     private void UpdateBottleLocation(object sender, System.EventArgs e){
         if(puzzleActive)
         {
-            turncounter+=1;
-            if (turncounter > 2)
+            turncounter += 1;
+            if (1 <= turncounter && turncounter <= 3)
+            {
+                AudioManager.PickSound("Pop")
+                    .WithVolume(0.4f)
+                    .WithPitch(0.9f - 0.2f * turncounter)
+                    .AndPlay();
+            }
+
+            if (turncounter >= 3)
             {
                 DestroyBottle();
             }
             else
+            {
                 StartCoroutine(StartBottleMovementAnimation(positions[turncounter-1], positions[turncounter], 1));
+            }
         }
     }
 
@@ -237,6 +247,11 @@ public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
             romeosBottle.spriteRenderer.enabled = false;
             romeosBottle.transform.SetParent(romeosBottleHolder);
             romeosBottle.transform.localPosition = Vector3.zero;
+
+            AudioManager.PickSound("Boat Splash")
+                .WithVolume(6f)
+                .WithAttachmentToTransform(romeosBottle.transform)
+                .AndPlay();
         });
     }
 

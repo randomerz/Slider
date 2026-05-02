@@ -9,7 +9,7 @@ TextureImporter:
       213: -7999811972579686801
     second: casinotileset_inside_decor_layer3_1
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -125,36 +125,28 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
-    - serializedVersion: 2
-      name: casinotileset_inside_decor_layer3_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 900
-        width: 218
-        height: 300
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1183edf67ff09d050800000000000000
-      internalID: 5825705148388620305
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     - serializedVersion: 2
       name: casinotileset_inside_decor_layer3_1
       rect:
         serializedVersion: 2
         x: 218
-        y: 900
+        y: 0
         width: 218
         height: 300
       alignment: 0
@@ -171,13 +163,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: casinotileset_inside_decor_layer3_2
+      name: casinotileset_inside_decor_layer3_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 600
+        y: 128
         width: 218
-        height: 300
+        height: 171
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,71 +177,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f3a39cb0dc4529408821a131e736f9f
-      internalID: 1491320562
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: casinotileset_inside_decor_layer3_3
-      rect:
-        serializedVersion: 2
-        x: 218
-        y: 600
-        width: 218
-        height: 300
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: da5b55ca33ab28f40ad3cf4dbced4153
-      internalID: -1250484831
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: casinotileset_inside_decor_layer3_6
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 218
-        height: 300
-      alignment: 9
-      pivot: {x: 0.5, y: 0.7133333}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b7a8f87619c0c1b4396976fb6f9edf14
-      internalID: 2002291575
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: casinotileset_inside_decor_layer3_7
-      rect:
-        serializedVersion: 2
-        x: 218
-        y: 0
-        width: 218
-        height: 300
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c06baa9781c80d54f8d512cd0158593d
-      internalID: -492455569
+      spriteID: b166bbe3dc07ba649b041b7c53ac46a7
+      internalID: 5825705148388620305
       vertices: []
       indices: 
       edges: []

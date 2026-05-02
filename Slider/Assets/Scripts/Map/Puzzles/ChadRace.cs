@@ -78,7 +78,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
             },
             {
                 ChadRaceDialogueCode.TooEasy,
-                "Pfft, too easy. Come back when you're fast enough to compete with me."
+                "Pfft, too easy. Another win for Chad."
             },
             {
                 ChadRaceDialogueCode.WonXTimes,
@@ -200,7 +200,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
 
                     numTimesChadWon += 1;
 
-                    if (numTimesChadWon >= 10)
+                    if (numTimesChadWon >= 3)
                     {
                         string dialogue = IDialogueTableProvider.Interpolate(
                             this.GetLocalizedSingle(ChadRaceDialogueCode.WonXTimes),
@@ -409,7 +409,8 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
             raceState != State.Started && 
             raceState != State.Running && 
             raceState != State.PlayerWon && 
-            raceState != State.RaceEnded)
+            raceState != State.RaceEnded &&
+            !npcScript.IsTypingDialogue())
         {
             transform.parent = startStileTransform;
             transform.localPosition = chadStartLocal;

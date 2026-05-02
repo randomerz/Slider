@@ -13,6 +13,7 @@ public class ShapePlacer : MonoBehaviour
         if (this.transform.childCount == 0 && making)
         {
             Place(makeShape);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
         }
     }
 

@@ -17,4 +17,9 @@ public class UIControllerWarning : Singleton<UIControllerWarning>
             _instance.warningText.SetActive(value);
         }
     }
+
+    void Update()
+    {
+        // Debug.Log("current selected object: " + UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);
+    }
 }

@@ -31,7 +31,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         }
 
         LocalizationPair pair = ShapeNameToSpecialMessage(item.itemName);
-        if (pair.translated != null)
+        if (HasJoke(pair))
         {
             SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, pair.TranslatedFallbackToOriginal);
             npc.Conds[^1].dialogueChain[0].animationOnStart = ShapeNameToSpecialAnimation(item.itemName);
@@ -46,36 +46,49 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         c.SetSpec(true);
     }
 
+    private bool HasJoke(LocalizationPair pair)
+    {
+        // The English localization pairs have nothing in "translated"
+        if (LocalizationLoader.CurrentLocale == LocalizationFile.DefaultLocale)
+        {
+            return !string.IsNullOrEmpty(pair.original);
+        }
+        else
+        {
+            return !string.IsNullOrEmpty(pair.translated);
+        }
+    }
+
     public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
         new Dictionary<string, string>
         {
             { "Generic", "Woah! Is that a <shape/>?!" },
 
-            // { "Bandage", "" },
+            { "Bandage", "" },
             { "Bread", "It's gluten free!" },
-            // { "Camera", "" },
+            { "Camera", "" },
             { "Chest", "That would make for some great buried treasure!" },
             { "Circle", "OMG Circle!!! Just like me!!!!" },
-            // { "Crate", "" },
+            { "Crate", "" },
             { "Crutch", "Crutch? Isn't that a police baton? Yay!!" },
-            // { "Female", "" },
+            { "Female", "" },
             { "Fish", "Blub blub blub" },
             { "FishBowl", "NOOOO YOU TRAPPED MR. BLUB BLUB" },
             { "Flag", "A race? I hope everyone's a winner!" },
             { "Glasses", "I SEE you've made something cool." },
             { "Heart", "Aww <3" },
-            // { "House", "" },
+            { "House", "" },
             { "Icecream", "Artificial vanilla, my favorite!" },
             { "Line", "Does Barron want more lines..?" },
             { "Lollipop", "Yummy!!!" },
-            // { "Male", "" },
+            { "Male", "" },
             { "Minecart", "OMG do you think I can fit in it?" },
             { "Mushroom", "Watch out!! It might explode!" },
             { "Pickaxe", "Diggy diggy hole" },
             { "Plus", "Eww... is that... math?" },
-            // { "Popsicle", "" },
+            { "Popsicle", "" },
             { "Rail", "I am going to 'Rail' you!" },
-            // { "Semicircle", "" },
+            { "Semicircle", "" },
             { "Ship", "Ahoy!!!" },
             { "Square", "Squares are okay... but I like circles more!" },
             { "Triangle", "If you were a triangle you'd be acute one!" },

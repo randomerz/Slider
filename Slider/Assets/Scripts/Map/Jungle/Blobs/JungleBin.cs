@@ -12,6 +12,7 @@ public class JungleBin : JungleBox
     }
 
     [SerializeField] private List<ShapePlacer> shapePlacers;
+    private List<Shape> lastShapes = new() { null, null };
 
     protected override void Awake()
     {
@@ -71,6 +72,12 @@ public class JungleBin : JungleBox
             
             shapePlacers[i].gameObject.SetActive(true);
             shapePlacers[i].Place(shape);
+
+            if (lastShapes[i] != shape)
+            {
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, shapePlacers[i].transform.position, shapePlacers[i].transform.parent);
+            }
+            lastShapes[i] = shape;
         }
 
         UpdateSprites();
