@@ -45,7 +45,6 @@ public class ParticleManager : Singleton<ParticleManager>
 
     public static GameObject SpawnParticle(ParticleType type, Vector3 position, Quaternion rotation, Transform parent=null)
     {
-        Debug.Log("Spawning particle of type " + type + " at position " + position);
         GameObject prefab = GetPrefab(type);
 
         return GameObject.Instantiate(prefab, position, rotation, parent);

@@ -308,9 +308,14 @@ namespace Localization
         public static string TestingLanguage => "Debug";
 
         // Unity's GetStartupLocale should only be called in Start() or Awake() according to docs
-        public static void UpdateDefaultLocaleOnAwake() =>
-                defaultLocale = LocaleUtils.LocaleShortToLong(GetDefaultLocale().Identifier.Code);
-        
+        public static void UpdateDefaultLocaleOnAwake()
+        {
+            var detected = GetDefaultLocale();
+            if (detected != null)
+                defaultLocale = LocaleUtils.LocaleShortToLong(detected.Identifier.Code);
+            // else: localization system not yet ready, keep hardcoded "English" default
+        }
+
         private static Locale GetDefaultLocale()
         {
             foreach (var selector in LocalizationSettings.StartupLocaleSelectors)
@@ -319,7 +324,7 @@ namespace Localization
                 if (locale != null)
                     return locale;
             }
-            return LocalizationSettings.AvailableLocales.Locales[0]; // english
+            return LocalizationSettings.AvailableLocales.GetLocale("en");
         }
 
         public static string AssetPath(string locale, Scene scene, string root = null) =>
