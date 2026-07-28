@@ -18,6 +18,8 @@ public class LocaleSelector : MonoBehaviour
     public List<Sprite> flags;
     public Image flagImage;
     
+    public MainMenuManager mainMenuManager;
+
     private void Start()
     {
         retriever = GetComponent<SettingRetriever>();
@@ -61,6 +63,15 @@ public class LocaleSelector : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+        else
+        {
+            // if there are no save files, have the button opened already
+            if (!AreAnyProfilesLoaded())
+            {
+                ShowHide.SetActive(false);
+                Dropdown.gameObject.SetActive(true);
+            }
+        }
     }
 
     [SerializeField]
@@ -101,5 +112,11 @@ public class LocaleSelector : MonoBehaviour
         LocalizationLoader.RefreshLocalization();
 
         // Don't put anything here... there's a force scene reload in the setting change event (see SettingsManager)
+    }
+
+    // this method is copied 3 times lol
+    private bool AreAnyProfilesLoaded()
+    {
+        return SaveSystem.GetProfile(0) != null || SaveSystem.GetProfile(1) != null || SaveSystem.GetProfile(2) != null;
     }
 }
