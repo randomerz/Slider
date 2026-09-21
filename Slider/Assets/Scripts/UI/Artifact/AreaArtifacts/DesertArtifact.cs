@@ -105,7 +105,7 @@ public class DesertArtifact : UIArtifact
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         UpdateMirageGrid();
-        SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);;
+        SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
         buttonEmpty.SetSpriteToIslandOrEmpty();
         if (SGrid.Current.CanMove(move) && !QueueFull() && playerCanQueue)
         {
@@ -132,7 +132,13 @@ public class DesertArtifact : UIArtifact
         CoroutineUtils.ExecuteAfterEndOfFrame(() => {
             UIEffects.TakeScreenshot();
             QueueAdd(move);
+            int oldSelectedX = buttonEmpty.x;
+            int oldSelectedY = buttonEmpty.y;
             UpdateUI();
+            if (Controls.UsingControllerOrKeyboardOnly())
+            {
+                EventSystem.current.SetSelectedGameObject(GetButton(oldSelectedX, oldSelectedY).gameObject);
+            }
             AudioManager.Play("Slider Sand");
             ProcessQueue();
             UpdatePushedDowns(null, null);

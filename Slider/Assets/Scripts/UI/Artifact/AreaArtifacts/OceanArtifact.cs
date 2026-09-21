@@ -55,6 +55,22 @@ public class OceanArtifact : UIArtifact
         // do nothing
     }
 
+    protected override bool IsButtonValidForSelection(GameObject g)
+    {
+        // Can't select artifact tiles in ocean
+        if (g == null)
+        {
+            return false;
+        }
+        
+        if (g.GetComponent<ArtifactTileButton>() != null)
+        {
+            return false;
+        }
+
+        return base.IsButtonValidForSelection(g);
+    }
+
     /// <summary>
     /// Routine that rotates all tiles in the ocean grid (for Fezziwig)
     /// </summary>

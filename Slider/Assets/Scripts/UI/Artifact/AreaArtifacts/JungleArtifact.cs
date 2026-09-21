@@ -63,8 +63,8 @@ public class JungleArtifact : UIArtifact
                 else
                 {
                     // vert/horiz case
-                    SwapButtons(buttonCurrent, buttonEmpty);
                     SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
+                    SwapButtons(buttonCurrent, buttonEmpty);
                 }
                 
                 ProcessQueue();

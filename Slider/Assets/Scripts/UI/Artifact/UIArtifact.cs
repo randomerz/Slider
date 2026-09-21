@@ -40,6 +40,8 @@ public class UIArtifact : Singleton<UIArtifact>
     private float consecutiveQueueSpeedBuffer = 0.15f;
     private float consecutiveQueueSpeedTimer;
 
+    private float timeUntilTryRescue;
+
     protected void Awake()
     {
         if (!didInit)
@@ -114,10 +116,29 @@ public class UIArtifact : Singleton<UIArtifact>
                 moveCounter = 0;
             }
         }
+
+        GameObject go = EventSystem.current.currentSelectedGameObject;
+        // if selecting something that is not active in heirarchy, i.e. selecting a button but on a different panel
+        if (UIArtifactMenus.IsArtifactOpen() && (go == null || !go.activeInHierarchy))
+        {
+            timeUntilTryRescue -= Time.deltaTime;
+            if (timeUntilTryRescue < 0)
+            {
+                Debug.Log("[UI] Had nothing selected for some time... attemptying rescue");
+                timeUntilTryRescue = 1;
+                // Selects a default button when you open the artifact screen
+                HandleControllerCheck(this, null);
+            }
+        }
+        else
+        {
+            // operating fine, reset
+            timeUntilTryRescue = 1;
+        }
     }
 
     // Selects a default button when you open the artifact screen
-    protected void HandleControllerCheck(object sender, System.EventArgs e)
+    public void HandleControllerCheck(object sender, System.EventArgs e)
     {
         GameObject buttonToSelect = GetValidButtonForSelection();
         EventSystem.current.SetSelectedGameObject(null);
@@ -162,7 +183,7 @@ public class UIArtifact : Singleton<UIArtifact>
     }
 
 
-    protected bool IsButtonValidForSelection(GameObject g)
+    protected virtual bool IsButtonValidForSelection(GameObject g)
     {
         // If selected object is null or deactivated
         if (g == null || !g.activeInHierarchy)
